@@ -29,7 +29,7 @@
   d'entrée
 - l'ordonnancement d'une séquence est implicitement défini par le binding, quand
   la dernière socket d'input d'une tâche est connectée, alors on va passer aux
-  tâches suivante
+  tâches suivantes
 
 #### Modules particuliers
 
@@ -84,6 +84,10 @@
 - objectif : minimum de synchronisation entre les nœuds -> collective tout les
   n secondes (n est définit par l'utilisateur)
 
+#### SDR
+
+- multi-flux et au-delà
+
 <!-- ********************************************************************** -->
 <!-- *********************************************************** CHAPITRE 3 -->
 <!-- ********************************************************************** -->
@@ -91,8 +95,7 @@
 
 #### Papier workshop WPMVP
 
-- vectorisation inter/intra-SIMD
-- wrapper MIPP
+- MIPP
 
 ### Codes polaires
 
