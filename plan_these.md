@@ -10,6 +10,29 @@
 <!-- ********************************************************************** -->
 ## CHAPITRE 2 : Contexte (5/10 pages)
 
+ 1. Shannon: système de communication (source -> émetteur -> canal -> récepteur
+    -> destination)
+ 2. utilisé partout dans notre monde (télé, téléphone, internet, satellites,
+    etc.)
+ 3. zoom sur l'émetteur (source -> codage canal -> modulation)
+ 4. zoom sur le récepteur (démodulation -> décodage canal -> destination)
+ 5. introduction au codage canal, nécessaire pour mieux résister aux
+    perturbations dues à la traversée du signal dans un environnement physique
+    (le canal)
+ 6. modulation: représentation d'une information numérique en analogique adaptée
+    au canal
+ 7. couche physique (PHY 1) du modèle OSI
+ 8. couche physique traditionnellement implémentée en hardware (ASIC)
+ 9. récepteur gourmand en calcul (plus particulière l'algorithme de décodage et
+    un peu la démodulation)
+10. 3 grandes familles de code approchent la capacité du canal (limite de
+    Shannon) : LDPC, Polar et Turbo, les décrire et les comparer
+11. besoin d'implémentations logicielles pour estimer les performances des
+    algorithmes de décodage avant de les implémenter en hardware (Monte-Carlo
+    sur canal AWGN)
+12. besoin d'implémentations software pour gagner en flexibilité et réduire les
+    coûts par rapport au hardware dans les stations de base par ex. (SDR)
+
 <!-- ********************************************************************** -->
 <!-- *********************************************************** CHAPITRE 3 -->
 <!-- ********************************************************************** -->
@@ -21,8 +44,6 @@
 - le temps d'exécution d'une tâche peut varier entre quelques microsecondes et
   quelques milliseconde -> faible latence -> adapté à la vectorisation
 - expliquer les approches intra-trame et inter-trame pour faire du SIMD
-- envoie vers le chapitre 3 pour plus de détails sur la vectorisation de tâches
-  en particulier
 
 Cassagne, A.; Aumage, O.; Barthou, D.; Leroux, C. & Jégo, C.,
 **MIPP: A Portable C++ SIMD Wrapper and its use for Error Correction Coding in 5G Standard**,
@@ -137,7 +158,7 @@ Ghaffari, A.; Léonardon, M.; Cassagne, A.; Leroux, C. &; Savaria, Y.,
 - 0-copy adaptateurs
 - clone
 
-### Cadre applicatif : standard DVB-S2 pour un industriel
+### Standard DVB-S2 full SDR pour un industriel
 
 - émetteur
 - récepteur
@@ -152,6 +173,10 @@ Ghaffari, A.; Léonardon, M.; Cassagne, A.; Leroux, C. &; Savaria, Y.,
 - performance -> langage C++
 - hétérogénéité d'algorithmes -> langage C++
 - science reproductible -> projet sur GitHub, licence MIT
+
+### Related works
+
+- [Bibliothèques FEC](http://aff3ct.github.io/fec_libraries.html)
 
 ### Utilisations possibles
 
