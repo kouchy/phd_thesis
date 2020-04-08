@@ -118,6 +118,10 @@ Ghaffari, A.; Léonardon, M.; Cassagne, A.; Leroux, C. &; Savaria, Y.,
 <!-- ********************************************************************** -->
 ## CHAPITRE 4 : langage dédié à la SDR
 
+### Introduction
+
+- Algorithmes de synchronisation avant la démodulation
+
 ### Modèle Dataflow
 
 - DF
