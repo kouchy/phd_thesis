@@ -1,2 +1,66 @@
 %!TEX root = ../my_thesis.tex
 \chapter{Efficient Implementations of Receiver Algorithms}
+
+\section{Vectorization~\cite{Cassagne2018}}
+
+\begin{itemize}
+  \item \textbf{état de l'art wrapper SIMD}
+  \item le temps d'exécution d'une tâche peut varier entre quelques
+        microsecondes et quelques milliseconde -> faible latence -> adapté à la
+        vectorisation
+  \item expliquer les approches intra-trame et inter-trame pour faire du SIMD
+\end{itemize}
+
+\section{Channel Coding}
+
+\subsection{Polar Decoders~\cite{Cassagne2015c,Cassagne2016b,Leonardon2019}}
+
+\begin{itemize}
+  \item \textbf{état de l'art} (HoF polar: \url{http://aff3ct.github.io/hof_polar.html})
+  \item décodeur SC
+  \item décodeur SC-List
+  \item polar API
+  \item déroulage d'arbre
+  \item décodeurs générique (pas déroulé)
+  \item élagage
+  \item inter/intra-SIMD
+  \item consommation énergétique ARM/x86
+  \item 32-bit, 16-bit, 8-bit
+\end{itemize}
+
+\begin{itemize}
+  \item \textbf{état de l'art multi-kernel}
+  \item factorisation automatique de kernels et génération du code source associé
+  \item décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non systématique et systématique)
+\end{itemize}
+
+\subsection{Turbo Decoders~\cite{Cassagne2016a}}
+
+\begin{itemize}
+  \item \textbf{état de l'art} (HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html})
+  \item décodeur Turbo LTE (3G/4G)
+  \item inter-SIMD
+  \item treillis
+  \item décodeur inter- et intra-SIMD LTE à faible latence
+  \item 32-bit, 16-bit, 8-bit
+\end{itemize}
+
+\subsection{LDPC Decoders}
+
+\begin{itemize}
+  \item \textbf{état de l'art} (HoF LDPC: \url{http://aff3ct.github.io/hof_ldpc.html})
+  \item décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
+  \item versions séquentielles et inter-SIMD
+  \item 32-bit, 16-bit
+  \item graphe biparti
+\end{itemize}
+
+\section{Modem}
+
+\subsection{SCMA Demodulators~\cite{Ghaffari2019}}
+
+\begin{itemize}
+  \item \textbf{état de l'art SCMA}
+  \item démodulateur SCMA intra-SIMD
+  \item proposition d'une approximation des calculs
+\end{itemize}

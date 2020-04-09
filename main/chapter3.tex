@@ -1,2 +1,58 @@
 %!TEX root = ../my_thesis.tex
 \chapter{Embedded Domain Specific Language for the SDR}
+
+\section{Introduction}
+
+\begin{itemize}
+  \item Algorithmes de synchronisation avant la démodulation
+\end{itemize}
+
+\section{Dataflow Model}
+
+\begin{itemize}
+  \item langages dédiés
+  \item solutions ad hoc
+  \item GNU Radio
+\end{itemize}
+
+\section{Runtime Embedded DSL}
+
+\begin{itemize}
+  \item tâches = les traitements (effectués sur des trames)
+  \item modules = les données internes à une ou plusieurs tâches
+  \item sockets = les données échangées entre les tâches
+  \item boucles = permet de répéter une sous-séquence
+  \item routeurs = permet d'aiguiller vers différentes sous-séquences
+  \item séquence = un enchaînement de tâches dont l'ordre est défini par les
+        connections entre les sockets
+  \item pipeline
+\end{itemize}
+
+\subsection{Rules}
+
+\begin{itemize}
+  \item une socket d'entrée ne peut être connectée qu'à une seule socket de
+        sortie
+  \item toutes les sockets d'entrée d'une tâche doivent être connectées pour
+        qu'elle puisse s'exécuter
+  \item une socket de sortie peut être connectée à aucune, une ou plus d'une
+        socket d'entrée
+  \item l'ordonnancement d'une séquence est implicitement défini par le binding,
+        quand la dernière socket d'input d'une tâche est connectée, alors on va
+        passer aux tâches suivantes
+\end{itemize}
+
+\subsection{Implementation}
+
+\begin{itemize}
+  \item notion de processus (= wrapper de tâche)
+  \item 0-copy adaptateurs
+  \item clone
+\end{itemize}
+
+\subsection{Standard DVB-S2 full SDR for industrial}
+
+\begin{itemize}
+  \item émetteur
+  \item récepteur
+\end{itemize}
