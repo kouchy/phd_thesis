@@ -1,7 +1,9 @@
 %!TEX root = ../my_thesis.tex
 \chapter{Context and State-of-the-Art}
 
-\begin{enumerate}
+\section{Introduction}
+
+\begin{itemize}
   \item Shannon~\cite{Shannon1948}: système de communication (source -> émetteur
         -> canal -> récepteur -> destination)
   \item utilisé partout dans notre monde (télé, téléphone, internet, satellites,
@@ -17,12 +19,43 @@
   \item couche physique traditionnellement implémentée en hardware (ASIC)
   \item récepteur gourmand en calcul (plus particulière l'algorithme de décodage
         et un peu la démodulation)
+\end{itemize}
+
+\section{Channel Coding}
+
+\begin{itemize}
   \item 3 grandes familles de code approchent la capacité du canal (limite de
         Shannon) : LDPC, Polar et Turbo, les décrire et les comparer
+\end{itemize}
+
+\subsection{Channel Models}
+
+\begin{itemize}
+  \item présenter modèles de canal (BEC, BSC, AWGN)
+  \item introduire LLRs
+\end{itemize}
+
+\subsection{LDPC codes}
+
+\subsection{Turbo codes}
+
+\subsection{Polar codes}
+
+\section{Simulation}
+
+\begin{itemize}
   \item besoin d'implémentations logicielles pour estimer les performances des
         algorithmes de décodage avant de les implémenter en hardware
         (Monte-Carlo sur canal AWGN)
+  \item Introduire BE, FE, BER, FER
+\end{itemize}
+
+\section{Base Station and Cloud-RAN}
+
+\begin{itemize}
   \item besoin d'implémentations software pour gagner en flexibilité et réduire
         les coûts par rapport au hardware dans les stations de base par ex.
         (SDR)
-\end{enumerate}
+\end{itemize}
+
+\section{Software Defined Radio (SDR)}

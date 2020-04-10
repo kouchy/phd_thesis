@@ -5,17 +5,28 @@
 
 \begin{itemize}
   \item Algorithmes de synchronisation avant la démodulation
+  \item Tâches séquentielles (avec état)
 \end{itemize}
 
 \section{Dataflow Model}
 
 \begin{itemize}
-  \item langages dédiés
-  \item solutions ad hoc
-  \item GNU Radio
+  \item géneral dataflow
+  \item synchronous dataflow
+  \item cyclo static dataflow
 \end{itemize}
 
+\section{Related Works}
+
+\subsection{Dedicated Languages}
+
+\subsection{Ad Hoc Solutions}
+
+\subsection{GNU Radio}
+
 \section{Runtime Embedded DSL}
+
+\subsection{Serial Blocks}
 
 \begin{itemize}
   \item tâches = les traitements (effectués sur des trames)
@@ -23,6 +34,11 @@
   \item sockets = les données échangées entre les tâches
   \item boucles = permet de répéter une sous-séquence
   \item routeurs = permet d'aiguiller vers différentes sous-séquences
+\end{itemize}
+
+\subsection{Parallel Blocks}
+
+\begin{itemize}
   \item séquence = un enchaînement de tâches dont l'ordre est défini par les
         connections entre les sockets
   \item pipeline
@@ -44,15 +60,16 @@
 
 \subsection{Implementation}
 
-\begin{itemize}
-  \item notion de processus (= wrapper de tâche)
-  \item 0-copy adaptateurs
-  \item clone
-\end{itemize}
+\subsubsection{Clone}
 
-\subsection{Standard DVB-S2 in SDR for Industrial Uses}
+\subsubsection{Processes}
 
-\begin{itemize}
-  \item émetteur
-  \item récepteur
-\end{itemize}
+\subsubsection{0-Copy}
+
+\section{Implementing the DVB-S2 Standard}
+
+\subsection{Transmitter}
+
+\subsection{Receiver}
+
+\subsection{Evaluations}

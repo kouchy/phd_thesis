@@ -11,56 +11,123 @@
   \item expliquer les approches intra-trame et inter-trame pour faire du SIMD
 \end{itemize}
 
-\section{Channel Coding}
+\section{Polar Decoders~\cite{Cassagne2015c,Cassagne2016b,Leonardon2019}}
 
-\subsection{Polar Decoders~\cite{Cassagne2015c,Cassagne2016b,Leonardon2019}}
+\subsection{Fast Implementations}
+
+\subsubsection{Related Works}
+
+HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
+
+\subsubsection{Successive Cancellation Algorithm}
+
+\subsubsection{Successive Cancellation List Algorithm}
+
+\subsubsection{Tree Pruning Strategies}
 
 \begin{itemize}
-  \item \textbf{état de l'art} (HoF polar: \url{http://aff3ct.github.io/hof_polar.html})
-  \item décodeur SC
-  \item décodeur SC-List
-  \item polar API
-  \item déroulage d'arbre
-  \item décodeurs générique (pas déroulé)
   \item élagage
-  \item inter/intra-SIMD
-  \item consommation énergétique ARM/x86
-  \item 32-bit, 16-bit, 8-bit
 \end{itemize}
 
+\subsubsection{Vectorization Strategies}
+
 \begin{itemize}
-  \item \textbf{état de l'art multi-kernel}
+  \item polar API
+  \item inter/intra-SIMD
+\end{itemize}
+
+\subsubsection{Unrolling}
+
+\begin{itemize}
+  \item décodeurs générique (pas déroulé)
+  \item déroulage d'arbre
+\end{itemize}
+
+\subsubsection{Evaluations}
+
+\begin{itemize}
+  \item 32-bit, 16-bit, 8-bit
+  \item consommation énergétique ARM/x86
+\end{itemize}
+
+\subsection{Generic Kernels and Multi-Kernel}
+
+\subsubsection{Related Works}
+
+\subsubsection{Others}
+
+\begin{itemize}
   \item factorisation automatique de kernels et génération du code source associé
   \item décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non systématique et systématique)
 \end{itemize}
 
-\subsection{Turbo Decoders~\cite{Cassagne2016a}}
+\section{Turbo Decoders~\cite{Cassagne2016a}}
+
+\subsection{Related Works}
+
+HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
+
+\subsection{Max-log-MAP Algorithm}
 
 \begin{itemize}
-  \item \textbf{état de l'art} (HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html})
   \item décodeur Turbo LTE (3G/4G)
-  \item inter-SIMD
   \item treillis
+\end{itemize}
+
+\subsection{Vectorization Strategies}
+
+\begin{itemize}
+  \item inter-SIMD
   \item décodeur inter- et intra-SIMD LTE à faible latence
+\end{itemize}
+
+\subsection{Evaluations}
+
+\begin{itemize}
   \item 32-bit, 16-bit, 8-bit
 \end{itemize}
 
-\subsection{LDPC Decoders}
+\section{LDPC Decoders}
+
+\subsection{Related Works}
+
+HoF LDPC: \url{http://aff3ct.github.io/hof_ldpc.html}
+
+\subsection{BP Algorithms}
 
 \begin{itemize}
-  \item \textbf{état de l'art} (HoF LDPC: \url{http://aff3ct.github.io/hof_ldpc.html})
-  \item décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
-  \item versions séquentielles et inter-SIMD
-  \item 32-bit, 16-bit
   \item graphe biparti
 \end{itemize}
 
-\section{Modem}
-
-\subsection{SCMA Demodulators~\cite{Ghaffari2019}}
+\subsection{Generic Implementation}
 
 \begin{itemize}
-  \item \textbf{état de l'art SCMA}
+  \item décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
+\end{itemize}
+
+\subsection{Vectorization Strategies}
+
+\begin{itemize}
+  \item versions séquentielles et inter-SIMD
+\end{itemize}
+
+\subsection{Evaluations}
+
+\begin{itemize}
+  \item 32-bit, 16-bit
+\end{itemize}
+
+\section{SCMA Demodulator~\cite{Ghaffari2019}}
+
+\subsection{Related Works}
+
+\subsection{Presentation}
+
+\subsection{MPA Demodulation Algorithms}
+
+\begin{itemize}
   \item démodulateur SCMA intra-SIMD
   \item proposition d'une approximation des calculs
 \end{itemize}
+
+\subsection{Evaluations}
