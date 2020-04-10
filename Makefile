@@ -13,3 +13,6 @@ titlepage: head/titlepage.tex
 clean:
 	$(RUBBER) --clean -d $(PAPER)
 	cd head && $(RUBBER) --clean -d titlepage.tex
+
+open:
+	xdg-open my_thesis.pdf &
