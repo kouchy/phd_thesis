@@ -1,7 +1,11 @@
 %!TEX root = ../my_thesis.tex
-\chapter{Efficient Implementations of Receiver Algorithms}
+\chapter{Algorithms and Efficient Methods of Receiver}
 
-\section{Vectorization~\cite{Cassagne2018}}
+\section{Strategy for Optimizations}
+
+\subsection{Algorithmic Simplifications}
+
+\subsection{Vectorization~\cite{Cassagne2018}}
 
 \begin{itemize}
   \item \textbf{état de l'art wrapper SIMD}
@@ -9,7 +13,12 @@
         microsecondes et quelques milliseconde -> faible latence -> adapté à la
         vectorisation
   \item expliquer les approches intra-trame et inter-trame pour faire du SIMD
+  \item portabilité (ARM to Xeon Phi)
 \end{itemize}
+
+\subsection{Memory Data Layer}
+
+\subsection{Quantification}
 
 \section{Polar Decoders~\cite{Cassagne2015c,Cassagne2016b,Leonardon2019}}
 
@@ -67,7 +76,7 @@ HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
 
 HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
 
-\subsection{Max-log-MAP Algorithm}
+\subsection{Maximum A Posteriori Algorithm}
 
 \begin{itemize}
   \item décodeur Turbo LTE (3G/4G)
@@ -131,3 +140,5 @@ HoF LDPC: \url{http://aff3ct.github.io/hof_ldpc.html}
 \end{itemize}
 
 \subsection{Evaluations}
+
+\section{Discussion}
