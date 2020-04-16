@@ -1,0 +1,23 @@
+# 64-bit
+#
+#Wrappers		NEON	SSE		AVX 	AVX-512
+#Intrinsics		1.19	1.84	3.30	5.16
+#"MIPP low"		1.10	1.68	3.15	4.72
+#"MIPP med."	1.09	1.62	3.15	4.95
+#VCL			-		1.71	3.15	5.16
+#simdpp			1.06	1.67	2.86	3.31
+#T-SIMD			-		-		-		-
+#Vc				-		0.49	3.18	2.25
+#xsimd			-		1.64	3.19	-
+#Boost.SIMD 	-		0.51	0.42	0.42
+#
+Wrappers		NEON	SSE		AVX 	AVX-512
+Intrinsics		1.21	1.82	3.38	5.93
+"MIPP low"		1.12	1.65	3.19	5.36
+"MIPP med."		1.11	1.65	3.20	5.64
+VCL				-		1.78	3.29	5.93
+simdpp			1.06	1.70	2.96	3.57
+T-SIMD			-		-		-		-
+Vc				-		0.47	3.35	2.39
+xsimd			-		1.68	3.35	-
+Boost.SIMD 		-		0.52	0.42	0.43

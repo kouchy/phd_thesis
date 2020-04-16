@@ -1,3 +1,4 @@
+%!TEX root = ../my_thesis.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %		Thesis Settings
@@ -11,56 +12,64 @@
 %   Use this file for your own custom packages, command-definitions, etc...
 %
 
+% Rubber configuration
+% rubber: setlist arguments --shell-escape
 
-% the following lines are for creating a simplified TO-DO box. However since boites is not per default installed with all latex-distributions, we have removed this example again
-% if you want to use it and do not have "boites" installed, you can get it from here: http://www.ctan.org/tex-archive/macros/latex/contrib/boites
-%
-%\usepackage{boites,boites_exemples}
-%\newcommand{\todolist}[1]{\begin{boiteepaisseavecuntitre}{TO DO in this chapter} #1 \end{boiteepaisseavecuntitre}}  % creates a little box
-% %\newcommand{\todolist}[1]{}  % to be used when to do is not to be printed
-
-\setcounter{secnumdepth}{4}
-
-\usepackage[british]{minitoc} %rappel du plan du chapitre en cours
-\renewcommand{\mtctitle}{}
-\tightmtctrue
-\nomtcrule
-\renewcommand{\mtcSfont}{\small}
-
-\newcommand{\minitocTITI}{\vspace*{1em}{\color{bleuUni}\hrule}\vspace*{-1ex}\minitoc\vspace*{-1ex}{\color{bleuUni}\hrule}%
-}
-
-
-%\usepackage{geometry} %pour la page de garde
-
-\usepackage{tikz} %de même
-\usetikzlibrary{shapes,arrows}
-\usetikzlibrary{calc}
-
+% Packages --------------------------------------------------------------------
+\usepackage[british]{minitoc} % rappel du plan du chapitre en cours
 \usepackage{array}
-\usepackage{longtable} %pour la liste des notations
-
-
+\usepackage{longtable} % pour la liste des notations
 \usepackage[toc,page]{appendix}
-\usepackage{stmaryrd} % ll and rrbrackets
-\usepackage{circuitikz}			% création d'images et de circuits électriques
-\usepackage{pgfplots}				% package pour les graphiques
-\usepackage{tikz-timing}			% package pour les chronogrammes
-\usepackage{trig}				% fourni les fonctions trigonométriques
+\usepackage{pgfplots} % package pour les graphiques
+\usepackage[french,onelanguage,ruled,linesnumbered,vlined]{algorithm2e}
+\usepackage{multibib}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xspace}
+\usepackage{xcolor}
+\usepackage{pifont}
+\usepackage{hyperref}
+\usepackage{minted} % beautiful source code
+\usepackage{sourcecodepro} % beautiful source code
+\usepackage{chngcntr}
 
-\usepackage{lettrine}
-\pgfplotsset{compat=newest}
+% Parameters ------------------------------------------------------------------
+\setcounter{secnumdepth}{4} % package 'minitoc'
+\setcounter{tocdepth}{3} % package 'minitoc'
+\newcites{mine}{Publications} % package 'multibib'
+\newlength{\Oldarrayrulewidth} % package 'array'
+\setminted{fontsize=\small,framesep=2mm} % package 'minted'
+\usemintedstyle{friendly} % package 'minted'
+\counterwithin{listing}{chapter} % package 'chngcntr'
 
-\usetikzlibrary{circuits, matrix, positioning}
-% porte logique a plusieurs entrées
-\usetikzlibrary{circuits.logic.CDH}
-%\usetikzlibrary{circuits.ee.IEC}
-\usepgfplotslibrary{groupplots}
-\usepgfplotslibrary{colorbrewer}
+% Math operators --------------------------------------------------------------
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator*{\maxstar}{max*}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\decide}{decide}
 
-\usepackage{pgffor}
+% Commands --------------------------------------------------------------------
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\newcommand{\MIPP}{\texttt{MIPP}\xspace}
+\newcommand{\longMIPP}{\textsc{MyIntrinsics++}\xspace}
+\newcommand{\TSIMD}{\texttt{T-SIMD}\xspace}
+\newcommand{\xsimd}{\texttt{xsimd}\xspace}
+\newcommand{\simdpp}{\texttt{simdpp}\xspace}
+\newcommand{\Vc}{\texttt{Vc}\xspace}
+\newcommand{\VCL}{\texttt{VCL}\xspace}
+\newcommand{\BoostSIMD}{\texttt{Boost.SIMD}\xspace}
+\newcommand{\bSIMD}{\texttt{bSIMD}\xspace}
+\newcommand{\Cxx}{\texttt{C++}\xspace}
+\newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
+\newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
+\newcommand{\Cline}[2]{
+  \noalign{\global\setlength{\Oldarrayrulewidth}{\arrayrulewidth}}
+  \noalign{\global\setlength{\arrayrulewidth}{#1}}\cline{#2}
+  \noalign{\global\setlength{\arrayrulewidth}{\Oldarrayrulewidth}}}
+\renewcommand\listoflistingscaption{List of Source Codes}
 
-
+% Colors ----------------------------------------------------------------------
 \definecolor{Paired-2}{RGB}{166,206,227}
 \definecolor{Paired-1}{RGB}{31,120,180}
 \definecolor{Paired-4}{RGB}{178,223,138}
@@ -144,65 +153,20 @@
 \definecolor{Blues-7}{RGB}{33,113,181}
 \definecolor{Blues-8}{RGB}{8,81,156}
 \definecolor{Blues-9}{RGB}{8,48,107}
+\definecolor{main-color}{rgb}{0.6627, 0.7176, 0.7764}
+\definecolor{back-color}{rgb}{0.1686, 0.1686, 0.1686}
+\definecolor{string-color}{rgb}{0.3333, 0.5254, 0.345}
+\definecolor{key-color}{rgb}{0.8, 0.47, 0.196}
+\definecolor{comment-color}{rgb}{0.35, 0.35, 0.35}
 
-\definecolor{falseframe}{RGB}{254,178,76}
-\definecolor{correctframe}{RGB}{44,162,95}
-\definecolor{falsebit}{RGB}{227,74,51}
-\definecolor{correctbit}{RGB}{67,162,202}
-
-\DeclareMathOperator{\card}{card}
-\DeclareMathOperator*{\maxstar}{max*}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\decide}{decide}
-
-%\let\emph\relax % there's no \RedeclareTextFontCommand
-%\DeclareTextFontCommand{\emph}{\bfseries\em}
-\usetikzlibrary{patterns}
-
-\usepackage{version}
-\usepackage[export]{adjustbox}
-\reversemarginpar
-
-\newcommand{\e}{\mathrm{e}}
-\usepackage{multirow}
-
-\usepackage{arydshln}
-
-\makeatletter
-\def\adl@drawiv#1#2#3{%
-        \hskip.5\tabcolsep
-        \xleaders#3{#2.5\@tempdimb #1{1}#2.5\@tempdimb}%
-                #2\z@ plus1fil minus1fil\relax
-        \hskip.5\tabcolsep}
-\newcommand{\cdashlinelr}[1]{%
-  \noalign{\vskip\aboverulesep
-           \global\let\@dashdrawstore\adl@draw
-           \global\let\adl@draw\adl@drawiv}
-  \cdashline{#1}
-  \noalign{\global\let\adl@draw\@dashdrawstore
-           \vskip\belowrulesep}}
-\makeatother
-
-\usepackage{scalerel}
-
-\def\thumbsup{\includegraphics[width=15pt]{head/down.png}}
-\def\thumbsdown{\includegraphics[width=15pt]{head/up.png}}
-\def\thumbsmid{\includegraphics[width=15pt]{head/mid.png}}
-
-\usepackage[french,onelanguage, ruled, linesnumbered, vlined]{algorithm2e}
-\SetAlFnt{\small}
-\usepackage{multibib}
-\newcites{mine}{Publications}
-
-\DecimalMathComma
-
-\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
-
-\makeatletter
-\AtBeginDocument{\let\book@l@chapter\l@chapter}
-\newcommand{\demotechaptersintoc}{%
-  \addtocontents{toc}{\let\protect\l@chapter\protect\l@section}%
-}
-\newcommand{\promotechaptersintoc}{%
-  \addtocontents{toc}{\let\protect\l@chapter\protect\book@l@chapter}%
+% Styles for lstlisting -------------------------------------------------------
+\lstdefinestyle{mycpp}
+{
+    language = C++,
+    numbers=left,
+    numbersep=0.3em,
+    tabsize=2,
+    basicstyle=\footnotesize\ttfamily,
+    morekeywords = {constexpr,int8_t,int16_t,int32_t},
+    commentstyle=\color{comment-color},
 }
