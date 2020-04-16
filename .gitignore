@@ -1,4 +1,5 @@
 build
+_minted*
 stamp
 .DS_Store
 acmart.cls
@@ -41,3 +42,4 @@ sample-*.pdf
 *.out
 *.maf
 *.mtc*
+*.lol
