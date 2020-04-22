@@ -1,4 +1,3 @@
-%!TEX root = ../my_thesis.tex
 \graphicspath{{main/chapter3/fig/}}
 
 \chapter{Embedded Domain Specific Language for the SDR}
@@ -50,14 +49,14 @@
 
 \begin{itemize}
   \item une socket d'entrée ne peut être connectée qu'à une seule socket de
-        sortie
+    sortie
   \item toutes les sockets d'entrée d'une tâche doivent être connectées pour
-        qu'elle puisse s'exécuter
+    qu'elle puisse s'exécuter
   \item une socket de sortie peut être connectée à aucune, une ou plus d'une
-        socket d'entrée
+    socket d'entrée
   \item l'ordonnancement d'une séquence est implicitement défini par le binding,
-        quand la dernière socket d'input d'une tâche est connectée, alors on va
-        passer aux tâches suivantes
+    quand la dernière socket d'input d'une tâche est connectée, alors on va
+    passer aux tâches suivantes
 \end{itemize}
 
 \section{Implementation}

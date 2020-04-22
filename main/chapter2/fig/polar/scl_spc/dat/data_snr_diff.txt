@@ -1,0 +1,70 @@
+" L=8 R=0.5"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 8
+#N       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      64      0.5     6.55    6.55    0.0     1e-05
+256      128     0.5     4.48    4.57    0.09    1e-05
+512      256     0.5     3.48    3.53    0.05    1e-05
+1024     512     0.5     2.86    2.9     0.04    1e-05
+2048     1024    0.5     2.45    2.48    0.03    1e-05
+4096     2048    0.5     2.14    2.21    0.07    1e-05
+8192     4096    0.5     1.88    1.95    0.07    1e-05
+
+
+" L=8 R=0.33"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 8
+#N       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      42      0.33    9.73    9.76    0.03    1e-05
+256      84      0.33    4.99    5.14    0.15    1e-05
+512      168     0.33    3.48    3.5     0.02    1e-05
+1024     337     0.33    2.65    2.68    0.03    1e-05
+2048     675     0.33    2.12    2.18    0.06    1e-05
+4096     1351    0.33    1.71    1.73    0.02    1e-05
+8192     2703    0.33    1.44    1.47    0.03    1e-05
+
+
+" L=8 R=0.66"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 8
+#N       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      84      0.66    6.19    6.23    0.04    1e-05
+256      168     0.66    4.69    4.72    0.03    1e-05
+512      337     0.66    3.9     3.91    0.01    1e-05
+1024     675     0.66    3.42    3.46    0.04    1e-05
+2048     1351    0.66    3.0     3.07    0.07    1e-05
+4096     2703    0.66    2.74    2.83    0.09    1e-05
+8192     5406    0.66    2.5     2.57    0.07    1e-05
+
+
+" L=32 R=0.5"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 32
+#N       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      64      0.5     6.08    6.07    -0.01   1e-05
+256      128     0.5     4.12    4.42    0.3     1e-05
+512      256     0.5     3.15    3.42    0.27    1e-05
+1024     512     0.5     2.5     2.74    0.24    1e-05
+2048     1024    0.5     2.2     2.44    0.24    1e-05
+4096     2048    0.5     1.92    2.18    0.26    1e-05
+8192     4096    0.5     1.7     1.9     0.2     1e-05
+
+
+" L=32 R=0.33"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 32
+#N       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      42      0.33    9.18    9.43    0.25    1e-05
+256      84      0.33    4.49    5.01    0.52    1e-05
+512      168     0.33    3.15    3.35    0.2     1e-05
+1024     337     0.33    2.3     2.49    0.19    1e-05
+2048     675     0.33    1.77    2.06    0.29    1e-05
+4096     1351    0.33    1.46    1.68    0.22    1e-05
+8192     2703    0.33    1.21    1.43    0.22    1e-05
+
+
+" L=32 R=0.66"
+# ./bin/aff3ct --sim-type BFER --cde-type POLAR --src-type RAND_FAST --chn-type AWGN_FAST --dec-simd INTRA --crc-type FAST --crc-poly 32-GZIP -t 40 -p 32 --cde-fb-gen-method GA --dec-type ASCL -L 32
+#LN       K       R       Eb/N0_SPC_4     Eb/N0_SPC       Eb/N0 diff (dB)         FER
+128      84      0.66    5.72    6.01    0.29    1e-05
+256      168     0.66    4.25    4.52    0.27    1e-05
+512      337     0.66    3.52    3.67    0.15    1e-05
+1024     675     0.66    3.11    3.33    0.22    1e-05
+2048     1351    0.66    2.75    2.99    0.24    1e-05
+4096     2703    0.66    2.5     2.75    0.25    1e-05
+8192     5406    0.66    2.36    2.5     0.14    1e-05

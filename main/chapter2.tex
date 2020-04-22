@@ -1,4 +1,3 @@
-%!TEX root = ../my_thesis.tex
 \graphicspath{{main/chapter2/fig/}}
 
 \chapter{Algorithms and Efficient Methods of Receiver}
@@ -15,10 +14,10 @@
 
 \begin{itemize}
   \item \xmark~le temps d'exécution d'une tâche peut varier entre quelques
-        microsecondes et quelques milliseconde -> faible latence -> adapté à la
-        vectorisation
+    microsecondes et quelques milliseconde -> faible latence -> adapté à la
+    vectorisation
   \item \xmark~expliquer les approches intra-trame et inter-trame pour faire du
-        SIMD
+    SIMD
   \item \cmark~\textbf{état de l'art wrapper SIMD}
   \item \cmark~portabilité (ARM to Xeon Phi)
 \end{itemize}
@@ -46,12 +45,12 @@ of expressiveness and of performance for the channel codes. Our contributions
 are:
 \begin{itemize}
   \item A portable and high performance  \Cxx SIMD wrapper called \MIPP, for
-        \verb|SSE|, \verb|AVX|, \verb|AVX-512| and \verb|NEON| instruction sets;
+    \verb|SSE|, \verb|AVX|, \verb|AVX-512| and \verb|NEON| instruction sets;
   \item An implementation of several channel codes with this wrapper. We
-        present the main advantages of \MIPP in this context;
-  \item A comparison with other state-of-the-art SIMD
-        wrappers on a Mandelbrot code, demonstrating that the code based on
-        \MIPP has similar performance as hand-written intrinsics.
+    present the main advantages of \MIPP in this context;
+  \item A comparison with other state-of-the-art SIMD wrappers on a Mandelbrot
+    code, demonstrating that the code based on \MIPP has similar performance as
+    hand-written intrinsics.
 \end{itemize}
 \MIPP programming model is not too far from intrinsics, allowing a good control
 on performance, but still provides an abstraction on the basic types used in
@@ -104,7 +103,7 @@ expanded as an operation and a \verb|blend| instead.
 
 \subsubsection{Medium Level Interface}
 
-\begin{listing}[htp]
+\begin{listing}
   \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/vectorization/mipp_mli.cpp}
   \caption{Medium Level Interface encapsulation.}
   \label{lst:MLI}
@@ -225,7 +224,7 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
 
 \paragraph{\Cxx SIMD Wrappers}
 
-\begin{table*}[htp]
+\begin{table*}
   \renewcommand{\arraystretch}{0.95}
   \tabcolsep=6pt
   \centering
@@ -250,9 +249,9 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
   }}
 \end{table*}
 
-\begin{figure*}[htp]
+\begin{figure*}
 \centering
-\includegraphics[width=0.90\textwidth]{vectorization/mandelbrot_speedup}
+\includegraphics[width=1.00\textwidth]{vectorization/mandelbrot_speedup}
 \caption{Speedups over the Mandelbrot naive auto-vectorized implementation}
 \label{fig:fractal}
 \end{figure*}
@@ -380,22 +379,576 @@ HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
 
 \subsubsection{Successive Cancellation Algorithm}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.70\textwidth]{polar/sc_decoder}
+\caption{Full SC decoding tree (N = 16)}
+\label{fig:sc_decoder}
+\end{figure}
+
+The SC decoding algorithm can be seen as the traversal of a binary tree starting
+from the root node. For a code length $N=2^m$, the corresponding tree thus
+includes $m + 1$ node layers, indexed from $d=0$ (root node layer) down to
+$d=m$ (leaf nodes layers). As the tree is initially full, each layer $d$
+contains $2^d$ nodes, each node of that layer $d$  containing $2^{m-d}$ LLRs
+($\lambda$) and $2^{m-d}$ binary values denoted as \textit{partial sums} ($s$).
+At initialization, LLRs received  from the channel ($Y$) are stored in the root
+node. Then, the decoder performs a pre-order traversal of the tree. When a node
+is visited in the downward direction, LLRs of the node are updated. In the
+upward direction, partial sums are updated. Fig.~\ref{fig:sc_decoder} summarizes
+the computations performed in both directions. The update functions are:
+\begin{eqnarray}
+\left\{\begin{array}{l c l c l}
+\lambda_c &=& f(\lambda_a,\lambda_b) &=& sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+\lambda_c &=& g(\lambda_a,\lambda_b,s)&=&(1-2s)\lambda_a+\lambda_b\\
+(s_{c}, s_{d}) &=& h(s_{a}, s_{b}) &=& (s_{a} \oplus s_{b}, s_{b}).
+\end{array}\right.
+\label{eq:f_g}
+\end{eqnarray}
+The $f$ and $g$ functions both generate a single LLR. The $h$ function provides
+a couple of partial sums.
+
+Before recursively calling itself on the left node, the algorithm apply the $f$
+function, respectively, before calling itself on the right node the $g$ function
+is applied. At the end (after the recursive call on the right node) the $h$
+function is applied. The $f$ and $g$ functions use the LLRs (read only mode)
+from the current node $n_i$ in order to produce the new LLR values into
+respectively left and right $n_{i+1}$ nodes. The $h$ function, in the general
+case (non-terminal case), reads the bits from the left and right $n_{i+1}$ nodes
+in order to update the bit values of the $n_i$ node. For the terminal case, the
+$h$ function reads the LLRs from itself and decides the bit values.
+
+Leaf nodes are of two kinds: \emph{information bit} nodes and \emph{frozen bit}
+nodes. When a frozen bit leaf node is reached, its binary value is
+unconditionally set to zero. Instead, when an information leaf node is reached,
+its binary value is set according to the \emph{sign} of its LLR (0 if LLR is
+positive, 1 otherwise). Once every node in the tree has been visited in both
+directions, the decoder eventually updates partial sums in the root node and the
+decoding process is terminated. At this point, the decoding result is stored in
+the root node in the form of a $N$-bit partial sum vectors.
+
 \subsubsection{Successive Cancellation List Algorithm}
 
-\subsubsection{Tree Pruning Strategies}
+\begin{algorithm}
+  \caption{SCL decoding algorithm}\label{alg:scl}
+
+  \small
+  \SetKwProg{Fn}{Function}{}{}
+
+  % \KwIn{$N$ is the frame size.}
+  % \KwIn{$L$ is the number of lists (or paths) to maintain.}
+  \KwData{$\lambda$ is a 2D buffer ($[L][2N]$) to store the LLRs.}
+  \KwData{$\hat{s}$ is a 2D buffer ($[L][N]$) to store the bits.}
+
+  \Fn{SCL\_decode ($N, o_{\lambda}, o_{\hat{s}}$)}
+  {
+    $N_{\frac{1}{2}} = N / 2$
+
+    \uIf(// not a leaf node){$N > 1$}
+    {
+      \For(// loop over the paths){$p=0$ \textbf{to} $L-1$}
+      {
+        \For(// apply the $f$ function){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
+        {
+          $\lambda[p][o_\lambda + N + i] = \bm{f}(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i])$
+        }
+      }
+
+      \textit{SCL\_decode ($N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}}$)}
+
+      \For{$p=0$ \textbf{to} $L-1$}
+      {
+        \For(// apply the $g$ function){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
+        {
+          $\lambda[p][o_\lambda + N + i] = \bm{g}(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i], \hat{s}[p][o_{\hat{s}} + i])$
+        }
+      }
+
+      \textit{SCL\_decode ($N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}} + N_{\frac{1}{2}}$)}
+
+      \For{$p=0$ \textbf{to} $L-1$}
+      {
+        \For(// update the partial sums){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
+        {
+          $\hat{s}[p][o_{\hat{s}} + i] = \bm{h}(\hat{s}[p][o_{\hat{s}} + i], \hat{s}[p][o_{\hat{s}} + N_{\frac{1}{2}} + i])$
+        }
+      }
+    }
+    \Else(// a leaf node)
+    {
+      \textit{update\_paths ()} // update, create and delete paths
+    }
+  }
+
+  \textit{SCL\_decode ($N, 0, 0$)} // launch the decoder
+
+  \textit{select\_best\_path ()}
+\end{algorithm}
+
+The SCL algorithm is summarized in Algorithm~\ref{alg:scl}. Unlike the SC
+algorithm, the SCL decoder builds a list of candidate codewords along the
+decoding. At each call of the \textit{update\_paths()} sub-routine
+(Alg.~\ref{alg:scl}, l.16), $2L$ candidates are generated. A path metric is then
+evaluated to keep only the $L$ best candidates among the $2L$ paths. The path
+metrics are calculated as in \cite{Balatsoukas-Stimming2015}. At the end of the
+decoding process, the candidate codeword with the best path metric is selected
+in the \textit{select\_best\_path()} sub-routine (Alg.~\ref{alg:scl}, l.18).
+The decoding complexity of the SCL algorithm grows as $O(LN\log_2N)$. This
+linear increase in complexity with L leads to significant improvements in
+BER/FER performances, especially for small code lengths.
+
+\paragraph{CRC concatenation scheme}
+
+The authors in \cite{Tal2011} observed that when a decoding error occurs, the
+right codeword is often in the final list, but not with the best path metric.
+They proposed to concatenate a CRC to the codeword in order to discriminate the
+candidate codewords at the final stage of the SCL decoding. Indeed, this
+technique drastically improves the FER performance of the decoder. We denote
+this algorithm CA-SCL and its simplified version CA-SSCL. In terms of
+computational complexity, the overhead consists in the computation of $L$ CRC at
+the end of each decoding.
+
+\paragraph{Adaptive SCL decoding algorithm}
+
+The presence of the CRC can be further used to reduce the decoding time by
+gradually increasing $L$. This variation of SCL is called Adaptive SCL
+(A-SCL)~\cite{Li2012}. The first step of the A-SCL algorithm is to decode the
+received frame with the SC algorithm. Then, the decoded polar codeword is
+checked with a CRC. If the CRC is not valid, the SCL algorithm is applied with
+$L=2$. If no candidate in the list satisfies the CRC, $L$ is gradually doubled
+until it reaches the value $L_{max}$. In this paper, we call this version of the
+A-SCL decoding the Fully Adaptive SCL (FA-SCL) as opposed to the Partially
+Adaptive SCL (PA-SCL), in which the $L$ value is not gradually doubled but
+directly increased from $1$ (SC) to $L_{max}$. The simplified versions of these
+algorithms are denoted PA-SSCL and FA-SSCL. In order to simplify the algorithmic
+range, in the remainder of the paper, only the simplified versions are
+considered. The use of either FA-SSCL or PA-SSCL algorithmic improvement
+introduces no BER or FER performance degradation as long as the CRC length is
+adapted to the polar code length. If the CRC length is too short, the decoding
+performance may be degraded because of false detections. These adaptive versions
+of SSCL can achieve higher throughputs. Indeed, a large proportion of frames can
+be decoded with a single SC decoding. This is especially true when the SNR is
+high. This will be further discussed in Section~\ref{sec:genericity}.
+
+\subsubsection{Optimization Strategies}
 
 \begin{itemize}
-  \item élagage
+  \item \cmark~polar API
+  \item \cmark~inter/intra-SIMD
+  \item \cmark~élagage
+  \item \cmark~déroulage des appels récursifs
 \end{itemize}
 
-\subsubsection{Vectorization Strategies}
-
+The previous decoder algorithms has a number of characteristics of interest for
+its optimization. Generating decoders able to take advantage of this
+optimization space is the key for high performance decoders:
 \begin{itemize}
-  \item polar API
-  \item inter/intra-SIMD
+  \item The tree traversal is sequential, but $f$, $g$ and $h$ are applied
+    element-wise to all elements of the LLR and bits in the nodes and
+    their children. As there is no dependence between computations
+    involving different elements of the same node, these node computations
+    can be parallelized or vectorized (cf. the \emph{intra-frame} strategy
+    introduced in~\cite{Giard2014}),
+  \item Frozen bits fully define their leaf values, hence some part of the
+    traversal can be cut and its computation avoided, depending on the
+    location of the frozen bits. More generally, the tree computation can
+    be versioned depending on these bits. In~\cite{Alamdar-Yazdi2011}, a tree
+    pruning technique called the Simplified SC (SSC) was applied to SC decoding.
+    An improved version was proposed in~\cite{Sarkis2014a}. This technique
+    relies on the fact that, depending on the frozen bits location in the leaves
+    of the tree, the definition of dedicated nodes enables to prune the decoding
+    tree: Rate-0 nodes (\texttt{R0}) correspond to a sub-tree whose all leaves
+    are frozen bits, Rate-1 nodes (\texttt{R1}) correspond to a sub-tree in
+    which all leaves are information bits, REPetition (\texttt{REP}) and Single
+    Parity Check (\texttt{SPC}) nodes correspond to repetition and SPC codes
+    sub-trees. These special nodes, originally defined for SC decoding, can be
+    employed in the case of SCL decoding as long as some modifications are made
+    in the path metric calculation~\cite{Sarkis2016}. This tree-pruned version
+    of the algorithm is called Simplified SCL (SSCL). The tree pruning technique
+    can drastically reduce the amount of computation in the decoding process,
+  \item The decoder can be specialized for a particular configuration of frozen
+    bits, as frozen bit locations do not change for many frames,
+  \item Similarly, multiple frames can be decoded concurrently, with parallel or
+    vector code. Such \emph{inter-frame} optimizations can increase the decoding
+    throughput, however at the expense of latency, which is also one important
+    metric of the application (cf.~\cite{LeGal2015a}).
 \end{itemize}
 
-\subsubsection{Unrolling}
+Beside optimizations coming from the computations in the tree, several
+representations of LLR may lead to different error correction performance. LLR
+for instance can be represented by floats or integers (fixed point
+representation), LLR from different frames can be packed together.
+
+Finally, usual code optimizations, such as unrolling or inlining can also be
+explored. For instance, the recursive structure of the tree computation can be
+fully flatten, depending on the size of the code length.
+
+\subsubsection{Algorithmic Comparison}
+
+\begin{table}
+  \centering
+  \caption{Throughput and latency comparison of polar decoding algorithms.}
+  \label{tab:polar_algo}
+  {\small
+   \begin{tabular}{r|c|c|c}
+    \textbf{Decoding}  & \textbf{BER \& FER}   & \multirow{1}{*}{\textbf{Throughput}} & \textbf{Max. Latency}        \\
+    \textbf{Algorithm} & \textbf{Performances} & ($\bm{\mathcal{T}}$)                 & ($\bm{\mathcal{L}_{worst}}$) \\
+    \hline
+    SC      & poor      & medium & medium \\
+    SSC     & poor      & high   & low    \\
+    SCL     & good      & low    & high   \\
+    SSCL    & good      & low    & medium \\
+    CA-SSCL & very good & low    & medium \\
+    PA-SSCL & very good & high   & medium \\
+    FA-SSCL & very good & high   & high   \\
+  \end{tabular}
+  }
+\end{table}
+
+In order to better distinguish all the algorithmic variations, we compare their
+main features in Table~\ref{tab:polar_algo}. Each algorithm is characterized in
+terms of decoding performance, throughput, and worst case latency for a software
+implementation. The non-simplified versions of the adaptive SCL algorithms are
+not included in the Table for readability.
+
+The SC and especially the SSC algorithms achieve very high throughput and low
+latency with poor BER and FER performances. The SCL algorithm improves the
+decoding performance compared to the SC algorithm, but its computational
+complexity leads to an increased latency and a lower throughput. The SSCL
+algorithm improves the decoding throughput and latency without any impact in
+terms of BER and FER performances, as long as the tree pruning is not too deep,
+as will be discussed in Section~\ref{sec:genericity}. Therefore, tree pruning is
+applied to all the following algorithms, namely CA-SSCL, FA-SSCL and PA-SSCL. By
+applying CRC to the SCL algorithm, one can achieve better BER and FER
+performances at the cost of computational complexity overhead. The Adaptive SCL
+algorithms reduce the decoding time with no impact on BER and FER performances.
+Furthermore, a tradeoff between throughput and worst case latency is possible
+with the use of either PA-SSCL or FA-SSCL decoding algorithms.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{polar/comparison_alg/comparison_alg}
+  \caption{Decoding performance comparison between CA-SCL and SC decoders.
+    Code rate $R = 1/2$, and 32-bit CRC (GZip).}
+  \label{plot:polar_comparison_alg}
+\end{figure}
+
+CA-SCL decoding performances for large code lengths ($N > 2^{14}$) combined with
+large list sizes ($L > 8$) are rarely presented in the literature. This is
+probably due to the long simulation time. The proposed decoders are integrated
+in the AFF3CT toolbox. Therefore, multi-threaded and multi-nodes simulations
+are enabled to handle such computation-demanding simulations. All the presented
+simulations use the Monte Carlo method with a Binary Phase-Shift Keying (BPSK)
+modulation. The communication channel is an Additive White Gaussian Noise (AWGN)
+channel based on the Mersenne Twister pseudo-random number generator
+(MT19937)~\cite{Matsumoto1998} and the Box-Muller transform~\cite{Box1958}.
+Figure~\ref{plot:polar_comparison_alg} compares the BER/FER performances of
+CA-SCL with SC decoding for a large range of code lengths. As expected, it
+appears that the coding gain brought by the SCL algorithm decreases for larger
+$N$ values. In the case of $N=2^{16}$, the improvement caused by the use of the
+CA-SCL algorithm with $L=32$ and a 32-bit GZip CRC (\texttt{0x04C11DB7}
+polynomial) instead of SC is about $0.75$ dB compared to $1.2$ dB with a polar
+code of size $N=2^{12}$. For larger polar codes, $N=2^{20}$, the gain is reduced
+to $0.5$ dB, even with a list depth of $128$ that is very costly in terms of
+computational complexity.
+
+The tradeoffs between speed and decoding performance show some general trends.
+However, the efficiency of each decoding algorithm is strongly dependent on the
+polar code length, code rate, list depth and code construction. It is expected
+that the best tradeoff is not always obtained with a single algorithm and
+parameter set combination. It is consequently highly relevant to use a generic
+and flexible decoder, that supports all variants of the decoding algorithms.
+Thus, it is possible to switch from one to another as shown in the following
+section.
+
+\subsubsection{Generic and Flexible Polar Decoders}
+\label{sec:genericity}
+
+The main contribution of this work lies in the flexibility and the genericity of
+the proposed software decoder. These terms need to be clearly defined in order
+to circumvent possible ambiguity. In the remainder of the paper, the
+\textit{genericity} of the decoder concerns all the parameters that define the
+supported polar code such as the codeword length, the code rate, the frozen bits
+set, the puncturing patterns and the concatenated CRC. These parameters are
+imposed by the telecommunication standard or the communication context. In the
+wireless communications context, these are constantly adapted by AMC
+methods~\cite{Dahlman2013}. In this work, a decoder is considered
+\textit{generic} if it is able to support any combination of these parameters
+that can be changed during a real time execution. On the other hand, the
+\textit{flexibility} of a decoder includes all the customizations that can be
+applied to the decoding algorithm for a given polar code: variant of the
+decoding algorithm, data quantization, list size $L$, tree pruning strategy, ...
+These customizations are not enforced by a standard. The flexibility gives some
+degrees of freedom to the decoder in order to find the best tradeoff between
+decoding performance, throughput or latency for a given polar code.
+
+\paragraph{Genericity}
+
+In the context of wireless communications, the standards enforce several
+different code lengths $N$ that have to be supported to share bandwidth between
+different users. This is also the case for the code rate $R$ that needs to be
+adapted to the quality of the transmission channel. Therefore, a practical
+implementation should be adapted to both $N$ and $R$ in real-time in order to
+limit latency.
+
+A polar code is completely defined by $N$ and the frozen bits set
+$\bm{u}_{\mathcal{A}^c}$. Several methods exist to generate some "good" sets of
+frozen bits~\cite{Tal2013,Trifonov2012}. The code rate $R$ depends on the size
+of $\bm{u}_{\mathcal{A}^c}$. In their original form, polar code lengths are only
+powers of two. The puncturing and shortening techniques
+in~\cite{Wang2014,Niu2013,Miloslavskaya2015} enable to construct polar codes of
+any length at the cost of slightly degraded decoding performance. The coding
+scheme can be completed with the specification of a CRC.
+
+In~\cite{Sarkis2016}, the unrolling method is used: a specific description of
+the decoder has to be generated for a specific polar code parameter set of $N$,
+$K$, $R$, frozen bits set, puncturing pattern, CRC. This approach leads to very
+fast software decoders at the price of the genericity, since a new source code
+should be generated and compiled every time the modulation and coding scheme
+(MCS) changes. This method is not adapted to wireless communication standards,
+in which these parameters have to be adapted not only over time, but also for
+the different users.
+
+The proposed decoder does not use the unrolling method and is completely generic
+regarding the code dimension $K$, the code length $N$, the frozen bits set
+$\bm{u}_{\mathcal{A}^c}$ and the puncturing patterns. All of them are dynamic
+parameters of the decoder and can be defined in input files. All CRC listed
+in~\cite{CRCWiki2017} are available along with the possibility to define others.
+It is shown in~\cite{Zhang2017} that custom CRCs for polar codes can have a very
+good impact on the decoding performance.
+
+Relying on an unique software description also implies that the tree pruning
+technique also has to be dynamically defined. Indeed, this technique depends on
+the frozen bits set $\bm{u}_{\mathcal{A}^c}$. Not sacrificing throughput or
+latency while maintaining the genericity imposed by wireless communication
+standards is at the core of the proposed implementation. Flexibility in terms of
+decoding algorithms, described in the following, along with improvements
+presented in Section~\ref{sec:implem_improv}, is necessary to deal with this
+challenge.
+
+\paragraph{Flexibility}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_l/scl_l}
+  \caption{Tradeoffs between CA-SSCL decoding and throughput performances
+    depending on $L$. $N=2048$, $R=0.5$, and 32-bit CRC (GZip). For $L=1$, the
+    SSC decoder is used with a ($2048$,$1024$) polar code.}
+  \label{plot:polar_scl_l}
+\end{figure}
+
+On one hand, the reason for the decoder genericity is the compliance to the
+telecommunication standards. On the other hand, the flexibility of the decoder
+regroups several algorithmic variations that are discussed in the following.
+These variations allow several tradeoffs of multiple sorts, whatever the
+standard. They are all included in a single source code.
+
+In the proposed decoders the following parameters can be changed dynamically
+without re-compilation: the list size $L$, the tree pruning strategy, the
+quantization of the LLRs and the different SCL variants. Each of these
+adjustments can be applied to access to different tradeoffs between throughput,
+latency, and error rate performance. As a consequence, one can easily fine-tune
+the configuration of the software decoder for any given polar code.
+
+\subparagraph{List size}
+
+As mentioned earlier, the list size $L$ impacts both speed and decoding
+performance. In Figure~\ref{plot:polar_scl_l}, the throughput as well as BER and
+FER performances of the CA-SSCL algorithm are shown for different $L$ values. A
+($2048$,$1024$) polar code with a 32-bit CRC is considered. The computational
+complexity increases linearly with $L$: the throughput is approximately halved
+when $L$ is doubled, except for the case of the SC algorithm ($L=1$) which is
+much faster. Indeed, there is no overhead due to the management of different
+candidate paths during the decoding. For $L\geq4$ and $E_b/N_0=2$, the FER is
+also approximately halved when the list size $L$ is doubled.
+
+\subparagraph{Tree pruning strategy}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_tree_cut/scl_tree_cut}
+  \caption{Impact of the specialized nodes on the SCL coded throughput.
+  % \caption{Dedicated nodes impact on CA-SSCL.
+    $N=2048$ and $L=32$.}
+  \label{plot:polar_scl_tree_cut}
+\end{figure}
+
+A second degree of flexibility is the customization of the SCL tree pruning. The
+authors in~\cite{Alamdar-Yazdi2011,Sarkis2016} defined dedicated nodes to prune
+the decoding tree and therefore to reduce the computational complexity. In this
+proposed decoder, each dedicated node can be activated separately. The ability
+to activate dedicated nodes at will is useful in order to explore the
+contribution of each node type on the throughput.
+Figure~\ref{plot:polar_scl_tree_cut} shows the impact of the different tree
+pruning optimizations on the CA-SSCL decoder throughput depending on the code
+rate. The performance improvements are cumulative. Coded throughput, in which
+the redundant bits are taken in account, is shown instead of information
+throughput, for which only information bits are considered in order to
+illustrate the computational effort without the influence of the fact that
+higher rate codes involve higher information throughput.
+
+The coded throughput of the original unpruned algorithm (\texttt{ref}),
+decreases as the code rate increases. Indeed, frozen bit leaf nodes are faster
+to process than information bit leaf nodes, in which a threshold detection is
+necessary. As there are more \texttt{R0} and \texttt{REP} nodes in low code
+rates, the tree pruning is more efficient in the case of low code rates. The
+same explanation can be given for \texttt{R1} nodes in high code rates.
+\texttt{R1} node pruning is more efficient than \texttt{R0} node pruning on
+average. Indeed, a higher amount of computations is saved in \texttt{R1} nodes
+than in \texttt{R0} nodes.
+
+It has also been observed in~\cite{Sarkis2016} that when the \texttt{SPC} node
+size is not limited to $4$, the decoding performance may be degraded.
+Consequently the size is limited to $4$ in \texttt{SPC4}. In \texttt{SPC4+}
+nodes, there is no size limit. The two node types are considered in
+Figure~\ref{plot:polar_scl_tree_cut}. Therefore, the depth at which dedicated
+nodes are activated in the proposed decoder can be adjusted, in order to offer a
+tradeoff between throughput and decoding performance.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_spc/scl_spc_diff}
+  % \caption{Impact of the specialized nodes on the SCL coded throughput.
+  \caption{Effects of the \texttt{SPC4+} nodes on the CA-SSCL @ $10^{-5}$ FER}
+  \label{fig:polar_scl_spc}
+\end{figure}
+
+According to our experiments, the aforementioned statement about performance
+degradation caused by \texttt{SPC4+} nodes is not always accurate depending on
+the code and decoder parameters. The impact of switching \textit{on} or
+\textit{off} \texttt{SPC4+} nodes on decoding performance and throughput at a
+FER of $10^{-5}$ is detailed in Figure~\ref{fig:polar_scl_spc}. It shows that
+\texttt{SPC4+} nodes have only a small effect on the decoding performance. With
+$L=8$, an SNR degradation lower than 0.1 dB is observed, except for one
+particular configuration. Throughput improvements of $8$ to $23$ percents are
+observed. If $L=32$, the SNR losses are more substantial (up to $0.5$ dB),
+whereas throughput improvements are approximately the same. Besides this
+observation, Figure~\ref{fig:polar_scl_spc} shows how the proposed decoder
+flexibility in the AFF3CT environment enables to optimize easily the decoder
+tree pruning, both for software implementations or for hardware implementations
+in which tree pruning can also be applied~\cite{Lin2014}.
+
+\subparagraph{LLR Quantization}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer}
+  \caption{Decoding performance of the SSCL and the A-SSCL decoders.
+    Code ($2048$,$1723$), $L=32$.}
+  \label{plot:polar_scl_bfer}
+\end{figure}
+
+\begin{table}[b]
+  \renewcommand{\arraystretch}{1.1}
+  \centering
+  \caption{Throughput and latency comparisons between floating-point (32-bit)
+    and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
+    $L = 32$ and 32-bit CRC (Gzip).}
+  \label{tab:fixed}
+  {\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{r | r | c || c | c || c | c || c | c}
+    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c ||}{\textbf{3.5 dB}} & \multicolumn{2}{c ||}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
+    \cline{4-9}
+    & & & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ \\
+    % \hline
+    \hline
+    \multirow{3}{*}{PA-SSCL} & 32-bit &  635 & 232.3 &   7.6 & 41.7 &  42.1 & 7.4 & 237.6 \\
+    %\cline{3-9}
+                             & 16-bit &  622 & 219.6 &   8.0 & 40.1 &  43.8 & 6.6 & 267.5 \\
+    %\cline{3-9}
+                             &  8-bit &  651 & 232.4 &   7.6 & 41.2 &  42.6 & 6.5 & 268.3 \\
+    \hline
+    \multirow{3}{*}{FA-SSCL} & 32-bit & 1201 &  67.2 &  26.1 &  8.5 & 207.8 & 5.1 & 345.5 \\
+    %\cline{3-9}
+                             & 16-bit & 1198 &  68.7 &  25.6 &  7.7 & 225.7 & 4.3 & 408.7 \\
+    %\cline{3-9}
+                             &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
+  \end{tabular}
+  }}
+\end{table}
+
+Another important parameter in both software and hardware implementations is the
+quantization of data in the decoder. More specifically, the quantization of LLRs
+and partial sums in the decoder have an impact on decoding performance.
+Quantized implementations of the SC algorithm have already been proposed
+in~\cite{Giard2016} but to the best of our knowledge, the proposed decoder is
+the first SCL software implementation that can benefit from the 8-bit and 16-bit
+fixed-point representations of LLRs and internal path metrics. In the 8-bit mode
+LLRs and path metrics are saturated between $-127$ and $+127$ after each
+operation. Moreover, to avoid overflows, the path metrics are normalized after
+each \textit{update\_paths()} call (cf. Alg.~\ref{alg:scl}) by subtracting the
+smallest metric to each one of them. Figure~\ref{plot:polar_scl_bfer}a shows the
+BER and FER performances of the CA-SSCL decoder for 32-bit floating-point,
+16-bit and 8-bit fixed-point representations. One can observe that the
+\texttt{REP} nodes degrade the decoding performance in a 8-bit representation
+because of accumulation (red triangles curve). Indeed, it is necessary to add
+all the LLRs of a \texttt{REP} node together in order to process it, which may
+lead to an overflow in the case of fixed-point representation. It can happen
+when the size of the repetition nodes is not limited
+($\texttt{REP}_\texttt{2+}$). However, the size limitation of the repetition
+nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue. In
+Table~\ref{tab:fixed}, maximum latency ($\mathcal{L}_{worst}$ in $\mu s$),
+average latency ($\mathcal{L}_{avg}$ in $\mu s$) and information throughput
+($\mathcal{T}_i$ in Mb/s) are given. Note that in 8-bit configuration only the
+\texttt{REP}$_{\texttt{8-}}$ nodes are used. The fixed-point implementation
+reduces, on average, the latency. In the high SNR region, the frame errors are
+less frequent. Therefore, the SCL algorithm is less necessary than in low SNR
+regions for Adaptive SCL algorithms. As the gain of fixed-point implementation
+benefits more to the SC algorithm than to the SCL algorithm, the throughput is
+higher in high SNR regions. For instance, up to 425.9 Mb/s is achieved in 8-bit
+representation with the FA-SSCL decoder. Note that the improvements described in
+Section~\ref{sec:implem_improv} are applied to the decoders that are given in
+Table~\ref{tab:fixed}.
+
+\subparagraph{Supporting different variants of the decoding algorithms}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_adaptive/scl_adaptive}
+  \caption{Frame Error Rate (FER) performance and throughput of the Fully and
+    Partially Adaptive SSCL decoders (FA and PA). Code ($2048$,$1723$) and
+    32-bit CRC (GZip). 32-bit floating-point representation.}
+  \label{plot:polar_scl_adaptive}
+\end{figure}
+
+Besides the $L$ values, the tree pruning and quantization aspects, the proposed
+software polar decoder supports different variants of the SCL algorithm:
+CA-SSCL, PA-SSCL, FA-SSCL.
+
+As shown in~\cite{Sarkis2016}, the adaptive version of the SCL algorithm yields
+significant speedups, specially for high SNR. The original adaptive SCL
+described in~\cite{Li2012}, denoted as Fully Adaptive SCL (FA-SSCL) in this
+paper, gradually doubles the list depth $L$ of the SCL decoder when the CRC is
+not valid for any of the generated codewords at a given stage until the value
+$L_{max}$. By contrast, the adaptive decoding algorithm implemented
+in~\cite{Sarkis2016}, called in this paper Partially Adaptive SCL (PA-SSCL),
+directly increases the list depth from $1$ (SC) to $L_{max}$. In
+Figure~\ref{plot:polar_scl_adaptive}, the two versions (FA-SSCL and PA-SSCL) are
+compared on a ($2048$,$1723$) polar code and 32-bit CRC (GZip). The LLRs values
+are based on a 32-bit floating point representation. Note that as the FER
+performance of PA-SSCL and FA-SSCL are exactly the same, the related error
+performance plots completely overlap. The throughput of the FA-SSCL algorithm is
+higher than that of the PA-SSCL algorithm for some SNR values, depending on the
+code parameters. Considering typical FER values for wireless communication
+standards ($10^{-3}$ to $10^{-5}$), in the case of a ($2048$,$1723$) polar code,
+the throughput of FA-SSCL is double that of PA-SSCL with $L = 8$, while it is
+multiplied by a factor of $7$ with $L=32$. The drawback of FA-SSCL is that
+although the average latency decreases, the worst case latency increases.
+
+The adaptive versions of the algorithm achieve better throughputs, but CA-SCL
+may also be chosen depending on the CRC. One may observe in
+Figure~\ref{plot:polar_scl_bfer}b that an adaptive decoder dedicated to an 8-bit
+CRC with a ($2048$,$1723$) polar code and $L=32$ leads to a loss of $0.5$ dB for
+a FER of $10^{-5}$ compared to its non adaptive counterpart.
+
+Both polar code genericity and decoding algorithm flexibility are helpful to
+support the recommendations of wireless communications in an SDR or cloud RAN
+context. The code and decoder parameters can be dynamically changed in the
+proposed decoder, while maintaining competitive throughput and latency. The
+following section introduces algorithmic and implementation improvements applied
+in the proposed decoders to keep a low decoding time.
+
+\subsubsection{Unrolled Polar Decoders}
 
 \begin{itemize}
   \item décodeurs générique (pas déroulé)
@@ -416,8 +969,10 @@ HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
 \subsubsection{Others}
 
 \begin{itemize}
-  \item factorisation automatique de kernels et génération du code source associé
-  \item décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non systématique et systématique)
+  \item factorisation automatique de kernels et génération du code source
+    associé
+  \item décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non
+    systématique et systématique)
 \end{itemize}
 
 \section{Turbo Decoders~\cite{Cassagne2016a}}
@@ -463,7 +1018,7 @@ communication systems. They have been chosen in many communication standards
 (Wifi, WiMAX, DVB-S2, 10Gbps Ethernet, etc.). They were also selected for the
 future 5G standard data transport.
 
-\begin{figure}[htp]
+\begin{figure}
   \centering
   \includegraphics[width=0.60\textwidth]{ldpc/ldpc_tanner_graph}
   \caption{Tanner graph of a simple parity check $H$ matrix}
@@ -523,7 +1078,7 @@ This \MIPP feature is important for digital communication: adapting the data
 type without changing the source code enables to address varying constraints
 with a single source code.
 
-\begin{listing}[htp]
+\begin{listing}
   \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/ldpc/bp_min_sum.cpp}
   \caption{LDPC decoder implementation with \MIPP.}
   \label{lst:LDPC}
@@ -535,7 +1090,7 @@ with a single source code.
   \item 32-bit, 16-bit
 \end{itemize}
 
-\begin{table}[htp]
+\begin{table}
   \tabcolsep=6pt
   \centering
   \caption{LDPC decoder speedups with \MIPP.}

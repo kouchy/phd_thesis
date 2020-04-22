@@ -1,4 +1,3 @@
-%!TEX root = ../my_thesis.tex
 \graphicspath{{main/chapter1/fig/}}
 
 \chapter{Context and Objectives}
@@ -7,28 +6,28 @@
 
 \begin{itemize}
   \item Shannon~\cite{Shannon1948}: système de communication (source -> émetteur
-        -> canal -> récepteur -> destination)
+    -> canal -> récepteur -> destination)
   \item utilisé partout dans notre monde (télé, téléphone, internet, satellites,
-        etc.)
+    etc.)
   \item zoom sur l'émetteur (source -> codage canal -> modulation)
   \item zoom sur le récepteur (démodulation -> décodage canal -> destination)
   \item introduction au codage canal, nécessaire pour mieux résister aux
-        perturbations dues à la traversée du signal dans un environnement
-        physique (le canal)
+    perturbations dues à la traversée du signal dans un environnement physique
+    (le canal)
   \item modulation: représentation d'une information numérique en analogique
-        adaptée au canal
+    adaptée au canal
   \item évoquer la synchro avant la démodulation
   \item couche physique (PHY 1) du modèle OSI
   \item couche physique traditionnellement implémentée en hardware (ASIC)
   \item récepteur gourmand en calcul (plus particulière l'algorithme de décodage
-        et un peu la démodulation)
+    et un peu la démodulation)
 \end{itemize}
 
 \section{Channel Coding}
 
 \begin{itemize}
   \item 3 grandes familles de code approchent la capacité du canal (limite de
-        Shannon) : LDPC, Polar et Turbo, les décrire et les comparer
+    Shannon) : LDPC, Polar et Turbo, les décrire et les comparer
 \end{itemize}
 
 \subsection{Channel Models}
@@ -48,8 +47,8 @@
 
 \begin{itemize}
   \item besoin d'implémentations logicielles pour estimer les performances des
-        algorithmes de décodage avant de les implémenter en hardware
-        (Monte-Carlo sur canal AWGN)
+    algorithmes de décodage avant de les implémenter en hardware (Monte-Carlo
+    sur canal AWGN)
   \item Introduire BE, FE, BER, FER
 \end{itemize}
 
@@ -57,8 +56,7 @@
 
 \begin{itemize}
   \item besoin d'implémentations software pour gagner en flexibilité et réduire
-        les coûts par rapport au hardware dans les stations de base par ex.
-        (SDR)
+    les coûts par rapport au hardware dans les stations de base par ex. (SDR)
 \end{itemize}
 
 \section{Software Defined Radio (SDR)}

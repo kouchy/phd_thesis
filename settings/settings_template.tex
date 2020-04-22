@@ -11,7 +11,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[british,french]{babel}
+\usepackage[english,french]{babel}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% EDOC THESIS TEMPLATE: Variant 1.0 -> Latin modern, large text width&height
@@ -24,25 +24,39 @@
 % EDOC THESIS TEMPLATE: Variant 2.0 -> Utopia, Gabarrit A (lighter pages)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{eulervm} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
+% \usepackage{eulervm} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
+% %\usepackage{utopia} % on older systems -> use this package instead of fourier in combination with mathdesign for better looking results
+% %\usepackage[adobe-utopia]{mathdesign}
+% \setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
+% % \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
+% % \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
+% \setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
+% \setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
+% \setlength{\headheight}{14pt}
+
+% \makeatletter
+% \if@twoside
+% \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
+% \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
+% \else
+% \setlength{\oddsidemargin}{6mm} % 37mm - 1in (from hoffset)
+% \setlength{\evensidemargin}{6.2mm} % = 26.2mm - 1in (from hoffset)
+% \fi
+% \makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EDOC THESIS TEMPLATE: Variant 2.0 -> Utopia, Gabarrit A (lighter pages)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fourier} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
 %\usepackage{utopia} % on older systems -> use this package instead of fourier in combination with mathdesign for better looking results
 %\usepackage[adobe-utopia]{mathdesign}
 \setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
-% \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-% \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
+\setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
+\setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
 \setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
 \setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
 \setlength{\headheight}{14pt}
-
-\makeatletter
-\if@twoside
-\setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-\setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-\else
-\setlength{\oddsidemargin}{6mm} % 37mm - 1in (from hoffset)
-\setlength{\evensidemargin}{6.2mm} % = 26.2mm - 1in (from hoffset)
-\fi
-\makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 

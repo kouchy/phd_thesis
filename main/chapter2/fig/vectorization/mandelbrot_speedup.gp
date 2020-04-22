@@ -50,13 +50,13 @@ set style increment user
 # set the color and width of the axis border
 set border 31 lw @my_axis_width lc rgb text_color
 
-#set terminal pngcairo  transparent enhanced font "arial,10" fontscale 1.0 size 600, 400 
-set terminal pdf enhanced font "arial,10" fontscale 1.0 size 12,4 
+#set terminal pngcairo  transparent enhanced font "arial,10" fontscale 1.0 size 600, 400
+set terminal pdf enhanced font "arial,10" fontscale 1.0 size 12,4
 set output 'mandelbrot_speedup.pdf'
 set bar 1.000000 front
 set boxwidth 0.9 absolute
 #set style fill solid 1.00 border lt -1
-#set style circle radius graph 0.02, first 0.00000, 0.00000 
+#set style circle radius graph 0.02, first 0.00000, 0.00000
 #set style ellipse size graph 0.05, 0.03, first 0.00000 angle 0 units xy
 #set key inside right top vertical Right noreverse noenhanced autotitle nobox
 # set key options
@@ -68,7 +68,7 @@ set datafile missing '-'
 set style data histograms
 set style fill solid 0.5 border
 set xtics border in scale 0,0 nomirror rotate by -45  autojustify
-set xtics  norangelimit 
+set xtics  norangelimit
 set xtics   ()
 unset paxis 1 tics
 unset paxis 2 tics
@@ -77,7 +77,7 @@ unset paxis 4 tics
 unset paxis 5 tics
 unset paxis 6 tics
 unset paxis 7 tics
-#set title "Title" 
+#set title "Title"
 #set yrange [ 0.00000 : 300000. ] noreverse nowriteback
 set yrange [ 0.00000 : 15.0 ] noreverse nowriteback
 #set logscale y
@@ -91,7 +91,7 @@ set paxis 7 range [ * : * ] noreverse nowriteback
 # set grid color
 set grid y lc rgb grid_color
 #set colorbox vertical origin screen 0.9, 0.2, 0 size screen 0.05, 0.6, 0 front  noinvert bdefault
-set ylabel "Speedup" 
+set ylabel "Speedup"
 #set colorbox vertical origin screen 0.9, 0.2, 0 size screen 0.05, 0.6, 0 front bdefault
 #x = 0.0
 #i = 23
@@ -102,12 +102,12 @@ set multiplot layout 1,2
 
 set key off
 set title "Float 32-bit"
-plot 'data/perf_mandelbrot_32bit.dat' using 2:xtic(1) ti col fillstyle pattern 6, '' u 3 ti col fillstyle pattern 1, '' u 4 ti col fillstyle pattern 2, '' u 5 ti col
+plot 'dat/perf_mandelbrot_32bit.dat' using 2:xtic(1) ti col fillstyle pattern 6, '' u 3 ti col fillstyle pattern 1, '' u 4 ti col fillstyle pattern 2, '' u 5 ti col
 
 set yrange [ 0.00000 : 6.5 ] noreverse nowriteback
 set key on
 set title "Float 64-bit"
-set ylabel "" 
-plot 'data/perf_mandelbrot_64bit.dat' using 2:xtic(1) ti col fillstyle pattern 6, '' u 3 ti col fillstyle pattern 1, '' u 4 ti col fillstyle pattern 2, '' u 5 ti col
+set ylabel ""
+plot 'dat/perf_mandelbrot_64bit.dat' using 2:xtic(1) ti col fillstyle pattern 6, '' u 3 ti col fillstyle pattern 1, '' u 4 ti col fillstyle pattern 2, '' u 5 ti col
 
 unset multiplot
