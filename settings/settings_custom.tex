@@ -33,6 +33,7 @@
 \usepackage{chngcntr}
 \usepackage{bm} % bold math
 \usepackage{geometry} % reduce margins
+\usepackage{tkz-kiviat}
 
 % Parameters ------------------------------------------------------------------
 \setcounter{secnumdepth}{4} % package 'minitoc'
@@ -42,6 +43,7 @@
 \setminted{fontsize=\small,framesep=2mm} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
 \counterwithin{listing}{chapter} % package 'chngcntr'
+\usetikzlibrary{arrows} % package 'tikz'
 
 % Math operators --------------------------------------------------------------
 \DeclareMathOperator{\card}{card}
@@ -69,6 +71,13 @@
   \noalign{\global\setlength{\arrayrulewidth}{#1}}\cline{#2}
   \noalign{\global\setlength{\arrayrulewidth}{\Oldarrayrulewidth}}}
 \renewcommand\listoflistingscaption{List of Source Codes}
+\def\bl{big.\textsc{LITTLE}\xspace}
+\def\big{big\xspace}
+\def\little{\textsc{LITTLE}\xspace}
+\def\odr{\textsc{Odroid}\xspace}
+\def\odrx{\textsc{Odroid-XU+E}\xspace}
+\def\juno{\textsc{Juno}\xspace}
+\def\mus{\si{\micro\second}}
 
 % Colors ----------------------------------------------------------------------
 \definecolor{Paired-2}{RGB}{166,206,227}

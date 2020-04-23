@@ -1418,6 +1418,226 @@ masking instructions.
   \item consommation énergétique ARM/x86
 \end{itemize}
 
+\paragraph{Energy}
+
+\begin{table}
+  \caption{Characteristics for each cluster ($T_i$ is the information
+    throughput), for dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
+    consumption is not included in $E_b$ and in $P$.}
+  \label{tab:res}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{c | c | c | c | c | c}
+    \textbf{Cluster} &
+    \textbf{Impl.} &
+    $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
+    $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)} &
+    $\boldsymbol{E_b}$ \textbf{(nJ)} &
+    $\boldsymbol{P}$   \textbf{(W)}\\
+    \hline
+    \multirow{3}{*}{\textbf{A7-450MHz}}  & seq.  &  3.1 &  655 &  37.8 & 0.117 \\
+                                         & intra & 13.0 &  158 &   9.5 & 0.123 \\
+                                         & inter & 21.8 & 1506 &   6.0 & 0.131 \\
+    \hline
+    \multirow{3}{*}{\textbf{A53-450MHz}} & seq.  &  2.1 &  966 &  29.0 & 0.062 \\
+                                         & intra & 10.1 &  203 &   7.0 & 0.070 \\
+                                         & inter & 17.2 & 1902 &   5.1 & 0.088 \\
+    \hline
+    \multirow{3}{*}{\textbf{A15-1.1GHz}} & seq.  &  7.5 &  274 & 122.0 & 0.913 \\
+                                         & intra & 35.2 &   58 &  28.2 & 0.991 \\
+                                         & inter & 62.8 &  522 &  17.4 & 1.093 \\
+    \hline
+    \multirow{3}{*}{\textbf{A57-1.1GHz}} & seq.  &  9.2 &  222 &  78.9 & 0.730 \\
+                                         & intra & 39.2 &   52 &  21.1 & 0.826 \\
+                                         & inter & 65.1 &  503 &  14.2 & 0.923 \\
+    \hline
+    \multirow{3}{*}{\textbf{i7-3.3GHz}} & seq.  &  36.3 & 56.5 & 235.4 &  8.532 \\
+                                        & intra & 221.8 &  9.2 &  40.5 &  9.017 \\
+                                        & inter & 632.2 & 51.8 &  15.8 &  9.997 \\
+  \end{tabular}
+  }
+  \end{center}
+\end{table}
+
+Table~\ref{tab:res} gives an overview of the decoder behavior on different
+clusters and for various implementations. The code is always single threaded and
+only the 8-bit fixed-point decoders are considered, since 32-bit floating-point
+versions  are 4 times more energy consuming, on average. The sequential version
+is mentioned for reference only, as the  throughput $T_i$ is much higher on
+vectorized versions. Generally the inter-frame SIMD strategy delivers better
+performance at the cost of a higher latency $l$. Table~\ref{tab:res} also
+compares the energy consumption of \little and \big clusters. The A53 consumes
+less energy than the A7 and the A57 consumes less energy than the A15,
+respectively. This can be explained by  architectural improvements brought by
+the more recent ARM64 platform. Despite the fact that the ARM64 is a development
+board, the ARM64 outperforms the ARM32 architecture. Finally we observe that the
+power consumption is higher for the inter-frame version than for the intra-frame
+one because it fills the SIMD units more intensively, and the SIMD units consume
+more than the scalar pipeline.
+
+For comparison, the results for the Intel Core i7-4850HQ, using SSE4.1
+instructions (same vector length as ARM NEON vectors) are also included. Even if
+the i7 is competitive with the ARM big cores in term of \textit{energy-per-bit}
+($E b$), these results show it is not well suited for the low power SDR systems
+because of its high power requirements.
+
+\begin{table}
+  \caption{Comparison of 8-bit fixed-point decoders with intra-frame
+    vectorization. $N = 32768$ and $R = 5/6$.}
+  \label{tab:perf}
+  \begin{center}
+  {\footnotesize
+  \begin{tabular}{c | c | c | c | c | c}
+    \textbf{Decoder} &
+    \textbf{Platform} &
+    \textbf{Freq.} &
+    \textbf{SIMD} &
+    $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
+    $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)}\\
+    \hline
+    \cite{Giard2014} & i7-2600   & 3.4Ghz & SSE4.1 &         204  &  135 \\
+    \hline
+    this work        & i7-4850HQ & 3.3Ghz & SSE4.1 & \textbf{580} &   47 \\
+    \hline
+    this work        & A15       & 1.1Ghz & NEON   &          70  &  391 \\
+    \hline
+    this work        & A57       & 1.1Ghz & NEON   &          73  &  374 \\
+  \end{tabular}
+  }
+  \end{center}
+\end{table}
+
+Table~\ref{tab:perf} shows a performance comparison (throughput, latency) with
+the dynamic intra-frame decoder of~\cite{Giard2014}. On a x86 CPU, our dynamic
+decoder is 2.8 times faster than the state-of-the-art decoder. Even if we used a
+more recent CPU, we also used the same set of instructions (SSE4.1) and the
+frequencies are comparable.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/sc_energy_implems_vs/sc_energy_implems_vs}
+  \caption{Variation of the \emph{energy-per-bit} for different frame sizes and
+    impl.: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz. Fixed rate
+    $R = 1/2$.}
+  \label{plot:polar_sc_energy_implems_vs}
+\end{figure}
+
+Figure~\ref{plot:polar_sc_energy_implems_vs} shows the \emph{energy-per-bit}
+consumption depending on the frame size $N$ for the fixed rate $R = 1/2$. In
+general, the energy consumption increases with the frame size. For small frame
+sizes ($N$ from $2^{8}$ to $2^{14}$), the inter-frame SIMD outperforms the
+intra-frame SIMD. This is especially true for $N = 2^8$ which has a low ratio of
+SIMD computations over scalar computations in the intra-frame version. As the
+frame size increases, the ratio of SIMD vs scalar computations increases as
+well. At some point around $N = 2^{16}$ the intra-frame implementation begins
+to outperform the inter-frame one, because the data for the intra-frame decoder
+still fits in the CPU cache, whereas the data of the inter-frame decoder does
+not fit the cache anymore. In our case (8-bit fixed point numbers and 128-bit
+vector registers) the inter-frame decoders require 16~times more memory than the
+intra-frame decoders. Then, for the frame size $N = 2^{20}$, both intra and
+inter-frame decoders now exceed the cache capacity and the RAM power consumption
+becomes more significant due to the increased number of cache misses causing RAM
+transactions. In general the code generation is effective on the intra-frame
+strategy whereas it is negligible on the inter-frame version of the code.
+
+Considering those previous observations, it is more energy efficient to use
+inter-frame strategy for small frame sizes, whereas it is better to apply
+intra-frame strategy for larger frame sizes (comparable energy consumption with
+much lower latency).
+
+Figure~\ref{plot:polar_sc_energy_freq} shows the impact of the frequency on the
+energy, for a given value of frame size $N=4096$ and code rate $R=1/2$. On both
+A7 and A15 clusters, the supply voltage increases with the frequency from 0.946V
+to 1.170V. The A7 \little cluster shows that the energy consumed by the system
+RAM is significant: At 250MHz it accounts for half of the energy cost. Indeed,
+at low frequency, the long execution time due to the low throughput causes a
+high dynamic RAM refreshing bill. It is therefore more interesting to use
+frequencies higher than 250MHz. For this problem size and configuration, and
+from an energy-only point of view, the best choice is to run the decoder at
+350MHz. On the A15 \big cluster, the energy cost is mainly driven by the CPU
+frequency, while the RAM energy bill is limited compared to the CPU.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
+  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
+    frequency (dynamic code, intra-, inter-frame).
+    A7 performance is on the left and A15 on the right. $N = 4096$ and $R = 1/2$.
+    Dark colors and light colors stand for CPU cluster and RAM energy consumption,
+    resp.}
+  \label{plot:polar_sc_energy_freq}
+\end{figure}
+
+Thus, the bottom line about energy vs frequency relationship is: On the \little
+cluster it is more interesting to clock the CPU at high frequency (higher
+throughput and smaller latency for a small additional energy cost); On the
+\big cluster, where the RAM consumption is less significant, it is better to
+clock the CPU at a low frequency.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/sc_energy_rate/sc_energy_rate_N32768}
+  \caption{Variation of the \emph{energy-per-bit} ($E_b$) for $N = 32768$
+    depending on the rate $R = K / N$ (various impl.: intra-, inter-frame, code
+    gen. on). Running on A7, A53 and A57 @ 450MHz.}
+  \label{plot:polar_sc_energy_rate}
+\end{figure}
+
+In Figure~\ref{plot:polar_sc_energy_rate} the \emph{energy-per-bit} cost
+decreases when the code rate increases. This is expected because there are many
+more information bits in the frame when $R$ is high, making the decoder more
+energy efficient. With high rates, the SC decoding tree can be pruned more
+effectively, making the decoding process even more energy efficient.
+Figure~\ref{plot:polar_sc_energy_rate} also compares the ARM A7, A53 and A57
+clusters for the same 450MHz frequency (note: this frequency is not available on
+the A15). The \little A7 is more energy efficient than the \big A57, and the
+\little A53 is itself more energy efficient than the \little A7
+($E_{b_{A53}} < E_{b_{A7}} < E_{b_{A57}}$).
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+  \tkzKiviatDiagram[rotate         = 90,
+                    scale          = 0.70,
+                    label distance = 0.5cm,
+                    label space    = 5.7cm,
+                    font           = \footnotesize,
+                    radial         = 5,
+                    gap            = 1,
+                    lattice        = 4]{Larger SNR range,
+                                        Lower memory footprint,
+                                        Lower latency,
+                                        Lower energy per bit,
+                                        Higher throughput}
+  \tkzKiviatLine[ultra thick,color=red,mark=none,fill=red!20,opacity=.3](4,2,1,3,3)
+  \tkzKiviatLine[ultra thick,color=blue,fill=blue!20,opacity=.3](4,4,3,1,1)
+  \tkzKiviatLine[dotted,ultra thick,color=blue](2,3,4,2,2)
+  \tkzKiviatLine[dotted,ultra thick,color=red](2,1,2,4,4)
+  \end{tikzpicture}
+  \caption{\label{fig:spider}Ranking of the different approaches along 5
+    metrics. In red, inter-frame vectorization performance and in blue,
+    intra-frame performance. Solid color is for the dynamic versions, dotted is
+    for the generated versions. Each version is sorted along each of the 5 axes
+    and the best version for one axe is placed further from the center.}
+\end{figure}
+
+Figure \ref{fig:spider} presents a qualitative summary of the
+characteristics of the different code versions, for intra-/inter-frame
+vectorization, generated or dynamic code. For instance, if the size of
+the memory footprint is an essential criterion, the dynamic intra-frame
+code exhibits the best performance.
+
+To sum up, the dynamic implementations provides efficient trade-off between
+throughput, latency and energy depending on code length. It was demonstrated by
+previous benchmarks. Both implementations provide low-energy and low-power
+characteristics compared to previous works in the field on x86 processors
+\cite{Sarkis2014,Giard2014,Sarkis2014a,LeGal2014,LeGal2015a,Cassagne2015c}.
+Whereas the throughput on a single processor core is reduced compared to x86
+implementations, ARM implementations must fulfil a large set of SDR applications
+with limited throughputs and where the power consumption matters. Finally, it is
+important to notice that multi-core implementations of the proposed ARM decoders
+is still possible on these ARM targets to improve the decoding throughputs.
+
 \subsection{Generic Kernels and Multi-Kernel}
 
 \subsubsection{Related Works}

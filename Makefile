@@ -77,18 +77,29 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt \
               main/chapter2/fig/polar/sc_tree_cut/sc_tree_cut.gp \
               main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti.dat \
-              main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti.dat
-	cd main/chapter2/fig/vectorization/        && gnuplot   mandelbrot_speedup.gp
-	cd main/chapter2/fig/polar/comparison_alg/ && rubber -d comparison_alg.tex
-	cd main/chapter2/fig/polar/scl_l/          && rubber -d scl_l.tex
-	cd main/chapter2/fig/polar/scl_tree_cut/   && rubber -d scl_tree_cut.tex
-	cd main/chapter2/fig/polar/scl_spc/        && gnuplot   scl_spc.gp
-	cd main/chapter2/fig/polar/scl_spc/        && gnuplot   scl_spc_diff_old.gp
-	cd main/chapter2/fig/polar/scl_spc/        && rubber -d scl_spc_diff.tex
-	cd main/chapter2/fig/polar/scl_bfer/       && rubber -d scl_bfer.tex
-	cd main/chapter2/fig/polar/scl_adaptive/   && rubber -d scl_adaptive.tex
-	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber -d scl_cpy_vs_ptr.tex
-	cd main/chapter2/fig/polar/sc_tree_cut/    && gnuplot   sc_tree_cut.gp
+              main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti.dat \
+              main/chapter2/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs.gp \
+              main/chapter2/fig/polar/sc_energy_implems_vs/dat/A15_1100MHz_R05_intra_inter_bis.dat \
+              main/chapter2/fig/polar/sc_energy_freq/sc_energy_freq.gp \
+              main/chapter2/fig/polar/sc_energy_freq/dat/A7_250MHz_550MHz_R05_N4096_intra_inter_bis.dat \
+              main/chapter2/fig/polar/sc_energy_freq/dat/A15_800MHz_1400MHz_R05_N4096_intra_inter_bis.dat \
+              main/chapter2/fig/polar/sc_energy_rate/sc_energy_rate.gp \
+              main/chapter2/fig/polar/sc_energy_rate/dat/rate_N2048_SNR25.dat \
+              main/chapter2/fig/polar/sc_energy_rate/dat/rate_N32768_SNR25.dat
+	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
+	cd main/chapter2/fig/polar/comparison_alg/       && rubber -d comparison_alg.tex
+	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
+	cd main/chapter2/fig/polar/scl_tree_cut/         && rubber -d scl_tree_cut.tex
+	cd main/chapter2/fig/polar/scl_spc/              && gnuplot   scl_spc.gp
+	cd main/chapter2/fig/polar/scl_spc/              && gnuplot   scl_spc_diff_old.gp
+	cd main/chapter2/fig/polar/scl_spc/              && rubber -d scl_spc_diff.tex
+	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer.tex
+	cd main/chapter2/fig/polar/scl_adaptive/         && rubber -d scl_adaptive.tex
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/       && rubber -d scl_cpy_vs_ptr.tex
+	cd main/chapter2/fig/polar/sc_tree_cut/          && gnuplot   sc_tree_cut.gp
+	cd main/chapter2/fig/polar/sc_energy_implems_vs/ && gnuplot   sc_energy_implems_vs.gp
+	cd main/chapter2/fig/polar/sc_energy_freq/       && gnuplot   sc_energy_freq.gp
+	cd main/chapter2/fig/polar/sc_energy_rate/       && gnuplot   sc_energy_rate.gp
 
 clean4all:
 	rm -f *.mtc*
@@ -110,19 +121,23 @@ clean: clean4all
 	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean scl_cpy_vs_ptr
 
 mrproper: clean4all
-	cd ./                                      && rubber --clean -d my_thesis.tex
-	cd head                                    && rubber --clean -d titlepage.tex
-	cd main/chapter2/fig/vectorization/        && rm -f             mandelbrot_speedup.pdf
-	cd main/chapter2/fig/polar/comparison_alg/ && rubber --clean -d comparison_alg.tex
-	cd main/chapter2/fig/polar/scl_l/          && rubber --clean -d scl_l.tex
-	cd main/chapter2/fig/polar/scl_tree_cut/   && rubber --clean -d scl_tree_cut.tex
-	cd main/chapter2/fig/polar/scl_spc/        && rm -f             scl_spc.pdf
-	cd main/chapter2/fig/polar/scl_spc/        && rm -f             scl_spc_diff_old.pdf
-	cd main/chapter2/fig/polar/scl_spc/        && rubber --clean -d scl_spc_diff.tex
-	cd main/chapter2/fig/polar/scl_bfer/       && rubber --clean -d scl_bfer.tex
-	cd main/chapter2/fig/polar/scl_adaptive/   && rubber --clean -d scl_adaptive.tex
-	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean -d scl_cpy_vs_ptr.tex
-	cd main/chapter2/fig/polar/sc_tree_cut/    && rm -f             sc_tree_cut.gp
+	cd ./                                            && rubber --clean -d my_thesis.tex
+	cd head                                          && rubber --clean -d titlepage.tex
+	cd main/chapter2/fig/vectorization/              && rm -f             mandelbrot_speedup.pdf
+	cd main/chapter2/fig/polar/comparison_alg/       && rubber --clean -d comparison_alg.tex
+	cd main/chapter2/fig/polar/scl_l/                && rubber --clean -d scl_l.tex
+	cd main/chapter2/fig/polar/scl_tree_cut/         && rubber --clean -d scl_tree_cut.tex
+	cd main/chapter2/fig/polar/scl_spc/              && rm -f             scl_spc.pdf
+	cd main/chapter2/fig/polar/scl_spc/              && rm -f             scl_spc_diff_old.pdf
+	cd main/chapter2/fig/polar/scl_spc/              && rubber --clean -d scl_spc_diff.tex
+	cd main/chapter2/fig/polar/scl_bfer/             && rubber --clean -d scl_bfer.tex
+	cd main/chapter2/fig/polar/scl_adaptive/         && rubber --clean -d scl_adaptive.tex
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/       && rubber --clean -d scl_cpy_vs_ptr.tex
+	cd main/chapter2/fig/polar/sc_tree_cut/          && rm -f             sc_tree_cut.pdf
+	cd main/chapter2/fig/polar/sc_energy_implems_vs/ && rm -f             sc_energy_implems_vs.pdf
+	cd main/chapter2/fig/polar/sc_energy_freq/       && rm -f             sc_energy_freq.pdf
+	cd main/chapter2/fig/polar/sc_energy_rate/       && rm -f             sc_energy_rate_N2048.pdf
+	cd main/chapter2/fig/polar/sc_energy_rate/       && rm -f             sc_energy_rate_N32768.pdf
 
 open:
 	xdg-open my_thesis.pdf &
