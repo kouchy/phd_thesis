@@ -8,9 +8,12 @@ titlepage: head/titlepage.tex
 
 chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/src/ldpc/bp_min_sum.cpp \
+              main/chapter2/src/polar/f_seq.cpp \
+              main/chapter2/src/polar/f_simd.cpp \
               main/chapter2/src/polar/f_g_h_simd.cpp \
+              main/chapter2/src/polar/generated_sc_decoder.cpp \
               main/chapter2/src/vectorization/mipp_mli.cpp \
-	       main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
+              main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_32bit.dat \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_64bit.dat \
               main/chapter2/fig/polar/comparison_alg/comparison_alg.tex \
@@ -71,7 +74,10 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_32.txt \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_8.txt \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_16.txt \
-              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt \
+              main/chapter2/fig/polar/sc_tree_cut/sc_tree_cut.gp \
+              main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti.dat \
+              main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti.dat
 	cd main/chapter2/fig/vectorization/        && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/comparison_alg/ && rubber -d comparison_alg.tex
 	cd main/chapter2/fig/polar/scl_l/          && rubber -d scl_l.tex
@@ -82,6 +88,7 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/polar/scl_bfer/       && rubber -d scl_bfer.tex
 	cd main/chapter2/fig/polar/scl_adaptive/   && rubber -d scl_adaptive.tex
 	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber -d scl_cpy_vs_ptr.tex
+	cd main/chapter2/fig/polar/sc_tree_cut/    && gnuplot   sc_tree_cut.gp
 
 clean4all:
 	rm -f *.mtc*
@@ -115,6 +122,7 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/scl_bfer/       && rubber --clean -d scl_bfer.tex
 	cd main/chapter2/fig/polar/scl_adaptive/   && rubber --clean -d scl_adaptive.tex
 	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean -d scl_cpy_vs_ptr.tex
+	cd main/chapter2/fig/polar/sc_tree_cut/    && rm -f             sc_tree_cut.gp
 
 open:
 	xdg-open my_thesis.pdf &

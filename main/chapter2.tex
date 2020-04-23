@@ -383,7 +383,7 @@ HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
 \centering
 \includegraphics[width=0.70\textwidth]{polar/sc_decoder}
 \caption{Full SC decoding tree (N = 16)}
-\label{fig:sc_decoder}
+\label{fig:polar_sc_decoder}
 \end{figure}
 
 The SC decoding algorithm can be seen as the traversal of a binary tree starting
@@ -395,8 +395,9 @@ contains $2^d$ nodes, each node of that layer $d$  containing $2^{m-d}$ LLRs
 At initialization, LLRs received  from the channel ($Y$) are stored in the root
 node. Then, the decoder performs a pre-order traversal of the tree. When a node
 is visited in the downward direction, LLRs of the node are updated. In the
-upward direction, partial sums are updated. Fig.~\ref{fig:sc_decoder} summarizes
-the computations performed in both directions. The update functions are:
+upward direction, partial sums are updated. Fig.~\ref{fig:polar_sc_decoder}
+summarizes the computations performed in both directions. The update functions
+are:
 \begin{eqnarray}
 \left\{\begin{array}{l c l c l}
 \lambda_c &=& f(\lambda_a,\lambda_b) &=& sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
@@ -764,6 +765,31 @@ also approximately halved when the list size $L$ is doubled.
 
 \subparagraph{Tree pruning strategy}
 
+% SC --------------------------------------------------------------------------
+\begin{figure}[htp]
+\includegraphics[width=1.00\textwidth]{polar/sc_tree_cut/sc_tree_cut}
+\caption{Throughput depending on the different optimizations for $N = 2048$, for
+  intra-frame vectorization on the left and intra-frame vectorization on the
+  right, resp. (on the Intel Xeon CPU E31225).}
+\label{plot:polar_sc_tree_cut}
+\end{figure}
+
+The tree pruning step has a dramatical effect in general. For example, the
+reference code for a rate of 1/2 has 2047 nodes, whereas only 291 nodes remain
+in the pruned version. However, the individual effect of each rewriting rule is
+not trivial. The plots in Fig.~\ref{plot:polar_sc_tree_cut} show the respective
+impact of several rewriting rules (cuts, repetitions, single parity checks
+(SPC)), with $N = 2048$ and multiple code rates, for Intra-SIMD and Inter-SIMD
+respectively. The purpose of the plots is to show that no single rewriting rule
+dominates for every code rate, and that the respective impact of each rule may
+vary a lot from rate to rate, making the case for the flexible, extensible
+architecture of P-EDGE. Indeed, P-EDGE's rewriting rule set can also be enriched
+with rules for specific ranges of code rate. For instance, the rule
+\emph{Single Parity Check (SPC)} has been applied with different level limits
+for 9/10 code rate, where it has a significant impact and may benefit from fine
+tuning.
+
+% SCL -------------------------------------------------------------------------
 \begin{figure}
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_tree_cut/scl_tree_cut}
@@ -978,7 +1004,7 @@ former software polar decoder implementations. The proposed list decoders are
 based on specific building blocks included from the Polar
 API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast and optimized
 implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
-functions. Figure~\ref{lst:polar_f_g_h_simd} details the SIMD implementation of
+functions. Listing~\ref{lst:polar_f_g_h_simd} details the SIMD implementation of
 these  functions. This implementation is based on MIPP, a SIMD wrapper for the
 intrinsic functions (assembly code), and the template meta-programming
 technique. Consequently, the description is clear, portable, multi-format
@@ -988,7 +1014,7 @@ types correspond to SIMD registers. \texttt{B} and \texttt{R} define the type of
 the elements that are contained in this register. \texttt{B} for \textit{bit}
 could be \texttt{int}, \texttt{short} or \texttt{char}. \texttt{R} for
 \textit{real} could be \texttt{float}, \texttt{short} or \texttt{char}. In
-Figure~\ref{lst:polar_f_g_h_simd}, each operation is made on multiple elements
+Listing~\ref{lst:polar_f_g_h_simd}, each operation is made on multiple elements
 at the same  time. For instance, line 22, the addition between all the elements
 of the \texttt{neg\_la} and \texttt{lb} registers is executed in one CPU cycle.
 
@@ -1088,10 +1114,10 @@ or duplicated.
 \end{figure}
 
 An SCL decoder can be seen as $L$ replications of an SC decoder. The first
-possible memory layout is the one given in Figure~\ref{fig:sc_decoder}. In this
-layout, the partial sums $\hat{s}$ of each node is stored in a dedicated array.
-Therefore, a memory of size $2N-1$ bits is necessary in the SC decoder, or
-$L(2N -1)$ bits in the SCL decoder. This memory layout is described
+possible memory layout is the one given in Figure~\ref{fig:polar_sc_decoder}. In
+this layout, the partial sums $\hat{s}$ of each node is stored in a dedicated
+array. Therefore, a memory of size $2N-1$ bits is necessary in the SC decoder,
+or $L(2N -1)$ bits in the SCL decoder. This memory layout is described
 in~\cite{Tal2011} and applied in previous software
 implementations~\cite{Sarkis2014b,Sarkis2016,Shen2016}.
 
@@ -1181,6 +1207,209 @@ includes an additional SC decoder.
   \item décodeurs générique (pas déroulé)
   \item déroulage d'arbre
 \end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\textwidth]{polar/patterns}
+  \caption{Subtree rewriting rules for processing specialization.}
+  \label{fig:polar_patterns}
+\end{figure}
+
+\paragraph{Specialized Decoder Skeletons and Building Blocks Library.}
+
+The tree structure at the heart of SC decoders is fully determined by the
+parameters of a given code instance: the code size, the code rate ($R = K / N$),
+position of the frozen bits. All these parameters are  statically known at
+compile time. Thus, the recursive tree traversal code structure and the
+corresponding tree data structure are challenging to vectorize and to optimize
+for a compiler. Our Polar ECC Decoder Generation Environment (P-EDGE) builds on
+this property to provide a general framework for polar decoder design,
+generation and optimization. Beyond the \emph{code parameters}, Polar decoders
+can be tweaked and optimized in many different orthogonal or loosely coupled
+ways: \emph{Elementary} type (floating point, fixed point),
+\emph{Element containers} (array size), \emph{Data layout} (bit packing
+techniques), \emph{Instruction Set} (x86, ARM), \emph{SIMD} support (scalar,
+intra-frame or inter-frame processing vectorization), \emph{SIMD instruction set
+variant} (SSE, AVX, AVX-512, NEON), as well as the set and relative priorities
+of the \emph{rewriting rules for tree pruning}. Our framework enables to quickly
+experiment the different combinations of all optimizations. The decoder code
+thus results from two distinct parts:
+\begin{itemize}
+  \item An architecture independent \emph{specialized decoder skeleton}
+    generated by our decoder generator, from a given frozen bits location input.
+    Starting from the naive, recursive expression of the computational tree, we
+    apply successively cuts and specializations on the tree. They are described
+    through a set of rewriting rules, that can be customized according to the
+    specificities of the decoder and to the constraints in term of code size for
+    instance.
+  \item A library of architecture dependent \emph{elementary computation
+    building blocks}, corresponding to the implementation variants of the $f$,
+    $g$ and $h$ functions (fixed or floating point versions, scalar or vector
+    versions, ...). These blocks do not depend on the frozen bits location and
+    can therefore be used by any specialized skeleton.
+\end{itemize}
+
+This separation of concerns between high-level specialized algorithmic skeletons
+and low-level arithmetic routines, enables both ECC experts to focus on
+optimizing algorithm skeletons and architecture experts to focus on writing
+highly optimized routines, without interferences.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/patterns_example}
+  \caption{Generation process on a small binary tree ($N = 8$). The tree is cut
+    and the computations are versioned according to the location of the frozen
+    bit}
+  \label{fig:polar_patterns_example}
+\end{figure}
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/generated_sc_decoder.cpp}
+  \caption{The final code generated corresponding to the pruned tree in
+    Fig.~\ref{fig:polar_patterns_example}.}
+  \label{lst:polar_patterns_example}
+\end{listing}
+
+\paragraph{Decoder Generation.}
+
+The decoder generator first builds the binary tree structure as shown in
+Fig.~\ref{fig:polar_sc_decoder} from the frozen bit location input. Each
+internal node has a tag indicating the type of processing required at that node
+(recursive children processing, $f$/$g$/$h$ functions to be applied or not).
+This tag is initially set to \emph{standard}.
+
+For some sub-tree pattern configurations, the processing to be performed at the
+root of such sub-trees can be simplified, or even skipped completely, for
+instance when a node only has two frozen bit leaf children. To exploit such
+properties, the decoder generator repeatedly applies the set of sub-tree
+rewriting rules listed in Fig.~\ref{fig:polar_patterns} using a depth first
+traversal to alter the node tags, until no rewriting rule applies anymore.
+
+Each rewriting rule defines a subtree pattern \emph{selector}, a new \emph{tag}
+for the subtree root, and the $f$, $g$, and $h$ \emph{processing functions} to
+be applied, simplified or skipped for this node in the resulting decoder. A
+\emph{null} $f$ (resp. $g$) function cuts the left (resp. right) child of the
+node. From an implementation point of view, a rule is defined as a class, with a
+\texttt{match} function, and a set of functions $f$, $g$, and $h$. The current
+set of rewriting rules can thus easily be enriched with new rules to generate
+even more specialized versions.
+
+Patterns on the first two rows result in cutting away both children. For
+instance, the first rule, named \emph{Rate~0, leaf children}, cuts the two
+frozen bit leaf children of the parent node, and tag it as \emph{Rate~0} (white
+node). Processing is completely skipped on this node since the values of the
+bits are unconditionally known. The \emph{Repetition} rules match subtrees where
+only the rightmost leaf is black (tag \emph{Rate~1}), the others being frozen
+bits. In this case, the whole subtree is cut and replaced by a more simple
+processing. Moreover a single, specialized $rep$ function is applied on the node
+instead of the three functions $f$, $g$ and $h$. The third line describes
+partial cuts and specialization. For instance, the rule ``Repetition, left
+only'' specializes the $g$ and $h$ functions to use, but does not prune the
+recursive children processing.
+
+Rewriting rules are ordered by priority (left to right, then top row to bottom
+row in Fig.~\ref{fig:polar_patterns}), thus if more than one rule match an
+encountered subtree, the highest priority rule is applied. The priority order is
+chosen such as to favor strongest computation reducing rules over rules with
+minor impact, and to ensure confluence by selecting the most specific pattern
+first. Rules selectors can match on node tags and/or node levels (leaf, specific
+level, above or below some level). A given rule is applied at most once on a
+given node.
+
+Finally, once the tree has been fully specialized, the generator perform a
+second tree traversal pass to output the resulting decoder. An example of such a
+tree specialization process together with the generator output is shown in
+Fig.~\ref{lst:polar_patterns_example}.
+
+\paragraph{Low Level Building blocks}
+\label{sec:implem}
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_seq.cpp}
+  \caption{The C++ implementation of the $f$ function: sequential version.}
+  \label{lst:polar_f_seq}
+\end{listing}
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_simd.cpp}
+  \caption{The C++ implementation of the $f$ function: SIMD version.}
+  \label{lst:polar_f_simd}
+\end{listing}
+
+The main challenge in implementing P-EDGE's architecture dependent building
+blocks is to provide enough flexibility to enable varied type, data layout and
+optimization strategies such as intra-frame SIMDization (intra-SIMD) and
+inter-frame SIMDization (inter-SIMD), without breaking the high level skeleton
+abstraction. To meet this requirement, our building block library heavily relies
+on generic programming and compile time specialization by the means of C++
+templates, in a manner inspired by \emph{expression template}
+techniques~\cite{Stroustrup2013}. Template specializations provide node
+functions. Listing.~\ref{lst:polar_patterns_example} gives a example of a
+generated decoder for $N = 8$, calling template instances of the node functions.
+\texttt{B}:~partial sum type; \texttt{R}: LLR/$\lambda$ type;
+\texttt{F}/\texttt{G}/\texttt{H}/\texttt{X}: Scalar standard SC function
+versions; \texttt{FI}/\texttt{GI}/\texttt{HI}/\texttt{XI} SIMD versions.
+Remaining template parameters are offsets and chunk sizes to control data
+layout.
+
+A single SIMD set is needed because \emph{SIMD routines are common to both
+intra-SIMD and inter-SIMD}. In the later case, the generated decoder packs as
+many frames together from the frame stream as the vector size in a transparent
+manner. In both cases, offsets are fully precomputed at compile time.
+\textbf{Intra-SIMD} exploits SIMD units without increasing the decoder latency,
+since it still processes frames one at a time and thus preserves fine grain
+frame pipelining. However, at leaf nodes and nearby, too few elements remain to
+fill SIMD units. For instance, 4-way SIMD registers are fully filled only at
+level 2 and above. Thus, Intra-SIMD will only be effective on trees that can be
+heavily pruned from these numerous scalar nodes. \textbf{Inter-SIMD} does not
+suffer from this problem, since SIMD register lanes are filled by LLRs and bits
+from multiple frames instead. However, the decoder needs to wait for enough
+frames to arrive, which increases latency, and to interleave the LLRs from these
+frames (\emph{gather}) before proceeding. It also needs to de-interleave the
+resulting data (the bits) after decoding (\emph{scatter}). Refer
+to~\cite{LeGal2015a} for more details about the interleaving process.
+
+The framework instantiates scalar or SIMD functions as appropriate (hence the
+two sets of functions). These two sets of functions are themselves
+\emph{independent on the element type}. Scalar functions are
+datatype-parametered templates. SIMD functions use the template-based MIPP
+intrinsics wrapper library developed by one of the authors to benefit from SSE,
+AVX, AVX-512 and NEON flavors SIMD instruction sets in a portable and extensible
+manner. As an example, the generic scalar and SIMD implementations of the $f$
+function are shown in Listing.~\ref{lst:polar_f_seq} and
+Listing.~\ref{lst:polar_f_simd}. We also tried an auto-vectorized approach but even
+if all the routines were well vectorized (from the compiler report), the
+performance was, at least, 3 times slower than the MIPP handwritten versions.
+
+The decoder stores its state using two data buffers, one for the LLR values
+($\lambda$) and the other for the bits (partial sums $s$). The ``logical'' tree
+layout is implemented as a simple and efficient \emph{heap} vector data layout.
+Traversing the tree therefore corresponds to moving through the array, at
+different offsets and considering different index intervals. The LLR offset is
+computed from the graph depth~$d$ (or the node vertical indexing) as follows:
+%\begin{equation}
+%  off_{\lambda}(d) = \begin{cases}
+%    0                                         &\text{$d = 0$},\\
+%    \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}} &\text{otherwise.}
+%\end{cases}
+%\end{equation}
+\begin{equation}
+  off_{\lambda}(d = 0) = 0,~off_{\lambda}(d > 0) = \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
+\end{equation}
+Given~$l$ the lane (or the node horizontal indexing), the bit offset is
+determined as follows:
+\begin{equation}
+  off_{s}(d,l) = \frac{N}{2^d} \times l.
+\end{equation}
+The LLR buffer size is $2N$ and the bit buffer is $N$, for a frame of $N$ bits.
+Thus, the memory footprint per frame is:
+\begin{equation}
+  mem_{fp} = N \times (2 \times sizeof(LLR) + sizeof(bit)).
+\end{equation}
+LLRs element size is 4 bytes (float) or 1 byte (fixed point numbers). The
+Inter-SIMD version also employs a \emph{bit packing} memory footprint reduction
+technique~\cite{LeGal2015a} to pack several bits together by using shifts and
+masking instructions.
 
 \subsubsection{Evaluations}
 
