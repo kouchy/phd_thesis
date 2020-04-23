@@ -838,14 +838,14 @@ in which tree pruning can also be applied~\cite{Lin2014}.
   \label{plot:polar_scl_bfer}
 \end{figure}
 
-\begin{table}[b]
-  \renewcommand{\arraystretch}{1.1}
+\begin{table}
+  %\renewcommand{\arraystretch}{1.1}
   \centering
   \caption{Throughput and latency comparisons between floating-point (32-bit)
     and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
     $L = 32$ and 32-bit CRC (Gzip).}
   \label{tab:fixed}
-  {\small\resizebox{\linewidth}{!}{
+  %{\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r | c || c | c || c | c || c | c}
     \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c ||}{\textbf{3.5 dB}} & \multicolumn{2}{c ||}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
     \cline{4-9}
@@ -864,7 +864,7 @@ in which tree pruning can also be applied~\cite{Lin2014}.
     %\cline{3-9}
                              &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
   \end{tabular}
-  }}
+  %}}
 \end{table}
 
 Another important parameter in both software and hardware implementations is the
@@ -947,6 +947,233 @@ context. The code and decoder parameters can be dynamically changed in the
 proposed decoder, while maintaining competitive throughput and latency. The
 following section introduces algorithmic and implementation improvements applied
 in the proposed decoders to keep a low decoding time.
+
+\paragraph{Software implementation optimizations}
+\label{sec:implem_improv}
+
+The genericity and flexibility of the formerly described decoder prevent from
+using some optimizations. Unrolling the description as in~\cite{Sarkis2016} is
+not possible at runtime, although code generation could be used to produce an
+unrolled version of any decoder as in \cite{Cassagne2015c}. Moreover, in the
+case of large code lengths, the unrolling strategy can generate very large
+compiled binary files. This can cause instruction cache misses that would
+dramatically impact the decoder throughput. On the contrary, the size of the
+executable files of the proposed decoder are constant with respect to the code
+parameters (N, L, K). The number of cycles lost due to cache misses is,
+according to our experiments, less than 0.01\% of the total number of cycles.
+Still, some implementation improvements are necessary in order to be competitive
+with specific unrolled decoders of the literature. The software library for
+polar codes from \cite{Cassagne2015c,Cassagne2016b} enables to benefit from
+the SIMD instructions for various target architectures. Optimizations of CRC
+checking benefit to both the non-adaptive and adaptive versions of the CA-SCL
+algorithms. The new sorting technique presented in Section~\ref{subsec:sorting}
+can be applied to each variation of the SCL algorithm. Finally, an efficient
+implementation of the partial sums memory management is proposed. It is
+particularly effective for short polar codes.
+
+\subparagraph{Polar Application Programming Interface}
+
+Reducing the decoding time with SIMD instructions is a classical technique in
+former software polar decoder implementations. The proposed list decoders are
+based on specific building blocks included from the Polar
+API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast and optimized
+implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
+functions. Figure~\ref{lst:polar_f_g_h_simd} details the SIMD implementation of
+these  functions. This implementation is based on MIPP, a SIMD wrapper for the
+intrinsic functions (assembly code), and the template meta-programming
+technique. Consequently, the description is clear, portable, multi-format
+(32-bit floating-point, 16-bit and 8-bit fixed-points) and as fast as an
+architecture specific code. The \texttt{mipp::Reg<B>} and \texttt{mipp::Reg<R>}
+types correspond to SIMD registers. \texttt{B} and \texttt{R} define the type of
+the elements that are contained in this register. \texttt{B} for \textit{bit}
+could be \texttt{int}, \texttt{short} or \texttt{char}. \texttt{R} for
+\textit{real} could be \texttt{float}, \texttt{short} or \texttt{char}. In
+Figure~\ref{lst:polar_f_g_h_simd}, each operation is made on multiple elements
+at the same  time. For instance, line 22, the addition between all the elements
+of the \texttt{neg\_la} and \texttt{lb} registers is executed in one CPU cycle.
+
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_g_h_simd.cpp}
+  \caption{C++ SIMD implementation of the $f$, $g$ and $h$ functions.}
+  \label{lst:polar_f_g_h_simd}
+\end{listing}
+
+In the context of software decoders, there are two well-known strategies to
+exploit SIMD instructions: use the elements of a register to compute 1) many
+frames in parallel (INTER frame) or 2) multiple elements from a single frame
+(INTRA frame). In this paper, only the INTRA frame strategy is considered. The
+advantage of this strategy is the latency reduction by comparison to the INTER
+frame strategy. However, due to the nature of the polar codes, there are
+sometimes not enough elements to fill the SIMD registers completely. This is
+especially true in the nodes near the leaves. For this reason, SIMD instructions
+in the lower layers of the tree do not bring any speedup. In this context, the
+building blocks of the Polar API automatically switch from SIMD to sequential
+implementations. In the case of the CA-SSCL algorithm, using SIMD instructions
+for decoding a ($2048$, $1723$) polar code leads to an improvement of $20\%$ of
+the decoding throughput on average for different values of the list depth $L$.
+
+\subparagraph{Improving Cyclic Redundancy Checking}
+\label{subsec:crc_improv}
+
+By profiling the Adaptive SCL decoder, one may observe that a significant amount
+of time is spent to process the cyclic redundancy checks. Its computational
+complexity is O($LN$) versus the computational complexity of the SCL decoding,
+O($LN\log N$). The first is not negligible compared to the second.
+
+In the adaptive decoder, the CRC verification is performed a first time after
+the SC decoding. In the following, we show how to reduce the computational
+complexity of these CRC verifications.
+
+First, an efficient CRC checking code has been implemented. Whenever the decoder
+needs to check the CRC, the bits are packed and then computed 32 by 32. In order
+to further speed up the implementation, a lookup table used to store
+pre-computed CRC sub-sequences, and thus reduce the computational complexity.
+The size of the lookup table is 1 KB.
+
+After a regular SC decoding, a decision vector of size $N$ is produced. Then,
+the $K$ information bits must be extracted to apply cyclic redundancy check. The
+profiling of our decoder description shows that this extraction takes a
+significant amount of time compared to the check operation itself. Consequently,
+a specific extraction function was implemented. This function takes advantage of
+the leaf node type knowledge to perform efficient multi-element copies.
+
+Concerning SCL decoding, it is possible to sort the candidates according to
+their respective metrics and then to check the CRC of each candidate from the
+best to the worst. Once a candidate with a valid CRC is found, it is chosen as
+the decision. This method is strictly equivalent to do the cyclic redundancy
+check of each candidate and then to select the one with the best metric. With
+the adopted order, decoding time is saved by reducing the average number of
+checked candidates.
+
+\subparagraph{LLR and Metric Sorting}
+\label{subsec:sorting}
+
+Metric sorting is involved in the aforementioned path selection step, but also
+in the \textit{update\_paths()} sub-routine (Alg.~\ref{alg:scl}, l.16) and
+consequently in each leaf. Sorting the LLRs is also necessary in \texttt{R1} and
+\texttt{SPC} nodes. Because of a lack of information about the sorting technique
+presented in \cite{Sarkis2016}, its reproduction is not possible. In the
+following of the paragraph the sorting algorithm used in the SCL decoder is
+described.
+
+In \texttt{R1} nodes, a Chase-$2$~\cite{Chase1972} algorithm is applied. The two
+minimum absolute values of the LLRs have to be identified. The way to do the
+minimum number of comparisons to identify the $2$ largest of $n\geq2$ elements
+was originally described by Schreier in~\cite{Schreier1932} and reported
+in~\cite{Knuth1973}. The lower stages of this algorithm can be parallelized
+thanks to SIMD instructions in the way described in~\cite{Furtak2007}. According
+to our experimentations, Schreier's algorithm is the most efficient compared to
+parallelized Batcher's merge exchange, partial quick-sort or heap-sort
+implemented in the C++ standard library in the case of \texttt{R1} nodes. At the
+end, we chose not to apply the SIMD implementation of the Schreier's algorithm
+because: 1) the speedup was negligible, 2) in 8-bit fixed-point, only
+$N \leq 256$ codewords can be considered.
+
+Concerning path metrics, partial quick-sort appeared to yield no gains in terms
+of throughput by comparison with the algorithm in~\cite{Schreier1932}, neither
+did heap-sort or parallelized Batcher's merge exchange. For a matter of
+consistency, only Schreier's algorithm is used in the proposed decoder, for both
+LLR sorting in \texttt{R1} and \texttt{SPC} nodes and for path metrics sorting.
+The sorting of path metrics is applied to choose the paths to be removed, kept
+or duplicated.
+
+\subparagraph{Partial Sum Memory Management}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}
+  \caption{Information throughput of the SSCL decoder depending on the codeword
+    size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$.}
+  \label{plot:polar_scl_cpy_vs_ptr}
+\end{figure}
+
+An SCL decoder can be seen as $L$ replications of an SC decoder. The first
+possible memory layout is the one given in Figure~\ref{fig:sc_decoder}. In this
+layout, the partial sums $\hat{s}$ of each node is stored in a dedicated array.
+Therefore, a memory of size $2N-1$ bits is necessary in the SC decoder, or
+$L(2N -1)$ bits in the SCL decoder. This memory layout is described
+in~\cite{Tal2011} and applied in previous software
+implementations~\cite{Sarkis2014b,Sarkis2016,Shen2016}.
+
+A possible improvement is to change the memory layout to reduce its footprint.
+Due to the order of operations in both SC and SCL algorithms, the partial sums
+on a given layer are only used once by the $\bm{h}$ function and can then be
+overwritten. Thus, a dedicated memory allocation is not necessary at each layer
+of the tree. The memory can be shared between the stages. Therefore the memory
+footprint can be reduced from $2N-1$ to $N$ in the SC decoder as shown
+in~\cite{Leroux2013}. A reduction from $L(2N -1)$ to $LN$ can be obtained in the
+SCL decoder.
+
+In the case of the SCL algorithm, $L$ paths have to be assigned to $L$ partial
+sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
+advantage of pointers is that when a path is duplicated, in the
+\textit{update\_paths()} sub-routine of Alg.~\ref{alg:scl}, the partial sums are
+not copied. Actually, they can be shared between paths thanks to the use of
+pointers. This method limits the number of memory transactions. Unfortunately,
+it is not possible to take advantage of the memory space reduction: the partial
+sums have to be stored on $L(2N -1)$ bits. There is an alternative to this
+mechanism. If a logical path is statically assigned to a memory array, no
+pointers are necessary at the cost that partial sums must be copied when a path
+is duplicated (only $LN$ bits are required). This method is called
+SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
+
+Our experiments have proved that the overhead of handling pointers plus the
+extra memory space requirement cause the SSCL$_{\texttt{cpy}}$ to be more
+efficient than the SSCL$_{\texttt{ptr}}$ for short and medium code lengths, as
+shown in Figure~\ref{plot:polar_scl_cpy_vs_ptr}. The 32-bit version uses
+floating-point LLRs, whereas 16-bit and 8-bit versions are in fixed-point.
+Notice that in this work, each bit of the partial sums is stored on an 8-bit,
+16-bit or 32-bit number accordingly to the LLR data type. The code rate $R$ is
+equal to $1/2$. The throughput of the SSCL$_{\texttt{cpy}}$ version is higher
+for $N \leq 8192$ whereas the SSCL$_{\texttt{ptr}}$ version is more efficient
+for higher values of $N$. Although it does not appear in
+Figure~\ref{plot:polar_scl_cpy_vs_ptr}, experiments showed that the lower $L$
+is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
+SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:polar_scl_cpy_vs_ptr} also illustrates
+the impact of the representation of partial sums. For very high values of $N$,
+8-bit fixed point representation takes advantage of fewer cache misses.
+According to the results presented in Figure~\ref{plot:polar_comparison_alg}, as
+the decoding performance improvements of the SCL algorithm are not very
+significant compared to the SC algorithm for long polar codes,
+SSCL$_{\texttt{cpy}}$ is the appropriate solution in most practical cases.
+
+In our decoder description, LLRs are managed with pointers, as it is the case in
+other software implementations of the
+literature~\cite{Sarkis2014b,Sarkis2016,Shen2016}. We tried to remove the
+pointer handling as for the partial sums, but it appeared that it was not
+beneficial in any use case.
+
+\subparagraph{Memory Footprint}
+
+\begin{table}[t]
+  \centering
+  \caption{Polar decoders memory footprint (in bytes)}
+  \label{tab:footprint}
+  %{\small
+   \begin{tabular}{r|c}
+    \textbf{Algorithms}        & \textbf{Memory Footprint} \\
+    \hline
+    (CA-)SSCL$_{\texttt{cpy}}$ & $\mathcal{O}((2L + 1)NQ)$ \\
+    (CA-)SSCL$_{\texttt{ptr}}$ & $\mathcal{O}((3L + 1)NQ)$ \\
+    A-SSCL$_{\texttt{cpy}}$    & $\mathcal{O}((2L + 3)NQ)$ \\
+    A-SSCL$_{\texttt{ptr}}$    & $\mathcal{O}((3L + 3)NQ)$ \\
+  \end{tabular}
+  %}
+\end{table}
+
+The exact memory footprint of the decoders is hard to obtain as there are many
+small buffers related to the implementation. However, the memory footprint is
+mainly driven by the LLRs ($\lambda$) and the partial sums ($\hat{s}$) as they
+linearly depend on $LN$. The buffers related to the path metrics can be
+neglected as they linearly depend on $L$. The memory footprint of the CRC is
+also negligible, the only requirement is a lookup table of 256 integers.
+Table~\ref{tab:footprint} summarizes the memory footprint estimation of the
+various decoders while $Q$ stands for the size of the element (1, 2 or 4 bytes).
+The channel LLRs are taken into account in the approximation. As explained in
+the previous section, the SSCL$_{\texttt{ptr}}$ version of the code requires
+twice the amount of data for the partial sums. Notice that the memory footprint
+of the adaptive decoders is a little bit higher than the other SCL since it
+includes an additional SC decoder.
 
 \subsubsection{Unrolled Polar Decoders}
 
@@ -1095,14 +1322,14 @@ with a single source code.
   \centering
   \caption{LDPC decoder speedups with \MIPP.}
   \label{tab:sp_ldpc}
-  {\small
+  %{\small
   \begin{tabular}{r|r|r|r}
                       & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} \\ \hline
   \textbf{SIMD size}  & 8                      & 8                     & 16                    \\ \hline
   \textbf{T/P} (Mb/s) & 8.3                    & 30.3                  & 53.2                  \\ \hline
   \textbf{Speedup}    & $\times 9.7$           & $\times 8.8$          & $\times 15.2$         \\
   \end{tabular}
-  }
+  %}
 \end{table}
 
 Table~\ref{tab:sp_ldpc} presents speedups obtained with \MIPP. Ten iterations

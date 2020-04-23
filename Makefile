@@ -6,7 +6,11 @@ all: titlepage chapter2_fig
 titlepage: head/titlepage.tex
 	cd head && rubber -d titlepage.tex
 
-chapter2_fig: main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
+chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
+              main/chapter2/src/ldpc/bp_min_sum.cpp \
+              main/chapter2/src/polar/f_g_h_simd.cpp \
+              main/chapter2/src/vectorization/mipp_mli.cpp \
+	       main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_32bit.dat \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_64bit.dat \
               main/chapter2/fig/polar/comparison_alg/comparison_alg.tex \
@@ -59,7 +63,15 @@ chapter2_fig: main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
               main/chapter2/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt \
               main/chapter2/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt \
               main/chapter2/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt \
-              main/chapter2/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt
+              main/chapter2/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr.tex \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/colors \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_8.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_16.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_32.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_8.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_16.txt \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt
 	cd main/chapter2/fig/vectorization/        && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/comparison_alg/ && rubber -d comparison_alg.tex
 	cd main/chapter2/fig/polar/scl_l/          && rubber -d scl_l.tex
@@ -69,6 +81,7 @@ chapter2_fig: main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
 	cd main/chapter2/fig/polar/scl_spc/        && rubber -d scl_spc_diff.tex
 	cd main/chapter2/fig/polar/scl_bfer/       && rubber -d scl_bfer.tex
 	cd main/chapter2/fig/polar/scl_adaptive/   && rubber -d scl_adaptive.tex
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber -d scl_cpy_vs_ptr.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -87,6 +100,7 @@ clean: clean4all
 	cd main/chapter2/fig/polar/scl_spc/        && rubber --clean scl_spc_diff
 	cd main/chapter2/fig/polar/scl_bfer/       && rubber --clean scl_bfer
 	cd main/chapter2/fig/polar/scl_adaptive/   && rubber --clean scl_adaptive
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean scl_cpy_vs_ptr
 
 mrproper: clean4all
 	cd ./                                      && rubber --clean -d my_thesis.tex
@@ -100,6 +114,7 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/scl_spc/        && rubber --clean -d scl_spc_diff.tex
 	cd main/chapter2/fig/polar/scl_bfer/       && rubber --clean -d scl_bfer.tex
 	cd main/chapter2/fig/polar/scl_adaptive/   && rubber --clean -d scl_adaptive.tex
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean -d scl_cpy_vs_ptr.tex
 
 open:
 	xdg-open my_thesis.pdf &
