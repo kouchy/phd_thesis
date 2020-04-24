@@ -16,16 +16,16 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/vectorization/mandelbrot_speedup.gp \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_32bit.dat \
               main/chapter2/fig/vectorization/dat/perf_mandelbrot_64bit.dat \
-              main/chapter2/fig/polar/comparison_alg/comparison_alg.tex \
-              main/chapter2/fig/polar/comparison_alg/colors \
-              main/chapter2/fig/polar/comparison_alg/dat/SC_8.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SC_12.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SC_20.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SCL_8_32.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SCL_12_32.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SCL_16_32.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SCL_20_32.txt \
-              main/chapter2/fig/polar/comparison_alg/dat/SCL_20_128.txt \
+              main/chapter2/fig/polar/algos_comparison/algos_comparison.tex \
+              main/chapter2/fig/polar/algos_comparison/colors \
+              main/chapter2/fig/polar/algos_comparison/dat/SC_8.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SC_12.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SC_20.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SCL_8_32.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SCL_12_32.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SCL_16_32.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SCL_20_32.txt \
+              main/chapter2/fig/polar/algos_comparison/dat/SCL_20_128.txt \
               main/chapter2/fig/polar/scl_l/scl_l.tex \
               main/chapter2/fig/polar/scl_l/colors \
               main/chapter2/fig/polar/scl_l/dat/L_1.txt \
@@ -96,7 +96,7 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
               main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat
 	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
-	cd main/chapter2/fig/polar/comparison_alg/       && rubber -d comparison_alg.tex
+	cd main/chapter2/fig/polar/algos_comparison/     && rubber -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
 	cd main/chapter2/fig/polar/scl_tree_cut/         && rubber -d scl_tree_cut.tex
 	cd main/chapter2/fig/polar/scl_spc/              && gnuplot   scl_spc.gp
@@ -122,21 +122,21 @@ clean4all:
 	rm -rf build
 
 clean: clean4all
-	cd ./                                      && rubber --clean my_thesis
-	cd head                                    && rubber --clean titlepage
-	cd main/chapter2/fig/polar/comparison_alg/ && rubber --clean comparison_alg
-	cd main/chapter2/fig/polar/scl_l/          && rubber --clean scl_l
-	cd main/chapter2/fig/polar/scl_tree_cut/   && rubber --clean scl_tree_cut
-	cd main/chapter2/fig/polar/scl_spc/        && rubber --clean scl_spc_diff
-	cd main/chapter2/fig/polar/scl_bfer/       && rubber --clean scl_bfer
-	cd main/chapter2/fig/polar/scl_adaptive/   && rubber --clean scl_adaptive
-	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/ && rubber --clean scl_cpy_vs_ptr
+	cd ./                                        && rubber --clean my_thesis
+	cd head                                      && rubber --clean titlepage
+	cd main/chapter2/fig/polar/algos_comparison/ && rubber --clean algos_comparison
+	cd main/chapter2/fig/polar/scl_l/            && rubber --clean scl_l
+	cd main/chapter2/fig/polar/scl_tree_cut/     && rubber --clean scl_tree_cut
+	cd main/chapter2/fig/polar/scl_spc/          && rubber --clean scl_spc_diff
+	cd main/chapter2/fig/polar/scl_bfer/         && rubber --clean scl_bfer
+	cd main/chapter2/fig/polar/scl_adaptive/     && rubber --clean scl_adaptive
+	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/   && rubber --clean scl_cpy_vs_ptr
 
 mrproper: clean4all
 	cd ./                                            && rubber --clean -d my_thesis.tex
 	cd head                                          && rubber --clean -d titlepage.tex
 	cd main/chapter2/fig/vectorization/              && rm -f             mandelbrot_speedup.pdf
-	cd main/chapter2/fig/polar/comparison_alg/       && rubber --clean -d comparison_alg.tex
+	cd main/chapter2/fig/polar/algos_comparison/     && rubber --clean -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber --clean -d scl_l.tex
 	cd main/chapter2/fig/polar/scl_tree_cut/         && rubber --clean -d scl_tree_cut.tex
 	cd main/chapter2/fig/polar/scl_spc/              && rm -f             scl_spc.pdf

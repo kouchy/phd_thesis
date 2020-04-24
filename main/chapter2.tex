@@ -106,7 +106,7 @@ expanded as an operation and a \verb|blend| instead.
 \begin{listing}
   \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/vectorization/mipp_mli.cpp}
   \caption{Medium Level Interface encapsulation.}
-  \label{lst:MLI}
+  \label{lst:vectorization_mli}
 \end{listing}
 
 The \MIPP Medium Level Interface (\MIPP med.) provides additional expressiveness
@@ -117,9 +117,9 @@ type and the number of elements inside the vector register and the mask
 register, respectively. One can notice that in these register objects are typed,
 unlike the \MIPP low register basic type. It avoids to write the type when a
 \MIPP function is called. The function type can then be directly selected from
-the parameter type. Listing~\ref{lst:MLI} illustrates the template-based
-encapsulation, which enables \MIPP to override common arithmetic and comparison
-operators.
+the parameter type. Listing~\ref{lst:vectorization_mli} illustrates the
+template-based encapsulation, which enables \MIPP to override common arithmetic
+and comparison operators.
 
 \MIPP med. also simplifies register loading and initialization operations. The
 constructor of the \verb|mipp::Reg| object will call the \verb|mipp::load|
@@ -250,10 +250,10 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
 \end{table*}
 
 \begin{figure*}
-\centering
-\includegraphics[width=1.00\textwidth]{vectorization/mandelbrot_speedup}
-\caption{Speedups over the Mandelbrot naive auto-vectorized implementation}
-\label{fig:fractal}
+  \centering
+  \includegraphics[width=1.00\textwidth]{vectorization/mandelbrot_speedup}
+  \caption{Speedups over the Mandelbrot naive auto-vectorized implementation}
+  \label{fig:vectorization_mandelbrot}
 \end{figure*}
 
 Table~\ref{tab:vectorization_comparison} compares various SIMD wrappers. It aims
@@ -310,14 +310,15 @@ well known benchmark the computation of the Mandelbrot set, to prevent as much
 as possible the risk of unfairness of the port on each wrapper. This problem is
 compute-bound. The chosen implementation relies on a floating-point
 representation (available online\footnote{Mandelbrot set source code:
-\url{https://gitlab.inria.fr/acassagn/mandelbrot}}). Figure~\ref{fig:fractal}
-presents the speedups obtained on various instruction sets. \verb|SSE| stands
-for \verb|SSE4.2|, \verb|NEON| stands for \verb|NEONv2| (includes the FMA
-instructions), \verb|AVX| stands for \verb|AVX2+FMA3| and \verb|AVX-512| stands
-for \verb|AVX-512F| (with FMA instructions). The \verb|FMA| benefit ranges from
-17\% (\verb|AVX2|) to 26\% (\verb|AVX-512|). An SIMD with intrinsics version has
-been hand-coded for each specific instruction set. The intrinsics version is
-considered the ``\emph{golden}'' model.
+\url{https://gitlab.inria.fr/acassagn/mandelbrot}}).
+Figure~\ref{fig:vectorization_mandelbrot} presents the speedups obtained on
+various instruction sets. \verb|SSE| stands for \verb|SSE4.2|, \verb|NEON|
+stands for \verb|NEONv2| (includes the FMA instructions), \verb|AVX| stands for
+\verb|AVX2+FMA3| and \verb|AVX-512| stands for \verb|AVX-512F| (with FMA
+nstructions). The \verb|FMA| benefit ranges from 17\% (\verb|AVX2|) to 26\%
+(\verb|AVX-512|). An SIMD with intrinsics version has been hand-coded for each
+specific instruction set. The intrinsics version is considered the
+``\emph{golden}'' model.
 
 \textbf{\BoostSIMD} only supports the \verb|SSE| instruction set, even when the
 code is compiled with one of the \verb|AVX| or \verb|AVX-512| flags. It is
@@ -380,10 +381,10 @@ HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
 \subsubsection{Successive Cancellation Algorithm}
 
 \begin{figure}
-\centering
-\includegraphics[width=0.70\textwidth]{polar/sc_decoder}
-\caption{Full SC decoding tree (N = 16)}
-\label{fig:polar_sc_decoder}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/sc_decoder}
+  \caption{Full SC decoding tree (N = 16)}
+  \label{fig:polar_sc_decoder}
 \end{figure}
 
 The SC decoding algorithm can be seen as the traversal of a binary tree starting
@@ -431,7 +432,7 @@ the root node in the form of a $N$-bit partial sum vectors.
 \subsubsection{Successive Cancellation List Algorithm}
 
 \begin{algorithm}
-  \caption{SCL decoding algorithm}\label{alg:scl}
+  \caption{SCL decoding algorithm}\label{alg:polar_scl}
 
   \small
   \SetKwProg{Fn}{Function}{}{}
@@ -486,21 +487,22 @@ the root node in the form of a $N$-bit partial sum vectors.
   \textit{select\_best\_path ()}
 \end{algorithm}
 
-The SCL algorithm is summarized in Algorithm~\ref{alg:scl}. Unlike the SC
+The SCL algorithm is summarized in Algorithm~\ref{alg:polar_scl}. Unlike the SC
 algorithm, the SCL decoder builds a list of candidate codewords along the
 decoding. At each call of the \textit{update\_paths()} sub-routine
-(Alg.~\ref{alg:scl}, l.16), $2L$ candidates are generated. A path metric is then
-evaluated to keep only the $L$ best candidates among the $2L$ paths. The path
-metrics are calculated as in \cite{Balatsoukas-Stimming2015}. At the end of the
-decoding process, the candidate codeword with the best path metric is selected
-in the \textit{select\_best\_path()} sub-routine (Alg.~\ref{alg:scl}, l.18).
-The decoding complexity of the SCL algorithm grows as $O(LN\log_2N)$. This
-linear increase in complexity with L leads to significant improvements in
-BER/FER performances, especially for small code lengths.
+(Alg.~\ref{alg:polar_scl}, l.16), $2L$ candidates are generated. A path metric
+is then evaluated to keep only the $L$ best candidates among the $2L$ paths. The
+path metrics are calculated as in \cite{Balatsoukas-Stimming2015}. At the end of
+the decoding process, the candidate codeword with the best path metric is
+selected in the \textit{select\_best\_path()} sub-routine
+(Alg.~\ref{alg:polar_scl}, l.18). The decoding complexity of the SCL algorithm
+grows as $O(LN\log_2N)$. This linear increase in complexity with L leads to
+significant improvements in BER/FER performances, especially for small code
+lengths.
 
 \paragraph{CRC concatenation scheme}
 
-The authors in \cite{Tal2011} observed that when a decoding error occurs, the
+The authors in~\cite{Tal2011} observed that when a decoding error occurs, the
 right codeword is often in the final list, but not with the best path metric.
 They proposed to concatenate a CRC to the codeword in order to discriminate the
 candidate codewords at the final stage of the SCL decoding. Indeed, this
@@ -626,12 +628,12 @@ algorithms reduce the decoding time with no impact on BER and FER performances.
 Furthermore, a tradeoff between throughput and worst case latency is possible
 with the use of either PA-SSCL or FA-SSCL decoding algorithms.
 
-\begin{figure}[t]
+\begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{polar/comparison_alg/comparison_alg}
+  \includegraphics[width=0.7\textwidth]{polar/algos_comparison/algos_comparison}
   \caption{Decoding performance comparison between CA-SCL and SC decoders.
     Code rate $R = 1/2$, and 32-bit CRC (GZip).}
-  \label{plot:polar_comparison_alg}
+  \label{plot:polar_algos_comparison}
 \end{figure}
 
 CA-SCL decoding performances for large code lengths ($N > 2^{14}$) combined with
@@ -643,7 +645,7 @@ simulations use the Monte Carlo method with a Binary Phase-Shift Keying (BPSK)
 modulation. The communication channel is an Additive White Gaussian Noise (AWGN)
 channel based on the Mersenne Twister pseudo-random number generator
 (MT19937)~\cite{Matsumoto1998} and the Box-Muller transform~\cite{Box1958}.
-Figure~\ref{plot:polar_comparison_alg} compares the BER/FER performances of
+Figure~\ref{plot:polar_algos_comparison} compares the BER/FER performances of
 CA-SCL with SC decoding for a large range of code lengths. As expected, it
 appears that the coding gain brought by the SCL algorithm decreases for larger
 $N$ values. In the case of $N=2^{16}$, the improvement caused by the use of the
@@ -729,15 +731,6 @@ challenge.
 
 \paragraph{Flexibility}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.70\textwidth]{polar/scl_l/scl_l}
-  \caption{Tradeoffs between CA-SSCL decoding and throughput performances
-    depending on $L$. $N=2048$, $R=0.5$, and 32-bit CRC (GZip). For $L=1$, the
-    SSC decoder is used with a ($2048$,$1024$) polar code.}
-  \label{plot:polar_scl_l}
-\end{figure}
-
 On one hand, the reason for the decoder genericity is the compliance to the
 telecommunication standards. On the other hand, the flexibility of the decoder
 regroups several algorithmic variations that are discussed in the following.
@@ -752,6 +745,15 @@ latency, and error rate performance. As a consequence, one can easily fine-tune
 the configuration of the software decoder for any given polar code.
 
 \subparagraph{List size}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_l/scl_l}
+  \caption{Tradeoffs between CA-SSCL decoding and throughput performances
+    depending on $L$. $N=2048$, $R=0.5$, and 32-bit CRC (GZip). For $L=1$, the
+    SSC decoder is used with a ($2048$,$1024$) polar code.}
+  \label{plot:polar_scl_l}
+\end{figure}
 
 As mentioned earlier, the list size $L$ impacts both speed and decoding
 performance. In Figure~\ref{plot:polar_scl_l}, the throughput as well as BER and
@@ -902,9 +904,9 @@ the first SCL software implementation that can benefit from the 8-bit and 16-bit
 fixed-point representations of LLRs and internal path metrics. In the 8-bit mode
 LLRs and path metrics are saturated between $-127$ and $+127$ after each
 operation. Moreover, to avoid overflows, the path metrics are normalized after
-each \textit{update\_paths()} call (cf. Alg.~\ref{alg:scl}) by subtracting the
-smallest metric to each one of them. Figure~\ref{plot:polar_scl_bfer}a shows the
-BER and FER performances of the CA-SSCL decoder for 32-bit floating-point,
+each \textit{update\_paths()} call (cf. Alg.~\ref{alg:polar_scl}) by subtracting
+the smallest metric to each one of them. Figure~\ref{plot:polar_scl_bfer}a shows
+the BER and FER performances of the CA-SSCL decoder for 32-bit floating-point,
 16-bit and 8-bit fixed-point representations. One can observe that the
 \texttt{REP} nodes degrade the decoding performance in a 8-bit representation
 because of accumulation (red triangles curve). Indeed, it is necessary to add
@@ -928,7 +930,11 @@ decoders that are given in Table~\ref{tab:polar_scl_perfs_fixed}.
 
 \subparagraph{Supporting different variants of the decoding algorithms}
 
-\begin{figure}[t]
+Besides the $L$ values, the tree pruning and quantization aspects, the proposed
+software polar decoder supports different variants of the SCL algorithm:
+CA-SSCL, PA-SSCL, FA-SSCL.
+
+\begin{figure}
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_adaptive/scl_adaptive}
   \caption{Frame Error Rate (FER) performance and throughput of the Fully and
@@ -936,10 +942,6 @@ decoders that are given in Table~\ref{tab:polar_scl_perfs_fixed}.
     32-bit CRC (GZip). 32-bit floating-point representation.}
   \label{plot:polar_scl_adaptive}
 \end{figure}
-
-Besides the $L$ values, the tree pruning and quantization aspects, the proposed
-software polar decoder supports different variants of the SCL algorithm:
-CA-SSCL, PA-SSCL, FA-SSCL.
 
 As shown in~\cite{Sarkis2016}, the adaptive version of the SCL algorithm yields
 significant speedups, specially for high SNR. The original adaptive SCL
@@ -999,6 +1001,12 @@ particularly effective for short polar codes.
 
 \subparagraph{Polar Application Programming Interface}
 
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_g_h_simd.cpp}
+  \caption{C++ SIMD implementation of the $f$, $g$ and $h$ functions.}
+  \label{lst:polar_f_g_h_simd}
+\end{listing}
+
 Reducing the decoding time with SIMD instructions is a classical technique in
 former software polar decoder implementations. The proposed list decoders are
 based on specific building blocks included from the Polar
@@ -1017,12 +1025,6 @@ could be \texttt{int}, \texttt{short} or \texttt{char}. \texttt{R} for
 Listing~\ref{lst:polar_f_g_h_simd}, each operation is made on multiple elements
 at the same  time. For instance, line 22, the addition between all the elements
 of the \texttt{neg\_la} and \texttt{lb} registers is executed in one CPU cycle.
-
-\begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_g_h_simd.cpp}
-  \caption{C++ SIMD implementation of the $f$, $g$ and $h$ functions.}
-  \label{lst:polar_f_g_h_simd}
-\end{listing}
 
 In the context of software decoders, there are two well-known strategies to
 exploit SIMD instructions: use the elements of a register to compute 1) many
@@ -1075,10 +1077,10 @@ checked candidates.
 \label{subsec:sorting}
 
 Metric sorting is involved in the aforementioned path selection step, but also
-in the \textit{update\_paths()} sub-routine (Alg.~\ref{alg:scl}, l.16) and
+in the \textit{update\_paths()} sub-routine (Alg.~\ref{alg:polar_scl}, l.16) and
 consequently in each leaf. Sorting the LLRs is also necessary in \texttt{R1} and
 \texttt{SPC} nodes. Because of a lack of information about the sorting technique
-presented in \cite{Sarkis2016}, its reproduction is not possible. In the
+presented in~\cite{Sarkis2016}, its reproduction is not possible. In the
 following of the paragraph the sorting algorithm used in the SCL decoder is
 described.
 
@@ -1105,14 +1107,6 @@ or duplicated.
 
 \subparagraph{Partial Sum Memory Management}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.70\textwidth]{polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}
-  \caption{Information throughput of the SSCL decoder depending on the codeword
-    size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$.}
-  \label{plot:polar_scl_cpy_vs_ptr}
-\end{figure}
-
 An SCL decoder can be seen as $L$ replications of an SC decoder. The first
 possible memory layout is the one given in Figure~\ref{fig:polar_sc_decoder}. In
 this layout, the partial sums $\hat{s}$ of each node is stored in a dedicated
@@ -1133,15 +1127,23 @@ SCL decoder.
 In the case of the SCL algorithm, $L$ paths have to be assigned to $L$ partial
 sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
 advantage of pointers is that when a path is duplicated, in the
-\textit{update\_paths()} sub-routine of Alg.~\ref{alg:scl}, the partial sums are
-not copied. Actually, they can be shared between paths thanks to the use of
-pointers. This method limits the number of memory transactions. Unfortunately,
-it is not possible to take advantage of the memory space reduction: the partial
-sums have to be stored on $L(2N -1)$ bits. There is an alternative to this
-mechanism. If a logical path is statically assigned to a memory array, no
-pointers are necessary at the cost that partial sums must be copied when a path
-is duplicated (only $LN$ bits are required). This method is called
-SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
+\textit{update\_paths()} sub-routine of Alg.~\ref{alg:polar_scl}, the partial
+sums are not copied. Actually, they can be shared between paths thanks to the
+use of pointers. This method limits the number of memory transactions.
+Unfortunately, it is not possible to take advantage of the memory space
+reduction: the partial sums have to be stored on $L(2N -1)$ bits. There is an
+alternative to this mechanism. If a logical path is statically assigned to a
+memory array, no pointers are necessary at the cost that partial sums must be
+copied when a path is duplicated (only $LN$ bits are required). This method is
+called SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}
+  \caption{Information throughput of the SSCL decoder depending on the codeword
+    size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$.}
+  \label{plot:polar_scl_cpy_vs_ptr}
+\end{figure}
 
 Our experiments have proved that the overhead of handling pointers plus the
 extra memory space requirement cause the SSCL$_{\texttt{cpy}}$ to be more
@@ -1158,8 +1160,8 @@ is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
 SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:polar_scl_cpy_vs_ptr} also illustrates
 the impact of the representation of partial sums. For very high values of $N$,
 8-bit fixed point representation takes advantage of fewer cache misses.
-According to the results presented in Figure~\ref{plot:polar_comparison_alg}, as
-the decoding performance improvements of the SCL algorithm are not very
+According to the results presented in Figure~\ref{plot:polar_algos_comparison},
+as the decoding performance improvements of the SCL algorithm are not very
 significant compared to the SC algorithm for long polar codes,
 SSCL$_{\texttt{cpy}}$ is the appropriate solution in most practical cases.
 
@@ -1171,10 +1173,10 @@ beneficial in any use case.
 
 \subparagraph{Memory Footprint}
 
-\begin{table}[t]
+\begin{table}
   \centering
   \caption{Polar decoders memory footprint (in bytes)}
-  \label{tab:footprint}
+  \label{tab:polar_scl_memory_footprint}
   %{\small
    \begin{tabular}{r|c}
     \textbf{Algorithms}        & \textbf{Memory Footprint} \\
@@ -1193,13 +1195,13 @@ mainly driven by the LLRs ($\lambda$) and the partial sums ($\hat{s}$) as they
 linearly depend on $LN$. The buffers related to the path metrics can be
 neglected as they linearly depend on $L$. The memory footprint of the CRC is
 also negligible, the only requirement is a lookup table of 256 integers.
-Table~\ref{tab:footprint} summarizes the memory footprint estimation of the
-various decoders while $Q$ stands for the size of the element (1, 2 or 4 bytes).
-The channel LLRs are taken into account in the approximation. As explained in
-the previous section, the SSCL$_{\texttt{ptr}}$ version of the code requires
-twice the amount of data for the partial sums. Notice that the memory footprint
-of the adaptive decoders is a little bit higher than the other SCL since it
-includes an additional SC decoder.
+Table~\ref{tab:polar_scl_memory_footprint} summarizes the memory footprint
+estimation of the various decoders while $Q$ stands for the size of the element
+(1, 2 or 4 bytes). The channel LLRs are taken into account in the approximation.
+As explained in the previous section, the SSCL$_{\texttt{ptr}}$ version of the
+code requires twice the amount of data for the partial sums. Notice that the
+memory footprint of the adaptive decoders is a little bit higher than the other
+SCL since it includes an additional SC decoder.
 
 \subsubsection{Unrolled Polar Decoders}
 
@@ -1207,13 +1209,6 @@ includes an additional SC decoder.
   \item décodeurs générique (pas déroulé)
   \item déroulage d'arbre
 \end{itemize}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1.0\textwidth]{polar/patterns}
-  \caption{Subtree rewriting rules for processing specialization.}
-  \label{fig:polar_patterns}
-\end{figure}
 
 \paragraph{Specialized Decoder Skeletons and Building Blocks Library.}
 
@@ -1254,22 +1249,6 @@ and low-level arithmetic routines, enables both ECC experts to focus on
 optimizing algorithm skeletons and architecture experts to focus on writing
 highly optimized routines, without interferences.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.70\textwidth]{polar/patterns_example}
-  \caption{Generation process on a small binary tree ($N = 8$). The tree is cut
-    and the computations are versioned according to the location of the frozen
-    bit}
-  \label{fig:polar_patterns_example}
-\end{figure}
-
-\begin{listing}
-  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/generated_sc_decoder.cpp}
-  \caption{The final code generated corresponding to the pruned tree in
-    Fig.~\ref{fig:polar_patterns_example}.}
-  \label{lst:polar_patterns_example}
-\end{listing}
-
 \paragraph{Decoder Generation.}
 
 The decoder generator first builds the binary tree structure as shown in
@@ -1277,6 +1256,13 @@ Fig.~\ref{fig:polar_sc_decoder} from the frozen bit location input. Each
 internal node has a tag indicating the type of processing required at that node
 (recursive children processing, $f$/$g$/$h$ functions to be applied or not).
 This tag is initially set to \emph{standard}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\textwidth]{polar/patterns}
+  \caption{Subtree rewriting rules for processing specialization.}
+  \label{fig:polar_patterns}
+\end{figure}
 
 For some sub-tree pattern configurations, the processing to be performed at the
 root of such sub-trees can be simplified, or even skipped completely, for
@@ -1316,25 +1302,30 @@ first. Rules selectors can match on node tags and/or node levels (leaf, specific
 level, above or below some level). A given rule is applied at most once on a
 given node.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/patterns_example}
+  \caption{Generation process on a small binary tree ($N = 8$). The tree is cut
+    and the computations are versioned according to the location of the frozen
+    bit}
+  \label{fig:polar_patterns_example}
+\end{figure}
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/generated_sc_decoder.cpp}
+  \caption{The final code generated corresponding to the pruned tree in
+    Fig.~\ref{fig:polar_patterns_example}.}
+  \label{lst:polar_patterns_example}
+\end{listing}
+
 Finally, once the tree has been fully specialized, the generator perform a
 second tree traversal pass to output the resulting decoder. An example of such a
 tree specialization process together with the generator output is shown in
-Fig.~\ref{lst:polar_patterns_example}.
+Fig.~\ref{fig:polar_patterns_example} and in
+Listing~\ref{lst:polar_patterns_example}.
 
 \paragraph{Low Level Building blocks}
 \label{sec:implem}
-
-\begin{listing}
-  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_seq.cpp}
-  \caption{The C++ implementation of the $f$ function: sequential version.}
-  \label{lst:polar_f_seq}
-\end{listing}
-
-\begin{listing}
-  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_simd.cpp}
-  \caption{The C++ implementation of the $f$ function: SIMD version.}
-  \label{lst:polar_f_simd}
-\end{listing}
 
 The main challenge in implementing P-EDGE's architecture dependent building
 blocks is to provide enough flexibility to enable varied type, data layout and
@@ -1368,6 +1359,18 @@ frames to arrive, which increases latency, and to interleave the LLRs from these
 frames (\emph{gather}) before proceeding. It also needs to de-interleave the
 resulting data (the bits) after decoding (\emph{scatter}). Refer
 to~\cite{LeGal2015a} for more details about the interleaving process.
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_seq.cpp}
+  \caption{The C++ implementation of the $f$ function: sequential version.}
+  \label{lst:polar_f_seq}
+\end{listing}
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/polar/f_simd.cpp}
+  \caption{The C++ implementation of the $f$ function: SIMD version.}
+  \label{lst:polar_f_simd}
+\end{listing}
 
 The framework instantiates scalar or SIMD functions as appropriate (hence the
 two sets of functions). These two sets of functions are themselves
@@ -1420,7 +1423,7 @@ masking instructions.
 
 \paragraph{SC Energy and Dynamic}
 
-\begin{table}[t]
+\begin{table}
   \caption{Specifications of the \odr and the \juno boards.}
   \label{tab:polar_energy_arm_specs}
   \begin{center}
@@ -1575,6 +1578,17 @@ inter-frame strategy for small frame sizes, whereas it is better to apply
 intra-frame strategy for larger frame sizes (comparable energy consumption with
 much lower latency).
 
+\begin{figure}
+  \centering
+  \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
+  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
+    frequency (dynamic code, intra-, inter-frame).
+    A7 performance is on the left and A15 on the right. $N = 4096$ and $R = 1/2$.
+    Dark colors and light colors stand for CPU cluster and RAM energy consumption,
+    resp.}
+  \label{plot:polar_sc_energy_freq}
+\end{figure}
+
 Figure~\ref{plot:polar_sc_energy_freq} shows the impact of the frequency on the
 energy, for a given value of frame size $N=4096$ and code rate $R=1/2$. On both
 A7 and A15 clusters, the supply voltage increases with the frequency from 0.946V
@@ -1586,17 +1600,6 @@ frequencies higher than 250MHz. For this problem size and configuration, and
 from an energy-only point of view, the best choice is to run the decoder at
 350MHz. On the A15 \big cluster, the energy cost is mainly driven by the CPU
 frequency, while the RAM energy bill is limited compared to the CPU.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
-  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
-    frequency (dynamic code, intra-, inter-frame).
-    A7 performance is on the left and A15 on the right. $N = 4096$ and $R = 1/2$.
-    Dark colors and light colors stand for CPU cluster and RAM energy consumption,
-    resp.}
-  \label{plot:polar_sc_energy_freq}
-\end{figure}
 
 Thus, the bottom line about energy vs frequency relationship is: On the \little
 cluster it is more interesting to clock the CPU at high frequency (higher
@@ -1644,14 +1647,14 @@ the A15). The \little A7 is more energy efficient than the \big A57, and the
   \tkzKiviatLine[dotted,ultra thick,color=blue](2,3,4,2,2)
   \tkzKiviatLine[dotted,ultra thick,color=red](2,1,2,4,4)
   \end{tikzpicture}
-  \caption{\label{fig:spider}Ranking of the different approaches along 5
-    metrics. In red, inter-frame vectorization performance and in blue,
+  \caption{\label{fig:polar_sc_colgate}Ranking of the different approaches along
+    5 metrics. In red, inter-frame vectorization performance and in blue,
     intra-frame performance. Solid color is for the dynamic versions, dotted is
     for the generated versions. Each version is sorted along each of the 5 axes
     and the best version for one axe is placed further from the center.}
 \end{figure}
 
-Figure \ref{fig:spider} presents a qualitative summary of the
+Figure~\ref{fig:polar_sc_colgate} presents a qualitative summary of the
 characteristics of the different code versions, for intra-/inter-frame
 vectorization, generated or dynamic code. For instance, if the size of
 the memory footprint is an essential criterion, the dynamic intra-frame
@@ -1802,7 +1805,7 @@ same sub-tree and to put the corresponding code into a dedicated function
 (improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
 with the size of the tree).
 
-\begin{table}[h]
+\begin{table}
   \begin{center}
   \begin{tabular}{ c | c | c | c | c | c | c}
     Decoder                  & $N = 2^6$ & $N = 2^8$   & $N = 2^{10}$     & $N = 2^{12}$     & $N = 2^{14}$      & $N = 2^{16}$                \\
@@ -1865,15 +1868,15 @@ in~\cite{Sarkis2016}, the fully adaptive decoder would imply to generate a fully
 unrolled decoder for each value of the list depth. In our work, only one source
 code gives the designer the possibility to run each variation of the SCL
 decoders. FA-SSCL algorithm is the key to achieve the highest possible
-throughput. As shown in Table~\ref{tab:polar_scl_perfs_fixed}, with an 8-bit fixed point
-representation of the decoder inner values, the achieved throughput in the case
-of the ($2048$,$1723$) polar code is about $425$ Mb/s on the i5-6600K for an
-$E_b/N_0$ value of $4.5$ dB. It corresponds to a FER of $5\times10^{-8}$. This
-throughput is almost 2 times higher than the throughput of the PA-SSCL
-algorithm. The highest throughput increase from PA-SSCL to FA-SSCL, of
-about $380\%$, is in the domain where the FER is between $10^{-3}$ and
-$10^{-5}$. It is the targeted domain for wireless communications like LTE or 5G.
-In these conditions, the throughput of FA-SSCL algorithm is about $227$ Mb/s
+throughput. As shown in Table~\ref{tab:polar_scl_perfs_fixed}, with an 8-bit
+fixed point representation of the decoder inner values, the achieved throughput
+in the case of the ($2048$,$1723$) polar code is about $425$ Mb/s on the
+i5-6600K for an $E_b/N_0$ value of $4.5$ dB. It corresponds to a FER of
+$5\times10^{-8}$. This throughput is almost 2 times higher than the throughput
+of the PA-SSCL algorithm. The highest throughput increase from PA-SSCL to
+FA-SSCL, of about $380\%$, is in the domain where the FER is between $10^{-3}$
+and $10^{-5}$. It is the targeted domain for wireless communications like LTE or
+5G. In these conditions, the throughput of FA-SSCL algorithm is about $227$ Mb/s
 compared to $42$ Mb/s for the PA-SSCL algorithm.
 
 In Adaptive SCL algorithms, the worst case latency is the sum of the latency of
