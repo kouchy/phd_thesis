@@ -1,0 +1,89 @@
+digraph Decoder_polar_SC_sys_N128_K64_SNR25{
+	subgraph cluster_0 {
+		label="Legend";
+		rankdir=LR;
+		rank=same;
+		"Default"[style=filled, fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		"Rate 0 left"[style=filled, fillcolor="#dadada",fontcolor="#000000"];
+		"Rate 0"[style=filled, fillcolor="#FFFFFF",fontcolor="#000000"];
+		"Rate 1"[style=filled, fillcolor="#000000",fontcolor="#FFFFFF"];
+		"Rep left"[style=filled, fillcolor="#8e726f",fontcolor="#FFFFFF"];
+		"Rep"[style=filled, fillcolor="#8F463F",fontcolor="#FFFFFF"];
+		"SPC 2"[style=filled, fillcolor="#2F3F60",fontcolor="#FFFFFF"];
+		"Default" -> "Rate 0 left";
+		"Rate 0 left" -> "Rate 0";
+		"Rate 0" -> "Rate 1";
+		"Rate 1" -> "Rep left";
+		"Rep left" -> "Rep";
+		"Rep" -> "SPC 2";
+	}
+	subgraph cluster_1 {
+		label=" ";
+		N0[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N0 -> N1;
+		N1[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N1 -> N2;
+		N2[style=filled,fillcolor="#dadada",fontcolor="#000000"];
+		N2 -> N3;
+		N3[style=filled,fillcolor="#FFFFFF",fontcolor="#000000"];
+		N2 -> N4;
+		N4[style=filled,fillcolor="#dadada",fontcolor="#000000"];
+		N4 -> N5;
+		N5[style=filled,fillcolor="#FFFFFF",fontcolor="#000000"];
+		N4 -> N6;
+		N6[style=filled,fillcolor="#dadada",fontcolor="#000000"];
+		N6 -> N7;
+		N7[style=filled,fillcolor="#FFFFFF",fontcolor="#000000"];
+		N6 -> N8;
+		N8[style=filled,fillcolor="#dadada",fontcolor="#000000"];
+		N8 -> N9;
+		N9[style=filled,fillcolor="#FFFFFF",fontcolor="#000000"];
+		N8 -> N10;
+		N10[style=filled,fillcolor="#000000",fontcolor="#FFFFFF"];
+		N1 -> N11;
+		N11[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N11 -> N12;
+		N12[style=filled,fillcolor="#dadada",fontcolor="#000000"];
+		N12 -> N14;
+		N14[style=filled,fillcolor="#8e726f",fontcolor="#FFFFFF"];
+		N14 -> N15;
+		N15[style=filled,fillcolor="#8F463F",fontcolor="#FFFFFF"];
+		N14 -> N16;
+		N16[style=filled,fillcolor="#2F3F60",fontcolor="#FFFFFF"];
+		N11 -> N17;
+		N17[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N17 -> N21;
+		N21[style=filled,fillcolor="#2F3F60",fontcolor="#FFFFFF"];
+		N0 -> N22;
+		N22[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N22 -> N23;
+		N23[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N23 -> N24;
+		N24[style=filled,fillcolor="#8e726f",fontcolor="#FFFFFF"];
+		N24 -> N25;
+		N25[style=filled,fillcolor="#8F463F",fontcolor="#FFFFFF"];
+		N23 -> N29;
+		N29[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N29 -> N33;
+		N33[style=filled,fillcolor="#000000",fontcolor="#FFFFFF"];
+		N22 -> N34;
+		N34[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N34 -> N35;
+		N35[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N35 -> N36;
+		N36[style=filled,fillcolor="#7F7F7F",fontcolor="#FFFFFF"];
+		N36 -> N40;
+		N40[style=filled,fillcolor="#000000",fontcolor="#FFFFFF"];
+		N34 -> N42;
+		N42[style=filled,fillcolor="#000000",fontcolor="#FFFFFF"];
+
+		N12 -> N5;
+		N17 -> N14;
+		N24 -> N14;
+		N29 -> N14;
+		N35 -> N33;
+		N36 -> N8;
+		
+		
+	}
+}

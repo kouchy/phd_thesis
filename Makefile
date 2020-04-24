@@ -91,7 +91,10 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b.dat \
               main/chapter2/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter.gp \
               main/chapter2/fig/polar/sc_gen_thr_inter/dat/A15_samples_inter_8b.dat \
-              main/chapter2/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b.dat
+              main/chapter2/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b.dat \
+              main/chapter2/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size.gp \
+              main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
+              main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat
 	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/comparison_alg/       && rubber -d comparison_alg.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
@@ -108,6 +111,7 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/polar/sc_energy_rate/       && gnuplot   sc_energy_rate.gp
 	cd main/chapter2/fig/polar/sc_gen_thr_intra/     && gnuplot   sc_gen_thr_intra.gp
 	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && gnuplot   sc_gen_thr_inter.gp
+	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && gnuplot   sc_gen_l1i_size.gp
 
 clean4all:
 	rm -f *.mtc*
@@ -148,6 +152,8 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/sc_energy_rate/       && rm -f             sc_energy_rate_N32768.pdf
 	cd main/chapter2/fig/polar/sc_gen_thr_intra/     && rm -f             sc_gen_thr_intra.pdf
 	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && rm -f             sc_gen_thr_inter.pdf
+	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && rm -f             sc_gen_l1i_size.pdf
+	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && rm -f             sc_gen_l1i_size_small.pdf
 
 open:
 	xdg-open my_thesis.pdf &

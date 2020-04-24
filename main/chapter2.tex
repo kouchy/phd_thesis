@@ -1766,6 +1766,41 @@ in Figure~\ref{plot:polar_sc_gen_thr_inter} for different architectures. Again,
 the results confirm that our generic approach overtakes handwritten code (also
 between 10\% and 25\% higher on x86).
 
+\begin{figure}
+  \centering
+  \begin{subfigure}{8cm}
+    \centering
+    \includegraphics[width=8cm]{polar/sc_gen_compression/sc_gen_no_compression}
+    \caption{Without compression.}
+  \end{subfigure}
+  \begin{subfigure}{4cm}
+    \centering
+    \includegraphics[width=3.725cm]{polar/sc_gen_compression/sc_gen_compression}
+    \caption{With compression.}
+  \end{subfigure}
+  \caption{Full decoding tree representation (N = 128, K = 64) without and with compression.}
+  \label{fig:polar_sc_gen_compression}
+\end{figure}
+
+For all the test series, the bandwidth first increases with codeword size, as
+the tree pruning becomes increasingly more effective with larger trees. The
+effect is stronger for Intra-SIMD where pruning also results in removing
+inefficient scalar nodes. However, beyond a codeword size point which depends on
+the architecture and on the selected SIMD version, performance decreases again
+due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
+generated as straight-line code (no recursive calls), with all node computations
+put in sequence. This improves performance for small to medium codeword size, up
+to the point where the compiled binary exceeds the L1I cache size. We mitigated
+this issue by reducing decoder binary sizes using two compression techniques: 1)
+in the generated code, we moved the buffer offsets from template arguments to
+function arguments, which enabled the compiler to factorize more function calls
+than before (improvement by a factor of 10), 2) we implemented a sub-tree
+folding algorithm in the generator (see
+Fig.~\ref{fig:polar_sc_gen_compression}), to detect multiple occurrences of a
+same sub-tree and to put the corresponding code into a dedicated function
+(improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
+with the size of the tree).
+
 \begin{table}[h]
   \begin{center}
   \begin{tabular}{ c | c | c | c | c | c | c}
@@ -1788,34 +1823,23 @@ between 10\% and 25\% higher on x86).
     of bits $N$ per frame (code respectively compiled with AVX1 instructions for
     the 32-bit decoders and with SSE4.1 instructions for the 8-bit decoders).
     For comparison, code size without compression are shown in parentheses.}
-  \label{plot:polar_sc_gen_l1i_size}
+  \label{tab:polar_sc_gen_l1i_size}
 \end{table}
 
-For all the test series, the bandwidth first increases with codeword size, as
-the tree pruning becomes increasingly more effective with larger trees. The
-effect is stronger for Intra-SIMD where pruning also results in removing
-inefficient scalar nodes. However, beyond a codeword size point which depends on
-the architecture and on the selected SIMD version, performance decreases again
-due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
-generated as straight-line code (no recursive calls), with all node computations
-put in sequence. This improves performance for small to medium codeword size, up
-to the point where the compiled binary exceeds the L1I cache size. We mitigated
-this issue by reducing decoder binary sizes using two compression techniques: 1)
-in the generated code, we moved the buffer offsets from template arguments to
-function arguments, which enabled the compiler to factorize more function calls
-than before (improvement by a factor of 10), 2) we implemented a sub-tree
-folding algorithm in the generator, to detect multiple occurrences of a same
-sub-tree and to put the corresponding code into a dedicated function
-(improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
-with the size of the tree).
+\begin{figure}
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
+  \caption{P-EDGE generated decoder binary sizes depending on the frame size
+    (R=1/2).}
+  \label{plot:polar_sc_gen_l1i_size}
+\end{figure}
 
-Table~\ref{plot:polar_sc_gen_l1i_size} shows the binary code size of the
-decoders depending on $N$. The results which exceed the 32KB of the L1I cache
-are highlighted in bold font. Sub-tree folding was enabled starting from
-$N=2^{12}$ because there is an overhead (at run-time) when using this technique.
-P-EDGE decoder code sizes without compression are shown in parentheses: we can
-observe a huge improvement, until $N=2^{14}$ the code size never exceeds the L1I
-cache anymore.
+Table~\ref{tab:polar_sc_gen_l1i_size} and Fig.~\ref{plot:polar_sc_gen_l1i_size}
+show the binary code size of the decoders depending on $N$. The results which
+exceed the 32KB of the L1I cache are highlighted in bold font. Sub-tree folding
+was enabled starting from $N=2^{12}$ because there is an overhead (at run-time)
+when using this technique. P-EDGE decoder code sizes without compression are
+shown in parentheses: we can observe a huge improvement, until $N=2^{14}$ the
+code size never exceeds the L1I cache anymore.
 
 \subsection{Generic Kernels and Multi-Kernel}
 
