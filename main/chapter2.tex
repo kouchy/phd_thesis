@@ -870,7 +870,7 @@ in which tree pruning can also be applied~\cite{Lin2014}.
   \caption{Throughput and latency comparisons between floating-point (32-bit)
     and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
     $L = 32$ and 32-bit CRC (Gzip).}
-  \label{tab:fixed}
+  \label{tab:polar_scl_perfs_fixed}
   %{\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r | c || c | c || c | c || c | c}
     \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c ||}{\textbf{3.5 dB}} & \multicolumn{2}{c ||}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
@@ -913,18 +913,18 @@ lead to an overflow in the case of fixed-point representation. It can happen
 when the size of the repetition nodes is not limited
 ($\texttt{REP}_\texttt{2+}$). However, the size limitation of the repetition
 nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue. In
-Table~\ref{tab:fixed}, maximum latency ($\mathcal{L}_{worst}$ in $\mu s$),
-average latency ($\mathcal{L}_{avg}$ in $\mu s$) and information throughput
-($\mathcal{T}_i$ in Mb/s) are given. Note that in 8-bit configuration only the
-\texttt{REP}$_{\texttt{8-}}$ nodes are used. The fixed-point implementation
-reduces, on average, the latency. In the high SNR region, the frame errors are
-less frequent. Therefore, the SCL algorithm is less necessary than in low SNR
-regions for Adaptive SCL algorithms. As the gain of fixed-point implementation
-benefits more to the SC algorithm than to the SCL algorithm, the throughput is
-higher in high SNR regions. For instance, up to 425.9 Mb/s is achieved in 8-bit
-representation with the FA-SSCL decoder. Note that the improvements described in
-Section~\ref{sec:implem_improv} are applied to the decoders that are given in
-Table~\ref{tab:fixed}.
+Table~\ref{tab:polar_scl_perfs_fixed}, maximum latency ($\mathcal{L}_{worst}$ in
+$\mu s$), average latency ($\mathcal{L}_{avg}$ in $\mu s$) and information
+throughput ($\mathcal{T}_i$ in Mb/s) are given. Note that in 8-bit configuration
+only the \texttt{REP}$_{\texttt{8-}}$ nodes are used. The fixed-point
+implementation reduces, on average, the latency. In the high SNR region, the
+frame errors are less frequent. Therefore, the SCL algorithm is less necessary
+than in low SNR regions for Adaptive SCL algorithms. As the gain of fixed-point
+implementation benefits more to the SC algorithm than to the SCL algorithm, the
+throughput is higher in high SNR regions. For instance, up to 425.9 Mb/s is
+achieved in 8-bit representation with the FA-SSCL decoder. Note that the
+improvements described in Section~\ref{sec:implem_improv} are applied to the
+decoders that are given in Table~\ref{tab:polar_scl_perfs_fixed}.
 
 \subparagraph{Supporting different variants of the decoding algorithms}
 
@@ -1778,7 +1778,8 @@ between 10\% and 25\% higher on x86).
     \includegraphics[width=3.725cm]{polar/sc_gen_compression/sc_gen_compression}
     \caption{With compression.}
   \end{subfigure}
-  \caption{Full decoding tree representation (N = 128, K = 64) without and with compression.}
+  \caption{Full decoding tree representation (N = 128, K = 64) without and with
+           the compression sub-tree folding algorithm.}
   \label{fig:polar_sc_gen_compression}
 \end{figure}
 
@@ -1840,6 +1841,132 @@ was enabled starting from $N=2^{12}$ because there is an overhead (at run-time)
 when using this technique. P-EDGE decoder code sizes without compression are
 shown in parentheses: we can observe a huge improvement, until $N=2^{14}$ the
 code size never exceeds the L1I cache anymore.
+
+\paragraph{SCL Experiments and Measurements}
+
+Throughput and latency measurements are detailed in this section. The proposed
+decoder implementation is compared with the previous software decoders. Despite
+the additional levels of genericity and flexibility, the proposed implementation
+is very competitive with its counterparts. Note that all the results presented
+in the following can be reproduced with the AFF3CT tool.
+
+During our investigations, all the throughput and latency measurements have been
+obtained on a single core of an Intel i5-6600K CPU (Skylake architecture with
+AVX2 SIMD) with a base clock frequency of 3.6 GHz and a maximum turbo frequency
+of 3.9 GHz. The description has been compiled on Linux with the C++ GNU compiler
+(version 5.4.0) and with the following options:
+\texttt{-Ofast -march=native -funroll-loops}.
+
+\subparagraph{Fully Adaptive SCL}
+
+Being able to easily change the list size of the SCL decoders enables the use of
+the FA-SSCL algorithm. With an unrolled decoder as proposed
+in~\cite{Sarkis2016}, the fully adaptive decoder would imply to generate a fully
+unrolled decoder for each value of the list depth. In our work, only one source
+code gives the designer the possibility to run each variation of the SCL
+decoders. FA-SSCL algorithm is the key to achieve the highest possible
+throughput. As shown in Table~\ref{tab:polar_scl_perfs_fixed}, with an 8-bit fixed point
+representation of the decoder inner values, the achieved throughput in the case
+of the ($2048$,$1723$) polar code is about $425$ Mb/s on the i5-6600K for an
+$E_b/N_0$ value of $4.5$ dB. It corresponds to a FER of $5\times10^{-8}$. This
+throughput is almost 2 times higher than the throughput of the PA-SSCL
+algorithm. The highest throughput increase from PA-SSCL to FA-SSCL, of
+about $380\%$, is in the domain where the FER is between $10^{-3}$ and
+$10^{-5}$. It is the targeted domain for wireless communications like LTE or 5G.
+In these conditions, the throughput of FA-SSCL algorithm is about $227$ Mb/s
+compared to $42$ Mb/s for the PA-SSCL algorithm.
+
+In Adaptive SCL algorithms, the worst case latency is the sum of the latency of
+each triggered algorithm. In the case of PA-SSCL with $L_{max}=32$, it is just
+the sum of the latency of the SC algorithm, plus the latency of the SCL
+algorithm with $L=32$. In the case of the FA-SSCL algorithm, it is the sum of
+the decoding latency of the SC algorithm and all the decoding latencies of the
+SCL algorithm for $L={2,4,8,16,32}$. This is the reason why the worst latency of
+the PA-SSCL algorithm is lower while the average latency and consequently the
+average throughput is better with the FA-SSCL algorithm.
+
+\subparagraph{Comparison With State-Of-The-Art SCL Decoders.}
+
+\begin{table}
+  \centering
+  \caption{Throughput and latency comparison with state-of-the-art SCL decoders.
+    32-bit floating-point representation. Code (2048,1723), $L = 32$, 32-bit
+    CRC.}
+  \label{tab:polar_scl_perfs_comparison}
+  %{\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{r|r|c|c c c}
+    \multirow{2}{*}{\textbf{Target}} & \multirow{2}{*}{\textbf{Decoder}} & \multirow{1}{*}{\textbf{$\bm{\mathcal{L}_{worst}}$}} & \multicolumn{3}{c}{$\bm{\mathcal{T}_i}$ (Mb/s)} \\
+    \cline{4-6}
+    &                                & ($\mu s$)                         & \textbf{3.5 dB} & \textbf{4.0 dB} & \textbf{4.5 dB} \\
+    \hline
+    % \hline
+    \multirow{1}{*}{i7-4790K}
+    & CA-SCL~\cite{Shen2016}         &  1572                             &  1.10           &  1.10           &   1.10          \\
+    \hline
+    \multirow{3}{*}{i7-2600}
+    & CA-SCL~\cite{Sarkis2014b}      & 23000                             &  0.07           &  0.07           &   0.07          \\
+    & CA-SSCL~\cite{Sarkis2014b}     &  3300                             &  0.52           &  0.52           &   0.52          \\
+    & PA-SSCL~\cite{Sarkis2014b}     & $\approx$ 3300                    &  0.9            &  4.90           &  54.0           \\
+    \hline
+    \multirow{3}{*}{i7-2600}
+    & CA-SCL~\cite{Sarkis2016}       &  2294                             &  0.76           &  0.76           &   0.76          \\
+    & CA-SSCL~\cite{Sarkis2016}      &   433                             &  4.0            &  4.0            &   4.0           \\
+    & PA-SSCL~\cite{Sarkis2016}      & $\approx$ 433                     &  8.6            & 33.0            & 196.0           \\
+    \hline
+%   original data
+%   \multirow{4}{*}{\rotatebox[origin=c]{90}{\textbf{E5-2650}}}
+%   & Proposed CA-SCL                &  6554                             &  0.27           &   0.27          &   0.27          \\
+%   & Proposed CA-SSCL               &  1048                             &  1.67           &   1.67          &   1.67          \\
+%   & Proposed PA-SSCL               & $\approx$ 1048                    &  4.07           &  22.9           & 124.1           \\
+%   & Proposed FA-SSCL               & $\approx$ 2096                    & 14.3            & 109.8           & 180.0           \\
+%   \hline
+%   rescaled data from E5-2650
+    \multirow{4}{*}{i7-2600}
+    & This CA-SCL                    &  4819                             &  0.37           &   0.37          &   0.37          \\
+    & This CA-SSCL                   &   770                             &  2.3            &   2.3           &   2.3           \\
+    & This PA-SSCL                   &   847                             &  5.5            &  31.1           & 168.4           \\
+    & This FA-SSCL                   &  1602                             & 19.4            & 149.0           & 244.3           \\
+    \hline
+    \multirow{4}{*}{i5-6600K}
+    & This CA-SCL                    &  3635                             &  0.48           &   0.48          &   0.48          \\
+    & This CA-SSCL                   &   577                             &  3.0            &   3.0           &   3.0           \\
+    & This PA-SSCL                   &   635                             &  7.6            &  42.1           & 237.6           \\
+    & This FA-SSCL                   &  1201                             & 26.1            & 207.8           & 345.5           \\
+  \end{tabular}
+  %}}
+\end{table}
+
+The throughput and latency of the proposed decoder compared to other reported
+implementations are detailed in Table~\ref{tab:polar_scl_perfs_comparison}. For
+all the decoders, all the available tree pruning optimizations are applied
+excluding the \texttt{SPC4+} nodes because of the performance degradation. Each
+decoder is based on a 32-bit floating-point representation. The polar code
+parameters are $N=2048$, $K=1723$ and the 32-bit GZip CRC is used. The list size
+is $L=32$.
+
+The latency given in Table~\ref{tab:polar_scl_perfs_comparison} is the worst
+case latency and the throughput is the average information throughput. The first
+version, CA-SCL, is the implementation of the CA-SCL algorithm without any tree
+pruning. As mentioned before the throughput of the proposed CA-SSCL decoder
+($2.3$ Mb/s) is only halved compared to the specific unrolled CA-SSCL decoder
+described in~\cite{Sarkis2016} (4.0 Mb/s). The proposed CA-SSCL decoder is
+approximately 4 times faster than the generic implementation
+in~\cite{Sarkis2014b} ($0.52$ Mb/s) and 2 times faster than the CA-SCL
+implementation in~\cite{Shen2016} ($1.1$ Mb/s) thanks to the implementation
+improvements detailed in Section~\ref{sec:implem_improv}.
+Furthermore, the proposed decoder exhibits a much deeper level of genericity and
+flexibility than the ones proposed in~\cite{Sarkis2014,Shen2016}. Indeed, the
+following features were not enabled: the customization of the tree pruning, the
+8-bit and 16-bit fixed-point representations of the LLRs, the puncturing
+patterns and the FA-SSCL algorithm.
+
+When implemented on the same target (i7-2600), the proposed PA-SSCL is
+competitive with the unrolled PA-SSCL in~\cite{Sarkis2016}, being only two times
+slower. This can be explained by the improvements concerning the CRC that are
+described in Section \ref{subsec:crc_improv}, especially the information bits
+extraction in the SC decoder. Finally, as mentioned before, the throughput of
+the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
+345.5 Mb/s at 4.5 dB in 32-bit floating-point).
 
 \subsection{Generic Kernels and Multi-Kernel}
 
