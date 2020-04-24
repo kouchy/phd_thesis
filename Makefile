@@ -85,7 +85,13 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/sc_energy_freq/dat/A15_800MHz_1400MHz_R05_N4096_intra_inter_bis.dat \
               main/chapter2/fig/polar/sc_energy_rate/sc_energy_rate.gp \
               main/chapter2/fig/polar/sc_energy_rate/dat/rate_N2048_SNR25.dat \
-              main/chapter2/fig/polar/sc_energy_rate/dat/rate_N32768_SNR25.dat
+              main/chapter2/fig/polar/sc_energy_rate/dat/rate_N32768_SNR25.dat \
+              main/chapter2/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra.gp \
+              main/chapter2/fig/polar/sc_gen_thr_intra/dat/A15_samples_intra_32b.dat \
+              main/chapter2/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b.dat \
+              main/chapter2/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter.gp \
+              main/chapter2/fig/polar/sc_gen_thr_inter/dat/A15_samples_inter_8b.dat \
+              main/chapter2/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b.dat
 	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/comparison_alg/       && rubber -d comparison_alg.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
@@ -100,6 +106,8 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/polar/sc_energy_implems_vs/ && gnuplot   sc_energy_implems_vs.gp
 	cd main/chapter2/fig/polar/sc_energy_freq/       && gnuplot   sc_energy_freq.gp
 	cd main/chapter2/fig/polar/sc_energy_rate/       && gnuplot   sc_energy_rate.gp
+	cd main/chapter2/fig/polar/sc_gen_thr_intra/     && gnuplot   sc_gen_thr_intra.gp
+	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && gnuplot   sc_gen_thr_inter.gp
 
 clean4all:
 	rm -f *.mtc*
@@ -138,6 +146,8 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/sc_energy_freq/       && rm -f             sc_energy_freq.pdf
 	cd main/chapter2/fig/polar/sc_energy_rate/       && rm -f             sc_energy_rate_N2048.pdf
 	cd main/chapter2/fig/polar/sc_energy_rate/       && rm -f             sc_energy_rate_N32768.pdf
+	cd main/chapter2/fig/polar/sc_gen_thr_intra/     && rm -f             sc_gen_thr_intra.pdf
+	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && rm -f             sc_gen_thr_inter.pdf
 
 open:
 	xdg-open my_thesis.pdf &

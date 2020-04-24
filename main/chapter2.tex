@@ -229,7 +229,7 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
   \tabcolsep=6pt
   \centering
   \caption{Comparison of various SIMD wrappers.}
-  \label{tab:comp}
+  \label{tab:vectorization_comparison}
   {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{|r|r|r|r|r||c|c|c|c|c||c|c|c|c|c|c||c|c|c|}
   \hline
@@ -256,37 +256,37 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
 \label{fig:fractal}
 \end{figure*}
 
-Table~\ref{tab:comp} compares various SIMD wrappers. It aims to present an
-overview of some prominent solutions, though it is by no means exhaustive due to
-the richness of the SIMD wrapper landscape. Some of the wrappers presented, such
-as \MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic
-research context. Some others, \simdpp and \xsimd, appear to be standalone
-development efforts by individual programmers or maintainers. Proprietary,
-closed-source solutions also exist on the market, such as \bSIMD, which is an
-extended version of \BoostSIMD, or the commercial version of \VCL. The
-\textit{Instruction Set} column is broken up into five families among the most
-widely available on the market: \verb|NEON|, \verb|SSE|, \verb|AVX|,
-\verb|AVX-512| and \verb|AltiVec|. For the sake of conciseness, we choose not to
-list all the instruction sets ``sub-variants'' (such as \verb|SSE2|,
-\verb|SSE3|, etc). \simdpp et \bSIMD propose the most comprehensive instruction
-set compatibility. At the other end of the range, \xsimd and \BoostSIMD only
-support Intel SIMD instruction sets. The \textit{Data Type} column of the table
-summarizes the supported vector element types and precisions. In their public
-version, and at the time of writing, \Vc does not support 8-bit integers, \xsimd
-does not support 8-bit and 16-bit integers and \TSIMD does not support 64-bit
-data types, to the best of our knowledge. The \textit{Features} column
-highlights some additional characteristics. The \textit{Math Func.}~ column
-indicates which wrapper supports additional mathematical sub-routines, not
-necessarily available as native CPU instructions (exponential, logarithm,
-trigonometric functions for instance), and required by algorithms such as the
-Box-Muller Transform (see Section~\ref{subsec:bmt}). The \textit{\Cxx Technique}
-column indicates whether the wrapper is designed as an expression template
-framework, or whether it relies on operator overloading techniques. The
-expression template feature is a powerful technique to automatically drive the
-rewriting of whole arithmetic expressions into SIMD hardware instructions or
-instruction sequences. For instance if the user writes \verb|d = a * b + c|, the
-wrapper can automatically match a \emph{fused multiply and add} instruction
-(FMA). \BoostSIMD and \bSIMD extensively use this
+Table~\ref{tab:vectorization_comparison} compares various SIMD wrappers. It aims
+to present an overview of some prominent solutions, though it is by no means
+exhaustive due to the richness of the SIMD wrapper landscape. Some of the
+wrappers presented, such as \MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been
+designed in an academic research context. Some others, \simdpp and \xsimd,
+appear to be standalone development efforts by individual programmers or
+maintainers. Proprietary, closed-source solutions also exist on the market, such
+as \bSIMD, which is an extended version of \BoostSIMD, or the commercial version
+of \VCL. The \textit{Instruction Set} column is broken up into five families
+among the most widely available on the market: \verb|NEON|, \verb|SSE|,
+\verb|AVX|, \verb|AVX-512| and \verb|AltiVec|. For the sake of conciseness, we
+choose not to list all the instruction sets ``sub-variants'' (such as
+\verb|SSE2|, \verb|SSE3|, etc). \simdpp et \bSIMD propose the most comprehensive
+instruction set compatibility. At the other end of the range, \xsimd and
+\BoostSIMD only support Intel SIMD instruction sets. The \textit{Data Type}
+column of the table summarizes the supported vector element types and
+precisions. In their public version, and at the time of writing, \Vc does not
+support 8-bit integers, \xsimd does not support 8-bit and 16-bit integers and
+\TSIMD does not support 64-bit data types, to the best of our knowledge. The
+\textit{Features} column highlights some additional characteristics. The
+\textit{Math Func.}~ column indicates which wrapper supports additional
+mathematical sub-routines, not necessarily available as native CPU instructions
+(exponential, logarithm, trigonometric functions for instance), and required by
+algorithms such as the Box-Muller Transform (see Section~\ref{subsec:bmt}). The
+\textit{\Cxx Technique} column indicates whether the wrapper is designed as an
+expression template framework, or whether it relies on operator overloading
+techniques. The expression template feature is a powerful technique to
+automatically drive the rewriting of whole arithmetic expressions into SIMD
+hardware instructions or instruction sequences. For instance if the user writes
+\verb|d = a * b + c|, the wrapper can automatically match a \emph{fused multiply
+and add} instruction (FMA). \BoostSIMD and \bSIMD extensively use this
 technique~\cite{Esterie2012,Esterie2012a}. The drawbacks are that the source
 code complexity of the wrapper is dramatically increased. \BoostSIMD and \bSIMD
 have a dependency on the Boost framework to build, and currently available \Cxx
@@ -589,7 +589,7 @@ fully flatten, depending on the size of the code length.
 \begin{table}
   \centering
   \caption{Throughput and latency comparison of polar decoding algorithms.}
-  \label{tab:polar_algo}
+  \label{tab:polar_algos}
   {\small
    \begin{tabular}{r|c|c|c}
     \textbf{Decoding}  & \textbf{BER \& FER}   & \multirow{1}{*}{\textbf{Throughput}} & \textbf{Max. Latency}        \\
@@ -607,7 +607,7 @@ fully flatten, depending on the size of the code length.
 \end{table}
 
 In order to better distinguish all the algorithmic variations, we compare their
-main features in Table~\ref{tab:polar_algo}. Each algorithm is characterized in
+main features in Table~\ref{tab:polar_algos}. Each algorithm is characterized in
 terms of decoding performance, throughput, and worst case latency for a software
 implementation. The non-simplified versions of the adaptive SCL algorithms are
 not included in the Table for readability.
@@ -1418,15 +1418,45 @@ masking instructions.
   \item consommation énergétique ARM/x86
 \end{itemize}
 
-\paragraph{Energy}
+\paragraph{SC Energy and Dynamic}
+
+\begin{table}[t]
+  \caption{Specifications of the \odr and the \juno boards.}
+  \label{tab:polar_energy_arm_specs}
+  \begin{center}
+  % {\footnotesize
+  \begin{tabular}{c | c | c}
+                                      & \textbf{ODROID-XU+E} &          \textbf{\juno} \\
+    \hline
+    \multirow{2}{*}{\textbf{SoC}}     &  Samsung Exynos 5410 &               ARM64 \bl \\
+                                      &      (Exynos 5 Octa) &         (dev. platform) \\
+    \hline
+    \multirow{1}{*}{\textbf{Arch.}}   &       32-bit, ARMv7  &           64-bit, ARMv8 \\
+    \hline
+    \multirow{1}{*}{\textbf{Process}} &                 28nm &  unspecified (32/28 nm) \\
+
+    \hline
+    \multirow{4}{*}{\textbf{\big}}    &  4xCortex-A15 MPCore &     2xCortex-A57 MPCore \\
+                                      &   freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] \\
+                                      &   L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB \\
+                                      &               L2 2MB &                  L2 2MB \\
+    \hline
+    \multirow{4}{*}{\textbf{\little}} &   4xCortex-A7 MPCore &     4xCortex-A53 MPCore \\
+                                      &   freq. [250-600MHz] &      freq. [450-850MHz] \\
+                                      &   L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB \\
+                                      &             L2 512KB &                  L2 1MB \\
+  \end{tabular}
+  % }
+  \end{center}
+\end{table}
 
 \begin{table}
   \caption{Characteristics for each cluster ($T_i$ is the information
     throughput), for dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
     consumption is not included in $E_b$ and in $P$.}
-  \label{tab:res}
+  \label{tab:polar_energy_results}
   \begin{center}
-  {\footnotesize
+  %{\footnotesize
   \begin{tabular}{c | c | c | c | c | c}
     \textbf{Cluster} &
     \textbf{Impl.} &
@@ -1455,25 +1485,25 @@ masking instructions.
                                         & intra & 221.8 &  9.2 &  40.5 &  9.017 \\
                                         & inter & 632.2 & 51.8 &  15.8 &  9.997 \\
   \end{tabular}
-  }
+  %}
   \end{center}
 \end{table}
 
-Table~\ref{tab:res} gives an overview of the decoder behavior on different
-clusters and for various implementations. The code is always single threaded and
-only the 8-bit fixed-point decoders are considered, since 32-bit floating-point
-versions  are 4 times more energy consuming, on average. The sequential version
-is mentioned for reference only, as the  throughput $T_i$ is much higher on
-vectorized versions. Generally the inter-frame SIMD strategy delivers better
-performance at the cost of a higher latency $l$. Table~\ref{tab:res} also
-compares the energy consumption of \little and \big clusters. The A53 consumes
-less energy than the A7 and the A57 consumes less energy than the A15,
-respectively. This can be explained by  architectural improvements brought by
-the more recent ARM64 platform. Despite the fact that the ARM64 is a development
-board, the ARM64 outperforms the ARM32 architecture. Finally we observe that the
-power consumption is higher for the inter-frame version than for the intra-frame
-one because it fills the SIMD units more intensively, and the SIMD units consume
-more than the scalar pipeline.
+Table~\ref{tab:polar_energy_results} gives an overview of the decoder behavior
+on different clusters and for various implementations. The code is always single
+threaded and only the 8-bit fixed-point decoders are considered, since 32-bit
+floating-point versions  are 4 times more energy consuming, on average. The
+sequential version is mentioned for reference only, as the  throughput $T_i$ is
+much higher on vectorized versions. Generally the inter-frame SIMD strategy
+delivers better performance at the cost of a higher latency $l$.
+Table~\ref{tab:polar_energy_results} also compares the energy consumption of
+\little and \big clusters. The A53 consumes less energy than the A7 and the A57
+consumes less energy than the A15, respectively. This can be explained by
+architectural improvements brought by the more recent ARM64 platform. Despite
+the fact that the ARM64 is a development board, the ARM64 outperforms the ARM32
+architecture. Finally we observe that the power consumption is higher for the
+inter-frame version than for the intra-frame one because it fills the SIMD units
+more intensively, and the SIMD units consume more than the scalar pipeline.
 
 For comparison, the results for the Intel Core i7-4850HQ, using SSE4.1
 instructions (same vector length as ARM NEON vectors) are also included. Even if
@@ -1484,9 +1514,9 @@ because of its high power requirements.
 \begin{table}
   \caption{Comparison of 8-bit fixed-point decoders with intra-frame
     vectorization. $N = 32768$ and $R = 5/6$.}
-  \label{tab:perf}
+  \label{tab:polar_energy_comparison}
   \begin{center}
-  {\footnotesize
+  %{\footnotesize
   \begin{tabular}{c | c | c | c | c | c}
     \textbf{Decoder} &
     \textbf{Platform} &
@@ -1503,15 +1533,15 @@ because of its high power requirements.
     \hline
     this work        & A57       & 1.1Ghz & NEON   &          73  &  374 \\
   \end{tabular}
-  }
+  %}
   \end{center}
 \end{table}
 
-Table~\ref{tab:perf} shows a performance comparison (throughput, latency) with
-the dynamic intra-frame decoder of~\cite{Giard2014}. On a x86 CPU, our dynamic
-decoder is 2.8 times faster than the state-of-the-art decoder. Even if we used a
-more recent CPU, we also used the same set of instructions (SSE4.1) and the
-frequencies are comparable.
+Table~\ref{tab:polar_energy_comparison} shows a performance comparison
+(throughput, latency) with the dynamic intra-frame decoder of~\cite{Giard2014}.
+On a x86 CPU, our dynamic decoder is 2.8 times faster than the state-of-the-art
+decoder. Even if we used a more recent CPU, we also used the same set of
+instructions (SSE4.1) and the frequencies are comparable.
 
 \begin{figure}
   \centering
@@ -1637,6 +1667,155 @@ implementations, ARM implementations must fulfil a large set of SDR applications
 with limited throughputs and where the power consumption matters. Finally, it is
 important to notice that multi-core implementations of the proposed ARM decoders
 is still possible on these ARM targets to improve the decoding throughputs.
+
+\paragraph{SC inter/intra-SIMD Generated (aka Unrolled)}
+
+In this section we first describe the protocol we used, after that we provide a
+performance comparison between the state-of-the-art and P-EDGE. At the end we
+discuss the exploring capabilities of our framework.
+
+\begin{table}
+  \begin{center}
+  %{\scriptsize
+  \begin{tabular}{c|c|c|c}
+           & x86-based              & ARMv7-based             & prev. work arch.~\cite{Sarkis2014}\\
+  \hline
+  CPU      & Intel Xeon E31225      & ARM Cortex-A15          & Intel Core i7-2600                \\
+           & 3.10Ghz                & MPCore~2.32GHz          & 3.40GHz                           \\
+  Cache    & 32KB L1I/L1D, 256KB L2 & 32KB L1I/L1D, L2 1024KB & 32KB L1I/L1D, L2 256KB            \\
+           & L3 6MB                 & No L3                   & L3 8MB                            \\
+  Compiler & GNU g++~4.8            & GNU g++~4.8             & GNU g++~4.8                       \\
+  \hline
+  % Flags for 32-bit& \texttt{-std=c++11 -Ofast -funroll-loops -mavx}\\
+  % Flags for 8-bit & \texttt{-std=c++11 -Ofast -funroll-loops -msse4.1}\\
+  \end{tabular}
+  %}
+  \end{center}
+  \caption{Performance evaluation platforms.}
+  \label{tab:polar_sc_gen_thr_specs}
+  % \vspace{-1.5em}
+\end{table}
+
+The platforms used for performance evaluation are shown in
+Table~\ref{tab:polar_sc_gen_thr_specs}. Unless stated otherwise, each measure is
+obtained as the best of ten runs of a 10~second simulation, taking into account
+frame loading and result storing. SNR (Signal Noise Ratio) is set to 2.5~dB for
+tests with 1/5 and 1/2 rates, and to 4.0 dB for the 5/6, 0.84, and 9/10 rate
+tests. Colors differentiate the codes rates of the Polar Code, point shapes
+differentiate decoder types (Intra-SIMD vs Inter-SIMD).
+
+\subparagraph{Comparison between P-EDGE and the State of the Art}
+
+\begin{figure}[htp]
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra}
+  \caption{Performance comparison between several code rates of 32-bit floating
+    point decoding stages (running on the Intel\R Xeon\R CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\R CPU A15).}
+  \label{plot:polar_sc_gen_thr_intra}
+\end{figure}
+
+\begin{table}
+  \begin{center}
+  \begin{tabular}{c c c c}
+    \hline
+    $(N, K)$                        & Decoder                      & Info T/P (Mb/s) & Latency ($\mu$s)\\
+    \hline
+  %%this performance is included in the graphs
+  % \multirow{2}{*}{(2048, 1024)}   & prev. work~\cite{Sarkis2014} & 147             & 7               \\
+  %                                 & this work                    & 195             & 5               \\
+  % \hline
+  %%this performance is included in the graphs
+  % \multirow{2}{*}{(2048, 1707)}   & prev. work~\cite{Sarkis2014} & 335             & 5               \\
+  %                                 & this work                    & 402             & 4               \\
+  % \hline
+    \multirow{2}{*}{(16384, 14746)} & prev. work~\cite{Sarkis2014} & 292             & 50              \\
+                                    & this work                    & 341             & 43              \\
+    \hline
+    \multirow{2}{*}{(32768, 27568)} & prev. work~\cite{Sarkis2014} & 220             & 125             \\
+                                    & this work                    & 241             & 114             \\
+    \hline
+    \multirow{2}{*}{(32768, 29492)} & prev. work~\cite{Sarkis2014} & 261             & 113             \\
+                                    & this work                    & 293             & 101             \\
+    \hline
+  \end{tabular}
+  \end{center}
+  \caption{Comparing P-EDGE with a state-of-art software polar decoder, for
+    codes of rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
+    state-of-the art performance results reported in~\cite{Sarkis2014}, for
+    comparison.}
+  \label{tab:polar_sc_gen_thr_comparison}
+\end{table}
+
+\begin{figure}
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter}
+  \caption{Performance comparison between several code rates of 8-bit fixed
+    point decoding stages (running on the Intel\R Xeon\R CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\R CPU A15). Circles show P-EDGE
+    results. Triangles show our former ``handwritten'' implementation
+    results~\cite{LeGal2015a}.}
+  \label{plot:polar_sc_gen_thr_inter}
+\end{figure}
+
+Fig.~\ref{plot:polar_sc_gen_thr_intra} shows P-EDGE intra-frame throughput on
+different architectures. Our generic framework performance outperforms previous
+work decoder results (between 10\% and 25\% higher). This is confirmed in
+Tab.~\ref{tab:polar_sc_gen_thr_comparison} which compares P-EDGE with the
+state-of-the-art result samples for some specific rates reported
+in~\cite{Sarkis2014}. The throughput of the inter-frame implementation is shown
+in Figure~\ref{plot:polar_sc_gen_thr_inter} for different architectures. Again,
+the results confirm that our generic approach overtakes handwritten code (also
+between 10\% and 25\% higher on x86).
+
+\begin{table}[h]
+  \begin{center}
+  \begin{tabular}{ c | c | c | c | c | c | c}
+    Decoder                  & $N = 2^6$ & $N = 2^8$   & $N = 2^{10}$     & $N = 2^{12}$     & $N = 2^{14}$      & $N = 2^{16}$                \\
+    \hline
+    inter 32-bit, $R = 1/2$  & 1 (7)     & 2 (24)      & 7 (\textbf{77})  & 9 (\textbf{254}) & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
+    \hline
+    inter 32-bit, $R = 5/6$  & 1 (4)     & 2 (19)      & 4 (\textbf{53})  & 7 (\textbf{167}) & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
+    \hline
+    intra 32-bit, $R = 1/2$  & 1 (4)     & 3 (16)      & 9 (\textbf{56})  & 8 (\textbf{182}) & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
+    \hline
+    intra 32-bit, $R = 5/6$  & 1 (3)     & 3 (13)      & 6 (\textbf{38})  & 7 (\textbf{126}) & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
+    \hline
+    inter ~8-bit, $R = 1/2$  & 1 (5)     & 2 (22)      & 7 (\textbf{72})  & 8 (\textbf{252}) & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
+    \hline
+    inter ~8-bit, $R = 5/6$  & 1 (4)     & 2 (18)      & 4 (\textbf{51})  & 6 (\textbf{191}) & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
+  \end{tabular}
+  \end{center}
+  \caption{Code size (in KB) of the generated decoders depending on the number
+    of bits $N$ per frame (code respectively compiled with AVX1 instructions for
+    the 32-bit decoders and with SSE4.1 instructions for the 8-bit decoders).
+    For comparison, code size without compression are shown in parentheses.}
+  \label{plot:polar_sc_gen_l1i_size}
+\end{table}
+
+For all the test series, the bandwidth first increases with codeword size, as
+the tree pruning becomes increasingly more effective with larger trees. The
+effect is stronger for Intra-SIMD where pruning also results in removing
+inefficient scalar nodes. However, beyond a codeword size point which depends on
+the architecture and on the selected SIMD version, performance decreases again
+due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
+generated as straight-line code (no recursive calls), with all node computations
+put in sequence. This improves performance for small to medium codeword size, up
+to the point where the compiled binary exceeds the L1I cache size. We mitigated
+this issue by reducing decoder binary sizes using two compression techniques: 1)
+in the generated code, we moved the buffer offsets from template arguments to
+function arguments, which enabled the compiler to factorize more function calls
+than before (improvement by a factor of 10), 2) we implemented a sub-tree
+folding algorithm in the generator, to detect multiple occurrences of a same
+sub-tree and to put the corresponding code into a dedicated function
+(improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
+with the size of the tree).
+
+Table~\ref{plot:polar_sc_gen_l1i_size} shows the binary code size of the
+decoders depending on $N$. The results which exceed the 32KB of the L1I cache
+are highlighted in bold font. Sub-tree folding was enabled starting from
+$N=2^{12}$ because there is an overhead (at run-time) when using this technique.
+P-EDGE decoder code sizes without compression are shown in parentheses: we can
+observe a huge improvement, until $N=2^{14}$ the code size never exceeds the L1I
+cache anymore.
 
 \subsection{Generic Kernels and Multi-Kernel}
 
@@ -1770,7 +1949,7 @@ with a single source code.
   \tabcolsep=6pt
   \centering
   \caption{LDPC decoder speedups with \MIPP.}
-  \label{tab:sp_ldpc}
+  \label{tab:ldpc_speedups}
   %{\small
   \begin{tabular}{r|r|r|r}
                       & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} \\ \hline
@@ -1781,13 +1960,13 @@ with a single source code.
   %}
 \end{table}
 
-Table~\ref{tab:sp_ldpc} presents speedups obtained with \MIPP. Ten iterations
-are performed and a stop criterion was implemented for the tests based on parity
-check constraints (not shown in Listing~\ref{lst:LDPC}). The $H$ matrix comes
-from the IEEE 802.3an standard (10Gbps Ethernet). Speedups are close to the SIMD
-width. In \verb|NEON| and \verb|SSE| they even exceed it. Such result can be
-explained by an optimized memory management compared to the sequential version
-of the code.
+Table~\ref{tab:ldpc_speedups} presents speedups obtained with \MIPP. Ten
+iterations are performed and a stop criterion was implemented for the tests
+based on parity check constraints (not shown in Listing~\ref{lst:LDPC}). The $H$
+matrix comes from the IEEE 802.3an standard (10Gbps Ethernet). Speedups are
+close to the SIMD width. In \verb|NEON| and \verb|SSE| they even exceed it. Such
+result can be explained by an optimized memory management compared to the
+sequential version of the code.
 
 \section{SCMA Demodulator~\cite{Ghaffari2019}}
 
