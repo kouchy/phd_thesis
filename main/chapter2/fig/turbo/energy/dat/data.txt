@@ -1,0 +1,33 @@
+# power1 = current package power (with LLC cache)
+# power2 = current core power (without LLC cache)
+#
+"K=1024 \_{AVX}"
+#cores	K	simd	freq	power1 (W)	power2 (W)	ithr (Mbps)	lat (us)
+ 1	1024	32	3.6	21.8	11.8	63	520
+ 2	1024	32	3.6	37.1	24.6	120	546
+ 3	1024	32	3.3	45	34	160	614
+ 4	1024	32	3.2	49	38	180	728
+
+
+"K=1024 \_{SSE}"
+#cores	K	simd	freq	power1 (W)	power2 (W)	ithr (Mbps)	lat (us)
+ 1	1024	16	3.6	22.6	11.5	42	390
+ 2	1024	16	3.6	34.7	23	81	405
+ 3	1024	16	3.5	42	30.6	118	417
+ 4	1024	16	3.2	48	35	140	468
+
+
+"K=6144 \_{AVX}"
+#cores	K	simd	freq	power1 (W)	power2 (W)	ithr (Mbps)	lat (us)
+ 1	6144	32	3.6	21.8	11.8	48	4096
+ 2	6144	32	3.6	37.1	24.6	89	4418
+ 3	6144	32	3.3	45	34	121	4875
+ 4	6144	32	3.2	49	38	133	5913
+
+
+"K=6144 \_{SSE}"
+#cores	K	simd	freq	power1 (W)	power2 (W)	ithr (Mbps)	lat (us)
+ 1	6144	16	3.6	22.6	11.5	41	2398
+ 2	6144	16	3.6	34.7	23	80	2458
+ 3	6144	16	3.5	42	30.6	114	2587
+ 4	6144	16	3.2	48	35	139	2829

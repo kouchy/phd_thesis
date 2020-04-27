@@ -94,7 +94,13 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b.dat \
               main/chapter2/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size.gp \
               main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
-              main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat
+              main/chapter2/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat \
+              main/chapter2/fig/turbo/bfer/bfer.gp \
+              main/chapter2/fig/turbo/bfer/dat/data_6144.txt \
+              main/chapter2/fig/turbo/thr/thr.gp \
+              main/chapter2/fig/turbo/thr/dat/data.txt \
+              main/chapter2/fig/turbo/energy/energy.gp \
+              main/chapter2/fig/turbo/energy/dat/data.txt
 	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/algos_comparison/     && rubber -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
@@ -112,6 +118,9 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/polar/sc_gen_thr_intra/     && gnuplot   sc_gen_thr_intra.gp
 	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && gnuplot   sc_gen_thr_inter.gp
 	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && gnuplot   sc_gen_l1i_size.gp
+	cd main/chapter2/fig/turbo/bfer/                 && gnuplot   bfer.gp
+	cd main/chapter2/fig/turbo/thr/                  && gnuplot   thr.gp
+	cd main/chapter2/fig/turbo/energy/               && gnuplot   energy.gp
 
 clean4all:
 	rm -f *.mtc*
@@ -154,6 +163,9 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/sc_gen_thr_inter/     && rm -f             sc_gen_thr_inter.pdf
 	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && rm -f             sc_gen_l1i_size.pdf
 	cd main/chapter2/fig/polar/sc_gen_l1i_size/      && rm -f             sc_gen_l1i_size_small.pdf
+	cd main/chapter2/fig/turbo/bfer/                 && rm -f             bfer.pdf
+	cd main/chapter2/fig/turbo/thr/                  && rm -f             thr.pdf
+	cd main/chapter2/fig/turbo/energy/               && rm -f             energy.pdf
 
 open:
 	xdg-open my_thesis.pdf &

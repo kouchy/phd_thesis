@@ -434,7 +434,7 @@ the root node in the form of a $N$-bit partial sum vectors.
 \begin{algorithm}
   \caption{SCL decoding algorithm}\label{alg:polar_scl}
 
-  \small
+  % \small
   \SetKwProg{Fn}{Function}{}{}
 
   % \KwIn{$N$ is the frame size.}
@@ -1688,7 +1688,7 @@ discuss the exploring capabilities of our framework.
   Cache    & 32KB L1I/L1D, 256KB L2 & 32KB L1I/L1D, L2 1024KB & 32KB L1I/L1D, L2 256KB            \\
            & L3 6MB                 & No L3                   & L3 8MB                            \\
   Compiler & GNU g++~4.8            & GNU g++~4.8             & GNU g++~4.8                       \\
-  \hline
+  % \hline
   % Flags for 32-bit& \texttt{-std=c++11 -Ofast -funroll-loops -mavx}\\
   % Flags for 8-bit & \texttt{-std=c++11 -Ofast -funroll-loops -msse4.1}\\
   \end{tabular}
@@ -1990,25 +1990,592 @@ the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 
 HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
 
-\subsection{Maximum A Posteriori Algorithm}
+\subsection{Overview of the Turbo decoding process}
+\label{sec:overview}
 
 \begin{itemize}
   \item décodeur Turbo LTE (3G/4G)
   \item treillis
 \end{itemize}
 
-\subsection{Vectorization Strategies}
+% SHORT VERSION ---------------------------------------------------------------
+% The turbo-decoding process is an iterative process in which two soft input soft
+% output (SISO) decoders exchange extrinsic information. Each SISO decoder uses
+% the channel information and \textit{a priori} extrinsic information to compute
+% \textit{a posteriori} extrinsic information. The \textit{a posteriori}
+% information becomes the \textit{a priori} information for the other SISO decoder
+% and is exchanged via interleaver/deinterleaver.
+
+% In turbo-coding, the two component codes are convolutional codes, the associated
+% decoding modules perform the BCJR or forward-backward algorithm~\cite{Bahl1974}
+% which is optimal for the maximum a posteriori (MAP) decoding of convolutional
+% codes. In order to calculate the extrinsic information for a bit, a BCJR SISO
+% decoder first computes the probability that a trellis transition occurred during
+% the encoding process. The branch metrics associated with states
+% $s_i^k$ and $s_j^{k+1}$ are computed as:
+% \begin{equation}
+% \label{eq:gamma}
+%   \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{sys}^k + L_a^k)u^k + 0.5(L_p^k p^k).
+% \end{equation}
+% Here, $L_{sys}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
+% LLR for $k^{th}$ trellis section, respectively. In addition, the parity LLRs for
+% the $k^{th}$ trellis step are $L_p^k = L_{p0}^k$ for MAP decoder 0 and
+% $L_p^k = L_{p1}^k$ for MAP decoder 1. We do not need to evaluate the branch
+% metric $\gamma(s^k , s^{k+1})$ for all 16 possible branches, as there are only
+% four different branch metrics:
+% $\gamma^k_0 = 0.5(L_{sys}^k + L_a^k + L_p^k)$,
+% $\gamma^k_1 = 0.5(L_{sys}^k + L_a^k - L_p^k)$, $-\gamma^k_0$, and $-\gamma^k_1$.
+% After that, the SISO decoder computes forward and backward recursions over the
+% trellis representation of the convolutional code. In this work, we use the
+% Enhanced max-log-MAP algorithm~\cite{Robertson1995,Vogt2000}. For each state
+% $j$ of section $k$ of the trellis, the forward ($\alpha$) and backward ($\beta$)
+% metrics are computed as follows:
+% \begin{equation}
+% \label{eq:alpha}
+%   \alpha_j^{k+1} = max_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
+% \end{equation}
+% \begin{equation}
+% \label{eq:beta}
+%   \beta_j^k = max_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
+% \end{equation}
+% Then, the extrinsic information for each bit at position $k$ is:
+% \begin{equation}
+% \label{eq:ext}
+% \begin{aligned}
+%   L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
+%   - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
+%   - L_{sys}^k - L_a^k,
+% \end{aligned}
+% \end{equation}
+% Finally, $L_e$ is scaled by a fixed factor of $0.75$.
+% %As the Enhanced max-log-MAP is implemented, $L_e$ is re-scaled by a factor of
+% %$0.75$ (fixed scaling factor).
+
+% LONG VERSION ----------------------------------------------------------------
+The turbo decoder consists of two concatenated component decoders (denoted as
+decoder 0 and decoder 1) exchanging soft information in terms of the
+log-likelihood ratio (LLR) for each transmitted information bit through an
+interleaver and a deinterleaver.
+
+In this paper we will only consider rate-1/3 codewords. $K$ represents the
+number of information bits and $N$ is the codeword size: $K = N / 3$.
+
+\subsubsection{Algorithm outline}
+
+Turbo decoding is carried out in multiple iterations where each iteration
+consists of two component decoding phases. In each phase, a component
+decoder performs maximum a-posteriori (MAP) decoding using the BCJR algorithm
+\cite{Bahl1974}, which generates so-called extrinsic LLRs given the LLRs
+obtained by the detector and a-priori LLRs obtained from the other component
+decoder. The BCJR algorithm consists of one forward and one backward traversal
+on a trellis, which is defined by the underlying code. Specifically, to decode a
+codeword of $K$ information bits, the BCJR algorithm performs the following
+steps: (i) In the forward traversal step, it iteratively computes $K$ sets of
+forward state metrics for each transmitted information bit. (ii) In the backward
+traversal step, it iteratively computes $K$ sets of backward state metrics
+for each transmitted information bit. (iii) To compute the extrinsic LLRs, the
+BCJR algorithm then combines the forward and backward state metrics.
+
+\subsubsection{Branch-metric computations}
+
+LTE-Advanced operates on a 8-state trellis. Let $s_j^{k+1}$ be the $j^{th}$
+state associated with information bit $k+1$. There are two incoming branches
+into state $s_j^{k+1}$. Each incoming branch is associated with values $u^k$ and
+$p^k$, the $k^{th}$ information bit and the parity bit (both $\pm1$),
+respectively. The branch metrics associated with states $s_i^k$ and $s_j^{k+1}$
+are computed as follows:
+\begin{equation}
+\label{eq:gamma}
+ \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{sys}^k + L_a^k)u^k + 0.5(L_p^k p^k).
+\end{equation}
+Here, $L_{sys}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
+LLR for $k^{th}$ trellis step, respectively. In addition, the parity LLRs for
+the $k^{th}$ trellis step are $L_p^k = L_{p0}^k$ for MAP decoder 0 and
+$L_p^k = L_{p1}^k$ for MAP decoder 1. Note that we do not need to evaluate the
+branch metric $\gamma(s^k , s^{k+1})$ for all 16 possible branches, as there are
+only four different branch metrics:
+$\gamma^k_0 = 0.5(L_{sys}^k + L_a^k + L_p^k)$,
+$\gamma^k_1 = 0.5(L_{sys}^k + L_a^k - L_p^k)$, $-\gamma^k_0$, and $-\gamma^k_1$.
+
+\subsubsection{Forward and backward state metric computations}
+
+The forward state metrics can be computed iteratively from trellis step to
+trellis step. The forward state metrics of step $k+1$ correspond to the vector
+$\mathbf{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
+$j^{th}$ forward state metric $\alpha_j^{k+1}$ only depends on two forward
+state metrics of stage $k$. These state metrics are computed by:
+\begin{equation}
+\label{eq:alpha}
+ \alpha_j^{k+1} = max^*_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
+\end{equation}
+where the set $F$ contains the two indices of the states in step $k$ connected
+to state $s_j^{k+1}$ (as defined by the trellis). The $max^*\{·\}$ operator is
+defined as:
+\begin{equation}
+ max^*\{a,b\} = max\{a,b\} + log(1 + exp(-|a-b|)),
+\end{equation}
+where $log(1 + exp(-|a-b|))$ is a correction term. For the max-log
+approximation, we approximate $max^*$ by:
+\begin{equation*}
+ max^*(a, b) \approx max(a, b).
+\end{equation*}
+In this case, one can scale the extrinsic LLRs by a factor of 0.75 to partially
+recover the error-rate performance loss induced by the approximation (see, e.g.,
+\cite{Vogt2000}, \cite{Studer2011} for additional details). We will call this
+decoding algorithm the \emph{Enhanced} max-log-MAP (EML-MAP).
+
+Computation of the backward state metrics is similar to that of the forward
+trellis traversal in Eq.~\ref{eq:alpha}. The vector of backward state metrics,
+denoted by $\mathbf{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is computed as:
+\begin{equation}
+\label{eq:beta}
+ \beta_j^k = max^*_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
+\end{equation}
+Here, the set $B$ contains the indices of states in step $k+1$ connected to
+state $s_j^k$ as defined by the trellis.
+
+\subsubsection{LLR computations}
+
+After the forward and backward iterations have been carried out, the extrinsic
+LLRs for the $k^{th}$ bit are computed as:
+\begin{equation}
+\label{eq:ext}
+\begin{aligned}
+ L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}^*\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
+ - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}^*\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
+ - L_{sys}^k - L_a^k,
+\end{aligned}
+\end{equation}
+where the sets $U^1$ and $U^{-1}$ designate the set of states connected by paths
+where $u^k=1$ and the set of states connected by paths where $u^k=-1$,
+respectively (because of the BPSK modulation).
+
+\subsection{Parallelism analysis}
+\label{sec:parallelism}
 
 \begin{itemize}
   \item inter-SIMD
   \item décodeur inter- et intra-SIMD LTE à faible latence
 \end{itemize}
 
+\subsubsection{Intra-frame versus inter-frame parallelism}
+
+A Turbo decoder is in charge of decoding a large set of frames. Two strategies
+are then possible to speedup the decoding process. i)
+\textit{Intra-frame parallelism} : the decoder exploits the parallelism within
+the turbo-decoding process by executing concurrent tasks during
+the decoding of one frame. ii) \textit{inter-frame parallelism} : several frames
+are decoded simultaneously.
+
+In the perspective of a hardware implementation, the intra-frame approach is
+efficient~\cite{Muller2009} because the area overhead resulting from
+parallelization is lower than the speedup. On the contrary, the inter-frame
+strategy is inefficient, due to the duplication of multiple hardware
+turbo-decoders. The resulting speedup comes at a high cost in term of area
+overhead.
+
+In the perspective of a software implementation, the issue is different. The
+algorithm is executed on a programmable non-modifiable architecture. The degree
+of freedom lies in the mapping of the different parallelizable tasks on the
+parallel units of the processor. Modern multi-core processors support Single
+Program Multiple Data (SPMD) execution. Each core includes Single Instruction
+Multiple Data (SIMD) units. The objective is then to identify the
+parallelization strategy suitable for both SIMD and SPMD programming models.
+In the literature, intra-frame parallelism is often mapped on SIMD units while
+inter-frame parallelization is usually kept for multi-threaded approaches
+(SPMD). In~\cite{Zhang2012,Wu2013}, multiple trellis-state computations are
+performed in parallel in the SIMD units. In~\cite{Wu2010,Wu2011,Chinnici2012,
+Yoge2012,Zhang2012,Liu2013,Chen2013,Xianjun2013,Wu2013,Zhang2014,Li2014}, the
+decoded frame is split into sub-blocks that are processed in parallel in the
+SIMD units. An alternative approach is to process both SISO decoding in parallel
+but it requires additional computations for synchronization and/or impacts on
+error-correction performance~\cite{Muller2009}. However, for all these
+approaches a part of the computation of the BCJR decoder remains sequential,
+bounding the speedup beyond the capabilities of SIMD units. Inter-frame
+parallelism has been proposed in~\cite{Wu2010,Wu2011,Zhang2012,Wu2013}. Multiple
+codewords are decoded in parallel, it improves the memory access regularity and
+the usage rate of SIMD units. The speedup is no longer bounded by the sequential
+parts, all removed, but this comes at the expense of an increase in memory
+footprint and latency.
+
+In this work, we focus on the inter-frame parallelization and show that the use
+of this approach allows some register-reuse optimizations that are not possible
+in the intra-frame strategy.
+
+\paragraph{Inter-frame parallelism on multi-core CPUs}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\textwidth]{turbo/reordering_process_inter_simd}
+  \caption{Frame reordering process before and after the decoding process.
+    Performed 3 times: for systematic, first and second parity information.}
+  \label{fig:turbo_reordering_process_inter_simd}
+\end{figure}
+
+The contribution of this work is to propose an efficient mapping of multiple
+frames on the CPU SIMD units (inter-frame strategy): the decoding of $M$ frames
+is vectorized. Before the decoding process can be launched, this new approach
+requires to: (a) buffer a set of $M$ frames and (b) reorder the input LLRs in
+order to make the SIMDization efficient with memory aligned transactions (see
+Fig.~\ref{fig:turbo_reordering_process_inter_simd}). Similarly, a
+reversed-reordering step has to be performed at the end of the decoding process.
+These reordering operations are expensive but they make the complete decoding
+process very regular and efficient for SIMD parallelization. Moreover,
+reordering is applied only once, independently of the number of decoding
+iterations.
+
+\begin{algorithm}
+  \caption{Standard BCJR implementation}
+  \label{alg:turbo_bcjr}
+
+  % \small
+  \For(// Sequential loop){$all~frames$}
+  {
+    \For(// Parallel loop){$k=0;~k<K;~k=k+1$}
+    {
+      $\boldsymbol{\gamma}^k\gets \computeGamma(L_{sys}^k, L_{p}^k, L_{e}^k)$
+    }
+
+    $\boldsymbol{\alpha}^0\gets \initAlpha()$
+
+    \For(// Sequential loop){$k=1;~k<K;~k=k+1$}
+    {
+      $\boldsymbol{\alpha}^k\gets \computeAlpha(\boldsymbol{\alpha}^{k-1}, \boldsymbol{\gamma}^{k-1})$
+    }
+
+    $\boldsymbol{\beta}^{K-1}\gets \initBeta()$
+
+    \For(// Sequential loop){$k=K-2;~k \geq 0;~k=k-1$}
+    {
+      $\boldsymbol{\beta}^k\gets \computeBeta(\boldsymbol{\beta}^{k+1}, \boldsymbol{\gamma}^{k})$
+    }
+
+    \For(// Parallel loop){$k=0;~k<K;~k=k+1$}
+    {
+      $L_e^k\gets \computeExtrinsic(\boldsymbol{\alpha}^k, \boldsymbol{\beta}^{k}, \boldsymbol{\gamma}^{k})$
+    }
+  }
+\end{algorithm}
+
+\begin{algorithm}
+  \caption{Loop fusion BCJR implementation}
+  \label{alg:turbo_bcjr_loop_fusion}
+
+  % \small
+  \For(// Vectorized loop){$all~frames$}
+  {
+    $\boldsymbol{\alpha}^0\gets \initAlpha()$
+
+    \For(// Sequential loop){$k=1;~k<K;~k=k+1$}
+    {
+      $\boldsymbol{\gamma}^{k-1}\gets \computeGamma(L_{sys}^{k-1}, L_{p}^{k-1}, L_{e}^{k-1})$
+
+      $\boldsymbol{\alpha}^k\gets \computeAlpha(\boldsymbol{\alpha}^{k-1}, \boldsymbol{\gamma}^{k-1})$
+    }
+
+    $\boldsymbol{\gamma}^{K-1}\gets \computeGamma(L_{sys}^{K-1}, L_{p}^{K-1}, L_{e}^{K-1})$
+
+    $\boldsymbol{\beta}^{K-1}\gets \initBeta()$
+
+    $L_e^{K-1}\gets \computeExtrinsic(\boldsymbol{\alpha}^{K-1}, \boldsymbol{\beta}^{K-1}, \boldsymbol{\gamma}^{K-1})$
+
+    \For(// Sequential loop){$k=K-2;~k \geq 0;~k=k-1$}
+    {
+      $\boldsymbol{\beta}^k\gets \computeBeta(\boldsymbol{\beta}^{k+1}, \boldsymbol{\gamma}^{k})$
+
+      $L_e^{k}\gets \computeExtrinsic(\boldsymbol{\alpha}^{k}, \boldsymbol{\beta}^k, \boldsymbol{\gamma}^{k})$
+    }
+  }
+\end{algorithm}
+
+In the proposed implementation, the inter-frame parallelism is used to fill the
+SIMD units of the CPU cores. Algorithm~\ref{alg:turbo_bcjr} illustrates the
+traditional implementation of the BCJR (used for the \emph{intra-frame}
+vectorization). The inter-frame strategy makes the outer loop on the frame
+parallel (through vectors). This means all computations inside this loop operate
+on SIMD vectors instead of scalars, and the inner loops can be turned into
+sequential loops on SIMD vectors. This gives the opportunity for memory
+optimizations, through loop fusion. The initial 4 inner loops are merged into 2
+loops. Algorithm~\ref{alg:turbo_bcjr_loop_fusion} presents this loop fusion
+optimization. This makes possible the scalar promotion of $\beta_j$ (no longer
+an array), since it can be directly reused from the CPU registers. In this
+version, the SIMD are always stressed.
+
+On a multicore processor, each core decodes $M$ frames using its own SIMD unit
+and $T$ threads are activated, a total of $M\times T$ frames are therefore
+decoded simultaneously with the inter-frame strategy. Theoretically, this SPMD
+parallelization strategy provide an acceleration up to a factor $T$, with $T$
+cores. Large memory footprint, exceeding L3 cache capacity may reduce the
+effective speedup, as shown in Section~\ref{sec:results}.
+
+\subsubsection{Implementation of the decoder}
+\label{sec:impl}
+
+The presented decoder implementation is available in the AFF3CT software. The
+use of \texttt{C++} templates associated to our generic SIMD library enables the
+same source code to be compiled using different formats (32-bit \texttt{float},
+16-bit \texttt{short}, and 8-bit \texttt{char}) and different SIMD instructions
+(SSE, AVX and NEON), providing possible trade-offs between SIMDization,
+throughput and error-correction performance.
+
+\paragraph{Fixed-point representation}
+
+Nowadays on x86 CPUs, there are large SIMD registers: SSE/NEON are 128 bits
+wide and AVX are 256 bits wide. The number of elements that can be vectorized
+depends on the SIMD length and on the data format:
+$n_{elem} = \sizeof(SIMD) / \sizeof(data)$. So, the key for a large parallelism
+is to work on short data.
+
+As there is no floating-point support for 16-bit and 8-bit data, a fixed-point
+representation is used. The AWGN channel soft information is quantized as
+%follows: $y_{s,v}^k = -2^{s-1} < 2^v . y^k \pm 0.5 < 2^{s-1}$, with $y^k$
+follows: $y_{s,v}^k = \Psi(2^v . y^k \pm 0.5)$, with $y^k$ the current
+floating-point value from the channel, $s$ the number of bit of the quantized
+number, including $v$ bits for the fractional part and the saturation function
+$\Psi(x) = min(max(x, -2^{s-1} +1), 2^{s-1} -1)$. In the experiments
+(cf. Fig.~\ref{plot:turbo_bfer}) $Q_{s,v}$ denotes this channel quantization.
+
+During the turbo-decoding process, the extrinsic values grow at each iteration.
+It is then necessary for internal LLRs to have a larger dynamic than the channel
+information. Depending on data format, 16-bit or 8-bit, the quantization used in
+the decoder is $Q_{16,3}$ or $Q_{8,2}$, respectively.
+
+\paragraph{Memory allocations}
+
+The systematic information $L_{sys_N}$/$L_{sys_I}$ and the parity information
+$L_{p_N}$/$L_{p_I}$  are stored in the natural domain $N$ as well as in the
+interleaved domain $I$. Two extrinsic vectors are also stored: $L_{e_N}$ in $N$
+and $L_{e_I}$ in $I$. Inside the BCJR decoding and per trellis section, two
+$\gamma_{i}$ and eight $\alpha_{j}$ metrics are stored. Thanks to the loop
+fusion optimization, the eight $\beta_j$ metrics are not stored in the global
+memory. In the proposed implementation $i \in \{0,1\}$ and
+$j \in \{0,1,2,3,4,5,6,7\}$. Notice that all those previously-mentioned vectors
+are $K$-bit wide and are duplicated $M\times T$ times because of the inter-frame
+strategy. The memory footprint in bytes is approximatively equal to:
+$16 \times K \times sizeof(data) \times M \times T$.
+The interleaving and deinterleaving lookup tables have been neglected in this
+model.
+%We did not consider the 2 lookup tables (interleaving and deinterleaving) in
+%this model as they are not duplicated $M\times T$ times.
+
+\paragraph{Forward trellis traversal}
+
+The objective is to reduce the number of loads/stores, performing the arithmetic
+computations (\texttt{add} and \texttt{max}) inside registers. The max-log-MAP
+algorithm only stresses the integer pipeline of the CPU. This kind of operations
+takes only one cycle to execute when the latency is also very small (1 cycle
+too). In contrast, a load/store can take a larger number of cycles depending on
+where the current value is loaded/stored in the memory hierarchy. Using data
+directly from the registers is cost-free but loading/storing it from the
+L1/L2/L3 cache can take up to 30 cycles (at worst).
+
+Per trellis section $k$, the two $\gamma_i^k$ metrics are computed from the
+systematic and the parity information. These two $\gamma_i^k$ are directly
+reused to compute the eight $\alpha_j^k$ metrics. Depending on the number of
+bits available, the trellis traversal requires to normalize the $\alpha_j^k$
+because of the accumulations along the multiple sections.  In 8-bit format, the
+$\alpha_j^k$ metrics are normalized for each section: the first $\alpha_0^k$
+value is subtracted to all the $\alpha_j^k$ (including $\alpha_0^k$ itself). In
+the 16-bit decoder, the normalization is only applied every eight steps (like
+in~\cite{Wu2013}), since there are enough bits to accumulate eight values. We
+have observed in experiments that there is no performance degradation due to the
+normalization process. At the end of a trellis section $k$ the two $\gamma_i^k$
+and the eight normalized $\alpha_j^k$ are stored in  memory. In the next trellis
+section ($k+1$) the eight previous $\alpha_j^k$ are not loaded from memory but
+they are directly reused from registers to compute the $\alpha_j^{k+1}$ values.
+
+\paragraph{Backward trellis traversal}
+
+Per trellis section $k$, the two $\gamma_i^k$ metrics are loaded from the
+memory. These two metrics are then used to compute, on the fly, the eight
+$\beta_j^k$ metrics (whenever needed the $\beta_j^k$ metrics have been
+normalized like for the $\alpha_j^k$ metrics). After that, the $\alpha_j^k$
+metrics are loaded from the memory. The $\alpha_j^k$, $\beta_j^k$ and
+$\gamma_i^k$ metrics are used to determine the \textit{a posteriori} and the
+extrinsic LLRs. In the next trellis section ($k-1$) the previous $\beta_j^k$
+metrics are directly reused from registers in order to compute the next
+$\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are then never stored in the
+memory.
+
 \subsection{Evaluations}
+\label{sec:results}
 
 \begin{itemize}
   \item 32-bit, 16-bit, 8-bit
 \end{itemize}
+
+\begin{table}
+  \centering
+  \caption{Specifications of the target processors.}
+  % {\scriptsize
+  % {\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{c | c | c | c}
+    \textbf{CPU}          & \textbf{P1} : Xeon E5-2650 & \textbf{P2}: Core i7-4960HQ & \textbf{P3}: Xeon E5-2680v3 \\
+    \hline
+    \textbf{Intel Arch.}  & \textit{Ivy Bridge} Q1'12  & \textit{Haswell} Q4'13      & \textit{Haswell} Q3'14      \\
+    \hline
+    \textbf{Cores/Freq.}  & 8 cores, 2--2.8 GHz        & 4 cores, 2.6--3.8 GHz       & 12 cores,  2.5--3.3 GHz     \\
+    \hline
+    \textbf{LLC}          & 20MB L3                    & 6MB L3                      & 30MB L3                     \\
+    \hline
+    \textbf{TDP}          & 95 W                       & 47 W                        & 120 W                       \\
+  \end{tabular}
+  % }
+  % }}
+  \label{tab:turbo_specs}
+\end{table}
+
+The experiments have been conducted on three different x86-based processors
+detailed in Table~\ref{tab:turbo_specs}. A mid-range processor (P2) is used for
+comparison with similar CPU targets in the literature \cite{Huang2011,Zhang2012,
+Wu2013} while the two high-end processors (P1 and P3) are used for comparison
+with GPU-based turbo-decoder implementations. Indeed, P1 and P3 have a number of
+cores that is similar to the number of \emph{Streaming Multiprocessors} (SM)
+inside a GPU. Moreover, the code has been compiled on Linux (Ubuntu 14.04 LTS)
+with the GNU compiler (version 4.8) and with the \texttt{-Ofast -funroll-loops
+-msse4.1/-mavx2} flags.
+
+\paragraph{BER/FER performance}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{turbo/bfer/bfer}
+  \caption{Bit Error Rate (BER) and Frame Error Rate (FER) of the decoder for
+    K = 6144 (6 iters) and $R=1/3$. Enhanced max-log-MAP algorithm (scaling
+    factor = 0.75). BPSK modulation and AWGN channel were used.}
+  \label{plot:turbo_bfer}
+\end{figure}
+
+Fig.~\ref{plot:turbo_bfer} shows the decoding performance of the proposed
+software turbo-decoder for the $K = 6144$ rate-1/3, LTE-specified turbo-code.
+The decoding performance of a floating-point decoder is provided as a reference.
+Unlike~\cite{Wu2013}, the proposed 16-bit implementation does not degrade the
+decoding performance. The 8-bit version of our decoder shows a 0.15 dB
+degradation. The limited dynamic of 8-bit format together with early saturation
+inside the decoder are responsible for this small performance loss.
+
+\paragraph{Throughput performance}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{turbo/thr/thr}
+  \caption{Information throughput depending on $K$ for various number of cores
+    and SIMD instruction types. 6 iterations, 8-bit fixed-point.}
+  \label{plot:turbo_thr}
+\end{figure}
+
+Fig.~\ref{plot:turbo_thr} shows the evolution of the information throughput
+depending on the code dimension $K$. This experiment was conducted on P2 and P3
+(both have \emph{ Haswell} architectures). The throughput tends to increase
+linearly with the number of cores (up to 24 cores) except in AVX mode where a
+performance drop can be observed when $K > 4096$. The reason is that the AVX
+instructions use vectors $2\times$ wider than those used by SSE instructions and
+the inter-frame strategy loads twice the number of frames to fill these vectors.
+Thus, for $K > 4096$, in AVX, the memory footprint exceeds the L3 cache optimal
+occupancy and the performance is driven by the RAM bandwidth. Then, as $K$
+increases the number of RAM accesses increases and there is not enough memory
+bandwidth to feed all the cores. This explains the decreasing throughput for
+$K > 4096$, in AVX mode. Nonetheless, on P3 target, the throughput exceeds 1Gbps
+for all codes with $K<4096$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{turbo/energy/energy}
+  \caption{\emph{Energy-per-bit} ($E_d$) depending on the number of cores and
+    the instruction types. 6 iterations, 8-bit fixed-point. The throughput and
+    power measurements were conducted on P2 with the
+    \emph{Intel Power Gadget} tool.}
+  \label{plot:turbo_energy}
+\end{figure}
+
+Fig.~\ref{plot:turbo_energy} shows the energy consumed by the processor to
+decode one information bit ($E_d$) of the codes using SSE and AVX instructions,
+on the P2 CPU target. For small codewords ($K=1024$) it is more energy efficient
+to resort to AVX. But this is not so clear on larger codewords ($K=6144$) since
+with 3/4 cores, the code using SSE outperforms the AVX one.
+
+\begin{table*}[htp]
+  % \renewcommand{\arraystretch}{0.7}
+  % \tabcolsep=6pt
+  \centering
+  \caption{Performance comparison with the other works. All the reported metrics
+    are normalized to one iteration.\newline
+    $NThr. = (Thr. \times Iters) / (Freq. \times Cores)~$,\newline
+    $TNDC  = (Thr. \times Iters) / (Cores \times Freq. \times SIMD)$ see \cite{Ying2012}, \newline
+    $E_d   = [ TDP / (Thr. \times Iters) ] \times 10^3$.\newline
+    On CPUs, only SSE instructions are considered.}
+  \label{tab:turbo_comparison}
+  {\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{|r|r|r||r|r|r|r|r|r|r|r|r|r|r||r|r|r|r||r|r|r|}
+  \hline
+  \multicolumn{3}{|c||}{\multirow{2}{*}{}} & \multicolumn{11}{c||}{\multirow{2}{*}{\textbf{Hardware and decoder parameters}}} & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Decoding performances}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
+  \multicolumn{3}{|c||}{}                  & \multicolumn{11}{c||}{}                                                          & \multicolumn{4}{c||}{}                                                & \multicolumn{3}{c|}{}                                  \\
+  \hline
+  \multicolumn{2}{|r|}{\textbf{Work}}                                                  & \textbf{Year}         & \textbf{Platform}  & \textbf{Arch.}      & \textbf{TDP} & \textbf{Cores} & \textbf{Freq.} & \textbf{Algorithm}       & \textbf{Pre.}       & \textbf{SIMD}       & \textbf{Inter}                & $\boldsymbol{K}$      & \textbf{Iters}     & \textbf{BER}                  & \textbf{FER}                  & \textbf{Lat.} & \textbf{Thr.}  & \textbf{NThr.} & \textbf{TNDC}  & $\boldsymbol{E_d}$ \\ %Real TNDC
+  \cline{15-16}
+  \multicolumn{2}{|r|}{}                                                               &                       &                    &                     & Watts        & or SM          & GHz            &                          & bit                 & length              & level                         &                       &                    & \multicolumn{2}{c|}{at 0.7 dB}                                & $\mu$s        & Mbps           & Mbps           &                & nJ                 \\ %(not normalized)
+  \hline
+  \hline
+  \multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{GPU-based}}} & \cite{Wu2010}       & 2010                  & Tesla C1060        & \textit{Tesla}      & 200          & 15             & 1.30           &  ML-MAP                  & 32                  & 16                  & 100                           & 6144                  & 5                  & 1e-04                         & \multicolumn{1}{c|}{$-$}      & 76800         & 8.0            &  2.1           & 0.135          & 5000               \\ %0.027
+  \cline{2-21}
+                                                                 & \cite{Wu2011}       & 2011                  & GTX 470            & \textit{Fermi}      & 215          & 14             & 1.22           &  ML-MAP                  & 32                  & 32                  & 100                           & 6144                  & 5                  & 4e-05                         & \multicolumn{1}{c|}{$-$}      & 20827         & 29.5           &  8.6           & 0.270          & 1458               \\ %0.054
+  \cline{2-21}
+                                                                 & \cite{Chinnici2012} & 2012                  & Tesla C2050        & \textit{Fermi}      & 247          & 14             & 1.15           &   L-MAP                  & 32                  & 32                  & 32                            & 11918                 & 5                  & \multicolumn{1}{c|}{$-$}      & \multicolumn{1}{c|}{$-$}      & 108965        & 3.5            &  1.1           & 0.035          & 14114              \\ %0.007
+  \cline{2-21}
+                                                                 & \cite{Yoge2012}     & 2012                  & 9800 GX2           & \textit{Tesla}      & 197          & 16             & 1.50           &  ML-MAP                  & 32                  & 16                  & 1                             & 6144                  & 5                  & 1e-02                         & \multicolumn{1}{c|}{$-$}      & 3072          & 2.0            &  0.4           & 0.025          & 19700              \\ %0.005
+  \cline{2-21}
+                                                                 & \cite{Liu2013}      & 2013                  & GTX 550 Ti         & \textit{Fermi}      & 116          & 6              & 1.80           & EML-MAP                  & 32                  & 32                  & 1                             & 6144                  & 6                  & 1e-02                         & \multicolumn{1}{c|}{$-$}      & 72$^*$        & 85.3           & 47.4           & 1.482          & 227                \\ %0.247
+  \cline{2-21}
+                                                                 & \cite{Chen2013}     & 2013                  & GTX 580            & \textit{Fermi}      & 244          & 16             & 1.54           &  ML-MAP                  & 32                  & 32                  & 1                             & 6144                  & 6                  & 3e-04                         & \multicolumn{1}{c|}{$-$}      & 1660          & 3.7            &  0.9           & 0.030          & 10090              \\ %0.005
+  \cline{2-21}
+                                                                 & \cite{Xianjun2013}  & 2013                  & GTX 480            & \textit{Fermi}      & 250          & 15             & 1.40           & EML-MAP                  & 32                  & 32                  & 1                             & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & \multicolumn{1}{c|}{$-$}      & 50$^*$        & 122.8          & 35.1           & 1.098          & 339                \\ %0.183
+  \cline{2-21}
+                                                                 & \cite{Wu2013}       & 2013                  & GTX 680            & \textit{Kepler}     & 195          & 8              & 1.01           & EML-MAP                  & 32                  & 192                 & 16                            & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & 1e-02                         & 2657          & 37.0           & 27.5           & 0.144          & 878                \\ %0.024
+  \cline{2-21}
+                                                                 & \cite{Zhang2014}    & 2014                  & Tesla K20c         & \textit{Kepler}     & 225          & 13             & 0.71           &  ML-MAP                  & 32                  & 192                 & 1                             & 6144                  & 5                  & 1e-04                         & \multicolumn{1}{c|}{$-$}      & 1097          & 5.6            &  3.0           & 0.015          & 8036               \\ %0.003
+  \cline{2-21}
+                                                                 & \cite{Li2014}       & 2014                  & GTX 580            & \textit{Fermi}      & 244          & 16             & 1.54           & BR-SOVA                  & 8                   & 32                  & 4                             & 6144                  & 5                  & 2e-02                         & \multicolumn{1}{c|}{$-$}      & 192$^*$       & 127.8          & 25.9           & 0.810          & 382                \\ %0.162
+  \hline
+  \hline
+  \multirow{9}{*}{\rotatebox[origin=c]{90}{\textbf{CPU-based}}}  & \cite{Huang2011}    & 2011                  & i7-960             & \textit{Nehalem}    & 130          & 1              & 3.20           &  ML-MAP                  & 16                  & 8                   & 1                             & 1008                  & 8                  & 3e-03                         & 7e-02                         & 138           & 7.3            & 18.3           & 2.280          & 2226               \\ %0.285
+  \cline{2-21}
+                                                                 & \cite{Zhang2012}    & 2012                  & X5670              & \textit{Westmere}   & 95           & 6              & 2.93           & EML-MAP                  & 8                   & 16                  & 6                             & 5824                  & 3                  & 6e-02                         & \multicolumn{1}{c|}{$-$}      & 157           & 222.6          & 38.0           & 2.373          & 142                \\ %0.791
+  \cline{2-21}
+                                                                 & \cite{Wu2013}       & 2013                  & i7-3770K           & \textit{Ivy Bridge} & 77           & 4              & 3.50           & EML-MAP                  & 16                  & 8                   & 4                             & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & 1e-01                         & 323           & 76.2           & 32.7           & 4.080          & 168                \\ %0.680
+  \Cline{0.8pt}{2-21}
+                                                                 &                     & \multirow{6}{*}{2016} & E5-2650            & \textit{Ivy Bridge} & 95           & 8              & 2.50           & \multirow{6}{*}{EML-MAP} & \multirow{3}{*}{16} & \multirow{3}{*}{8}  & 64                            & \multirow{6}{*}{6144} & \multirow{6}{*}{6} & \multirow{3}{*}{6e-06}        & \multirow{3}{*}{6e-03}        & 3665          & 107.3          & 32.2           & 4.014          & 148                \\ %0.669
+  \cline{4-8} \cline{12-12} \cline{17-21}
+                                                                 &                     &                       & i7-4960HQ          & \textit{Haswell}    & 47           & 4              & 3.20           &                          &                     &                     & 32                            &                       &                    &                               &                               & 2212          & 88.9           & 41.7           & 5.208          & 88                 \\ %0.868
+  \cline{4-8} \cline{12-12} \cline{17-21}
+                                                                 & this                &                       & $2\times$E5-2680v3 & \textit{Haswell}    & 240          & 24             & 2.50           &                          &                     &                     & 192                           &                       &                    &                               &                               & 2657          & 443.7          & 44.4           & 5.544          & 90                 \\ %0.924
+  \cline{4-8} \cline{10-12} \cline{15-21}
+                                                                 & work                &                       & E5-2650            & \textit{Ivy Bridge} & 95           & 8              & 2.50           &                          & \multirow{3}{*}{8}  & \multirow{3}{*}{16} & 128                           &                       &                    & \multirow{3}{*}{8e-05}        & \multirow{3}{*}{5e-02}        & 3492          & 225.2          & 67.6           & 4.224          & 70                 \\ %0.704
+  \cline{4-8} \cline{12-12} \cline{17-21}
+                                                                 &                     &                       & i7-4960HQ          & \textit{Haswell}    & 47           & 4              & 3.20           &                          &                     &                     & 64                            &                       &                    &                               &                               & 2837          & 138.6          & 65.0           & 4.062          & 57                 \\ %0.677
+  \cline{4-8} \cline{12-12} \cline{17-21}
+                                                                 &                     &                       & $2\times$E5-2680v3 & \textit{Haswell}    & 240          & 24             & 2.50           &                          &                     &                     & 384                           &                       &                    &                               &                               & 3293          & 716.4          & 71.6           & 4.476          & 56                 \\ %0.746
+  \hline
+  \end{tabular}
+  }}
+\end{table*}
+
+Table~\ref{tab:turbo_comparison} shows a performance comparison with related
+works\footnote{To be as fair as possible with the other works, we assume that
+the \emph{Intel Turbo Boost} (ITB) technology was disabled on their CPUs. For
+our experiments, the ITB technology was on and the real frequency is picked up.
+Moreover, for GPU works there is an asterisk when it is unclear if the CPU/GPU
+data transfer times have been taken into account.}. The variety of CPU/GPU
+targets and algorithmic parameters allows to show some global emerging trends.
+When comparing to similar CPU targets~\cite{Zhang2012,Wu2013}, the proposed
+implementation reaches similar or higher throughput (from 88.9 Mbps to 138.6
+Mbps on P2 target) at the price of an increased latency (from 2212 $\mu$s to
+2837 $\mu$s) and memory footprint. The proposed high-end CPU processor (P3)
+implementation outperforms all GPU-based works in terms of throughput (from
+443.7 Mbps to 716.4 Mbps) while consuming noticeably less power (from 56 nJ to
+90 nJ for each iteration). This leads to the conclusion that high-end multi-core
+CPUs is a more energy-efficient solution than GPUs while ensuring similar or
+higher throughputs. Considering this, high-end multi-core CPU appear as an
+alternative to GPU in future channel coding functions in cloud-based RAN.
 
 \section{LDPC Decoders}
 
