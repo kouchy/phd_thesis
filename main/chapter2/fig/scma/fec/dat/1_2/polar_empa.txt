@@ -1,0 +1,89 @@
+#Run command:
+#./bin/aff3ct --sim-type "BFER" -C "POLAR" -m "4.00" -M "5.25" --sim-snr-step "0.25" -K "2048" -N "4096" --chn-type "AWGN_FAST" --mdm-type "SCMA" -F "6" --mdm-ite "5" --mdm-psi "PSI3" --dec-type "SCL" -L "32" --crc-type "FAST" --crc-poly "32-GZIP" --dec-polar-nodes "{R0,R0L,R1,REP,REPL,SPC_4}" --sim-pyber "Fast-ASCL32+CRC32 SCMA PSI3" --enc-fb-sigma "1" --sim-stop-time "600" 
+#Curve name:
+#Fast-ASCL32+CRC32 SCMA PSI3
+# -------------------------------------------------
+# ---- A FAST FORWARD ERROR CORRECTION TOOL >> ----
+# -------------------------------------------------
+# Parameters :
+# * Simulation ------------------------------------
+#    ** Type                     = BFER
+#    ** Type of bits             = int32
+#    ** Type of reals            = float32
+#    ** Date (UTC)               = 2017-08-11 15:30:09
+#    ** Git version              = v1.2-beta.0-21-gc95f295
+#    ** Code type (C)            = POLAR
+#    ** SNR min (m)              = 4.000000 dB
+#    ** SNR max (M)              = 5.250100 dB
+#    ** SNR step (s)             = 0.250000 dB
+#    ** Seed                     = 0
+#    ** Multi-threading (t)      = 160 thread(s)
+#    ** SNR type                 = EB
+#    ** Time report              = off
+#    ** Debug mode               = off
+#    ** Coset approach (c)       = no
+#    ** Coded monitoring         = no
+#    ** Bad frames tracking      = off
+#    ** Bad frames replay        = off
+#    ** Bit rate                 = 0.492188
+#    ** Inter frame level        = 6
+# * Code ------------------------------------------
+#    ** Type                     = POLAR
+#    ** Info. bits (K)           = 2048
+#    ** Codeword size (N_cw)     = 4096
+#    ** Frame size (N)           = 4096
+#    ** Code rate                = 0.500000
+# * Source ----------------------------------------
+#    ** Type                     = RAND
+#    ** Info. bits (K_info)      = 2016
+# * CRC -------------------------------------------
+#    ** Type                     = FAST
+#    ** Name                     = 32-GZIP
+#    ** Polynomial (hexadecimal) = 0x4c11db7
+#    ** Size (in bit)            = 32
+# * Encoder ---------------------------------------
+#    ** Type                     = POLAR
+#    ** Systematic               = yes
+#    ** Fb gen. method           = GA
+#    ** Fb sigma                 = 1.000000
+# * Modem -----------------------------------------
+#    ** Type                     = SCMA
+#    ** Bits per symbol          = 3
+#    ** Sampling factor          = 1
+#    ** Sigma square             = on
+#    ** Max type                 = unused
+#    ** Number of iterations     = 5
+#    ** Psi function             = PSI3
+# * Channel ---------------------------------------
+#    ** Type                     = AWGN_FAST
+#    ** Complex                  = on
+#    ** Add users                = on
+# * Decoder ---------------------------------------
+#    ** Type (D)                 = SCL
+#    ** Implementation           = FAST
+#    ** Systematic               = yes
+#    ** Num. of lists (L)        = 32
+#    ** Polar node types         = {R0,R0L,R1,REP,REPL,SPC_4}
+# * Monitor ---------------------------------------
+#    ** Frame error count (e)    = 100
+# * Terminal --------------------------------------
+#    ** Type                     = STD
+#    ** Enabled                  = yes
+#    ** Frequency (ms)           = 500
+#
+# The simulation is running...
+# ----------------------------------------------------------------------||--------------------------------||---------------------
+#       Bit Error Rate (BER) and Frame Error Rate (FER) depending       ||     Decoder throughput and     ||  Global throughput  
+#                    on the Signal Noise Ratio (SNR)                    ||      latency (per thread)      ||  and elapsed time   
+# ----------------------------------------------------------------------||--------------------------------||---------------------
+# -------|-------|----------|----------|----------|----------|----------||----------|----------|----------||----------|----------
+  Es/N0 | Eb/N0 |      FRA |       BE |       FE |      BER |      FER ||     CTHR |     ITHR |  LATENCY || SIM_CTHR |    ET/RT 
+#   (dB) |  (dB) |          |          |          |          |          ||   (Mb/s) |   (Mb/s) |     (us) ||   (Mb/s) | (hhmmss) 
+# -------|-------|----------|----------|----------|----------|----------||----------|----------|----------||----------|----------
+    5.69 |  4.00 |     1242 |    49148 |      465 | 1.96e-02 | 3.74e-01 ||     0.58 |     0.29 | 42632.65 ||     1.25 | 00h00'04  
+    5.94 |  4.25 |     1578 |    18374 |      240 | 5.78e-03 | 1.52e-01 ||     0.56 |     0.28 | 43875.05 ||     5.28 | 00h00'01  
+    6.19 |  4.50 |     2916 |     8550 |      152 | 1.45e-03 | 5.21e-02 ||     0.51 |     0.26 | 48097.67 ||     8.49 | 00h00'01  
+    6.44 |  4.75 |     9060 |     5447 |      113 | 2.98e-04 | 1.25e-02 ||     0.50 |     0.25 | 49279.67 ||    17.53 | 00h00'02  
+    6.69 |  5.00 |    42198 |     3561 |      101 | 4.19e-05 | 2.39e-03 ||     0.51 |     0.25 | 48373.46 ||    27.60 | 00h00'06  
+    6.94 |  5.25 |   363516 |     2904 |      100 | 3.96e-06 | 2.75e-04 ||     0.52 |     0.26 | 46926.85 ||    32.28 | 00h00'46  
+# End of the simulation.

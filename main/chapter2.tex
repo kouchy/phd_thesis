@@ -33,8 +33,8 @@ intrinsics, or by making assumptions on the data types. However, these decoders
 should be implemented in a single source code, in which the following parameters
 could be changed at runtime: the channel code type, the decoding algorithm, the
 number of decoding iterations, the data format, etc. Another important aspect is
-the \textit{portability} of the source code on different hardwares (Intel x86,
-Xeon KNL and ARM) and the possibility to use different instruction sets
+the \textit{portability} of the source code on different hardwares (Intel\R x86,
+Xeon Phi\TM KNL and ARM\R) and the possibility to use different instruction sets
 (\verb|SSE|, \verb|AVX|, \verb|AVX-512|, \verb|NEON|). These three constraints
 (performance, flexibility, portability) push towards the use of a SIMD library
 that helps in the abstraction of the SIMD instruction sets, while still allowing
@@ -134,13 +134,13 @@ Likewise, a scalar assigned to a vector sets all elements to
 this value.
 
 \subsubsection{Implementation Details}
-\label{subsec:implem}
+\label{sec:vectorization_implem}
 
 \MIPP targets \verb|SSE2|, \verb|SSE3|, \verb|SSSE3|, \verb|SSE4.1|,
 \verb|SSE4.2|, \verb|AVX|, \verb|AVX2|, \verb|FMA3|, \verb|KNCI|,
 \verb|AVX-512F| and \verb|AVX-512BW| instruction sets on x86 and related
 architectures, as well as \verb|NEON|, \verb|NEONv2|, \verb|NEON64| and
-\verb|NEON64v2| on ARM. It can easily be extended to other instruction sets.
+\verb|NEON64v2| on ARM\R. It can easily be extended to other instruction sets.
 
 \MIPP selects the most recent instruction set available at compile time. For
 instance, a code compiled with the \verb|-march=avx| flag of the GNU GCC
@@ -270,7 +270,7 @@ among the most widely available on the market: \verb|NEON|, \verb|SSE|,
 choose not to list all the instruction sets ``sub-variants'' (such as
 \verb|SSE2|, \verb|SSE3|, etc). \simdpp et \bSIMD propose the most comprehensive
 instruction set compatibility. At the other end of the range, \xsimd and
-\BoostSIMD only support Intel SIMD instruction sets. The \textit{Data Type}
+\BoostSIMD only support Intel\R SIMD instruction sets. The \textit{Data Type}
 column of the table summarizes the supported vector element types and
 precisions. In their public version, and at the time of writing, \Vc does not
 support 8-bit integers, \xsimd does not support 8-bit and 16-bit integers and
@@ -292,15 +292,16 @@ code complexity of the wrapper is dramatically increased. \BoostSIMD and \bSIMD
 have a dependency on the Boost framework to build, and currently available \Cxx
 compilers produce huge amounts of arcane error messages at the slightest mistake
 in the end user program. For these reasons, we decided not to base \MIPP on the
-expression template technique. As mentioned in Section~\ref{subsec:implem},
-maintaining SIMD wrappers, and porting them to new instruction sets is error
-prone by nature, due to the large number of routines, cryptic intrinsics names,
-and specific instruction set details. A comprehensive testing suite is therefore
-critical to validate new development, optimizations and ports on new instruction
-sets. This is why \MIPP, as well as \Vc, \BoostSIMD, \simdpp and \bSIMD come
-with their own test suites. We have not found similar test suites in the
-software distributions of \VCL, \xsimd and \TSIMD; however, test suites might be
-in use internally, within the development teams of these wrappers.
+expression template technique. As mentioned in
+Section~\ref{sec:vectorization_implem}, maintaining SIMD wrappers, and porting
+them to new instruction sets is error prone by nature, due to the large number
+of routines, cryptic intrinsics names, and specific instruction set details. A
+comprehensive testing suite is therefore critical to validate new development,
+optimizations and ports on new instruction sets. This is why \MIPP, as well as
+\Vc, \BoostSIMD, \simdpp and \bSIMD come with their own test suites. We have not
+found similar test suites in the software distributions of \VCL, \xsimd and
+\TSIMD; however, test suites might be in use internally, within the development
+teams of these wrappers.
 
 \paragraph{Qualitative and Quantitative Comparisons}
 
@@ -405,7 +406,7 @@ are:
 \lambda_c &=& g(\lambda_a,\lambda_b,s)&=&(1-2s)\lambda_a+\lambda_b\\
 (s_{c}, s_{d}) &=& h(s_{a}, s_{b}) &=& (s_{a} \oplus s_{b}, s_{b}).
 \end{array}\right.
-\label{eq:f_g}
+\label{eq:polar_f_g_h}
 \end{eqnarray}
 The $f$ and $g$ functions both generate a single LLR. The $h$ function provides
 a couple of partial sums.
@@ -531,7 +532,7 @@ adapted to the polar code length. If the CRC length is too short, the decoding
 performance may be degraded because of false detections. These adaptive versions
 of SSCL can achieve higher throughputs. Indeed, a large proportion of frames can
 be decoded with a single SC decoding. This is especially true when the SNR is
-high. This will be further discussed in Section~\ref{sec:genericity}.
+high. This will be further discussed in Section~\ref{sec:polar_genericity}.
 
 \subsubsection{Optimization Strategies}
 
@@ -620,13 +621,13 @@ decoding performance compared to the SC algorithm, but its computational
 complexity leads to an increased latency and a lower throughput. The SSCL
 algorithm improves the decoding throughput and latency without any impact in
 terms of BER and FER performances, as long as the tree pruning is not too deep,
-as will be discussed in Section~\ref{sec:genericity}. Therefore, tree pruning is
-applied to all the following algorithms, namely CA-SSCL, FA-SSCL and PA-SSCL. By
-applying CRC to the SCL algorithm, one can achieve better BER and FER
-performances at the cost of computational complexity overhead. The Adaptive SCL
-algorithms reduce the decoding time with no impact on BER and FER performances.
-Furthermore, a tradeoff between throughput and worst case latency is possible
-with the use of either PA-SSCL or FA-SSCL decoding algorithms.
+as will be discussed in Section~\ref{sec:polar_genericity}. Therefore, tree
+pruning is applied to all the following algorithms, namely CA-SSCL, FA-SSCL and
+PA-SSCL. By applying CRC to the SCL algorithm, one can achieve better BER and
+FER performances at the cost of computational complexity overhead. The Adaptive
+SCL algorithms reduce the decoding time with no impact on BER and FER
+performances. Furthermore, a tradeoff between throughput and worst case latency
+is possible with the use of either PA-SSCL or FA-SSCL decoding algorithms.
 
 \begin{figure}
   \centering
@@ -665,7 +666,7 @@ Thus, it is possible to switch from one to another as shown in the following
 section.
 
 \subsubsection{Generic and Flexible Polar Decoders}
-\label{sec:genericity}
+\label{sec:polar_genericity}
 
 The main contribution of this work lies in the flexibility and the genericity of
 the proposed software decoder. These terms need to be clearly defined in order
@@ -726,7 +727,7 @@ the frozen bits set $\bm{u}_{\mathcal{A}^c}$. Not sacrificing throughput or
 latency while maintaining the genericity imposed by wireless communication
 standards is at the core of the proposed implementation. Flexibility in terms of
 decoding algorithms, described in the following, along with improvements
-presented in Section~\ref{sec:implem_improv}, is necessary to deal with this
+presented in Section~\ref{sec:polar_implem}, is necessary to deal with this
 challenge.
 
 \paragraph{Flexibility}
@@ -772,7 +773,7 @@ also approximately halved when the list size $L$ is doubled.
 \includegraphics[width=1.00\textwidth]{polar/sc_tree_cut/sc_tree_cut}
 \caption{Throughput depending on the different optimizations for $N = 2048$, for
   intra-frame vectorization on the left and intra-frame vectorization on the
-  right, resp. (on the Intel Xeon CPU E31225).}
+  right, resp. (on the Intel\R Xeon\TM CPU E31225).}
 \label{plot:polar_sc_tree_cut}
 \end{figure}
 
@@ -925,7 +926,7 @@ than in low SNR regions for Adaptive SCL algorithms. As the gain of fixed-point
 implementation benefits more to the SC algorithm than to the SCL algorithm, the
 throughput is higher in high SNR regions. For instance, up to 425.9 Mb/s is
 achieved in 8-bit representation with the FA-SSCL decoder. Note that the
-improvements described in Section~\ref{sec:implem_improv} are applied to the
+improvements described in Section~\ref{sec:polar_implem} are applied to the
 decoders that are given in Table~\ref{tab:polar_scl_perfs_fixed}.
 
 \subparagraph{Supporting different variants of the decoding algorithms}
@@ -977,7 +978,7 @@ following section introduces algorithmic and implementation improvements applied
 in the proposed decoders to keep a low decoding time.
 
 \paragraph{Software implementation optimizations}
-\label{sec:implem_improv}
+\label{sec:polar_implem}
 
 The genericity and flexibility of the formerly described decoder prevent from
 using some optimizations. Unrolling the description as in~\cite{Sarkis2016} is
@@ -994,10 +995,10 @@ with specific unrolled decoders of the literature. The software library for
 polar codes from \cite{Cassagne2015c,Cassagne2016b} enables to benefit from
 the SIMD instructions for various target architectures. Optimizations of CRC
 checking benefit to both the non-adaptive and adaptive versions of the CA-SCL
-algorithms. The new sorting technique presented in Section~\ref{subsec:sorting}
-can be applied to each variation of the SCL algorithm. Finally, an efficient
-implementation of the partial sums memory management is proposed. It is
-particularly effective for short polar codes.
+algorithms. The new sorting technique presented in
+Section~\ref{sec:polar_sorting} can be applied to each variation of the SCL
+algorithm. Finally, an efficient implementation of the partial sums memory
+management is proposed. It is particularly effective for short polar codes.
 
 \subparagraph{Polar Application Programming Interface}
 
@@ -1041,7 +1042,7 @@ for decoding a ($2048$, $1723$) polar code leads to an improvement of $20\%$ of
 the decoding throughput on average for different values of the list depth $L$.
 
 \subparagraph{Improving Cyclic Redundancy Checking}
-\label{subsec:crc_improv}
+\label{sec:polar_crc}
 
 By profiling the Adaptive SCL decoder, one may observe that a significant amount
 of time is spent to process the cyclic redundancy checks. Its computational
@@ -1074,7 +1075,7 @@ the adopted order, decoding time is saved by reducing the average number of
 checked candidates.
 
 \subparagraph{LLR and Metric Sorting}
-\label{subsec:sorting}
+\label{sec:polar_sorting}
 
 Metric sorting is involved in the aforementioned path selection step, but also
 in the \textit{update\_paths()} sub-routine (Alg.~\ref{alg:polar_scl}, l.16) and
@@ -1223,7 +1224,7 @@ generation and optimization. Beyond the \emph{code parameters}, Polar decoders
 can be tweaked and optimized in many different orthogonal or loosely coupled
 ways: \emph{Elementary} type (floating point, fixed point),
 \emph{Element containers} (array size), \emph{Data layout} (bit packing
-techniques), \emph{Instruction Set} (x86, ARM), \emph{SIMD} support (scalar,
+techniques), \emph{Instruction Set} (x86, ARM\R), \emph{SIMD} support (scalar,
 intra-frame or inter-frame processing vectorization), \emph{SIMD instruction set
 variant} (SSE, AVX, AVX-512, NEON), as well as the set and relative priorities
 of the \emph{rewriting rules for tree pruning}. Our framework enables to quickly
@@ -1325,7 +1326,7 @@ Fig.~\ref{fig:polar_patterns_example} and in
 Listing~\ref{lst:polar_patterns_example}.
 
 \paragraph{Low Level Building blocks}
-\label{sec:implem}
+\label{sec:polar_api}
 
 The main challenge in implementing P-EDGE's architecture dependent building
 blocks is to provide enough flexibility to enable varied type, data layout and
@@ -1397,7 +1398,8 @@ computed from the graph depth~$d$ (or the node vertical indexing) as follows:
 %\end{cases}
 %\end{equation}
 \begin{equation}
-  off_{\lambda}(d = 0) = 0,~off_{\lambda}(d > 0) = \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
+  off_{\lambda}(d = 0) = 0,~off_{\lambda}(d > 0) =
+  \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
 \end{equation}
 Given~$l$ the lane (or the node horizontal indexing), the bit offset is
 determined as follows:
@@ -1407,7 +1409,7 @@ determined as follows:
 The LLR buffer size is $2N$ and the bit buffer is $N$, for a frame of $N$ bits.
 Thus, the memory footprint per frame is:
 \begin{equation}
-  mem_{fp} = N \times (2 \times sizeof(LLR) + sizeof(bit)).
+  mem_{fp} = N \times (2 \times \sizeof(LLR) + \sizeof(bit)).
 \end{equation}
 LLRs element size is 4 bytes (float) or 1 byte (fixed point numbers). The
 Inter-SIMD version also employs a \emph{bit packing} memory footprint reduction
@@ -1429,25 +1431,25 @@ masking instructions.
   \begin{center}
   % {\footnotesize
   \begin{tabular}{c | c | c}
-                                      & \textbf{ODROID-XU+E} &          \textbf{\juno} \\
+                                      & \textbf{ODROID-XU+E}      &          \textbf{\juno} \\
     \hline
-    \multirow{2}{*}{\textbf{SoC}}     &  Samsung Exynos 5410 &               ARM64 \bl \\
-                                      &      (Exynos 5 Octa) &         (dev. platform) \\
+    \multirow{2}{*}{\textbf{SoC}}     &  Samsung\R Exynos\TM 5410 &               ARM64 \bl \\
+                                      &           (Exynos 5 Octa) &         (dev. platform) \\
     \hline
-    \multirow{1}{*}{\textbf{Arch.}}   &       32-bit, ARMv7  &           64-bit, ARMv8 \\
+    \multirow{1}{*}{\textbf{Arch.}}   &             32-bit, ARMv7 &           64-bit, ARMv8 \\
     \hline
-    \multirow{1}{*}{\textbf{Process}} &                 28nm &  unspecified (32/28 nm) \\
+    \multirow{1}{*}{\textbf{Process}} &                      28nm &  unspecified (32/28 nm) \\
 
     \hline
-    \multirow{4}{*}{\textbf{\big}}    &  4xCortex-A15 MPCore &     2xCortex-A57 MPCore \\
-                                      &   freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] \\
-                                      &   L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB \\
-                                      &               L2 2MB &                  L2 2MB \\
+    \multirow{4}{*}{\textbf{\big}}    &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore \\
+                                      &        freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] \\
+                                      &        L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB \\
+                                      &                    L2 2MB &                  L2 2MB \\
     \hline
-    \multirow{4}{*}{\textbf{\little}} &   4xCortex-A7 MPCore &     4xCortex-A53 MPCore \\
-                                      &   freq. [250-600MHz] &      freq. [450-850MHz] \\
-                                      &   L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB \\
-                                      &             L2 512KB &                  L2 1MB \\
+    \multirow{4}{*}{\textbf{\little}} &        4xCortex-A7 MPCore &     4xCortex-A53 MPCore \\
+                                      &        freq. [250-600MHz] &      freq. [450-850MHz] \\
+                                      &        L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB \\
+                                      &                  L2 512KB &                  L2 1MB \\
   \end{tabular}
   % }
   \end{center}
@@ -1508,11 +1510,11 @@ architecture. Finally we observe that the power consumption is higher for the
 inter-frame version than for the intra-frame one because it fills the SIMD units
 more intensively, and the SIMD units consume more than the scalar pipeline.
 
-For comparison, the results for the Intel Core i7-4850HQ, using SSE4.1
-instructions (same vector length as ARM NEON vectors) are also included. Even if
-the i7 is competitive with the ARM big cores in term of \textit{energy-per-bit}
-($E b$), these results show it is not well suited for the low power SDR systems
-because of its high power requirements.
+For comparison, the results for the Intel\R Core\TM i7-4850HQ, using SSE4.1
+instructions (same vector length as ARM\R NEON vectors) are also included. Even
+if the i7 is competitive with the ARM\R big cores in term of
+\textit{energy-per-bit} ($E b$), these results show it is not well suited for
+the low power SDR systems because of its high power requirements.
 
 \begin{table}
   \caption{Comparison of 8-bit fixed-point decoders with intra-frame
@@ -1621,7 +1623,7 @@ decreases when the code rate increases. This is expected because there are many
 more information bits in the frame when $R$ is high, making the decoder more
 energy efficient. With high rates, the SC decoding tree can be pruned more
 effectively, making the decoding process even more energy efficient.
-Figure~\ref{plot:polar_sc_energy_rate} also compares the ARM A7, A53 and A57
+Figure~\ref{plot:polar_sc_energy_rate} also compares the ARM\R A7, A53 and A57
 clusters for the same 450MHz frequency (note: this frequency is not available on
 the A15). The \little A7 is more energy efficient than the \big A57, and the
 \little A53 is itself more energy efficient than the \little A7
@@ -1666,10 +1668,11 @@ previous benchmarks. Both implementations provide low-energy and low-power
 characteristics compared to previous works in the field on x86 processors
 \cite{Sarkis2014,Giard2014,Sarkis2014a,LeGal2014,LeGal2015a,Cassagne2015c}.
 Whereas the throughput on a single processor core is reduced compared to x86
-implementations, ARM implementations must fulfil a large set of SDR applications
-with limited throughputs and where the power consumption matters. Finally, it is
-important to notice that multi-core implementations of the proposed ARM decoders
-is still possible on these ARM targets to improve the decoding throughputs.
+implementations, ARM\R implementations must fulfil a large set of SDR
+applications with limited throughputs and where the power consumption matters.
+Finally, it is important to notice that multi-core implementations of the
+proposed ARM\R decoders is still possible on these ARM\R targets to improve the
+decoding throughputs.
 
 \paragraph{SC inter/intra-SIMD Generated (aka Unrolled)}
 
@@ -1683,7 +1686,7 @@ discuss the exploring capabilities of our framework.
   \begin{tabular}{c|c|c|c}
            & x86-based              & ARMv7-based             & prev. work arch.~\cite{Sarkis2014}\\
   \hline
-  CPU      & Intel Xeon E31225      & ARM Cortex-A15          & Intel Core i7-2600                \\
+  CPU      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15        & Intel\R Core\TM i7-2600           \\
            & 3.10Ghz                & MPCore~2.32GHz          & 3.40GHz                           \\
   Cache    & 32KB L1I/L1D, 256KB L2 & 32KB L1I/L1D, L2 1024KB & 32KB L1I/L1D, L2 256KB            \\
            & L3 6MB                 & No L3                   & L3 8MB                            \\
@@ -1712,8 +1715,8 @@ differentiate decoder types (Intra-SIMD vs Inter-SIMD).
 \begin{figure}[htp]
   \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra}
   \caption{Performance comparison between several code rates of 32-bit floating
-    point decoding stages (running on the Intel\R Xeon\R CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\R CPU A15).}
+    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\TM CPU A15).}
   \label{plot:polar_sc_gen_thr_intra}
 \end{figure}
 
@@ -1752,8 +1755,8 @@ differentiate decoder types (Intra-SIMD vs Inter-SIMD).
 \begin{figure}
   \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter}
   \caption{Performance comparison between several code rates of 8-bit fixed
-    point decoding stages (running on the Intel\R Xeon\R CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\R CPU A15). Circles show P-EDGE
+    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\TM CPU A15). Circles show P-EDGE
     results. Triangles show our former ``handwritten'' implementation
     results~\cite{LeGal2015a}.}
   \label{plot:polar_sc_gen_thr_inter}
@@ -1771,18 +1774,11 @@ between 10\% and 25\% higher on x86).
 
 \begin{figure}
   \centering
-  \begin{subfigure}{8cm}
-    \centering
-    \includegraphics[width=8cm]{polar/sc_gen_compression/sc_gen_no_compression}
-    \caption{Without compression.}
-  \end{subfigure}
-  \begin{subfigure}{4cm}
-    \centering
-    \includegraphics[width=3.725cm]{polar/sc_gen_compression/sc_gen_compression}
-    \caption{With compression.}
-  \end{subfigure}
-  \caption{Full decoding tree representation (N = 128, K = 64) without and with
-           the compression sub-tree folding algorithm.}
+  \subfloat[][Without compression.]{\includegraphics[height=4.5cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:polar_sc_gen_compression_wo}}
+  \qquad
+  \subfloat[][With compression.]{\includegraphics[height=4.5cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:polar_sc_gen_compression_w}}
+  \caption{Full decoding tree representation ($N = 128, K = 64$) without and
+    with the compression sub-tree folding algorithm.}
   \label{fig:polar_sc_gen_compression}
 \end{figure}
 
@@ -1854,10 +1850,10 @@ is very competitive with its counterparts. Note that all the results presented
 in the following can be reproduced with the AFF3CT tool.
 
 During our investigations, all the throughput and latency measurements have been
-obtained on a single core of an Intel i5-6600K CPU (Skylake architecture with
-AVX2 SIMD) with a base clock frequency of 3.6 GHz and a maximum turbo frequency
-of 3.9 GHz. The description has been compiled on Linux with the C++ GNU compiler
-(version 5.4.0) and with the following options:
+obtained on a single core of an Intel\R Core\TM i5-6600K CPU (Skylake
+architecture with AVX2 SIMD) with a base clock frequency of 3.6 GHz and a
+maximum turbo frequency of 3.9 GHz. The description has been compiled on Linux
+with the C++ GNU compiler (version 5.4.0) and with the following options:
 \texttt{-Ofast -march=native -funroll-loops}.
 
 \subparagraph{Fully Adaptive SCL}
@@ -1956,7 +1952,7 @@ described in~\cite{Sarkis2016} (4.0 Mb/s). The proposed CA-SSCL decoder is
 approximately 4 times faster than the generic implementation
 in~\cite{Sarkis2014b} ($0.52$ Mb/s) and 2 times faster than the CA-SCL
 implementation in~\cite{Shen2016} ($1.1$ Mb/s) thanks to the implementation
-improvements detailed in Section~\ref{sec:implem_improv}.
+improvements detailed in Section~\ref{sec:polar_implem}.
 Furthermore, the proposed decoder exhibits a much deeper level of genericity and
 flexibility than the ones proposed in~\cite{Sarkis2014,Shen2016}. Indeed, the
 following features were not enabled: the customization of the tree pruning, the
@@ -1966,7 +1962,7 @@ patterns and the FA-SSCL algorithm.
 When implemented on the same target (i7-2600), the proposed PA-SSCL is
 competitive with the unrolled PA-SSCL in~\cite{Sarkis2016}, being only two times
 slower. This can be explained by the improvements concerning the CRC that are
-described in Section \ref{subsec:crc_improv}, especially the information bits
+described in Section \ref{sec:polar_crc}, especially the information bits
 extraction in the SC decoder. Finally, as mentioned before, the throughput of
 the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
@@ -1991,7 +1987,7 @@ the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
 
 \subsection{Overview of the Turbo decoding process}
-\label{sec:overview}
+\label{sec:turbo_overview}
 
 \begin{itemize}
   \item décodeur Turbo LTE (3G/4G)
@@ -2014,7 +2010,7 @@ HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
 % the encoding process. The branch metrics associated with states
 % $s_i^k$ and $s_j^{k+1}$ are computed as:
 % \begin{equation}
-% \label{eq:gamma}
+% \label{eq:turbo_gamma}
 %   \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{sys}^k + L_a^k)u^k + 0.5(L_p^k p^k).
 % \end{equation}
 % Here, $L_{sys}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
@@ -2031,16 +2027,16 @@ HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
 % $j$ of section $k$ of the trellis, the forward ($\alpha$) and backward ($\beta$)
 % metrics are computed as follows:
 % \begin{equation}
-% \label{eq:alpha}
+% \label{eq:turbo_alpha}
 %   \alpha_j^{k+1} = max_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
 % \end{equation}
 % \begin{equation}
-% \label{eq:beta}
+% \label{eq:turbo_beta}
 %   \beta_j^k = max_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
 % \end{equation}
 % Then, the extrinsic information for each bit at position $k$ is:
 % \begin{equation}
-% \label{eq:ext}
+% \label{eq:turbo_ext}
 % \begin{aligned}
 %   L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
 %   - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
@@ -2085,7 +2081,7 @@ $p^k$, the $k^{th}$ information bit and the parity bit (both $\pm1$),
 respectively. The branch metrics associated with states $s_i^k$ and $s_j^{k+1}$
 are computed as follows:
 \begin{equation}
-\label{eq:gamma}
+\label{eq:turbo_gamma}
  \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{sys}^k + L_a^k)u^k + 0.5(L_p^k p^k).
 \end{equation}
 Here, $L_{sys}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
@@ -2105,19 +2101,20 @@ $\mathbf{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
 $j^{th}$ forward state metric $\alpha_j^{k+1}$ only depends on two forward
 state metrics of stage $k$. These state metrics are computed by:
 \begin{equation}
-\label{eq:alpha}
- \alpha_j^{k+1} = max^*_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
+  \label{eq:turbo_alpha}
+  \alpha_j^{k+1} =
+  max^*_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
 \end{equation}
 where the set $F$ contains the two indices of the states in step $k$ connected
 to state $s_j^{k+1}$ (as defined by the trellis). The $max^*\{·\}$ operator is
 defined as:
 \begin{equation}
- max^*\{a,b\} = max\{a,b\} + log(1 + exp(-|a-b|)),
+   max^*\{a,b\} = max\{a,b\} + log(1 + exp(-|a-b|)),
 \end{equation}
 where $log(1 + exp(-|a-b|))$ is a correction term. For the max-log
 approximation, we approximate $max^*$ by:
 \begin{equation*}
- max^*(a, b) \approx max(a, b).
+   max^*(a, b) \approx max(a, b).
 \end{equation*}
 In this case, one can scale the extrinsic LLRs by a factor of 0.75 to partially
 recover the error-rate performance loss induced by the approximation (see, e.g.,
@@ -2125,11 +2122,13 @@ recover the error-rate performance loss induced by the approximation (see, e.g.,
 decoding algorithm the \emph{Enhanced} max-log-MAP (EML-MAP).
 
 Computation of the backward state metrics is similar to that of the forward
-trellis traversal in Eq.~\ref{eq:alpha}. The vector of backward state metrics,
-denoted by $\mathbf{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is computed as:
+trellis traversal in Eq.~\ref{eq:turbo_alpha}. The vector of backward state
+metrics, denoted by $\mathbf{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is
+computed as:
 \begin{equation}
-\label{eq:beta}
- \beta_j^k = max^*_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
+  \label{eq:turbo_beta}
+  \beta_j^k =
+  max^*_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
 \end{equation}
 Here, the set $B$ contains the indices of states in step $k+1$ connected to
 state $s_j^k$ as defined by the trellis.
@@ -2139,19 +2138,21 @@ state $s_j^k$ as defined by the trellis.
 After the forward and backward iterations have been carried out, the extrinsic
 LLRs for the $k^{th}$ bit are computed as:
 \begin{equation}
-\label{eq:ext}
-\begin{aligned}
- L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}^*\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
- - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}^*\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
- - L_{sys}^k - L_a^k,
-\end{aligned}
+  \label{eq:turbo_ext}
+  \begin{aligned}
+  L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}^*\{ \alpha_i^k + \beta_j^{k+1} +
+  \gamma(s_i^k, s_j^{k+1}) \} \\
+  - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}^*\{ \alpha_i^k + \beta_j^{k+1} +
+  \gamma(s_i^k, s_j^{k+1}) \} \\
+  - L_{sys}^k - L_a^k,
+  \end{aligned}
 \end{equation}
 where the sets $U^1$ and $U^{-1}$ designate the set of states connected by paths
 where $u^k=1$ and the set of states connected by paths where $u^k=-1$,
 respectively (because of the BPSK modulation).
 
 \subsection{Parallelism analysis}
-\label{sec:parallelism}
+\label{sec:turbo_parallelism}
 
 \begin{itemize}
   \item inter-SIMD
@@ -2306,10 +2307,10 @@ and $T$ threads are activated, a total of $M\times T$ frames are therefore
 decoded simultaneously with the inter-frame strategy. Theoretically, this SPMD
 parallelization strategy provide an acceleration up to a factor $T$, with $T$
 cores. Large memory footprint, exceeding L3 cache capacity may reduce the
-effective speedup, as shown in Section~\ref{sec:results}.
+effective speedup, as shown in Section~\ref{sec:turbo_results}.
 
 \subsubsection{Implementation of the decoder}
-\label{sec:impl}
+\label{sec:turbo_implem}
 
 The presented decoder implementation is available in the AFF3CT software. The
 use of \texttt{C++} templates associated to our generic SIMD library enables the
@@ -2398,7 +2399,7 @@ $\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are then never stored in the
 memory.
 
 \subsection{Evaluations}
-\label{sec:results}
+\label{sec:turbo_results}
 
 \begin{itemize}
   \item 32-bit, 16-bit, 8-bit
@@ -2410,15 +2411,15 @@ memory.
   % {\scriptsize
   % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c | c | c}
-    \textbf{CPU}          & \textbf{P1} : Xeon E5-2650 & \textbf{P2}: Core i7-4960HQ & \textbf{P3}: Xeon E5-2680v3 \\
+    \textbf{CPU}           & \textbf{P1} : Xeon\TM E5-2650 & \textbf{P2}: Core\TM i7-4960HQ & \textbf{P3}: Xeon\TM E5-2680v3 \\
     \hline
-    \textbf{Intel Arch.}  & \textit{Ivy Bridge} Q1'12  & \textit{Haswell} Q4'13      & \textit{Haswell} Q3'14      \\
+    \textbf{Intel\R Arch.} & \textit{Ivy Bridge} Q1'12     & \textit{Haswell} Q4'13         & \textit{Haswell} Q3'14      \\
     \hline
-    \textbf{Cores/Freq.}  & 8 cores, 2--2.8 GHz        & 4 cores, 2.6--3.8 GHz       & 12 cores,  2.5--3.3 GHz     \\
+    \textbf{Cores/Freq.}   & 8 cores, 2--2.8 GHz           & 4 cores, 2.6--3.8 GHz          & 12 cores,  2.5--3.3 GHz     \\
     \hline
-    \textbf{LLC}          & 20MB L3                    & 6MB L3                      & 30MB L3                     \\
+    \textbf{LLC}           & 20MB L3                       & 6MB L3                         & 30MB L3                     \\
     \hline
-    \textbf{TDP}          & 95 W                       & 47 W                        & 120 W                       \\
+    \textbf{TDP}           & 95 W                          & 47 W                           & 120 W                       \\
   \end{tabular}
   % }
   % }}
@@ -2427,7 +2428,7 @@ memory.
 
 The experiments have been conducted on three different x86-based processors
 detailed in Table~\ref{tab:turbo_specs}. A mid-range processor (P2) is used for
-comparison with similar CPU targets in the literature \cite{Huang2011,Zhang2012,
+comparison with similar CPU targets in the literature~\cite{Huang2011,Zhang2012,
 Wu2013} while the two high-end processors (P1 and P3) are used for comparison
 with GPU-based turbo-decoder implementations. Indeed, P1 and P3 have a number of
 cores that is similar to the number of \emph{Streaming Multiprocessors} (SM)
@@ -2484,7 +2485,7 @@ for all codes with $K<4096$.
   \caption{\emph{Energy-per-bit} ($E_d$) depending on the number of cores and
     the instruction types. 6 iterations, 8-bit fixed-point. The throughput and
     power measurements were conducted on P2 with the
-    \emph{Intel Power Gadget} tool.}
+    \emph{Intel\R Power Gadget} tool.}
   \label{plot:turbo_energy}
 \end{figure}
 
@@ -2561,7 +2562,7 @@ with 3/4 cores, the code using SSE outperforms the AVX one.
 
 Table~\ref{tab:turbo_comparison} shows a performance comparison with related
 works\footnote{To be as fair as possible with the other works, we assume that
-the \emph{Intel Turbo Boost} (ITB) technology was disabled on their CPUs. For
+the \emph{Intel\R Turbo Boost} (ITB) technology was disabled on their CPUs. For
 our experiments, the ITB technology was on and the real frequency is picked up.
 Moreover, for GPU works there is an asterisk when it is unclear if the CPU/GPU
 data transfer times have been taken into account.}. The variety of CPU/GPU
@@ -2644,6 +2645,12 @@ representation enables to pack more elements into SIMD registers.
   \item versions séquentielles et inter-SIMD
 \end{itemize}
 
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/ldpc/bp_min_sum.cpp}
+  \caption{LDPC decoder implementation with \MIPP.}
+  \label{lst:LDPC}
+\end{listing}
+
 Listing~\ref{lst:LDPC} shows a 16-bit fixed-point LDPC decoder. This decoder
 works on several frames at once. Each element of the SIMD registers corresponds
 to an element of a specific frame. This approach is called the
@@ -2653,12 +2660,6 @@ at the expense of latency. Notice that the data type can be switched from
 This \MIPP feature is important for digital communication: adapting the data
 type without changing the source code enables to address varying constraints
 with a single source code.
-
-\begin{listing}
-  \inputminted[frame=lines,linenos]{C++}{main/chapter2/src/ldpc/bp_min_sum.cpp}
-  \caption{LDPC decoder implementation with \MIPP.}
-  \label{lst:LDPC}
-\end{listing}
 
 \subsection{Evaluations}
 
@@ -2691,17 +2692,940 @@ sequential version of the code.
 
 \section{SCMA Demodulator~\cite{Ghaffari2019}}
 
-\subsection{Related Works}
+\subsection{Introduction and Related Works}
 
-\subsection{Presentation}
+Non-orthogonal Multiple Access (NOMA) mechanisms are investigated as means to
+improve the fifth-generation mobile communication systems (5G)~\cite{Islam2017}
+to realize massive connectivity and to reduce bit error rates. Sparse Code
+Multiple Access (SCMA) is a NOMA mechanism that offers better bit error rate
+performance and higher spectral efficiency, while the sparsity of the codebooks
+ensures lower complexity of decoding compared to other non-orthogonal
+modulations~\cite{Nikopour2013}. SCMA is a promising candidate for 5G
+communication systems since it provides up to 300\% more connectivity by
+spreading information of each user's codebook over sets of shared OFDM frequency
+tones~\cite{Altera2015}. According to the NGMN white paper~\cite{Alliance2015},
+5G is seriously considered to fulfill more diverse scenarios compared to 4G.
+Applications can be broadband support in dense areas, low latency connectivity
+for Augmented Reality (AR) and reliable communication for intelligent industrial
+controls, Internet of Things (IoT) or Internet of Mission Critical Things
+(IoMCT). Unfortunately, massive connectivity and spectral efficiency of SCMA
+come at the cost of high complexity in the decoder, making the design of high
+throughput and low complexity decoders a challenge for systems exploiting
+SCMA~\cite{Lu2015}.
 
-\subsection{MPA Demodulation Algorithms}
+Exploiting sparsity of the codebooks, Belief Propagation (BP) or Message Passing
+Algorithm (MPA) decoders were introduced to achieve near Maximum Likelihood
+performance with lower complexity~\cite{Zhang2014a}. Substantial research works
+were conducted on improving SCMA decoders to satisfy the uplink requirements of
+5G. Indeed, MPA is populated with many exponential computations to calculate the
+extrinsic information and probabilities of the received signal. This is based on
+modeling the channel noise with a Gaussian probability density function (PDF). A
+classical improvement to this bottleneck is the computation of extrinsic
+information in the logarithm domain, which led to develop the log-MPA decoder.
+In~\cite{Liu2016}, fixed point and floating-point implementations of the MPA and
+log-MPA on FPGA are studied. The bit error rate performance and complexity of
+the MPA and log-MPA are compared and it is concluded that using log-MPA with 4
+message passing iterations achieves a good tradeoff between performance and
+complexity. In~\cite{Bayesteh2015}, several complexity reduction techniques are
+proposed to increase the system throughput. These techniques are 1) SCMA
+codebook design with minimum number of projections, 2) clustered MPA (CMPA)
+which defines sub-graphs in MPA and runs MPA on them, and 3) selected
+exponential computations. In~\cite{Du2016} an adaptive Gaussian approximation
+is used to unselect the edges of the graph with smaller modulus. In addition,
+mean and variance feedbacks are employed to compensate information loss caused
+by unselected edges. User's codebooks play an important role for fast
+convergence of the MPA or log-MPA. As investigated in~\cite{Taherzadeh2014,
+Peng2017,Yan2017}, revisiting codebook design can help to reduce the number of
+iterations needed for MPA decoding of SCMA. In~\cite{Jia2018}, an improved MPA
+is proposed which eliminates determined user codewords after certain number of
+iterations and continue the iterations for undetermined user's codewords.
+Similarly, in~\cite{Yang2016}, a belief threshold is set to choose the most
+reliable edge probabilities and continue the iterations for the others. A
+Shuffled MPA (S-MPA) is introduced in~\cite{Du2016a}. S-MPA is based on
+shuffling the messages between function nodes and variable nodes. As a result,
+the convergence rate is accelerated. A Monte Carlo Markov Chain Method is
+proposed in~\cite{Chen2016} to decode SCMA signals and sphere decoding is also
+explored in~\cite{Yang2017,Wei2017} for SCMA receiver design.
+
+The main difference between this work and previously cited works is that the
+present paper combines an analytic view of MPA complexity with hardware and
+resource aware programming, exploiting hardware features available in general
+purpose processors (GPPs). The SCMA decoding algorithms are revised in light of
+the needs of Cloud Radio Access Networks (C-RANs) and to take full advantage of
+key hardware features available in GPPs such as their SIMD engine. In the early
+2000s, the performance of many processors improved significantly due to clock
+rate increases. This increase of performance needed very minimal if any
+programming effort, however the drawbacks of high clock rate was more power and
+energy consumption, overheating of processors, leakage currents and signal
+integrity problems. These disadvantages led designers to follow new paradigms
+such as thread-level and data-level parallelisms that provide good performance
+at lower clock speeds. Another challenge was data access efficiency in cache and
+RAM for performance critical algorithms. Higher performance also came from
+improved cache access efficiency of heterogeneous processors and parallel access
+to the L1 cache through vectorized instructions. Therefore, complicated and
+control heavy algorithms such as MPA have to be adapted for efficient execution
+on heterogeneous architectures and their exploitable parallelism must be
+expressed at every level of the code, whether in arithmetic or memory access
+instructions. Particularly, various Single Instruction Multiple Data (SIMD)
+extensions and thread-level parallelism are used to increase the throughput of
+MPA decoding on various platforms.
+
+This paper reports on two contributions that can be useful for any variation of
+the aforementioned MPA. First, MPA and log-MPA have been adapted to use SIMD
+extensions leveraging the available data-level parallelism. The algorithms are
+revised to have aligned and contiguous access to memory, which is crucial to
+achieve high memory throughput. Various SIMD instruction set architectures
+(ISAs) such as Advanced Vector Extensions (AVX), Streaming SIMD Extension (SSE),
+Knights Corner Instruction (KNCI) and ARM\R NEON are used to enhance the
+performance of various parts of the algorithm. Multi-threaded programming
+technique and power efficiency are also studied in this paper.
+
+Second, efforts have been made to reduce the high dynamic ranges and high
+storage burden that are induced by the numerous calculations of the exponential
+function embedded in MPA, which is one of its main points of congestion. To
+eliminate calculations of the exponentials in the MPA, this paper uses
+approximate modeling of noise. Indeed, a Gaussian Probability Density Function
+(PDF) is estimated with sub-optimal, bell shaped, polynomial PDFs. Using
+polynomial PDFs enables a significant throughput improvement with a very small
+degradation on the bit error rate performance. In addition, this technique
+enables to use vectorized instructions for the calculation of the probabilities,
+as opposed to log-MPA. Details will be explained in the sequel. The impacts of
+turbo codes~\cite{Berrou1993}, polar codes~\cite{Arikan2009} and LDPC
+codes~\cite{Gallager1962,MacKay1995} are investigated.
+
+In this paper, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
+and $\mathbb{C}$ denote binary, natural, integer, real and complex numbers.
+Scalar, vector and matrix are presented as $x$, $\bm{x}$, $\bm{X}$ respectively.
+The n'th element of a vector denoted by $\bm{x}_n$ and $\bm{X}_{n,m}$ is the
+element of n'th row and m'th column of matrix $\bm{X}$. Notation $\diag(x)$
+shows a diagonal matrix where its n'th diagonal element is $\bm{x_n}$. In
+addition, the transpose of a matrix is expressed as $\bm{X^T}$. The paper is
+organized as follows, Section~\ref{sec:scma_background} introduces the SCMA
+algorithm. Maximum Likelihood, MPA and log-MPA decoding methods are explained in
+this section as a background to this research.
+Section~\ref{sec:scma_improvements} elaborates on proposed improvements such as
+vectorizing the algorithm, exponential estimations, contiguous access to memory
+and other hardware oriented techniques. Section~\ref{sec:scma_performance}
+explores the bit error rate performance as well as the throughput, the latency,
+the power consumption, and the energy efficiency of the proposed MPA and log-MPA
+implementations. Some profiling metrics are given to better understand the
+results. Section~\ref{sec:scma_fec} is dedicated to study the effects of
+suggested techniques on block error rate after channel coding. Finally, the main
+findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
+
+\subsection{Background}
+\label{sec:scma_background}
+
+\paragraph{Overview of the SCMA System Model}
+\label{sec:scma_overview}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\linewidth]{scma/codec/codec}
+  \caption{a) SCMA encoder with 6 users (layers) and 4 physical resources,
+           b) SCMA uplink chain with channel coding,
+           c) Factor graph representation of a decoder,
+           d) Message Passing Algorithm based on Bayesian factor graph:
+              (I)   Resource to user message,
+              (II)  Guess swap at each user and user to resource message,
+              (III) Final guess at each user.}
+  \label{fig:scma_codec}
+\end{figure}
+
+An SCMA encoder with $J$ users (layers) and $K$ physical resources is a function
+that maps a binary stream of data to $K$-dimensional complex constellations
+$f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
+$\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
+sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
+own codebook to generate the desired codeword according to the binary input
+stream. Fig.~\ref{fig:scma_codec} shows SCMA uplink chain with $J = 6$, $K = 4$
+and $N = 2$. SCMA codewords are spread over $K$ physical resources, such as
+OFDMA tones. Fig.~\ref{fig:scma_codec}a shows that in the multiplexed scheme of
+SCMA, all chosen codewords of the $J$ layers are added together after being
+multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
+is shown in Fig.~\ref{fig:scma_codec}b. The output of the SCMA encoder is
+affected by the white additive noise $\bm{n}$.
+\begin{equation}
+  \label{eq:scma_1}
+  \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
+\end{equation}
+where $\bm{x}_j=(x_1,...,x_{Kj})^T$ and $\bm{h}_j=(h_1,...,h_{Kj})^T$ are
+respectively codeword and channel coefficients of layer $j$.
+
+\paragraph{SCMA Detection Schemes}
+\label{sec:scma_detection}
+
+\subparagraph{Maximum Likelihood}
+\label{sec:scma_ml}
+
+For an arbitrary codeword, the optimum decision, i.e. the one that minimizes the
+likelihood of transmission errors after decoding, is the one resulting from the
+Maximum Likelihood (ML) estimation, which can be described as:
+\begin{equation}
+  \label{eq:scma_2}
+  \bm{\hat{x}_{ML}} = \argmin_{c \in \bm{X}}||\bm{y - c}||^2,
+\end{equation}
+given the received codeword. In \eqref{eq:scma_2}, the soft outputs
+$\hat{\bm{x}}$ are also called Log-Likelihood Ratios (LLRs) that can be
+calculated with the following equation:
+\begin{equation}
+  \label{eq:scma_3}
+  LLR_x = \ln\Bigg(\frac{\sum_{C\in\mathcal{L}_x^0} \prob(\bm{y}|\bm{c})}
+  {\sum_{C\in\mathcal{L}_x^1} \prob(\bm{y}|\bm{c})}\Bigg),
+\end{equation}
+where $LLR_x$ is the log likelihood ratio of bit $x$ obtained from codeword
+$\hat{\bm{x}}$. This codeword comes from $\mathcal{L}_x^1$ the set of codewords
+in which bit $x$ is 1 and $\mathcal{L}_x^0$ the set of codewords in which bit
+$x$ is 0. The probability function $\prob(\bm{y}|\bm{c})$ can be expressed as
+in \eqref{eq:scma_4} when a signal is transmitted over an additive white
+Gaussian channel with $\sigma^2$ variance:
+\begin{equation}
+  \label{eq:scma_4}
+  \prob(\bm{y}|\bm{c}) = \frac{1}{\sqrt{2\pi}\sigma}\exp
+  \Bigg(-\frac{||\bm{y}-\bm{c}||^2}{2\sigma^2}\Bigg).
+\end{equation}
+Although the ML method provides the best guess for $\bm{\hat{x}_{ML}}$,
+performing the computation with this method requires unacceptable complexity in
+real applications. In the case of six users and codebooks matrices size
+$4\times4$ as in Fig.~\ref{fig:scma_codec}a, the calculation of the soft output
+for each bit in \eqref{eq:scma_4} needs 4096 exponential function computations,
+which is unacceptable. Nevertheless, in this article the result of this method
+is used to compare with practical methods to characterize the BER performance
+degradation of MPA and log-MPA.
+
+\subparagraph{Message Passing Algorithm (MPA)}
+\label{sec:scma_mpa}
+
+Fig.~\ref{fig:scma_codec}c shows a Bayesian factor graph representation of an
+MPA decoder with six users and four physical resources. Thanks to sparsity of
+the codebooks, exactly three users collide in each physical resource. There are
+four possible codewords for each of the three connected user's codebooks which
+gives 64 possible combined codewords in each physical resource. In the first
+step of the MPA, the 64~distances between each possible combined codewords and
+the actual received codeword are calculated.
+\begin{equation}
+  \label{eq:scma_5}
+  d_{RES  \beta}(\bm{m}, \bm{H}) =
+  \underset{l \subset \zeta, m_u\in\{1,...,K\}}{||\bm{y}_\beta -
+  \sum \bm{h}_{l,m_u} \bm{x}_{l,m_u} ||},
+\end{equation}
+$\zeta$ is the set of users connected to resource $\beta$ and the
+considered codeword is denoted as $m$. For instance, \eqref{eq:scma_5} can be
+re-written for resource 4 as:
+\begin{equation}
+  \label{eq:scma_6}
+  \begin{split}
+  d_{RES 4}(m_2,m_4,m_6,\bm{h}_2, \bm{h}_4, \bm{h}_5) =\\
+  \underset{m_{2,4,6}=1,2,3,4}{|| \bm{y_4} - \Big(\bm{h}_2\bm{x}_2(m_2) +
+  (\bm{h}_4\bm{x}_4(m_4) + (\bm{h}_5\bm{x}_5(m_5) \Big) ||}.
+  \end{split}
+\end{equation}
+In which $m_2$, $m_4$, $m_5$ indicate the different codewords for users 5, 4,
+and 2 in \eqref{eq:scma_6}. Assuming perfect channel estimation and Gaussian
+noise, these Euclidean distances can be expressed as probabilities using
+\eqref{eq:scma_7}:
+\begin{equation}
+  \label{eq:scma_7}
+  \Psi(d_{RES \beta}) = \exp \Bigg(-\frac{d_{RES \beta}^2}{2\sigma^2} \Bigg).
+\end{equation}
+After calculating the residual probability of each codeword with
+\eqref{eq:scma_7}, iterative MPA starts exchanging beliefs (probabilities) on
+possible received codewords among the users and resources nodes of the
+factor-graph. According to Fig.~\ref{fig:scma_codec}d(I), a message from
+resources to users has been defined to contain extrinsic information of two
+other connected users. For instance, a message from resource 4 to user 2
+containing the probability information of codeword $i$ can be expressed as:
+\begin{equation}
+  \label{eq:scma_8}
+  \begin{split}
+  \mu_{RES4 \rightarrow UE2}(i) = \sum\limits_{j=1}^4 \sum\limits_{i=1}^4 \Psi
+  \Big(d_{RES4}(i,j,k,\bm{H}) \Big)\\
+  \times \mu_{UE4 \rightarrow RES4}(j) \times \mu_{UE5 \rightarrow RES4}(k).
+  \end{split}
+\end{equation}
+As shown in Fig.~\ref{fig:scma_codec}d(II) there are only two resources
+connected to each user. A message from a user to a resource is a normalized
+guess swap at the user node:
+\begin{equation}
+  \label{eq:scma_9}
+  \mu_{UE3 \rightarrow RES1}(i) = \frac{\mu_{RES3 \rightarrow UE3}(i)}
+  {\sum_i\mu_{RES3 \rightarrow UE3}(i)},
+\end{equation}
+message passing between users and resources (see \eqref{eq:scma_8} and
+\eqref{eq:scma_9}) will be repeated three to eight times to reach the desired
+decoding performance. The final belief at each user B (i) is the multiplication
+of all incoming messages as illustrated in Fig.~{\ref{fig:scma_codec}}d(III) and
+\eqref{eq:scma_10} for UE4 and codeword $i$. Finally, \eqref{eq:scma_11} is used
+to calculate soft outputs for bit $b_x$:
+\begin{equation}
+  \label{eq:scma_10}
+  B_3(i) = \mu_{RES1 \rightarrow UE3}(i) \times \mu_{RES3 \rightarrow UE3}(i),
+\end{equation}
+\begin{equation}
+  \label{eq:scma_11}
+  LLR_x = \ln \Bigg( \frac{\prob(\bm{y}|b_x=0)}{\prob(\bm{y}|b_x=1)} \Bigg) =
+  \ln \Bigg( \frac{\sum_m B_m(i)_{~when~b_x=0}}{\sum_m B_m(i)_{~when~b_x=1}}
+  \Bigg).
+\end{equation}
+
+\subparagraph{Log-MAP}
+\label{sec:scma_log-map}
+
+Since calculation of exponentials in \eqref{eq:scma_7} requires relatively high
+computational effort, changing the algorithm to log domain using the Jacobi
+formula \eqref{eq:scma_12} is a classical improvement of MPA:
+\begin{equation}
+  \label{eq:scma_12}
+  \ln \Bigg( \sum\limits_{i-1}^N\exp(f_i) \Bigg) \approx \max\{f_1,f_2,...,f_N\}
+\end{equation}
+using Jacobi formula, \eqref{eq:scma_8} can be reduced to:
+\begin{equation}
+  \label{eq:scma_13}
+  \mu_{RES1 \rightarrow UE5}(i) = \underset{j,k=1,...,4}
+  {\max \Bigg(-\frac{d_{RES1}^2(i,j,k,\bm{H})}{2\sigma^2} \Bigg)} +
+  \mu_{UE2 \rightarrow RES1}(j) + \mu_{UE3 \rightarrow RES1}(k),
+\end{equation}
+due to elimination of exponential's high dynamic ranges, there is no need to
+normalize the guess swap and \eqref{eq:scma_9} will be:
+\begin{equation}
+  \label{eq:scma_14}
+  \mu_{UE3 \rightarrow RES1}(i) = \mu_{RES3 \rightarrow UE3}(i).
+\end{equation}
+The rest of the algorithm can be expressed as follows:
+\begin{equation}
+  \label{eq:scma_15}
+  B_3(i) = \mu_{RES3 \rightarrow UE3}(i) + \mu_{RES1 \rightarrow UE3}(i),
+\end{equation}
+\begin{equation}
+  \label{eq:scma_16}
+  LLR_x = \max_i(B_m(i))_{~when~b_x=0} - \max_i(B_m(i))_{~when~b_x=1}.
+\end{equation}
+
+\subsection{Proposed Improvements}
+\label{sec:scma_improvements}
 
 \begin{itemize}
-  \item démodulateur SCMA intra-SIMD
-  \item proposition d'une approximation des calculs
+  \item \cmark~démodulateur SCMA intra-SIMD
+  \item \cmark~proposition d'une approximation des calculs
 \end{itemize}
 
+Besides methodical improvements of the MPA such as log-MPA, hardware oriented
+improvements are important to take full benefit of C-RAN servers capabilities.
+Since MPA and log-MPA are control heavy algorithms, mishandling of data can
+induce huge performance losses. This section explores how MPA can be
+reformulated: 1) to improve data locality in cache and to reduce cache misses
+and branch mispredictions 2) to reorder the data paths in order to help
+exploiting data-level parallelism at each step of the MPA and log-MPA algorithms
+and 3) to exploit approximated modeling of additive white Gaussian noise in
+order to eliminate exponential calculations and to drastically reduce the number
+of instructions for SSE, NEON, AVX and KNCI ISAs.
+
+\subsubsection{Flattening Matrices to Reduce Cache Misses and Branch Misses}
+\label{sec:scma_improvements_flattening}
+
+Considering \eqref{eq:scma_6} and \eqref{eq:scma_7}, there are 64 calculations
+of distances and probabilities for each resource (256 for all resources). Using
+a multidimensional array ($4\times4\times4$) should be avoided, because it
+typically causes bad data locality, which leads to an increased number of cache
+misses. These misses negatively affect the throughput, and this is significant,
+since this process must be repeated in the decoder for each received 12-bit
+block of data. Flattening a $d$-dimensional array to a vector using
+\eqref{eq:scma_17} is appropriate to prevent cache misses and improve the
+spatial locality of data. This is done with the help of an index defined as:
+\begin{equation}
+  \label{eq:scma_17}
+  index = \sum\limits_{i=1}^d\Bigg( \prod\limits_{j=i+1}^d N_j \Bigg)n_i.
+\end{equation}
+Where $N_j$ is the size of the $j^{th}$ dimension of the array and $n_i$ is the
+location of a target element in that dimension. Improving data locality with
+a stride of a single floating-point number in each element makes it easier for
+the processor to have aligned and contiguous accesses to the memory through SIMD
+ISA. Utilizing SIMD instructions helps to reduce the total number of
+mispredicted branches in the algorithm. Contiguous accesses to the L1 cache are
+performed by chunks of 128-bit, 256-bit or 512-bit. It reduces the number of
+iterations in the \verb|for|-loops and consequently it reduces the number of
+branches. On the other hand, for a vector of sixty four 32-bit floating-point
+numbers, 64 iterations are needed in the scalar mode, while only 16, 8 or 4
+iterations are required in the vectorized modes using respectively SSE (or
+NEON), AVX or KNCI ISAs.
+
+\subsubsection{Adapting the Algorithms to Improve Data-Level Parallelism}
+\label{sec:scma_improvements_adapting_algorithms}
+
+SSE, NEON, AVX and KNCI ISAs handle SIMD operations. KNCI and AVX use 512-bit
+and 256-bit registers, while SSE and NEON use 128-bit registers. For instance,
+an AVX operation can process eight 32-bit floating-point numbers simultaneously.
+The AVX instructions also provide high-performance loads and stores to the cache
+memory due to data vectorization. Flattening matrices to vectors is a
+prerequisite to enable AVX contiguous accesses to the memory. Vectorized
+instructions such as AVX are accessible in C++ through intrinsic functions. An
+intrinsic is a function that directly maps to an assembly instructions (for some
+rare exceptions it can be more than one instruction). Nowadays, AVX units use
+sixteen 256-bit YMM registers and a 32-bit MXCSR control register to handle
+vectors of eight 32-bit or four 64-bit floating-point numbers. The AVX ISA
+allows to perform SSE instructions using the lower 128-bit lane of the YMM
+registers. For MPA, the SIMD instructions are used to 1) compute the complex
+norm $||.||$ in \eqref{eq:scma_5} and \eqref{eq:scma_6}, 2) calculate the
+exponentials in \eqref{eq:scma_7}, 3) perform users to resources messaging and
+final guesses at each user.
+
+\paragraph{SIMD Computation of Complex Norms}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.50\linewidth]{scma/simd_norm/simd_norm}
+  \caption{Complex norm AVX algorithm using
+           a) Array of Structures (AoS),
+           b) Structure of Arrays (SoA).}
+  \label{fig:scma_simd_norm}
+\end{figure}
+
+Equations~\eqref{eq:scma_5} and \eqref{eq:scma_6} use a complex norm function
+$||.||$, it can be optimized by using SIMD instructions. There are two ways to
+perform this computation: Fig.~\ref{fig:scma_simd_norm}a depicts how to
+implement the norm function using an Array of Structures (AoS) for complex
+numbers. In this method, the complex numbers are represented as two consecutive
+floating-point numbers. The implementation with AoS uses six intrinsic
+functions: one load (\verb|_mm256_loadu_ps|), one store
+(\verb|_mm256_storeu_ps|), one multiplication (\verb|_mm256_mul_ps|), one
+permutation of the lanes (\verb|_mm256_permute2f128_ps|), one horizontal
+addition (\verb|_mm256_hadd_ps|) and one extraction of the highest lane of the
+AVX register (\verb|_mm256_extractf128_ps|). Fig.~\ref{fig:scma_simd_norm}b
+sketches the computation of the complex norm using a Structure of Array (SoA)
+data layout. This implementation also uses six intrinsic functions: two loads
+(\verb|_mm256_loadu_ps|), one store (\verb|_mm256_storeu_ps|), two standard
+multiplications (\verb|_mm256_mul_ps|), one addition (\verb|_mm256_add_ps|).
+
+Our experiments demonstrated that these two methods have similar performances,
+however we used the Structure of Arrays (SoA) since it is 1) easier to port for
+the ISAs that lack from shuffle instructions and 2) trivial to extend for
+different register lengths.
+
+\paragraph{SIMD Computation of Exponential}
+
+To speedup the computational time of the exponentials used in \eqref{eq:scma_7},
+the MIPP wrapper~\cite{Cassagne2018} has been used. MIPP proposes a vectorized
+implementation of the exponential based on a series expansion. Many intrinsic
+functions are encapsulated to compute the exponential. MIPP also allows to write
+portable intrinsic codes. A single SIMD code is written for multiple ISAs such
+as SSE, NEON, AVX, AVX512 and KNCI thanks to the meta-programming techniques.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.50\linewidth]{scma/simd_exp_mul/simd_exp_mul}
+  \caption{a) Vectorized Exponentials ($N_ 0 = 2\sigma^2$),
+           b) Vectorized calculation of final guess at user 4.}
+  \label{fig:scma_simd_exp_mul}
+\end{figure}
+
+The flattened complex and normalized numbers are calculated as shown in
+Fig.~\ref{fig:scma_simd_norm}a and Fig.~\ref{fig:scma_simd_norm}b to produce the
+preliminary values used to compute the probabilities.
+Fig.~\ref{fig:scma_simd_exp_mul}a illustrates the full process on a vector of
+eight floating-point numbers. First the values are loaded into the YMM
+registers, then they are multiplied by $-1/2\sigma^2$ and finally the
+exponential function is performed according to \eqref{eq:scma_7}.
+
+\paragraph{SIMD Message Passing}
+
+Some remaining parts of the MPA can be vectorized too. Especially, the guess
+swaps and the computation of the final guesses at each user node can be
+vectorized using SSE instructions. Fig.~\ref{fig:scma_simd_exp_mul}b shows the
+computation of final guesses for user 4. There are four messages from a resource
+to a user containing the probabilities of four different codewords, which are
+the elements of the SSE vectors. According to Fig.~\ref{fig:scma_simd_exp_mul}b
+these vectors of probabilities are loaded into SSE, NEON or the lowest lane of
+the AVX registers.
+
+\subsubsection{Estimated-MPA (E-MPA)}
+
+Computation of the exponentials in \eqref{eq:scma_7} is one of the most
+important bottlenecks of the MPA algorithm. It is possible to further accelerate
+the computation by using proper estimations. The exact exponential computation
+is not essential to produce a satisfying estimation in the MPA algorithms.
+Considering that \eqref{eq:scma_7} represents a Gaussian PDF, it can be replaced
+by sub-optimal bell-shaped polynomial distributions to model the noise. It will
+be shown in Section~\ref{sec:scma_performance_throughput} that using a
+polynomial estimation can increase the throughput while leading to marginal bit
+error rate degradation after the MPA decoding. However, these estimated
+probabilities cause small degradations of the block error rate (BLER)
+performance after the channel decoding (cf. Section~\ref{sec:scma_fec}). The
+proposed PDF must satisfy two conditions to be valid: 1) it must be positive and
+lower bounded at zero, 2) its integral over $(-\infty, \infty)$ must be equal to
+1. The following function is suggested to estimate the exponentials:
+\begin{equation}
+  \label{eq:scma_18}
+  \Psi^{'}_{d_{RES \beta}} = \frac{2 / \pi}{2\sigma^2 + 4d^4_{RES \beta}}.
+\end{equation}
+The computation of $\Psi^{'}$ is faster than the original
+$\Psi$~\cite{Ghaffari2017}. The probabilities produced using \eqref{eq:scma_7}
+and \eqref{eq:scma_18} are normalized according to \eqref{eq:scma_9}.
+Furthermore, the numerator $2/\pi$ does not play an important role in MPA and
+can be uniformly eliminated from all calculations to reduce the computational
+effort. Thus,
+\begin{equation}
+  \label{eq:scma_19}
+  \Psi^{'}_{d_{RES \beta}} \approx \frac{1}{2\sigma^2 + 4d^4_{RES \beta}},
+\end{equation}
+can be used as a systematic replacement to the vectorized exponential MIPP
+function used in Fig.~\ref{fig:scma_simd_exp_mul}a. It reduces the overall
+number of instructions to three intrinsic functions : two multiplications
+(\verb|_mm256_mul_ps|) and one addition (\verb|_mm256_add_ps|).
+
+% \subsection{Accuracy of Floating-point Computations and Other Traditional Optimization}
+\subsubsection{Accuracy of Floating-point Computations}
+\label{sec:scma_improvements_float}
+
+The finite precision of floating-point calculations induces losses in the
+results. Thus, technical standards such as IEEE 754 define rounding rules,
+precision of calculations, exception handling and underflow behavior. However,
+the MPA delivers approaching bit error rate results with less precise
+floating-point models. For instance, in the GNU compiler, \verb|-Ofast| is a
+high-level compiler option which includes fast math libraries to handle
+floating-point calculations (\verb|-ffast-math|). The compiler uses various
+mathematical simplifications as explained in~\cite{Gccfp2018} and uses
+approximated libraries for the division and the square root functions. The
+compiler also forces the value to zero in the case of an underflow. Using
+\verb|-Ofast| can improve the throughput of the MPA algorithm as will be shown
+in Section~\ref{sec:scma_performance}.
+
+In this work, other well-known optimization techniques, such as loops unrolling,
+using references instead of pointers, avoiding type conversions, preferring
+prefixed operators, and functions inlining have been used to enhance the
+throughput of the various message passing algorithms.
+
 \subsection{Evaluations}
+
+\subsubsection{Performance Analysis}
+\label{sec:scma_performance}
+
+In this section, the effects of the various optimizations considered in
+Section~\ref{sec:scma_improvements} are investigated. A key concern is to ensure
+that the decoding error performance is not affected by the execution time
+improvements, particularly when approximations are involved. Energy efficiency
+and power consumption, throughput, memory access efficiency, hardware complexity
+analysis are all important aspects that must be considered.
+
+% \subsection{Evaluation of Error Performance and Convergence Rate}
+\paragraph{Evaluation of Error Performance}
+\label{sec:scma_performance_evaluation}
+
+\begin{figure}
+  \centering
+  \subfloat[][BER performance comparison of ML, MPA and E-MPA for 5 iterations.]
+  {
+    \includegraphics[width=0.70\linewidth]{scma/ber_uncoded/ber_uncoded}
+    \label{plot:scma_ber_uncoded_a}
+  }
+  \\
+  % \qquad
+  \centering
+  \subfloat[][Convergence behavior of E-MPA and MPA.]
+  {
+    \includegraphics[width=0.70\linewidth]{scma/ber_uncoded_iter/ber_uncoded_iter}
+    \label{plot:scma_ber_uncoded_b}
+  }
+  \caption{Performance of MPA compared with E-MPA.}
+  \label{plot:scma_ber_uncoded}
+\end{figure}
+
+Fig.~\ref{plot:scma_ber_uncoded_a} shows the performance comparison of a maximum
+likelihood (ML) decoder, an MPA decoder performing 5 iterations and an
+estimated-MPA (E-MPA) decoder as explained in
+Section~\ref{sec:scma_improvements} also performing 5 iterations. There are very
+small differences in the bit error rate performance of the three decoders (less
+than 0.10 dB). Although both MPA and E-MPA show their optimum behavior with 5
+iterations, the convergence behavior of the two methods are different as
+illustrated in Fig.~\ref{plot:scma_ber_uncoded_b}. E-MPA has a slower
+convergence rate for less than three iterations. This phenomenon is expected as
+the probability functions produced by bell-shaped polynomial PDF do not have the
+quality of probabilities produced by exponentials. However, the convergence
+behavior is almost identical for more than 4 iterations. The other optimizations
+like loops unrolling, fast math libraries and vectorization were not found to
+degrade the BER performance or the convergence rates.
+
+\paragraph{Characterizing Throughput Gains, Energy Efficiency and Power Consumption}
+\label{sec:scma_performance_throughput}
+
+Energy efficiency is of interest in the design of C-RAN servers. It is
+determined by the rate of computation that can be delivered by a processor.
+Joint optimization of the throughput and energy consumption is a main goal of
+system designers. Energy optimization can reduce the cost of cloud services
+significantly while it can contribute to decrease the emission of greenhouse
+gases. Power utilization is also important because improved performance per Watt
+is useful to limit power demands. This section explores the power, energy
+efficiency and throughput of the various message passing algorithms suggested in
+this work. Tests have been conducted on three platforms running the Ubuntu Linux
+operating system. The three systems are : 1) an Intel\R Core\TM i7-6700HQ
+processor with AVX instructions (256-bit SIMD) and four physical cores using
+2-way Simultaneous Multi-Threading (SMT or Intel\R Hyper-Threading technology)
+running at nominal frequency of 2.6 GHz, 2) an ARM\R Cortex-A57 with NEON
+instructions (128-bit SIMD) and four cores (no SMT) running at 2.0 GHz and 3) an
+Intel\R Xeon Phi\TM Knight-Corner 7120P with KNCI instructions (512-bit SIMD)
+and 61 cores using 4-way SMT and running at 1.2 GHz.
+
+\begin{table}
+  \centering
+  \caption{Throughput, Latency, Power and Energy Characteristics}
+  \label{tab:scma_thr}
+  % {\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{c|c||c c c c c}
+  & \multirow{3}{*}{\textbf{Algorithm}} & \multirow{3}{*}{\shortstack[c]{\textbf{Throughput}\\\textbf{per Core}\\(Mbps)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Throughput}\\\textbf{per Socket}\\(Mbps)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Latency}\\\textbf{per Core}\\(ns)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Power}\\(W)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Energy}\\\textbf{per Bit}\\($\mu$J)}} \\
+  & & & & & & \\
+  & & & & & & \\
+  \hline
+  \hline
+  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Intel\R Core-i7 6700HQ~~~~~~}}}
+  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
+  & \multirow{2}{*}{\shortstack[c]{E-MPA+AVX \\(\texttt{-Ofast})}} & \multirow{2}{*}{17.46} & \multirow{2}{*}{ 75.46} & \multirow{2}{*}{  57.2} & \multirow{2}{*}{ 40.02} & \multirow{2}{*}{ 0.66} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA+AVX   \\(\texttt{-Ofast})}} & \multirow{2}{*}{15.06} & \multirow{2}{*}{ 67.83} & \multirow{2}{*}{  66.4} & \multirow{2}{*}{ 40.53} & \multirow{2}{*}{ 0.73} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 2.51} & \multirow{2}{*}{ 10.31} & \multirow{2}{*}{ 398.4} & \multirow{2}{*}{ 35.11} & \multirow{2}{*}{ 3.53} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O3})   }} & \multirow{2}{*}{ 1.11} & \multirow{2}{*}{  6.37} & \multirow{2}{*}{ 900.9} & \multirow{2}{*}{ 33.11} & \multirow{2}{*}{ 6.02} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.58} & \multirow{2}{*}{ 14.85} & \multirow{2}{*}{ 279.3} & \multirow{2}{*}{ 33.01} & \multirow{2}{*}{ 2.49} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.55} & \multirow{2}{*}{  3.51} & \multirow{2}{*}{1818.1} & \multirow{2}{*}{ 35.00} & \multirow{2}{*}{10.25} \\ & & & & & & \\ \hline
+  \hline
+  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{ARM\R Cortex-A57~~~~~~~~}}}
+  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
+  & \multirow{2}{*}{\shortstack[c]{E-MPA+NEON\\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.79} & \multirow{2}{*}{ 15.30} & \multirow{2}{*}{ 263.8} & \multirow{2}{*}{  7.93} & \multirow{2}{*}{ 0.52} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA+NEON  \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 2.09} & \multirow{2}{*}{  8.40} & \multirow{2}{*}{ 478.4} & \multirow{2}{*}{  7.56} & \multirow{2}{*}{ 0.90} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 1.20} & \multirow{2}{*}{  4.70} & \multirow{2}{*}{ 833.7} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 1.46} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.75} & \multirow{2}{*}{  3.01} & \multirow{2}{*}{1333.3} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 2.33} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 1.03} & \multirow{2}{*}{  4.07} & \multirow{2}{*}{ 970.8} & \multirow{2}{*}{  7.18} & \multirow{2}{*}{ 1.76} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.41} & \multirow{2}{*}{  1.60} & \multirow{2}{*}{2439.0} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 4.21} \\ & & & & & & \\ \hline
+  \hline
+  \multirow{4}{*}{\rotatebox[origin=c]{90}{\textbf{Xeon Phi\TM 7120P~~~~~}}}
+  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
+  & \multirow{2}{*}{\shortstack[c]{E-MPA+KNCI\\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.90} & \multirow{2}{*}{114.60} & \multirow{2}{*}{1111.1} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 1.73} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA+KNCI  \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.67} & \multirow{2}{*}{ 82.32} & \multirow{2}{*}{1492.5} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 2.41} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.36} & \multirow{2}{*}{ 53.38} & \multirow{2}{*}{2777.7} & \multirow{2}{*}{184.00} & \multirow{2}{*}{ 3.45} \\ & & & & & & \\ \cline{2-7}
+  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.28} & \multirow{2}{*}{ 36.09} & \multirow{2}{*}{3571.4} & \multirow{2}{*}{196.00} & \multirow{2}{*}{ 5.44} \\ & & & & & & \\
+  \end{tabular}
+  % }}
+\end{table}
+
+Table~\ref{tab:scma_thr} shows the comparison of throughput, latency, power
+consumption and energy of different decoding algorithms that are executed on the
+three platforms to decode 768 Million bits. The average power and energy
+consumption measured on the Core\TM i7 processor were obtained with the turbostat
+software\footnote{turbostat: \url{https://github.com/torvalds/linux/tree/master/tools/power/x86/turbostat}}
+which exploits the Intel\R performance counters in Machine Specific Registers
+(MSRs) to monitor CPU and RAM utilizations. However, in the case of ARM\R and
+Xeon Phi\TM platforms, external current sensors were used to measure the energy
+and power consumptions.
+
+\subparagraph{Intel\R Core\TM i7-6700HQ}
+
+The baseline implementation of MPA with level 3 (\verb|-O3|) optimization of the
+GNU compiler reaches 3.51 Mbps utilizing all four physical cores of the
+processor (SMT on). Log-MPA improves the performance to 6.37 Mbps benefiting
+from elimination of the exponential calculations, still in \verb|-O3|. However,
+using the fast math libraries (\verb|-Ofast|) and the loop optimizations from
+Section~\ref{sec:scma_improvements_float} increases the throughput to 14.85 Mbps
+for MPA and to 10.31 Mbps for log-MPA. It is important to observe that MPA
+outperforms the log-MPA with the fast math libraries and more aggressive
+optimizations, without compromising on the bit error rate performance. This is
+because log-MPA induces inefficient data accesses due to the messages passed
+from resources to users. This phenomenon will be investigated further in
+Section~\ref{sec:scma_performance}. Using the AVX and SSE SIMD ISAs reduces the
+branch mispredictions and the cache misses (cf.
+Section~\ref{sec:scma_improvements_flattening}). Consequently, the throughput is
+increased to 67.83 Mbps in MPA and to 75.46 Mbps for the E-MPA where the $\Psi'$
+estimated exponentials from \eqref{eq:scma_19} are performed. These results
+confirm significant throughput gains for the proposed implementations, while the
+energy consumption is reduced. Utilizing AVX increases the average power
+consumption of MPA and log-MPA from 35 to 40 Watts but throughput and latency
+are improved by much larger factors. It means that the overall energy
+consumption have been decreased with AVX.
+
+\subparagraph{ARM\TM Cortex-A57}
+
+On the \emph{Nvidia\R Jetson TX1} platform, the throughput difference caused by
+the fast math libraries of the GNU compiler is still visible for MPA and log-MPA
+algorithms. With level three optimization (\verb|-O3|), MPA and log-MPA run at
+1.60 Mbps and 3.01 Mbps respectively. When using fast math libraries
+(\verb|-Ofast|) the throughputs increased to 4.07 and 4.70 Mbps. It should be
+noted that the four physical cores of the ARM\R platform were  utilized for
+those tests. Power consumption and energy used per decoded bit is lower on the
+ARM\R platform than on the Intel\R processors. The low power consumption of the
+ARM\R platform notably comes at the cost of less powerful floating-point
+arithmetic units (cf. MPA+NEON and E-MPA+NEON in Table~\ref{tab:scma_thr}).
+Eliminating the exponential computations almost doubled the performance in E-MPA
+(15.30 Mbps) as compared to MPA+NEON (8.40 Mbps), which shows the limits of low
+power processors when calculating many exponentials. Nevertheless, by using
+E-MPA, the ARM\R low power processors can be a good candidate for implementation
+of SCMA decoders on C-RAN servers as it allows significant energy savings.
+
+\subparagraph{Intel\R Xeon Phi\TM 7120P}
+
+The Xeon Phi\TM Knights Corner~\cite{Chrysos2012} benefits from the ability to
+execute four hardware threads per core, while having 61~cores and 512-bit SIMD
+registers. In this case, 244 threads can be run to handle the MPA decoding task.
+Despite these benefits, the Xeon Phi\TM Knight Corners suffers from two main
+disadvantages: 1) the KNC instructions diversity is reduced compared to AVX or
+AVX-512 ISAs and 2) the cores frequency is relatively low in order to keep
+reasonable power consumption and limits the heat dissipation. As an example of
+missing instruction, the KNCI ISA does not offer coalesced division
+(\verb|_mm512_div_ps|) for floating-point numbers. Beside those limitations,
+the E-MPA+KNCI exhibits the highest throughput among the three mentioned
+platforms (up to 114.60 Mbps). However, it consumes almost three times more
+energy per bit compared to the ARM\R-based implementations. The MPA decoding
+algorithm exhibits its best performance on this platform when cross compiled
+using \verb|-O2 -mmic| flags by an Intel\R icpc compiler. Using fast math
+options such as \verb|-no-prec-div| \verb|-no-prec-sqrt|
+\verb|-fp-speculation=fast| \verb|-fp-model-fast=2| do not change the results
+significantly with the Intel\R compiler.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.70\linewidth]{scma/energy/energy}
+  \caption{Graphical comparison of the energy consumed per decoded bit for
+           three different platforms.}
+  \label{fig:scma_energy}
+\end{figure}
+
+Fig.~\ref{fig:scma_energy} focuses on the energy consumed per decoded bit (also
+mentioned in Table~\ref{tab:scma_thr}). In summary, the SIMD algorithms have
+a higher energy efficiency per decoded bit. The processor resources are well
+stressed and the power does not increase too much. Among the obtained results,
+the Xeon Phi\TM obtains the best throughput while the Cortex-A57 has the lowest
+energy consumption. In the case where the number of users in the cloud is
+increased, the results presented in this section are scalable up to the number
+of processing units dedicated to them.
+
+\paragraph{Memory (Cache) Access Efficiency}
+\label{sec:scma_performance_memory}
+
+\begin{table}
+  \centering
+  \caption{Cache Performance Characterization}
+  \label{tab:scma_cache}
+  % {\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{c | c c c c c}
+  \multirow{4}{*}{\textbf{Algorithm}} & \multirow{4}{*}{\shortstack[c]{\textbf{\# of}\\\textbf{Branches}\\(Million)}} & \multirow{4}{*}{\shortstack[c]{\textbf{\# of}\\\textbf{Branch}\\\textbf{Misses}\\(Million)}} & \multirow{4}{*}{\shortstack[c]{\textbf{\# of }\\\textbf{Cache}\\\textbf{Ref.}\\(Million)}} & \multirow{4}{*}{\shortstack[c]{\textbf{\# of}\\\textbf{Cache}\\\textbf{Misses}\\(Million)}} & \multirow{4}{*}{\shortstack[c]{\textbf{Instruction}\\\textbf{per Cycle}}} \\
+  & & & & & \\
+  & & & & & \\
+  & & & & & \\
+  \hline
+  %& Algorithm                                                  & # branches              & # branche misses       & # cache ref          & # cache misses         & intr. per cycle
+  \multirow{2}{*}{               E-MPA+AVX                    } & \multirow{2}{*}{12267}  & \multirow{2}{*}{422}   & \multirow{2}{*}{275} & \multirow{2}{*}{70.83} & \multirow{2}{*}{1.23} \\ & & & & & \\ \hline
+  \multirow{2}{*}{               MPA+AVX                      } & \multirow{2}{*}{12845}  & \multirow{2}{*}{401}   & \multirow{2}{*}{244} & \multirow{2}{*}{70.32} & \multirow{2}{*}{1.19} \\ & & & & & \\ \hline
+  \multirow{2}{*}{\shortstack[c]{Log-MPA  \\(\texttt{-Ofast})}} & \multirow{2}{*}{148867} & \multirow{2}{*}{17584} & \multirow{2}{*}{484} & \multirow{2}{*}{73.02} & \multirow{2}{*}{0.67} \\ & & & & & \\ \hline
+  \multirow{2}{*}{\shortstack[c]{Log-MPA  \\(\texttt{-O3})   }} & \multirow{2}{*}{359967} & \multirow{2}{*}{18039} & \multirow{2}{*}{635} & \multirow{2}{*}{77.75} & \multirow{2}{*}{0.69} \\ & & & & & \\ \hline
+  \multirow{2}{*}{\shortstack[c]{MPA      \\(\texttt{-Ofast})}} & \multirow{2}{*}{126578} & \multirow{2}{*}{7093}  & \multirow{2}{*}{397} & \multirow{2}{*}{72.58} & \multirow{2}{*}{1.12} \\ & & & & & \\ \hline
+  \multirow{2}{*}{\shortstack[c]{MPA      \\(\texttt{-O3})   }} & \multirow{2}{*}{527075} & \multirow{2}{*}{9454}  & \multirow{2}{*}{833} & \multirow{2}{*}{79.73} & \multirow{2}{*}{0.57} \\ & & & & & \\
+  \end{tabular}
+  % }}
+\end{table}
+
+Apart from SIMD operations and parallelization, cache access efficiency plays an
+important role in the high-performance implementation of algorithms on GPP.
+Table~\ref{tab:scma_cache} shows the performance characterization of different
+MPA algorithms on the Core\TM i7-6700HQ processor for decoding 768 Million bits.
+As reported in Table~\ref{tab:scma_cache}, contiguous accesses to the memory
+using AVX instructions reduces the total number of branches and references to
+the cache. Reducing the number of branches and references to the cache increases
+the throughput of the algorithm.
+
+According to Table~\ref{tab:scma_cache}, MPA+AVX shows almost ten times fewer
+branches (12845 Million) versus MPA \verb|-Ofast| (126578 Million) and
+consequently it offers better performance. For MPA+AVX, 401 Million branches
+have been mispredicted by the processors, compared to 7093 Millions for MPA. For
+cache misses MPA+AVX produced two Millions fewer cache misses when compared to
+MPA and the total number of cache references are also significantly (122
+Millions) less than with MPA. The total number of cache misses for various
+algorithms in Table~\ref{tab:scma_cache} are between 70 to 79 Millions, while
+the total number of branch mispredictions varies between 422 Millions to 6454
+Millions. This high dynamic range of branch mispredictions shows that reducing
+the total number of branches and branch mispredictions have more impact on
+increasing throughput of the MPA algorithm in comparison to reducing cache
+misses. This phenomenon also shows that using optimization methods such as
+log-MPA which produces large number of branches due to the $\max(.)$ function is
+not ideal for multi-processor servers in C-RAN. These reported significant
+improvements have been brought by SIMD instructions. Improving data locality,
+contiguous access to memory and parallelizing loops are the main reasons that
+made SIMD algorithms exhibit better performance when it comes to cache
+interface.
+
+Table~\ref{tab:scma_cache} also reports the number of Instructions per Cycle
+(IPC) of each implementation. It is obvious that the number of IPC was reduced
+in MPA \verb|-O3| and log-MPA due to poorer memory access efficiency. This
+reduces the throughput of those algorithms. On the other hand, without using
+contiguous access to memory, the processor spends more time for scalar load and
+stores. This can cause a bottleneck in interfacing memory while other resources
+of the processor are waiting to receive data and consequently it decreases the
+IPC. By contrast, in the case of contiguous access to memory (or cache) the
+processor can fetch sufficient data all at once to support sustained processing
+thus reducing the memory bottleneck and improving internal processing as
+reflected by better IPC indices.
+
+\paragraph{Profiling and Hardware Complexity}
+\label{sec:scma_performance_profiling}
+
+Previous sections explored how processor parallel resources, efficient and
+contiguous memory access, and compiler optimizations play an important role in
+getting efficient implementation of the SCMA algorithms. In~\cite{Zhang2014a,
+Liu2016,Jia2018,Du2016a}, computational complexity, measured as operation
+counts, was used to represent the complexity of the MPA. Operation counts can be
+misleading metrics when characterizing algorithmic complexity of algorithms
+executing on general purpose processors. Indeed, it misses significant factors
+such as cache misses, memory efficiency and precision of floating-point
+calculations. In this section, the time complexity of the various forms of SCMA
+decoders are investigated using the Intel\R VTune\TM profiler\footnote{Intel\R
+VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
+  \caption{Profiling results of different MPA algorithms using Intel\R VTune\TM
+    Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
+  \label{fig:scma_profiling}
+\end{figure}
+
+Fig.~\ref{fig:scma_profiling} reports profiling results obtained with different
+SCMA decoders variations when applied to the decoding of 768 Million bits.
+Results were organized to show the existence of five bottlenecks i.e. logarithms
+in \eqref{eq:scma_11}, exponentials in \eqref{eq:scma_7}, complex norm and
+complex subtraction in \eqref{eq:scma_5} and messages passed from resources to
+users in \eqref{eq:scma_8}.
+
+Observing MPA and MPA (\verb|-Ofast|) reveals the overhead of exponentials and
+complex norms in the algorithm. For example, the decoder spent more than 62
+percent of its time (32.35 seconds) to calculate exponentials and norms in MPA
+(\verb|-Ofast|). This led us to explore SIMD calculation of these two steps.
+Comparing E-MPA+SIMD and MPA+SIMD implementations to others such as MPA
+(\verb|-O3| or \verb|-Ofast|) shows a clear gain in throughput for calculation
+of the exponentials and norms. In more details, E-MPA+SIMD spends 1.68 seconds
+computing exponentials and norms which is more than 19 times faster than the
+initial computation of norms and exponentials in MPA (\verb|-Ofast|). On the
+other hand, exponentials and norms computations are performing as fast as
+complex subtract. This profiling results show the efficiency of the proposed
+SIMD implementation methods. By contrast, log-MPA has not shown good performance
+using fast math library when compared to MPA. Inefficient memory access, cache
+misses and high number of branches are among the reasons that made log-MPA
+exhibits lower throughput than expected. Those phenomena are induced by
+comparison operations embedded in the $\max(.)$ function in \eqref{eq:scma_13}.
+Nevertheless, without using fast math libraries, log-MPA
+still offers performance gains over MPA.
+
+\subsubsection{Channel Coding}
+\label{sec:scma_fec}
+
+\paragraph{Complete Simulation Chain}
+\label{sec:scma_fec_chain}
+
+In the previous sections of this article, algorithmic improvements and
+implementation techniques have been proposed. These optimizations lead to
+drastic reductions of the processing time and to an increase of the processing
+power efficiency. This is done with approximately no degradation of the BER
+performance after SCMA decoding. Nevertheless, in a full communication chain,
+multiple access algorithms are closely linked to the Forward Error Correction
+(FEC) modules. Indeed, the input of the FEC decoder consists in the outputs of
+the SCMA decoder.
+
+In order to claim that the proposed improvements do not degrade the overall
+error performance, it is necessary to embed the SCMA encoder and decoder in a
+full communication chain. To this purpose, we used the AFF3CT\footnote{AFF3CT is
+an Open-source software (MIT license) for fast forward error correction
+simulations, see \url{http://aff3ct.github.io}} software which is an ideal
+tool that provides the necessary simulation models and allows performing the
+desired verifications.
+
+AFF3CT is Open-source and specifically designed to offer an efficient
+environment to the communication systems designers. Monte-Carlo simulations can
+be run to measure various metrics such as the BER and BLER performance, or the
+throughputs and latencies of each module, e.g. FEC encoders and decoders,
+modulation and demodulation blocks, or different channel models.
+
+\begin{figure}
+  \centering
+  \subfloat[][Code rate $R=1/3$.]
+  {
+  \includegraphics[width=0.70\linewidth]{scma/fec/fec_1_3}
+    \label{fig:scma_fec_a}
+  }
+  \\
+  % \qquad
+  \centering
+  \subfloat[][Code rate $R=1/2$.]
+  {
+  \includegraphics[width=0.70\linewidth]{scma/fec/fec_1_2}
+    \label{fig:scma_fec_b}
+  }
+  \caption{BLER evaluation of SCMA MPA and E-MPA decoders combined with LDPC,
+           polar and turbo codes.}
+  \label{fig:scma_fec}
+\end{figure}
+
+According to the latest 3GPP report~\cite{ETSI2018}, in the 5G standard, the
+two selected code families are the LDPC and polar codes. Being implemented in
+the AFF3CT software, it is possible to test our SCMA decoders in a complete
+communication chain, in conjunction with state-of-the art LDPC, polar and even
+turbo decoders that were used in the LTE standard~\cite{ETSI2013}.
+Fig.~\ref{fig:scma_fec} shows the BLER performances of MPA and E-MPA decoders
+when combined with different channel codes. For a matter of reproducibility, the
+full parameters of the FEC used are reported in the next section. This research
+does not claim any novelty in channel coding, however, we found crucial to
+validate our proposed SCMA optimizations in a sufficiently complete
+communication chain.
+
+\paragraph{Channel Coding Configurations}
+% \subsection{Forward Error Correction Characteristics}
+\label{sec:scma_fec_characteristics}
+
+\subparagraph{Turbo codes}
+
+In a first validation, the turbo code from the LTE standard is used. In the
+decoder, 6 iterations are done. The two sub-decoders implement the max-log
+Maximum A Posteriori algorithm (max-log-MAP)~\cite{Robertson1995} with a 0.75
+scaling factor~\cite{Vogt2000}. In Fig.~\ref{fig:scma_fec_a}, the rate is
+$R \approx 1/3$, no puncturing is performed, the number of information bits
+$K$ is 1024 and the codeword length $N$ is 3084. In Fig.~\ref{fig:scma_fec_b},
+$R \approx 1/2$ with the puncturing of half of the parity bits,
+$K=2048$, and $N=4108$.
+
+\subparagraph{LDPC codes}
+
+In a second set of validations, the LDPC codes used in this paper are based on
+MacKay's matrices that have been taken from its personal
+webpage\footnote{MacKay's webpage: \url{http://www.inference.org.uk/mackay/codes/data.html}}.
+In Fig.~\ref{fig:scma_fec_a}, the matrix used is ($K=272$, $N=816$), and in
+Fig.~\ref{fig:scma_fec_b} the matrix is ($K=2000$, $N=4000$). In both figures,
+the decoder used is a Belief Propagation (BP) decoder with an Horizontal Layered
+scheduling~\cite{Yeo2001}. For the update rules, the Sum-Product Algorithm (SPA)
+has been used~\cite{MacKay1999}. The number of iterations is 100.
+
+\subparagraph{Polar codes}
+
+In the final validation, polar codes are built by suitably selecting the frozen
+bits. We used the Gaussian Approximation (GA) technique of~\cite{Trifonov2012}.
+The input SNR for the code construction with the GA is 1 dB, which apparently is
+very low considering that the SNR are 4 to 5 dB in the convergence zone. This is
+motivated by the fact that the GA algorithm is designed to work with the BPSK
+modulation. Using SCMA completely modifies the histogram of the LLR values for a
+given SNR. Therefore, a shift on the input SNR of the GA algorithm must be
+applied in order to efficiently select the frozen bits. If this shift is
+not applied, the decoding performances of the polar code degrades drastically.
+The number of information bits and the codeword length are ($K=682$, $N=2048$)
+in Fig.~\ref{fig:scma_fec_a} and ($K=2048$, $N=4096$) in
+Fig.~\ref{fig:scma_fec_b}. The decoder is a Successive Cancellation List (SCL)
+decoder with $L=32$ and a 32-bit GZIP CRC that was proposed
+in~\cite{Leonardon2019}.
+
+\paragraph{Effects of E-MPA on Error Correction}
+\label{sec:scma_fec_e-mpa}
+
+In Fig.~\ref{fig:scma_fec}, the number of iterations of the SCMA demodulator is
+5. The objective of simulating multiple channel codes is not to compare them
+with each other. A fair comparison of the different channel codes would indeed
+impose using the same code lengths and more importantly their computational
+complexity should be compared, which is not the case here. Our goal here is to
+study the impact of using E-MPA on the BER and FER performances when the channel
+codes are included in the communication chain. For each channel code, two curves
+are plotted: one for the E-MPA and the other for the MPA. Only 0.2 to 0.4 dB
+separate the two versions of the algorithm for all the considered channel codes.
+These results show the extent to which uncertainty of estimations affects
+channel coding. The decoding speed improvement brought by the E-MPA algorithm
+has a cost in terms of decoding performance. This trade-off should be considered
+in order to meet the system constraints.
 
 \section{Discussion}

@@ -100,7 +100,41 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/fig/turbo/thr/thr.gp \
               main/chapter2/fig/turbo/thr/dat/data.txt \
               main/chapter2/fig/turbo/energy/energy.gp \
-              main/chapter2/fig/turbo/energy/dat/data.txt
+              main/chapter2/fig/turbo/energy/dat/data.txt \
+              main/chapter2/fig/scma/ber_uncoded/ber_uncoded.tex \
+              main/chapter2/fig/scma/ber_uncoded/colors \
+              main/chapter2/fig/scma/ber_uncoded/dat/scma_empa.txt \
+              main/chapter2/fig/scma/ber_uncoded/dat/scma_ml.txt \
+              main/chapter2/fig/scma/ber_uncoded/dat/scma_mpa.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/ber_uncoded_iter.tex \
+              main/chapter2/fig/scma/ber_uncoded_iter/colors \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/empa_2.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/empa_6.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/empa_10.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/empa_14.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/mpa_2.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/mpa_6.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/mpa_10.txt \
+              main/chapter2/fig/scma/ber_uncoded_iter/dat/mpa_14.txt \
+              main/chapter2/fig/scma/energy/energy.tex \
+              main/chapter2/fig/scma/energy/colors \
+              main/chapter2/fig/scma/profiling/profiling.tex \
+              main/chapter2/fig/scma/profiling/colors \
+              main/chapter2/fig/scma/fec/fec_1_2.tex \
+              main/chapter2/fig/scma/fec/fec_1_3.tex \
+              main/chapter2/fig/scma/fec/colors \
+              main/chapter2/fig/scma/fec/dat/1_2/ldpc_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_2/ldpc_mpa.txt \
+              main/chapter2/fig/scma/fec/dat/1_2/polar_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_2/polar_mpa.txt \
+              main/chapter2/fig/scma/fec/dat/1_2/turbo_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_2/turbo_mpa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/ldpc_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/ldpc_mpa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/polar_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/polar_mpa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/turbo_empa.txt \
+              main/chapter2/fig/scma/fec/dat/1_3/turbo_mpa.txt
 	cd main/chapter2/fig/vectorization/              && gnuplot   mandelbrot_speedup.gp
 	cd main/chapter2/fig/polar/algos_comparison/     && rubber -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
@@ -121,6 +155,12 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/turbo/bfer/                 && gnuplot   bfer.gp
 	cd main/chapter2/fig/turbo/thr/                  && gnuplot   thr.gp
 	cd main/chapter2/fig/turbo/energy/               && gnuplot   energy.gp
+	cd main/chapter2/fig/scma/ber_uncoded/           && rubber -d ber_uncoded.tex
+	cd main/chapter2/fig/scma/ber_uncoded_iter/      && rubber -d ber_uncoded_iter.tex
+	cd main/chapter2/fig/scma/energy/                && rubber -d energy.tex
+	cd main/chapter2/fig/scma/profiling/             && rubber -d profiling.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_2.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_3.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -140,6 +180,12 @@ clean: clean4all
 	cd main/chapter2/fig/polar/scl_bfer/         && rubber --clean scl_bfer
 	cd main/chapter2/fig/polar/scl_adaptive/     && rubber --clean scl_adaptive
 	cd main/chapter2/fig/polar/scl_cpy_vs_ptr/   && rubber --clean scl_cpy_vs_ptr
+	cd main/chapter2/fig/scma/ber_uncoded/       && rubber --clean ber_uncoded
+	cd main/chapter2/fig/scma/ber_uncoded_iter/  && rubber --clean ber_uncoded_iter
+	cd main/chapter2/fig/scma/energy/            && rubber --clean energy
+	cd main/chapter2/fig/scma/profiling/         && rubber --clean profiling
+	cd main/chapter2/fig/scma/fec/               && rubber --clean fec_1_2
+	cd main/chapter2/fig/scma/fec/               && rubber --clean fec_1_3
 
 mrproper: clean4all
 	cd ./                                            && rubber --clean -d my_thesis.tex
@@ -166,6 +212,12 @@ mrproper: clean4all
 	cd main/chapter2/fig/turbo/bfer/                 && rm -f             bfer.pdf
 	cd main/chapter2/fig/turbo/thr/                  && rm -f             thr.pdf
 	cd main/chapter2/fig/turbo/energy/               && rm -f             energy.pdf
+	cd main/chapter2/fig/scma/ber_uncoded/           && rubber --clean -d ber_uncoded.tex
+	cd main/chapter2/fig/scma/ber_uncoded_iter/      && rubber --clean -d ber_uncoded_iter.tex
+	cd main/chapter2/fig/scma/energy/                && rubber --clean -d energy.tex
+	cd main/chapter2/fig/scma/profiling/             && rubber --clean -d profiling.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber --clean -d fec_1_2.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber --clean -d fec_1_3.tex
 
 open:
 	xdg-open my_thesis.pdf &

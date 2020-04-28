@@ -1,0 +1,112 @@
+#Run command:
+#./bin/aff3ct --sim-type "BFER" -C "TURBO" -K "1024" -m "0" -M "4.00" -s "0.25" --enc-sub-std "LTE" --chn-type "AWGN_FAST" --mdm-type "SCMA" --mdm-ite "5" -i "6" --mnt-max-fe "100" --src-fra "6" --dec-sf-type "LTE_VEC" --mdm-psi "PSI3" --sim-pyber "SCMA-PSI0 + Turbo" 
+#Curve name:
+#SCMA-PSI0 + Turbo
+# -------------------------------------------------
+# ---- A FAST FORWARD ERROR CORRECTION TOOL >> ----
+# -------------------------------------------------
+# Parameters :
+# * Simulation ------------------------------------
+#    ** Type                        = BFER
+#    ** Type of bits                = int32
+#    ** Type of reals               = float32
+#    ** Date (UTC)                  = 2017-08-10 20:13:14
+#    ** Git version                 = v1.2-beta.0-21-gc95f295
+#    ** Code type (C)               = TURBO
+#    ** SNR min (m)                 = 0.000000 dB
+#    ** SNR max (M)                 = 4.000100 dB
+#    ** SNR step (s)                = 0.250000 dB
+#    ** Seed                        = 0
+#    ** Multi-threading (t)         = 160 thread(s)
+#    ** SNR type                    = EB
+#    ** Time report                 = off
+#    ** Debug mode                  = off
+#    ** Coset approach (c)          = no
+#    ** Coded monitoring            = no
+#    ** Bad frames tracking         = off
+#    ** Bad frames replay           = off
+#    ** Bit rate                    = 0.332036
+#    ** Inter frame level           = 6
+# * Code ------------------------------------------
+#    ** Type                        = TURBO
+#    ** Info. bits (K)              = 1024
+#    ** Codeword size (N_cw)        = 3084
+#    ** Frame size (N)              = 3084
+#    ** Code rate                   = 0.332036
+# * Source ----------------------------------------
+#    ** Type                        = RAND
+#    ** Info. bits (K_info)         = 1024
+# * Encoder ---------------------------------------
+#    ** Type                        = TURBO
+#    ** Systematic                  = yes
+#    ** Tail length                 = 12
+#    ** Encoder RSC: Type           = RSC
+#    ** Encoder RSC: Systematic     = yes
+#    ** Encoder RSC: Tail length    = 6
+#    ** Encoder RSC: Buffered       = on
+#    ** Encoder RSC: Standard       = LTE
+#    ** Encoder RSC: Polynomials    = {013,015}
+# * Interleaver -----------------------------------
+#    ** Type                        = LTE
+# * Modem -----------------------------------------
+#    ** Type                        = SCMA
+#    ** Bits per symbol             = 3
+#    ** Sampling factor             = 1
+#    ** Sigma square                = on
+#    ** Max type                    = unused
+#    ** Number of iterations        = 5
+#    ** Psi function                = PSI3
+# * Channel ---------------------------------------
+#    ** Type                        = AWGN_FAST
+#    ** Complex                     = on
+#    ** Add users                   = on
+# * Decoder ---------------------------------------
+#    ** Type (D)                    = TURBO
+#    ** Implementation              = FAST
+#    ** Systematic                  = yes
+#    ** Num. of iterations (i)      = 6
+#    ** Enable json                 = off
+#    ** Self-corrected              = off
+#    ** Scaling factor (SF)         = LTE_VEC
+#    ** SF iterations               = 6
+#    ** Flip aNd Check (FNC)        = off
+#    ** Decoder RSC: Type (D)       = BCJR
+#    ** Decoder RSC: Implementation = STD
+#    ** Decoder RSC: Systematic     = yes
+#    ** Decoder RSC: Standard       = LTE
+#    ** Decoder RSC: Polynomials    = {013,015}
+#    ** Decoder RSC: Max type       = MAX
+# * Monitor ---------------------------------------
+#    ** Frame error count (e)       = 100
+# * Terminal --------------------------------------
+#    ** Type                        = STD
+#    ** Enabled                     = yes
+#    ** Frequency (ms)              = 500
+#
+# The simulation is running...
+# ----------------------------------------------------------------------||--------------------------------||---------------------
+#       Bit Error Rate (BER) and Frame Error Rate (FER) depending       ||     Decoder throughput and     ||  Global throughput  
+#                    on the Signal Noise Ratio (SNR)                    ||      latency (per thread)      ||  and elapsed time   
+# ----------------------------------------------------------------------||--------------------------------||---------------------
+# -------|-------|----------|----------|----------|----------|----------||----------|----------|----------||----------|----------
+  Es/N0 | Eb/N0 |      FRA |       BE |       FE |      BER |      FER ||     CTHR |     ITHR |  LATENCY || SIM_CTHR |    ET/RT 
+#   (dB) |  (dB) |          |          |          |          |          ||   (Mb/s) |   (Mb/s) |     (us) ||   (Mb/s) | (hhmmss) 
+# -------|-------|----------|----------|----------|----------|----------||----------|----------|----------||----------|----------
+   -0.02 |  0.00 |      654 |   192706 |      654 | 2.88e-01 | 1.00e+00 ||     3.90 |     1.29 |  4747.05 ||     1.55 | 00h00'01  
+    0.23 |  0.25 |     1020 |   290237 |     1020 | 2.78e-01 | 1.00e+00 ||     3.49 |     1.16 |  5305.39 ||     4.64 | 00h00'00  
+    0.48 |  0.50 |      924 |   254387 |      924 | 2.69e-01 | 1.00e+00 ||     3.75 |     1.25 |  4933.13 ||     3.89 | 00h00'00  
+    0.73 |  0.75 |     1008 |   267883 |     1008 | 2.60e-01 | 1.00e+00 ||     3.78 |     1.26 |  4893.56 ||     4.52 | 00h00'00  
+    0.98 |  1.00 |      978 |   248407 |      978 | 2.48e-01 | 1.00e+00 ||     3.82 |     1.27 |  4841.22 ||     4.76 | 00h00'00  
+    1.23 |  1.25 |     1014 |   242434 |     1014 | 2.33e-01 | 1.00e+00 ||     3.75 |     1.25 |  4934.68 ||     5.06 | 00h00'00  
+    1.48 |  1.50 |     1032 |   227294 |     1031 | 2.15e-01 | 9.99e-01 ||     3.46 |     1.15 |  5342.27 ||     5.94 | 00h00'00  
+    1.73 |  1.75 |     1020 |   200646 |     1016 | 1.92e-01 | 9.96e-01 ||     3.83 |     1.27 |  4835.80 ||     5.63 | 00h00'00  
+    1.98 |  2.00 |      924 |   155600 |      902 | 1.64e-01 | 9.76e-01 ||     3.89 |     1.29 |  4754.93 ||     4.37 | 00h00'00  
+    2.23 |  2.25 |     1056 |   127581 |      924 | 1.18e-01 | 8.75e-01 ||     3.76 |     1.25 |  4926.83 ||     5.81 | 00h00'00  
+    2.48 |  2.50 |      978 |    72360 |      683 | 7.23e-02 | 6.98e-01 ||     3.88 |     1.29 |  4768.67 ||     4.70 | 00h00'00  
+    2.73 |  2.75 |     1050 |    32928 |      430 | 3.06e-02 | 4.10e-01 ||     3.71 |     1.23 |  4992.71 ||     4.90 | 00h00'00  
+    2.98 |  3.00 |     1800 |    12199 |      245 | 6.62e-03 | 1.36e-01 ||     3.24 |     1.08 |  5705.83 ||     8.26 | 00h00'00  
+    3.23 |  3.25 |     3858 |     4970 |      129 | 1.26e-03 | 3.34e-02 ||     2.99 |     0.99 |  6190.77 ||    14.87 | 00h00'00  
+    3.48 |  3.50 |    24546 |     3313 |      104 | 1.32e-04 | 4.24e-03 ||     2.98 |     0.99 |  6208.68 ||    33.44 | 00h00'02  
+    3.73 |  3.75 |   250704 |     2156 |      100 | 8.40e-06 | 3.99e-04 ||     3.06 |     1.02 |  6037.27 ||    48.09 | 00h00'16  
+    3.98 |  4.00 |  3553818 |     1265 |      100 | 3.48e-07 | 2.81e-05 ||     3.08 |     1.02 |  6001.95 ||    50.14 | 00h03'38  
+# End of the simulation.
