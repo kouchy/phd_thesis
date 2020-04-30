@@ -1,0 +1,68 @@
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=1.0\linewidth, height=0.675\linewidth,
+                 xlabel=Number of threads, ylabel=Speedup, grid=both, grid style={gray!30},
+                 xmin=1, xmax=256, xtick={1,32,64,...,256}, ytick={1,16,32,...,96},
+                 ymin=-5, ymax=102,
+                 tick align=outside, tickpos=left, %legend style={at={(0.5,-0.2)},anchor=north}]
+                 %label style={font=\large},
+                 %tick label style={font=\large},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=pentagon, Paired-5,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 28.219] {./dat/Cavium_ThunderX2_CN9975.txt}; \label{plot:line1}
+        \addplot[mark=triangle, Paired-3,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 26.892] {./dat/Intel_Xeon_Phi_7230.txt    }; \label{plot:line2}
+        \addplot[mark=o,        Paired-1,    semithick] table [x=t, y expr=\thisrow{Mbps}/164.946] {./dat/Intel_Xeon_Gold_6140.txt   }; \label{plot:line3}
+        \addplot[mark=otimes,   Paired-1!60, semithick] table [x=t, y expr=\thisrow{Mbps}/120.704] {./dat/Intel_Xeon_Gold_6142.txt   }; \label{plot:line4}
+        \addplot[mark=square,   Paired-7,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 81.759] {./dat/Intel_Xeon_E5-2680v3.txt   }; \label{plot:line5}
+        % \addplot[mark=x,        Paired-9,    semithick] table [x=t, y expr=\thisrow{Mbps}/148.994] {./dat/AMD_Ryzen_7_2700X.txt      }; \label{plot:line6}
+        \addplot[mark=none,     black!65              ] coordinates {(0,0) (512,512)};
+
+        % \legend{$2 \times$ThunderX2 CN9975,
+        %         $1 \times$Xeon Phi 7230,
+        %         % $1 \times$Ryzen 7 2700X,
+        %         $2 \times$Xeon E5-2680 v3,
+        %         $2 \times$Xeon Gold 6140,
+        %         $2 \times$Xeon Gold 6142,}
+    \end{axis}
+
+    \matrix [draw,
+             matrix of nodes,
+             anchor=south west,
+             inner sep=2.3pt,
+             fill=white] at (5.60,0.18)
+    {
+        \ref{plot:line1} & $2 \times$ThunderX2 CN9975 \\
+        \ref{plot:line2} & $1 \times$Xeon Phi 7230    \\
+        % \ref{plot:line6} & $1 \times$Ryzen 7 2700X    \\
+        \ref{plot:line5} & $2 \times$Xeon E5-2680 v3  \\
+        \ref{plot:line3} & $2 \times$Xeon Gold 6140   \\
+        \ref{plot:line4} & $2 \times$Xeon Gold 6142   \\
+    };
+
+    % \matrix [draw,
+    %          matrix of nodes,
+    %          anchor=south west,
+    %          fill=white] at (3.10,0.15)
+    % {
+    %                      & \bf{\small{CPU Name}}    & \bf{\small{Cores}} & \bf{\small{SMT}} & \bf{\small{Soc.}} \\
+    %     \ref{plot:line1} & \small{ThunderX2 CN9975} & \small{56}         & \small{4}        & \small{2}         \\
+    %     \ref{plot:line2} & \small{Xeon Phi 7230}    & \small{64}         & \small{4}        & \small{1}         \\
+    %     \ref{plot:line6} & \small{Ryzen 7 2700X}    & \small{8}          & \small{2}        & \small{1}         \\
+    %     \ref{plot:line5} & \small{Xeon E5-2680 v3}  & \small{24}         & \small{1}        & \small{2}         \\
+    %     \ref{plot:line3} & \small{Xeon Gold 6140}   & \small{36}         & \small{2}        & \small{2}         \\
+    %     \ref{plot:line4} & \small{Xeon Gold 6142}   & \small{32}         & \small{1}        & \small{2}         \\
+    % };
+  \end{tikzpicture}
+\end{document}

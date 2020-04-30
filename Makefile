@@ -1,10 +1,48 @@
 .phony: all clean mrproper
 
-all: titlepage chapter2_fig
+all: titlepage chapter1_fig chapter2_fig chapter4_fig my_thesis.tex
+	rubber --unsafe -d my_thesis.tex
+
+fast:
 	rubber --unsafe -d my_thesis.tex
 
 titlepage: head/titlepage.tex
 	cd head && rubber -d titlepage.tex
+
+chapter1_fig: main/chapter1/fig/intro/com_chain.svg \
+              main/chapter1/fig/simu/com_chain.svg \
+              main/chapter1/fig/simu/in_out.svg \
+              main/chapter1/fig/simu/bfer/bfer_bch_rs.tex \
+              main/chapter1/fig/simu/bfer/bfer_ldpc.tex \
+              main/chapter1/fig/simu/bfer/bfer_polar.tex \
+              main/chapter1/fig/simu/bfer/bfer_rsc.tex \
+              main/chapter1/fig/simu/bfer/bfer_tpc.tex \
+              main/chapter1/fig/simu/bfer/bfer_turbo.tex \
+              main/chapter1/fig/simu/bfer/colors \
+              main/chapter1/fig/simu/bfer/dat/BCH_N255_K231_algebraic_T3.txt \
+              main/chapter1/fig/simu/bfer/dat/LDPC_N648_K540_hlayered_SPA_i05_Wi-Fi.txt \
+              main/chapter1/fig/simu/bfer/dat/LDPC_N648_K540_hlayered_SPA_i40_Wi-Fi.txt \
+              main/chapter1/fig/simu/bfer/dat/Polar_N2048_K1723_ASCL_FA_L8_CRC32_SPC4_p32.txt \
+              main/chapter1/fig/simu/bfer/dat/Polar_N2048_K1723_ASCL_FA_L32_CRC32_SPC4_p32.txt \
+              main/chapter1/fig/simu/bfer/dat/RSC_N262_K128_BCJR_p32.txt \
+              main/chapter1/fig/simu/bfer/dat/RSC_N2054_K1024_BCJR_p32.txt \
+              main/chapter1/fig/simu/bfer/dat/RS_N31_K29_algebraic_T1.txt \
+              main/chapter1/fig/simu/bfer/dat/Turbo_N18432_K6144_BCJR_i5_p32_LTE.txt \
+              main/chapter1/fig/simu/bfer/dat/Turbo_N18432_K6144_BCJR_i6_p32_LTE.txt \
+              main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i6.txt \
+              main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
+              main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt \
+              main/chapter1/fig/other/com_chain_inter.svg
+	cd main/chapter1/fig/intro      && inkscape  com_chain.svg             --export-pdf=com_chain.pdf
+	cd main/chapter1/fig/simu       && inkscape  com_chain.svg             --export-pdf=com_chain.pdf
+	cd main/chapter1/fig/simu       && inkscape  in_out.svg                --export-pdf=in_out.pdf
+	cd main/chapter1/fig/other      && inkscape  com_chain_inter.svg       --export-pdf=com_chain_inter.pdf
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_bch_rs.tex
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_ldpc.tex
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_polar.tex
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_rsc.tex
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_tpc.tex
+	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_turbo.tex
 
 chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
               main/chapter2/src/ldpc/bp_min_sum.cpp \
@@ -162,6 +200,21 @@ chapter2_fig: main/chapter2/src/ldpc/bp_min_sum.cpp \
 	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_2.tex
 	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_3.tex
 
+chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module.svg \
+              main/chapter4/fig/simu/speedup/speedup.tex \
+              main/chapter4/fig/simu/speedup/colors \
+              main/chapter4/fig/simu/speedup/dat/AMD_Ryzen_7_2700X.txt \
+              main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt \
+              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt \
+              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6140.txt \
+              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6142.txt \
+              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt \
+              main/chapter4/fig/simu/throughput/throughput.tex \
+              main/chapter4/fig/simu/throughput/colors
+	cd main/chapter4/fig/soft_archi/     && inkscape  com_chain_task_module.svg --export-pdf=com_chain_task_module.pdf
+	cd main/chapter4/fig/simu/speedup    && rubber -d speedup.tex
+	cd main/chapter4/fig/simu/throughput && rubber -d throughput.tex
+
 clean4all:
 	rm -f *.mtc*
 	rm -f *.bcf
@@ -173,6 +226,12 @@ clean4all:
 clean: clean4all
 	cd ./                                        && rubber --clean my_thesis
 	cd head                                      && rubber --clean titlepage
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_bch_rs
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_ldpc
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_polar
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_rsc
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_tpc
+	cd main/chapter1/fig/simu/bfer/              && rubber --clean bfer_turbo
 	cd main/chapter2/fig/polar/algos_comparison/ && rubber --clean algos_comparison
 	cd main/chapter2/fig/polar/scl_l/            && rubber --clean scl_l
 	cd main/chapter2/fig/polar/scl_tree_cut/     && rubber --clean scl_tree_cut
@@ -186,10 +245,22 @@ clean: clean4all
 	cd main/chapter2/fig/scma/profiling/         && rubber --clean profiling
 	cd main/chapter2/fig/scma/fec/               && rubber --clean fec_1_2
 	cd main/chapter2/fig/scma/fec/               && rubber --clean fec_1_3
+	cd main/chapter4/fig/simu/speedup            && rubber --clean speedup
+	cd main/chapter4/fig/simu/throughput         && rubber --clean throughput
 
 mrproper: clean4all
 	cd ./                                            && rubber --clean -d my_thesis.tex
 	cd head                                          && rubber --clean -d titlepage.tex
+	cd main/chapter1/fig/intro                       && rm -f             com_chain.pdf
+	cd main/chapter1/fig/simu                        && rm -f             com_chain.pdf
+	cd main/chapter1/fig/simu                        && rm -f             in_out.pdf
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_bch_rs.tex
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_ldpc.tex
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_polar.tex
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_rsc.tex
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_tpc.tex
+	cd main/chapter1/fig/simu/bfer/                  && rubber --clean -d bfer_turbo.tex
+	cd main/chapter1/fig/other                       && rm -f             com_chain_inter.pdf
 	cd main/chapter2/fig/vectorization/              && rm -f             mandelbrot_speedup.pdf
 	cd main/chapter2/fig/polar/algos_comparison/     && rubber --clean -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                && rubber --clean -d scl_l.tex
@@ -218,6 +289,9 @@ mrproper: clean4all
 	cd main/chapter2/fig/scma/profiling/             && rubber --clean -d profiling.tex
 	cd main/chapter2/fig/scma/fec/                   && rubber --clean -d fec_1_2.tex
 	cd main/chapter2/fig/scma/fec/                   && rubber --clean -d fec_1_3.tex
+	cd main/chapter4/fig/soft_archi/                 && rm -f             com_chain_task_module.pdf
+	cd main/chapter4/fig/simu/speedup                && rubber --clean -d speedup.tex
+	cd main/chapter4/fig/simu/throughput             && rubber --clean -d throughput.tex
 
 open:
 	xdg-open my_thesis.pdf &

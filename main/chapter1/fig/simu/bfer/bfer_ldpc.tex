@@ -1,0 +1,40 @@
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                 width=0.675\linewidth, height=1.000\linewidth,
+                 xlabel=$E_b/N_0$ (dB), grid=both, grid style={gray!30},
+                 ylabel=Bit and Frame Error Rate,
+                 %ylabel=BER,
+                 %xmin=0, xmax=14,
+                 ymode = log,
+                 tick align=outside, tickpos=left, %legend style={at={(0.5,-0.2)},anchor=north}]
+                 legend pos=south west, legend columns=1]
+        \addplot[mark=o,      Paired-7,     semithick                              ] table [x=Eb/N0, y=BER] {./dat/LDPC_N648_K540_hlayered_SPA_i05_Wi-Fi.txt}; \label{plot:line1}
+        \addplot[mark=o,      Paired-7!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/LDPC_N648_K540_hlayered_SPA_i05_Wi-Fi.txt}; \label{plot:line2}
+        \addplot[mark=square, Paired-3,     semithick                              ] table [x=Eb/N0, y=BER] {./dat/LDPC_N648_K540_hlayered_SPA_i40_Wi-Fi.txt}; \label{plot:line3}
+        \addplot[mark=square, Paired-3!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/LDPC_N648_K540_hlayered_SPA_i40_Wi-Fi.txt}; \label{plot:line4}
+        \coordinate (legend) at (axis description cs:0.755,0.03);
+    \end{axis}
+
+    \matrix[draw,
+            matrix of nodes,
+            anchor=south east,
+            fill=white] at (legend) {
+            \small{Wi-Fi (648,540)} & \small{BER}      & \small{FER}      \\
+            BP-HL $i=05$            & \ref{plot:line1} & \ref{plot:line2} \\
+            BP-HL $i=40$            & \ref{plot:line3} & \ref{plot:line4} \\
+        };
+  \end{tikzpicture}
+\end{document}

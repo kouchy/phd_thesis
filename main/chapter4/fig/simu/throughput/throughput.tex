@@ -1,0 +1,126 @@
+\documentclass{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\input{colors}
+\usetikzlibrary{patterns}
+
+\pagestyle{empty}
+
+\tikzset{
+    hatch distance/.store in=\hatchdistance,
+    hatch distance=7pt,
+    hatch thickness/.store in=\hatchthickness,
+    hatch thickness=0.5pt
+}
+
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north east}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north west}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{\hatchdistance}{0pt}}
+    \pgfpathlineto{\pgfqpoint{0pt}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatother
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ybar,
+             width=1.0\linewidth, height=0.675\linewidth,
+             bar width=8pt,
+             legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
+             legend cell align=right,
+             area legend,
+             ylabel={Info. throughput (Mb/s)},
+             symbolic x coords={1T1SMT,NT1SMT,NT2SMT,NT3SMT,NT4SMT},
+             xticklabel style={align=center},
+             xticklabels={Single thread\\1-way SMT,
+                          All threads\\1-way SMT,
+                          All threads\\2-way SMT,
+                          All threads\\3-way SMT,
+                          All threads\\4-way SMT},
+             xtick=data,
+             ymajorgrids, grid style={gray!30},
+             ymin=0,
+             ymax=6500,
+             nodes near coords,
+             nodes near coords align={vertical},
+             every node near coord/.append style={rotate=90, anchor=west},
+             %label style={font=\large},
+             %tick label style={font=\large},
+            ]
+
+    % ThunderX2 CN9975
+    \addplot[black!25!Paired-5,fill=Paired-5!40,draw=Paired-5,
+             postaction={pattern color = black!50!Paired-5!70,
+                         pattern=crosshatch dots}
+            ]
+            coordinates {(1T1SMT,28) (NT1SMT,1573) (NT2SMT,2148) (NT3SMT,2446) (NT4SMT,2604)};
+    \label{plot1}
+
+    % Xeon Phi 7230
+    \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
+              postaction={pattern color = black!50!Paired-3!70,
+                          pattern=horizontal lines}
+             ]
+             coordinates {(1T1SMT,27) (NT1SMT,1716) (NT2SMT,2196) (NT3SMT,2208) (NT4SMT,2159)};
+    \label{plot2}
+
+    % % Ryzen 7 2700X
+    % \addplot[black!25!Paired-9,fill=Paired-9!40,draw=Paired-9,
+    %          postaction={pattern color = black!50!Paired-9!70,
+    %                      pattern=none}
+    %         ]
+    %         coordinates {(1T1SMT,149) (NT1SMT,1072) (NT2SMT,1335)};
+    % \label{plot3}
+
+    % Xeon E5-2680 v3
+    \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
+             postaction={pattern color = black!50!Paired-7!70,
+                         pattern=grid}
+            ]
+            coordinates {(1T1SMT,82) (NT1SMT,1950)};
+    \label{plot4}
+
+    % Xeon Gold 6140
+    \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
+             postaction={pattern color = black!50!Paired-1!70,
+                         pattern=flexible hatch north west}
+            ]
+            coordinates {(1T1SMT,165) (NT1SMT,3533) (NT2SMT,5436)};
+    \label{plot5}
+
+    % Xeon Gold 6142
+    \addplot[black!25!Paired-1!60,fill=Paired-1!20,draw=Paired-1!60,
+             postaction={pattern color = black!50!Paired-1!50,
+                         pattern=flexible hatch north east}
+            ]
+            coordinates {(1T1SMT,121) (NT1SMT,3252)};
+    \label{plot6}
+
+    \legend{$2 \times$ThunderX2 CN9975,
+            $1 \times$Xeon Phi 7230,
+            % $1 \times$Ryzen 7 2700X,
+            $2 \times$Xeon E5-2680 v3,
+            $2 \times$Xeon Gold 6140,
+            $2 \times$Xeon Gold 6142,}
+\end{axis}
+\end{tikzpicture}
+\end{document}

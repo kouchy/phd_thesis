@@ -253,7 +253,7 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
   \centering
   \includegraphics[width=1.00\textwidth]{vectorization/mandelbrot_speedup}
   \caption{Speedups over the Mandelbrot naive auto-vectorized implementation}
-  \label{fig:vectorization_mandelbrot}
+  \label{plot:vectorization_mandelbrot}
 \end{figure*}
 
 Table~\ref{tab:vectorization_comparison} compares various SIMD wrappers. It aims
@@ -312,7 +312,7 @@ as possible the risk of unfairness of the port on each wrapper. This problem is
 compute-bound. The chosen implementation relies on a floating-point
 representation (available online\footnote{Mandelbrot set source code:
 \url{https://gitlab.inria.fr/acassagn/mandelbrot}}).
-Figure~\ref{fig:vectorization_mandelbrot} presents the speedups obtained on
+Figure~\ref{plot:vectorization_mandelbrot} presents the speedups obtained on
 various instruction sets. \verb|SSE| stands for \verb|SSE4.2|, \verb|NEON|
 stands for \verb|NEONv2| (includes the FMA instructions), \verb|AVX| stands for
 \verb|AVX2+FMA3| and \verb|AVX-512| stands for \verb|AVX-512F| (with FMA
@@ -839,20 +839,20 @@ tradeoff between throughput and decoding performance.
   \includegraphics[width=0.70\textwidth]{polar/scl_spc/scl_spc_diff}
   % \caption{Impact of the specialized nodes on the SCL coded throughput.
   \caption{Effects of the \texttt{SPC4+} nodes on the CA-SSCL @ $10^{-5}$ FER}
-  \label{fig:polar_scl_spc}
+  \label{plot:polar_scl_spc}
 \end{figure}
 
 According to our experiments, the aforementioned statement about performance
 degradation caused by \texttt{SPC4+} nodes is not always accurate depending on
 the code and decoder parameters. The impact of switching \textit{on} or
 \textit{off} \texttt{SPC4+} nodes on decoding performance and throughput at a
-FER of $10^{-5}$ is detailed in Figure~\ref{fig:polar_scl_spc}. It shows that
+FER of $10^{-5}$ is detailed in Figure~\ref{plot:polar_scl_spc}. It shows that
 \texttt{SPC4+} nodes have only a small effect on the decoding performance. With
 $L=8$, an SNR degradation lower than 0.1 dB is observed, except for one
 particular configuration. Throughput improvements of $8$ to $23$ percents are
 observed. If $L=32$, the SNR losses are more substantial (up to $0.5$ dB),
 whereas throughput improvements are approximately the same. Besides this
-observation, Figure~\ref{fig:polar_scl_spc} shows how the proposed decoder
+observation, Figure~\ref{plot:polar_scl_spc} shows how the proposed decoder
 flexibility in the AFF3CT environment enables to optimize easily the decoder
 tree pruning, both for software implementations or for hardware implementations
 in which tree pruning can also be applied~\cite{Lin2014}.
@@ -1486,9 +1486,9 @@ masking instructions.
                                          & intra & 39.2 &   52 &  21.1 & 0.826 \\
                                          & inter & 65.1 &  503 &  14.2 & 0.923 \\
     \hline
-    \multirow{3}{*}{\textbf{i7-3.3GHz}} & seq.  &  36.3 & 56.5 & 235.4 &  8.532 \\
-                                        & intra & 221.8 &  9.2 &  40.5 &  9.017 \\
-                                        & inter & 632.2 & 51.8 &  15.8 &  9.997 \\
+    \multirow{3}{*}{\textbf{i7-3.3GHz}} & seq.  &  36.3 & 56.5 & 235.4 & 8.532 \\
+                                        & intra & 221.8 &  9.2 &  40.5 & 9.017 \\
+                                        & inter & 632.2 & 51.8 &  15.8 & 9.997 \\
   \end{tabular}
   %}
   \end{center}
@@ -1583,8 +1583,8 @@ much lower latency).
 \begin{figure}
   \centering
   \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
-  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
-    frequency (dynamic code, intra-, inter-frame).
+  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the
+    cluster frequency (dynamic code, intra-, inter-frame).
     A7 performance is on the left and A15 on the right. $N = 4096$ and $R = 1/2$.
     Dark colors and light colors stand for CPU cluster and RAM energy consumption,
     resp.}
@@ -3380,10 +3380,10 @@ significantly with the Intel\R compiler.
   \includegraphics[width=0.70\linewidth]{scma/energy/energy}
   \caption{Graphical comparison of the energy consumed per decoded bit for
            three different platforms.}
-  \label{fig:scma_energy}
+  \label{plot:scma_energy}
 \end{figure}
 
-Fig.~\ref{fig:scma_energy} focuses on the energy consumed per decoded bit (also
+Fig.~\ref{plot:scma_energy} focuses on the energy consumed per decoded bit (also
 mentioned in Table~\ref{tab:scma_thr}). In summary, the SIMD algorithms have
 a higher energy efficiency per decoded bit. The processor resources are well
 stressed and the power does not increase too much. Among the obtained results,
@@ -3478,10 +3478,10 @@ VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
   \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
   \caption{Profiling results of different MPA algorithms using Intel\R VTune\TM
     Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
-  \label{fig:scma_profiling}
+  \label{plot:scma_profiling}
 \end{figure}
 
-Fig.~\ref{fig:scma_profiling} reports profiling results obtained with different
+Fig.~\ref{plot:scma_profiling} reports profiling results obtained with different
 SCMA decoders variations when applied to the decoding of 768 Million bits.
 Results were organized to show the existence of five bottlenecks i.e. logarithms
 in \eqref{eq:scma_11}, exponentials in \eqref{eq:scma_7}, complex norm and
@@ -3541,7 +3541,7 @@ modulation and demodulation blocks, or different channel models.
   \subfloat[][Code rate $R=1/3$.]
   {
   \includegraphics[width=0.70\linewidth]{scma/fec/fec_1_3}
-    \label{fig:scma_fec_a}
+    \label{plot:scma_fec_a}
   }
   \\
   % \qquad
@@ -3549,11 +3549,11 @@ modulation and demodulation blocks, or different channel models.
   \subfloat[][Code rate $R=1/2$.]
   {
   \includegraphics[width=0.70\linewidth]{scma/fec/fec_1_2}
-    \label{fig:scma_fec_b}
+    \label{plot:scma_fec_b}
   }
   \caption{BLER evaluation of SCMA MPA and E-MPA decoders combined with LDPC,
            polar and turbo codes.}
-  \label{fig:scma_fec}
+  \label{plot:scma_fec}
 \end{figure}
 
 According to the latest 3GPP report~\cite{ETSI2018}, in the 5G standard, the
@@ -3561,7 +3561,7 @@ two selected code families are the LDPC and polar codes. Being implemented in
 the AFF3CT software, it is possible to test our SCMA decoders in a complete
 communication chain, in conjunction with state-of-the art LDPC, polar and even
 turbo decoders that were used in the LTE standard~\cite{ETSI2013}.
-Fig.~\ref{fig:scma_fec} shows the BLER performances of MPA and E-MPA decoders
+Fig.~\ref{plot:scma_fec} shows the BLER performances of MPA and E-MPA decoders
 when combined with different channel codes. For a matter of reproducibility, the
 full parameters of the FEC used are reported in the next section. This research
 does not claim any novelty in channel coding, however, we found crucial to
@@ -3577,9 +3577,9 @@ communication chain.
 In a first validation, the turbo code from the LTE standard is used. In the
 decoder, 6 iterations are done. The two sub-decoders implement the max-log
 Maximum A Posteriori algorithm (max-log-MAP)~\cite{Robertson1995} with a 0.75
-scaling factor~\cite{Vogt2000}. In Fig.~\ref{fig:scma_fec_a}, the rate is
+scaling factor~\cite{Vogt2000}. In Fig.~\ref{plot:scma_fec_a}, the rate is
 $R \approx 1/3$, no puncturing is performed, the number of information bits
-$K$ is 1024 and the codeword length $N$ is 3084. In Fig.~\ref{fig:scma_fec_b},
+$K$ is 1024 and the codeword length $N$ is 3084. In Fig.~\ref{plot:scma_fec_b},
 $R \approx 1/2$ with the puncturing of half of the parity bits,
 $K=2048$, and $N=4108$.
 
@@ -3588,8 +3588,8 @@ $K=2048$, and $N=4108$.
 In a second set of validations, the LDPC codes used in this paper are based on
 MacKay's matrices that have been taken from its personal
 webpage\footnote{MacKay's webpage: \url{http://www.inference.org.uk/mackay/codes/data.html}}.
-In Fig.~\ref{fig:scma_fec_a}, the matrix used is ($K=272$, $N=816$), and in
-Fig.~\ref{fig:scma_fec_b} the matrix is ($K=2000$, $N=4000$). In both figures,
+In Fig.~\ref{plot:scma_fec_a}, the matrix used is ($K=272$, $N=816$), and in
+Fig.~\ref{plot:scma_fec_b} the matrix is ($K=2000$, $N=4000$). In both figures,
 the decoder used is a Belief Propagation (BP) decoder with an Horizontal Layered
 scheduling~\cite{Yeo2001}. For the update rules, the Sum-Product Algorithm (SPA)
 has been used~\cite{MacKay1999}. The number of iterations is 100.
@@ -3606,15 +3606,15 @@ given SNR. Therefore, a shift on the input SNR of the GA algorithm must be
 applied in order to efficiently select the frozen bits. If this shift is
 not applied, the decoding performances of the polar code degrades drastically.
 The number of information bits and the codeword length are ($K=682$, $N=2048$)
-in Fig.~\ref{fig:scma_fec_a} and ($K=2048$, $N=4096$) in
-Fig.~\ref{fig:scma_fec_b}. The decoder is a Successive Cancellation List (SCL)
+in Fig.~\ref{plot:scma_fec_a} and ($K=2048$, $N=4096$) in
+Fig.~\ref{plot:scma_fec_b}. The decoder is a Successive Cancellation List (SCL)
 decoder with $L=32$ and a 32-bit GZIP CRC that was proposed
 in~\cite{Leonardon2019}.
 
 \paragraph{Effects of E-MPA on Error Correction}
 \label{sec:scma_fec_e-mpa}
 
-In Fig.~\ref{fig:scma_fec}, the number of iterations of the SCMA demodulator is
+In Fig.~\ref{plot:scma_fec}, the number of iterations of the SCMA demodulator is
 5. The objective of simulating multiple channel codes is not to compare them
 with each other. A fair comparison of the different channel codes would indeed
 impose using the same code lengths and more importantly their computational

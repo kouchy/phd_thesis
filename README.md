@@ -18,10 +18,10 @@ The source code samples use the `minted` package which is based on the `Python`
 sudo apt install python-pygments python3-pygments
 ```
 
-Some of the figures are generated with `Gnuplot` and `XFig`:
+Some of the figures are generated with `Gnuplot`, `XFig` and `Inkscape`:
 
 ```bash
-sudo apt install gnuplot xfig
+sudo apt install gnuplot xfig inkscape
 ```
 
 `rubber` is used as the building system for the `LaTeX` documents:

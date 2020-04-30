@@ -1,0 +1,67 @@
+# 1x Intel(R) Xeon Phi(TM) CPU 7230 @ 1.30GHz - 64 cores per socket (total 64 cores) - 4-way SMT - Turbo Boost ON - memory mode = flat - cluster mode = quadrant
+# Script:
+# #!/bin/bash
+#
+# CMD='./bin/aff3ct-2.2.2-14-g4d14567 -p 32 --sim-type BFER -C POLAR -m 4.5 -M 4.51 -s 0.25 --enc-fb-gen-method GA -K 1755 -N 2048 --src-type AZCW --src-implem FAST --chn-type AWGN --chn-implem FAST --dec-type ASCL --dec-simd INTRA --crc-type 32-GZIP --crc-implem FAST --dec-polar-nodes "{R0,R0L,R1,REP_2-8,REPL,SPC_4}" -L 32'
+# CMD_EXT='--no-legend --ter-freq 0 -e 20000000 --sim-stop-time 600'
+# CMD_FULL=$CMD" "$CMD_EXT
+#
+# START_THREAD=16
+# MAX_THREADS=256
+# STEP=16
+# COL_THR=10
+#
+# RES=$(eval $CMD_FULL" -t 1")
+# SIM_THR=$(echo $RES | cut -d "|" -f$COL_THR)
+# echo "1 $SIM_THR"
+#
+# for (( T=START_THREAD; T<=MAX_THREADS; T+=STEP ))
+# do
+# 	RES=$(eval $CMD_FULL" -t $T")
+# 	SIM_THR=$(echo $RES | cut -d "|" -f$COL_THR)
+# 	echo "$T $SIM_THR"
+# done
+# ----------------------------------------------------
+# AVX2 - SIMD 256 bits
+# GCC 8.2.0: -O3 -DNDEBUG -funroll-loops -mavx2 -mfma
+# ----------------------------------------------------
+#   t      Mbps
+#   1    11.948
+#  16   192.886
+#  32   384.673
+#  48   576.067
+#  64   761.799
+#  80   858.316
+#  96   948.233
+# 112  1036.668
+# 128  1126.284
+# 144  1172.966
+# 160  1215.443
+# 176  1248.760
+# 192  1282.938
+# 208  1316.595
+# 224  1328.380
+# 240  1352.215
+# 256  1327.420
+# ----------------------------------------------------
+# AVX-512 - SIMD 512 bits
+# GCC 8.2.0: -O3 -DNDEBUG -funroll-loops -march=native
+# ----------------------------------------------------
+  t      Mbps
+  1    26.892
+ 16   436.368
+ 32   872.828
+ 48  1302.278
+ 64  1715.887
+ 80  1835.597
+ 96  1959.699
+112  2081.104
+128  2196.143
+144  2203.245
+160  2263.183
+176  2230.000
+192  2207.961
+208  2249.455
+224  2292.240
+240  2191.697
+256  2158.975

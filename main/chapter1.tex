@@ -23,6 +23,82 @@
     et un peu la démodulation)
 \end{itemize}
 
+It is now commonplace to state that Humanity has entered the era of
+communication. Moreover, all kinds of objects will increasingly also use
+communication technology, to exchange information in the \emph{Internet of
+Things} (IoT). Despite their variety, all communication systems are based on a
+common abstract model proposed by Claude Shannon. In his seminal
+paper~\cite{Shannon1948}, he proposed to model a communication system with five
+components: an information source, a transmitter, a channel, a receiver and a
+destination. This model was later refined as shown in
+Figure~\ref{fig:intro_com_chain}. The source produces a digital message to be
+transmitted. The channel encoder transforms it to make it less prone to errors.
+The modulator translates digital data into a physical signal. The channel alters
+the signal with some noise and distortions. On the receiver side, the components
+perform the inverse operations to retrieve the message produced by the source.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.00\linewidth]{intro/com_chain}
+  \caption{Digital communication chain.}
+  \label{fig:intro_com_chain}
+\end{figure}
+
+The performance of this chain is measured by estimating the residual error rate
+at the sink. This rate is directly driven by the choice of the channel encoder
+and decoder. After Shannon, researchers have designed new coding/decoding
+schemes to approach Shannon's theoretical limit ever closer. Indeed, recent
+progresses managed to design practical codings performing very close to that
+limit, and already integrated in everyday communication systems.
+
+On the eve of the 5G mobile communication generation, the challenge is now to
+design communication systems able to transmit huge amounts of data in a short
+time, at a small energy cost, in a wide variety of environments. Researchers
+work at refining existing coding schemes further, to get low residual error
+rates with fast, flexible, low complexity decoders.
+
+The validation of a coding scheme requires estimating its error rate
+performance. Usually, no simple mathematical model exists to predict such
+performance. The only practical solution is to perform a Monte Carlo simulation
+of the whole chain: some data are randomly generated, encoded, modulated,
+noised, decoded, and the performance is then estimated by measuring the Bit
+Error Rate (BER) and the Frame Error Rate (FER) at the sink. This process leads
+to three main problems:
+
+\begin{enumerate}
+  \item \textbf{Simulation time:}
+    100 erroneous frames must be simulated to accurately estimate the FER/BER.
+    Thus, measuring a FER of $10^{-7}$ requires simulating the transmission of
+    $\sim100\times 10^7=10^9$ frames. Assuming a frame of 1000~bits, the
+    simulator must then emulate the transmission of $10^{12}$~bits. Keeping in
+    mind that the decoding algorithm complexity may be significant, several
+    weeks or months may be required to accurately estimate the FER/BER of a
+    coding scheme.
+
+  \item \textbf{Algorithmic heterogeneity:} A large number of channel codes have
+    been designed over time. For each kind of code, several decoding algorithms
+    are available. While it is straightforward to describe a unique coding
+    scheme, it is more challenging to have a unified software description that
+    supports all the coding schemes and their associated algorithms. This
+    difficulty comes from the heterogeneity of the data structure necessary to
+    describe a channel code and the associated decoder: turbo codes use
+    trellises, LDPC codes are well-defined on factor graphs and polar codes are
+    efficiently decoded using binary trees.
+
+  \item \textbf{Reproducibility:} It is usually tedious to reproduce results
+    from the literature. This can be explained by the large amount of empirical
+    parameters necessary to define one communication system, and the fact that
+    not all of them are always reported in publications. Moreover, the simulator
+    source codes are rarely publicly available. Consequently, a large amount of
+    time is spent ``reinventing the wheel'' just to be able to compare to the
+    state-of-the-art results.
+\end{enumerate}
+
+The long simulation times make it desirable to have \textbf{high throughput
+implementations}. The algorithmic heterogeneity requires \textbf{flexible,
+modular software}. The reproducibility issue pushes towards a \textbf{portable}
+and \textbf{open-source software}. These are the purposes of \AFFECT.
+
 \section{Channel Coding}
 
 \begin{itemize}
@@ -51,6 +127,32 @@
     sur canal AWGN)
   \item Introduire BE, FE, BER, FER
 \end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.00\linewidth]{simu/com_chain}
+  \caption{Main simulation parameters.}
+  \label{fig:simu_com_chain}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\linewidth]{simu/in_out}
+  \caption{Inpout simulation parameters and output BER results.}
+  \label{fig:intro_in_out}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \subfloat[][Polar codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \quad{}
+  \subfloat[][LDPC codes.]         {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
+  \subfloat[][Turbo codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \\
+  \subfloat[][Turbo product codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \quad{}
+  \subfloat[][BCH \& RS codes.]    {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
+  \subfloat[][Convolutional codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
+  \caption{\AFFECT simulation of various code families.}
+  \label{fig:intro_bfer}
+\end{figure}
 
 \section{Base Station and Cloud-RAN}
 

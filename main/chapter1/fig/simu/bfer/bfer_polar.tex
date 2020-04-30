@@ -1,0 +1,41 @@
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                 width=0.675\linewidth, height=1.000\linewidth,
+                 xlabel=$E_b/N_0$ (dB), grid=both, grid style={gray!30},
+                 ylabel=Bit and Frame Error Rate,
+                 %ylabel=BER,
+                 %xmin=0, xmax=14,
+                 ymin=0.0000000002,
+                 ymode = log,
+                 tick align=outside, tickpos=left, %legend style={at={(0.5,-0.2)},anchor=north}]
+                 legend pos=south west, legend columns=1]
+        \addplot[mark=o,      Paired-5,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/Polar_N2048_K1723_ASCL_FA_L8_CRC32_SPC4_p32.txt};  \label{plot:line1}
+        \addplot[mark=o,      Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Polar_N2048_K1723_ASCL_FA_L8_CRC32_SPC4_p32.txt};  \label{plot:line2}
+        \addplot[mark=square, Paired-1,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/Polar_N2048_K1723_ASCL_FA_L32_CRC32_SPC4_p32.txt}; \label{plot:line3}
+        \addplot[mark=square, Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Polar_N2048_K1723_ASCL_FA_L32_CRC32_SPC4_p32.txt}; \label{plot:line4}
+        \coordinate (legend) at (axis description cs:0.755,0.03);
+    \end{axis}
+
+    \matrix[draw,
+            matrix of nodes,
+            anchor=south east,
+            fill=white] at (legend) {
+            \small{GA (2048,1723)} & \small{BER}      & \small{FER}      \\
+            \small{FA-SCL $L=~8$}  & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{FA-SCL $L=32$}  & \ref{plot:line3} & \ref{plot:line4} \\
+        };
+  \end{tikzpicture}
+\end{document}
