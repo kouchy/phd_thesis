@@ -230,7 +230,8 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
   \centering
   \caption{Comparison of various SIMD wrappers.}
   \label{tab:vectorization_comparison}
-  {\small\resizebox{\linewidth}{!}{
+  \begin{adjustbox}{angle=90}
+  {\resizebox{0.975\textheight}{!}{
   \begin{tabular}{|r|r|r|r|r||c|c|c|c|c||c|c|c|c|c|c||c|c|c|}
   \hline
   \multicolumn{5}{|c||}{\multirow{2}{*}{\textbf{General Information}}}                                                               & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                                                                & \multicolumn{6}{c||}{\multirow{2}{*}{\textbf{Data Type}}}                    & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Features}}} \\
@@ -247,6 +248,7 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
                                                               & \bSIMD     & \cite{Esterie2012a} & 2017           & Non-free         & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark                    & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.       & \cmark           \\ \hline
   \end{tabular}
   }}
+  \end{adjustbox}
 \end{table*}
 
 \begin{figure*}
@@ -593,10 +595,11 @@ fully flatten, depending on the size of the code length.
   \centering
   \caption{Throughput and latency comparison of polar decoding algorithms.}
   \label{tab:polar_algos}
-  {\small
-   \begin{tabular}{r|c|c|c}
+  % {\small
+   \begin{tabular}{r c c c}
     \textbf{Decoding}  & \textbf{BER \& FER}   & \multirow{1}{*}{\textbf{Throughput}} & \textbf{Max. Latency}        \\
     \textbf{Algorithm} & \textbf{Performances} & ($\bm{\mathcal{T}}$)                 & ($\bm{\mathcal{L}_{worst}}$) \\
+    \hline
     \hline
     SC      & poor      & medium & medium \\
     SSC     & poor      & high   & low    \\
@@ -606,7 +609,7 @@ fully flatten, depending on the size of the code length.
     PA-SSCL & very good & high   & medium \\
     FA-SSCL & very good & high   & high   \\
   \end{tabular}
-  }
+  % }
 \end{table}
 
 In order to better distinguish all the algorithmic variations, we compare their
@@ -875,11 +878,12 @@ in which tree pruning can also be applied~\cite{Lin2014}.
     $L = 32$ and 32-bit CRC (Gzip).}
   \label{tab:polar_scl_perfs_fixed}
   %{\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{r | r | c || c | c || c | c || c | c}
-    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c ||}{\textbf{3.5 dB}} & \multicolumn{2}{c ||}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
+  \begin{tabular}{r | r  c | c  c | c  c | c  c}
+    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c |}{\textbf{3.5 dB}} & \multicolumn{2}{c |}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
     \cline{4-9}
     & & & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ \\
     % \hline
+    \hline
     \hline
     \multirow{3}{*}{PA-SSCL} & 32-bit &  635 & 232.3 &   7.6 & 41.7 &  42.1 & 7.4 & 237.6 \\
     %\cline{3-9}
@@ -1179,8 +1183,9 @@ beneficial in any use case.
   \caption{Polar decoders memory footprint (in bytes)}
   \label{tab:polar_scl_memory_footprint}
   %{\small
-   \begin{tabular}{r|c}
+   \begin{tabular}{r c}
     \textbf{Algorithms}        & \textbf{Memory Footprint} \\
+    \hline
     \hline
     (CA-)SSCL$_{\texttt{cpy}}$ & $\mathcal{O}((2L + 1)NQ)$ \\
     (CA-)SSCL$_{\texttt{ptr}}$ & $\mathcal{O}((3L + 1)NQ)$ \\
@@ -1305,7 +1310,7 @@ given node.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.70\textwidth]{polar/patterns_example}
+  \includegraphics[width=1.00\textwidth]{polar/patterns_example}
   \caption{Generation process on a small binary tree ($N = 8$). The tree is cut
     and the computations are versioned according to the location of the frozen
     bit}
@@ -1430,8 +1435,9 @@ masking instructions.
   \label{tab:polar_energy_arm_specs}
   \begin{center}
   % {\footnotesize
-  \begin{tabular}{c | c | c}
+  \begin{tabular}{c | c  c}
                                       & \textbf{ODROID-XU+E}      &          \textbf{\juno} \\
+    \hline
     \hline
     \multirow{2}{*}{\textbf{SoC}}     &  Samsung\R Exynos\TM 5410 &               ARM64 \bl \\
                                       &           (Exynos 5 Octa) &         (dev. platform) \\
@@ -1462,13 +1468,14 @@ masking instructions.
   \label{tab:polar_energy_results}
   \begin{center}
   %{\footnotesize
-  \begin{tabular}{c | c | c | c | c | c}
+  \begin{tabular}{c | c  c  c  c  c}
     \textbf{Cluster} &
     \textbf{Impl.} &
     $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
     $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)} &
     $\boldsymbol{E_b}$ \textbf{(nJ)} &
     $\boldsymbol{P}$   \textbf{(W)}\\
+    \hline
     \hline
     \multirow{3}{*}{\textbf{A7-450MHz}}  & seq.  &  3.1 &  655 &  37.8 & 0.117 \\
                                          & intra & 13.0 &  158 &   9.5 & 0.123 \\
@@ -1522,7 +1529,7 @@ the low power SDR systems because of its high power requirements.
   \label{tab:polar_energy_comparison}
   \begin{center}
   %{\footnotesize
-  \begin{tabular}{c | c | c | c | c | c}
+  \begin{tabular}{c  c  c  c  c  c}
     \textbf{Decoder} &
     \textbf{Platform} &
     \textbf{Freq.} &
@@ -1530,12 +1537,13 @@ the low power SDR systems because of its high power requirements.
     $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
     $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)}\\
     \hline
+    \hline
     \cite{Giard2014} & i7-2600   & 3.4Ghz & SSE4.1 &         204  &  135 \\
-    \hline
+    % \hline
     this work        & i7-4850HQ & 3.3Ghz & SSE4.1 & \textbf{580} &   47 \\
-    \hline
+    % \hline
     this work        & A15       & 1.1Ghz & NEON   &          70  &  391 \\
-    \hline
+    % \hline
     this work        & A57       & 1.1Ghz & NEON   &          73  &  374 \\
   \end{tabular}
   %}
@@ -1552,8 +1560,8 @@ instructions (SSE4.1) and the frequencies are comparable.
   \centering
   \includegraphics[width=0.70\textwidth]{polar/sc_energy_implems_vs/sc_energy_implems_vs}
   \caption{Variation of the \emph{energy-per-bit} for different frame sizes and
-    impl.: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz. Fixed rate
-    $R = 1/2$.}
+    implementations: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz.
+    Fixed rate $R = 1/2$.}
   \label{plot:polar_sc_energy_implems_vs}
 \end{figure}
 
@@ -1683,14 +1691,17 @@ discuss the exploring capabilities of our framework.
 \begin{table}
   \begin{center}
   %{\scriptsize
-  \begin{tabular}{c|c|c|c}
-           & x86-based              & ARMv7-based             & prev. work arch.~\cite{Sarkis2014}\\
+  \begin{tabular}{c | c c c}
+                                     & \textbf{x86-based}     & \textbf{ARMv7-based}    & \textbf{prev. work arch.}~\cite{Sarkis2014}\\
   \hline
-  CPU      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15        & Intel\R Core\TM i7-2600           \\
-           & 3.10Ghz                & MPCore~2.32GHz          & 3.40GHz                           \\
-  Cache    & 32KB L1I/L1D, 256KB L2 & 32KB L1I/L1D, L2 1024KB & 32KB L1I/L1D, L2 256KB            \\
-           & L3 6MB                 & No L3                   & L3 8MB                            \\
-  Compiler & GNU g++~4.8            & GNU g++~4.8             & GNU g++~4.8                       \\
+  \hline
+  \multirow{2}{*}{\textbf{CPU}}      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15        & Intel\R Core\TM i7-2600           \\
+                                     & 3.10Ghz                & MPCore~2.32GHz          & 3.40GHz                           \\
+  \hline
+  \multirow{2}{*}{\textbf{Cache}}    & 32KB L1I/L1D, 256KB L2 & 32KB L1I/L1D, L2 1024KB & 32KB L1I/L1D, L2 256KB            \\
+                                     & L3 6MB                 & No L3                   & L3 8MB                            \\
+  \hline
+  \multirow{1}{*}{\textbf{Compiler}} & GNU g++~4.8            & GNU g++~4.8             & GNU g++~4.8                       \\
   % \hline
   % Flags for 32-bit& \texttt{-std=c++11 -Ofast -funroll-loops -mavx}\\
   % Flags for 8-bit & \texttt{-std=c++11 -Ofast -funroll-loops -msse4.1}\\
@@ -1722,27 +1733,26 @@ differentiate decoder types (Intra-SIMD vs Inter-SIMD).
 
 \begin{table}
   \begin{center}
-  \begin{tabular}{c c c c}
+  \begin{tabular}{c | c  c  c}
+    $\bm{(N, K)}$                   & \textbf{Decoder}             & \textbf{Info T/P} (Mb/s) & \textbf{Latency} ($\mu$s)\\
     \hline
-    $(N, K)$                        & Decoder                      & Info T/P (Mb/s) & Latency ($\mu$s)\\
     \hline
   %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1024)}   & prev. work~\cite{Sarkis2014} & 147             & 7               \\
-  %                                 & this work                    & 195             & 5               \\
+  % \multirow{2}{*}{(2048, 1024)}   & prev. work~\cite{Sarkis2014} & 147                      & 7               \\
+  %                                 & this work                    & 195                      & 5               \\
   % \hline
   %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1707)}   & prev. work~\cite{Sarkis2014} & 335             & 5               \\
-  %                                 & this work                    & 402             & 4               \\
+  % \multirow{2}{*}{(2048, 1707)}   & prev. work~\cite{Sarkis2014} & 335                      & 5               \\
+  %                                 & this work                    & 402                      & 4               \\
   % \hline
-    \multirow{2}{*}{(16384, 14746)} & prev. work~\cite{Sarkis2014} & 292             & 50              \\
-                                    & this work                    & 341             & 43              \\
+    \multirow{2}{*}{(16384, 14746)} & prev. work~\cite{Sarkis2014} & 292                      & 50              \\
+                                    & this work                    & 341                      & 43              \\
     \hline
-    \multirow{2}{*}{(32768, 27568)} & prev. work~\cite{Sarkis2014} & 220             & 125             \\
-                                    & this work                    & 241             & 114             \\
+    \multirow{2}{*}{(32768, 27568)} & prev. work~\cite{Sarkis2014} & 220                      & 125             \\
+                                    & this work                    & 241                      & 114             \\
     \hline
-    \multirow{2}{*}{(32768, 29492)} & prev. work~\cite{Sarkis2014} & 261             & 113             \\
-                                    & this work                    & 293             & 101             \\
-    \hline
+    \multirow{2}{*}{(32768, 29492)} & prev. work~\cite{Sarkis2014} & 261                      & 113             \\
+                                    & this work                    & 293                      & 101             \\
   \end{tabular}
   \end{center}
   \caption{Comparing P-EDGE with a state-of-art software polar decoder, for
@@ -1774,9 +1784,9 @@ between 10\% and 25\% higher on x86).
 
 \begin{figure}
   \centering
-  \subfloat[][Without compression.]{\includegraphics[height=4.5cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:polar_sc_gen_compression_wo}}
+  \subfloat[][Without compression.]{\includegraphics[height=5.0cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:polar_sc_gen_compression_wo}}
   \qquad
-  \subfloat[][With compression.]{\includegraphics[height=4.5cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:polar_sc_gen_compression_w}}
+  \subfloat[][With compression.]{\includegraphics[height=5.0cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:polar_sc_gen_compression_w}}
   \caption{Full decoding tree representation ($N = 128, K = 64$) without and
     with the compression sub-tree folding algorithm.}
   \label{fig:polar_sc_gen_compression}
@@ -1803,20 +1813,21 @@ with the size of the tree).
 
 \begin{table}
   \begin{center}
-  \begin{tabular}{ c | c | c | c | c | c | c}
-    Decoder                  & $N = 2^6$ & $N = 2^8$   & $N = 2^{10}$     & $N = 2^{12}$     & $N = 2^{14}$      & $N = 2^{16}$                \\
+  \begin{tabular}{ c  c  c  c  c  c  c}
+    \textbf{Decoder}         & $\bm{N = 2^6}$ & $\bm{N = 2^8}$ & $\bm{N = 2^{10}}$ & $\bm{N = 2^{12}}$ & $\bm{N = 2^{14}}$ & $\bm{N = 2^{16}}$           \\
     \hline
-    inter 32-bit, $R = 1/2$  & 1 (7)     & 2 (24)      & 7 (\textbf{77})  & 9 (\textbf{254}) & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
     \hline
-    inter 32-bit, $R = 5/6$  & 1 (4)     & 2 (19)      & 4 (\textbf{53})  & 7 (\textbf{167}) & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
-    \hline
-    intra 32-bit, $R = 1/2$  & 1 (4)     & 3 (16)      & 9 (\textbf{56})  & 8 (\textbf{182}) & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
-    \hline
-    intra 32-bit, $R = 5/6$  & 1 (3)     & 3 (13)      & 6 (\textbf{38})  & 7 (\textbf{126}) & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
-    \hline
-    inter ~8-bit, $R = 1/2$  & 1 (5)     & 2 (22)      & 7 (\textbf{72})  & 8 (\textbf{252}) & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
-    \hline
-    inter ~8-bit, $R = 5/6$  & 1 (4)     & 2 (18)      & 4 (\textbf{51})  & 6 (\textbf{191}) & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
+    inter 32-bit, $R = 1/2$  & 1 (7)          & 2 (24)         & 7 (\textbf{77})   & 9 (\textbf{254})  & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
+    % \hline
+    inter 32-bit, $R = 5/6$  & 1 (4)          & 2 (19)         & 4 (\textbf{53})   & 7 (\textbf{167})  & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
+    % \hline
+    intra 32-bit, $R = 1/2$  & 1 (4)          & 3 (16)         & 9 (\textbf{56})   & 8 (\textbf{182})  & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
+    % \hline
+    intra 32-bit, $R = 5/6$  & 1 (3)          & 3 (13)         & 6 (\textbf{38})   & 7 (\textbf{126})  & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
+    % \hline
+    inter ~8-bit, $R = 1/2$  & 1 (5)          & 2 (22)         & 7 (\textbf{72})   & 8 (\textbf{252})  & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
+    % \hline
+    inter ~8-bit, $R = 5/6$  & 1 (4)          & 2 (18)         & 4 (\textbf{51})   & 6 (\textbf{191})  & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
   \end{tabular}
   \end{center}
   \caption{Code size (in KB) of the generated decoders depending on the number
@@ -1893,10 +1904,11 @@ average throughput is better with the FA-SSCL algorithm.
     CRC.}
   \label{tab:polar_scl_perfs_comparison}
   %{\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{r|r|c|c c c}
+  \begin{tabular}{r | r c  c c c}
     \multirow{2}{*}{\textbf{Target}} & \multirow{2}{*}{\textbf{Decoder}} & \multirow{1}{*}{\textbf{$\bm{\mathcal{L}_{worst}}$}} & \multicolumn{3}{c}{$\bm{\mathcal{T}_i}$ (Mb/s)} \\
     \cline{4-6}
     &                                & ($\mu s$)                         & \textbf{3.5 dB} & \textbf{4.0 dB} & \textbf{4.5 dB} \\
+    \hline
     \hline
     % \hline
     \multirow{1}{*}{i7-4790K}
@@ -2410,15 +2422,16 @@ memory.
   \caption{Specifications of the target processors.}
   % {\scriptsize
   % {\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{c | c | c | c}
+  \begin{tabular}{c | c  c  c}
     \textbf{CPU}           & \textbf{P1} : Xeon\TM E5-2650 & \textbf{P2}: Core\TM i7-4960HQ & \textbf{P3}: Xeon\TM E5-2680v3 \\
     \hline
+    \hline
     \textbf{Intel\R Arch.} & \textit{Ivy Bridge} Q1'12     & \textit{Haswell} Q4'13         & \textit{Haswell} Q3'14      \\
-    \hline
+    % \hline
     \textbf{Cores/Freq.}   & 8 cores, 2--2.8 GHz           & 4 cores, 2.6--3.8 GHz          & 12 cores,  2.5--3.3 GHz     \\
-    \hline
+    % \hline
     \textbf{LLC}           & 20MB L3                       & 6MB L3                         & 30MB L3                     \\
-    \hline
+    % \hline
     \textbf{TDP}           & 95 W                          & 47 W                           & 120 W                       \\
   \end{tabular}
   % }
@@ -2495,18 +2508,19 @@ on the P2 CPU target. For small codewords ($K=1024$) it is more energy efficient
 to resort to AVX. But this is not so clear on larger codewords ($K=6144$) since
 with 3/4 cores, the code using SSE outperforms the AVX one.
 
-\begin{table*}[htp]
+\begin{table*}
   % \renewcommand{\arraystretch}{0.7}
   % \tabcolsep=6pt
   \centering
   \caption{Performance comparison with the other works. All the reported metrics
-    are normalized to one iteration.\newline
-    $NThr. = (Thr. \times Iters) / (Freq. \times Cores)~$,\newline
-    $TNDC  = (Thr. \times Iters) / (Cores \times Freq. \times SIMD)$ see \cite{Ying2012}, \newline
-    $E_d   = [ TDP / (Thr. \times Iters) ] \times 10^3$.\newline
+    are normalized to one iteration.
+    $NThr. = (Thr. \times Iters) / (Freq. \times Cores)~$,
+    $TNDC  = (Thr. \times Iters) / (Cores \times Freq. \times SIMD)$ see \cite{Ying2012},
+    $E_d   = [ TDP / (Thr. \times Iters) ] \times 10^3$.
     On CPUs, only SSE instructions are considered.}
   \label{tab:turbo_comparison}
-  {\small\resizebox{\linewidth}{!}{
+  \begin{adjustbox}{angle=90}
+  {\resizebox{0.95\textheight}{!}{
   \begin{tabular}{|r|r|r||r|r|r|r|r|r|r|r|r|r|r||r|r|r|r||r|r|r|}
   \hline
   \multicolumn{3}{|c||}{\multirow{2}{*}{}} & \multicolumn{11}{c||}{\multirow{2}{*}{\textbf{Hardware and decoder parameters}}} & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Decoding performances}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
@@ -2558,6 +2572,7 @@ with 3/4 cores, the code using SSE outperforms the AVX one.
   \hline
   \end{tabular}
   }}
+  \end{adjustbox}
 \end{table*}
 
 Table~\ref{tab:turbo_comparison} shows a performance comparison with related
@@ -2673,10 +2688,10 @@ with a single source code.
   \caption{LDPC decoder speedups with \MIPP.}
   \label{tab:ldpc_speedups}
   %{\small
-  \begin{tabular}{r|r|r|r}
-                      & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} \\ \hline
-  \textbf{SIMD size}  & 8                      & 8                     & 16                    \\ \hline
-  \textbf{T/P} (Mb/s) & 8.3                    & 30.3                  & 53.2                  \\ \hline
+  \begin{tabular}{r | r r r}
+                      & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} \\ \hline\hline
+  \textbf{SIMD size}  & 8                      & 8                     & 16                    \\ %\hline
+  \textbf{T/P} (Mb/s) & 8.3                    & 30.3                  & 53.2                  \\ %\hline
   \textbf{Speedup}    & $\times 9.7$           & $\times 8.8$          & $\times 15.2$         \\
   \end{tabular}
   %}
@@ -2915,7 +2930,7 @@ re-written for resource 4 as:
 \begin{equation}
   \label{eq:scma_6}
   \begin{split}
-  d_{RES 4}(m_2,m_4,m_6,\bm{h}_2, \bm{h}_4, \bm{h}_5) =\\
+  d_{RES 4}(m_2,m_4,m_6,\bm{h}_2, \bm{h}_4, \bm{h}_5) =
   \underset{m_{2,4,6}=1,2,3,4}{|| \bm{y_4} - \Big(\bm{h}_2\bm{x}_2(m_2) +
   (\bm{h}_4\bm{x}_4(m_4) + (\bm{h}_5\bm{x}_5(m_5) \Big) ||}.
   \end{split}
@@ -2939,7 +2954,7 @@ containing the probability information of codeword $i$ can be expressed as:
   \label{eq:scma_8}
   \begin{split}
   \mu_{RES4 \rightarrow UE2}(i) = \sum\limits_{j=1}^4 \sum\limits_{i=1}^4 \Psi
-  \Big(d_{RES4}(i,j,k,\bm{H}) \Big)\\
+  \Big(d_{RES4}(i,j,k,\bm{H}) \Big)
   \times \mu_{UE4 \rightarrow RES4}(j) \times \mu_{UE5 \rightarrow RES4}(k).
   \end{split}
 \end{equation}
@@ -3269,13 +3284,13 @@ and 61 cores using 4-way SMT and running at 1.2 GHz.
   \caption{Throughput, Latency, Power and Energy Characteristics}
   \label{tab:scma_thr}
   % {\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{c|c||c c c c c}
+  \begin{tabular}{c | c | c c c c c}
   & \multirow{3}{*}{\textbf{Algorithm}} & \multirow{3}{*}{\shortstack[c]{\textbf{Throughput}\\\textbf{per Core}\\(Mbps)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Throughput}\\\textbf{per Socket}\\(Mbps)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Latency}\\\textbf{per Core}\\(ns)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Power}\\(W)}} & \multirow{3}{*}{\shortstack[c]{\textbf{Energy}\\\textbf{per Bit}\\($\mu$J)}} \\
   & & & & & & \\
   & & & & & & \\
   \hline
   \hline
-  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Intel\R Core-i7 6700HQ~~~~~~}}}
+  \multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{Intel\R Core\TM i7-6700HQ~~~~~~}}}
   %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
   & \multirow{2}{*}{\shortstack[c]{E-MPA+AVX \\(\texttt{-Ofast})}} & \multirow{2}{*}{17.46} & \multirow{2}{*}{ 75.46} & \multirow{2}{*}{  57.2} & \multirow{2}{*}{ 40.02} & \multirow{2}{*}{ 0.66} \\ & & & & & & \\ \cline{2-7}
   & \multirow{2}{*}{\shortstack[c]{MPA+AVX   \\(\texttt{-Ofast})}} & \multirow{2}{*}{15.06} & \multirow{2}{*}{ 67.83} & \multirow{2}{*}{  66.4} & \multirow{2}{*}{ 40.53} & \multirow{2}{*}{ 0.73} \\ & & & & & & \\ \cline{2-7}
@@ -3284,7 +3299,7 @@ and 61 cores using 4-way SMT and running at 1.2 GHz.
   & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.58} & \multirow{2}{*}{ 14.85} & \multirow{2}{*}{ 279.3} & \multirow{2}{*}{ 33.01} & \multirow{2}{*}{ 2.49} \\ & & & & & & \\ \cline{2-7}
   & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.55} & \multirow{2}{*}{  3.51} & \multirow{2}{*}{1818.1} & \multirow{2}{*}{ 35.00} & \multirow{2}{*}{10.25} \\ & & & & & & \\ \hline
   \hline
-  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{ARM\R Cortex-A57~~~~~~~~}}}
+  \multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{ARM\R Cortex-A57~~~~~~~~}}}
   %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
   & \multirow{2}{*}{\shortstack[c]{E-MPA+NEON\\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.79} & \multirow{2}{*}{ 15.30} & \multirow{2}{*}{ 263.8} & \multirow{2}{*}{  7.93} & \multirow{2}{*}{ 0.52} \\ & & & & & & \\ \cline{2-7}
   & \multirow{2}{*}{\shortstack[c]{MPA+NEON  \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 2.09} & \multirow{2}{*}{  8.40} & \multirow{2}{*}{ 478.4} & \multirow{2}{*}{  7.56} & \multirow{2}{*}{ 0.90} \\ & & & & & & \\ \cline{2-7}
@@ -3293,7 +3308,7 @@ and 61 cores using 4-way SMT and running at 1.2 GHz.
   & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 1.03} & \multirow{2}{*}{  4.07} & \multirow{2}{*}{ 970.8} & \multirow{2}{*}{  7.18} & \multirow{2}{*}{ 1.76} \\ & & & & & & \\ \cline{2-7}
   & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.41} & \multirow{2}{*}{  1.60} & \multirow{2}{*}{2439.0} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 4.21} \\ & & & & & & \\ \hline
   \hline
-  \multirow{4}{*}{\rotatebox[origin=c]{90}{\textbf{Xeon Phi\TM 7120P~~~~~}}}
+  \multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Xeon Phi\TM 7120P~~~~~}}}
   %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
   & \multirow{2}{*}{\shortstack[c]{E-MPA+KNCI\\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.90} & \multirow{2}{*}{114.60} & \multirow{2}{*}{1111.1} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 1.73} \\ & & & & & & \\ \cline{2-7}
   & \multirow{2}{*}{\shortstack[c]{MPA+KNCI  \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.67} & \multirow{2}{*}{ 82.32} & \multirow{2}{*}{1492.5} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 2.41} \\ & & & & & & \\ \cline{2-7}
@@ -3406,6 +3421,7 @@ of processing units dedicated to them.
   & & & & & \\
   & & & & & \\
   \hline
+  \hline
   %& Algorithm                                                  & # branches              & # branche misses       & # cache ref          & # cache misses         & intr. per cycle
   \multirow{2}{*}{               E-MPA+AVX                    } & \multirow{2}{*}{12267}  & \multirow{2}{*}{422}   & \multirow{2}{*}{275} & \multirow{2}{*}{70.83} & \multirow{2}{*}{1.23} \\ & & & & & \\ \hline
   \multirow{2}{*}{               MPA+AVX                      } & \multirow{2}{*}{12845}  & \multirow{2}{*}{401}   & \multirow{2}{*}{244} & \multirow{2}{*}{70.32} & \multirow{2}{*}{1.19} \\ & & & & & \\ \hline
@@ -3475,7 +3491,7 @@ VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
+  \includegraphics[width=0.70\linewidth]{scma/profiling/profiling}
   \caption{Profiling results of different MPA algorithms using Intel\R VTune\TM
     Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
   \label{plot:scma_profiling}

@@ -26,12 +26,13 @@
   \centering
   \caption{\texttt{C}/\Cxx open source channel coding simulators/libraries.}
   \label{tab:fec_libraries_comparison}
-  {\small\resizebox{\linewidth}{!}{
+  \begin{adjustbox}{angle=90}
+  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r | r | r | r | c | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
   \multirow{4}{*}{\textbf{Name}}                                                                     &                  & \multirow{4}{*}{\textbf{Lines}} & \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{Commit}}}           & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Erasure}} \\
                                                                                                      & \textbf{Contri-} &                                 & \multicolumn{2}{c |}{}                                           &                                   &        &        &        &        &        &        &        &        &        &         \\ \cline{4-5}
                                                                                                      & \textbf{butors}  &                                 & \multirow{2}{*}{\textbf{First}} & \multirow{2}{*}{\textbf{Last}} &                                   &        &        &        &        &        &        &        &        &        &         \\
-                                                                                                     &                  &                                 &                                 &                                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline
+                                                                                                     &                  &                                 &                                 &                                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline\hline
                                                                                                                                                                                                                                                                  % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
   \href{https://github.com/aff3ct/aff3ct                   }{AFF3CT}~\cite{Cassagne2019a}            &               11 &                             76k & 2016                            & 2019                           & MIT                               & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
   \href{https://github.com/aicodix/code                    }{aicodix GmbH}~\cite{Aicodix}            &                1 &                              7k & 2018                            & 2020                           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
@@ -56,7 +57,8 @@
   \href{http://www.the-art-of-ecc.com                      }{the-art-of-ecc}~\cite{The-art-of-ecc}   &                1 &                               - & 2006                            & 2009                           & Copyright                         & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
   \href{https://github.com/ttsou/turbofec                  }{TurboFEC}~\cite{TurboFEC}               &                2 &                              4k & 2015                            & 2018                           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
   \end{tabular}
-  }}
+  % }}
+  \end{adjustbox}
 \end{table}
 
 In the digital communications community, many scientists implement their own
@@ -95,10 +97,11 @@ codes\footnote{FEC Software Decoders Hall of Fame: \url{http://aff3ct.github.io/
   \centering
   \caption{Specifications of the target processors.}
   \label{tab:simu_cpus_specs}
-  {\resizebox{\linewidth}{!}{
+  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{l  l | l | l | c | c | c | c | c}
   \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
           &                                           & \textbf{Name} & \textbf{Size}              &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
+  \hline
   \hline
   ARM\R   & ThunderX2\R CN9975                        & NEON          & 128-bit                    & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
   Intel\R & Xeon Phi\TM 7230                          & AVX-512F      & 512-bit                    & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
@@ -107,7 +110,7 @@ codes\footnote{FEC Software Decoders Hall of Fame: \url{http://aff3ct.github.io/
   Intel\R & Xeon\TM Gold 6140                         & AVX-512BW     & 512-bit                    & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
   Intel\R & Xeon\TM Gold 6142                         & AVX-512BW     & 512-bit                    & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
   \end{tabular}
-  }}
+  % }}
 \end{table}
 
 \begin{figure}
@@ -166,9 +169,10 @@ parallelism.
   \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
   \label{tab:simu_speedup_mpi}
 % {\footnotesize%\resizebox{\linewidth}{!}{
-  \begin{tabular}{r | r | r | r}
+  \begin{tabular}{r  r  r  r}
   \textbf{Nodes} & \textbf{Cores} & \textbf{Info. T/P} & \textbf{Speedup} \\
                  &                & (Mb/s)             &           \\
+  \hline
   \hline
    1             &  24            &  1950              &  1.00     \\
    2             &  48            &  3901              &  1.95     \\
@@ -230,33 +234,33 @@ in Table~\ref{tab:lib_codecs}.
                                            &                                     &                                        \\
   \hline
   \hline
-  \multirow{5}{*}{\textbf{LDPC}}           & 5G (data), WiFi,                    & Scheduling: Flooding and H./V. Layered \\
+  \multirow{5}{*}{{LDPC}}                  & 5G (data), WiFi,                    & Scheduling: Flooding and H./V. Layered \\
                                            & WiMAX, WRAN,                        & Sum-Product Algorithm (SPA)            \\
                                            & 10 Gigabit Eth.,                    & Min-Sum (NMS, OMS)                     \\
                                            & DVB-S2, CCSDS                       & Approximate Min-Star (AMS)             \\
                                            & etc.                                & Bit Flipping: GallagerA/B/E, PPBF, WBF \\
   \hline
-  \multirow{4}{*}{\textbf{Polar}}          &                                     & Successive Cancellation (SC)           \\
+  \multirow{4}{*}{{Polar}}                 &                                     & Successive Cancellation (SC)           \\
                                            & 5G                                  & Successive Cancellation List (SCL)     \\
                                            & (control channel)                   & CRC Aided SCL (CA-SCL, Adaptive SCL)   \\
                                            &                                     & Soft Cancellation (SCAN)               \\
   \hline
-  \multirow{1}{*}{\textbf{Turbo Parallel}} & LTE (3G, 4G),                       & Turbo BCJR                             \\
+  \multirow{1}{*}{{Turbo Parallel}}        & LTE (3G, 4G),                       & Turbo BCJR                             \\
   (single and double                       & DVB-RCS,                            & Turbo BCJR + Early Termination (CRC)   \\
   binary)                                  & CCSDS, etc.                         & Post proc.: Flip aNd Check (FNC)       \\
   \hline
-  \multirow{2}{*}{\textbf{Turbo Product}}  & \multirow{2}{*}{WiMAX (opt.)}       & \multirow{2}{*}{Turbo Chase-Pyndiah}   \\
+  \multirow{2}{*}{{Turbo Product}}         & \multirow{2}{*}{WiMAX (opt.)}       & \multirow{2}{*}{Turbo Chase-Pyndiah}   \\
                                            &                                     &                                        \\
   \hline
-  \multirow{3}{*}{\textbf{BCH}}            & CD, DVD,                            &                                        \\
+  \multirow{3}{*}{{BCH}}                   & CD, DVD,                            &                                        \\
                                            & SSD, DVB-S2,                        & Berlekamp-Massey + Chien search        \\
                                            & Bitcoin, etc.                       &                                        \\
   \hline
-  \multirow{3}{*}{\textbf{Reed-Solomon}}   & CD, DVD,                            &                                        \\
+  \multirow{3}{*}{{Reed-Solomon}}          & CD, DVD,                            &                                        \\
                                            & SSD, DVB-T,                         & Berlekamp-Massey + Chien search        \\
                                            & ADSL, etc.                          &                                        \\
   \hline
-  \multirow{1}{*}{\textbf{Convolutional}}  &                                     & BCJR - Maximum A Posteriori (MAP)      \\
+  \multirow{1}{*}{{Convolutional}}         &                                     & BCJR - Maximum A Posteriori (MAP)      \\
   (single and double                       & NASA                                & BCJR - Linear Approximation            \\
   binary)                                  &                                     & BCJR - Max Approximation               \\
   \end{tabular}
@@ -291,28 +295,28 @@ purpose. Table~\ref{tab:lib_modems} lists all the supported modems.
                                          &                                    &                                           \\
   \hline
   \hline
-  \multirow{3}{*}{\textbf{N-PSK}}        & IEEE 802.16 (WiMAX)                &                                           \\
+  \multirow{3}{*}{{N-PSK}}               & IEEE 802.16 (WiMAX)                &                                           \\
                                          & UMTS (2G, 2G+)                     & Phase-Shift Keying                        \\
                                          & EDGE (8-PSK), ...                  &                                           \\
   \hline
-  \multirow{3}{*}{\textbf{N-QAM}}        & IEEE 802.16 (WiMAX)                &                                           \\
+  \multirow{3}{*}{{N-QAM}}               & IEEE 802.16 (WiMAX)                &                                           \\
                                          & UMTS (2G, 2G+)                     & Quadrature Amplitude Modulation           \\
                                          & 3G, 4G, 5G, ...                    &                                           \\
   \hline
-  \multirow{3}{*}{\textbf{N-PAM}}        & IEEE 802.16 (WiMAX)                &                                           \\
+  \multirow{3}{*}{{N-PAM}}               & IEEE 802.16 (WiMAX)                &                                           \\
                                          & UMTS (2G, 2G+)                     & Pulse Amplitude Modulation                \\
                                          & 3G, 4G, 5G, ...                    &                                           \\
   \hline
-  \multirow{2}{*}{\textbf{CPM}}          & GMSK, Bluetooth                    & Continuous Phase Modulation               \\
+  \multirow{2}{*}{{CPM}}                 & GMSK, Bluetooth                    & Continuous Phase Modulation               \\
                                          & IEEE 802.11 FHSS                   & Coded (convolutional-based) modulation    \\
   \hline
-  \multirow{2}{*}{\textbf{OOK}}          & IrDA (Infrared)                    & On-Off Keying                             \\
+  \multirow{2}{*}{{OOK}}                 & IrDA (Infrared)                    & On-Off Keying                             \\
                                          & ISM bands                          & Used in optical communication systems     \\
   \hline
-  \multirow{2}{*}{\textbf{SCMA}}         & \multirow{2}{*}{Considered for 5G} & Sparse Code Multiple Access               \\
+  \multirow{2}{*}{{SCMA}}                & \multirow{2}{*}{Considered for 5G} & Sparse Code Multiple Access               \\
                                          &                                    & Multi-user modulation                     \\
   \hline
-  \multirow{2}{*}{\textbf{User defined}} & \multirow{2}{*}{-}                 & Constellation and order can be            \\
+  \multirow{2}{*}{{User defined}}        & \multirow{2}{*}{-}                 & Constellation and order can be            \\
                                          &                                    & defined from an external file             \\
   \end{tabular}
   %}%}
@@ -342,19 +346,19 @@ Table~\ref{tab:lib_channels} reports all the supported channels.
                                          &                                      &                                                \\
   \hline
   \hline
-  \multirow{2}{*}{\textbf{AWGN}}         & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Additive White Gaussian Noise} \\
+  \multirow{2}{*}{{AWGN}}                & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Additive White Gaussian Noise} \\
                                          &                                      &                                                \\
   \hline
-  \multirow{2}{*}{\textbf{BEC}}          & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Erasure Channel}        \\
+  \multirow{2}{*}{{BEC}}                 & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Erasure Channel}        \\
                                          &                                      &                                                \\
   \hline
-  \multirow{2}{*}{\textbf{BSC}}          & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Symmetric Channel}      \\
+  \multirow{2}{*}{{BSC}}                 & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Symmetric Channel}      \\
                                          &                                      &                                                \\
   \hline
-  \multirow{2}{*}{\textbf{Rayleigh}}     & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Flat Rayleigh fading channel}  \\
+  \multirow{2}{*}{{Rayleigh}}            & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Flat Rayleigh fading channel}  \\
                                          &                                      &                                                \\
   \hline
-  \multirow{2}{*}{\textbf{User defined}} & \multirow{2}{*}{Not yet}             & User can import noise samples                  \\
+  \multirow{2}{*}{{User defined}}        & \multirow{2}{*}{Not yet}             & User can import noise samples                  \\
                                          &                                      & from an external file                          \\
   \end{tabular}
   %}%}
@@ -447,7 +451,7 @@ philosophy close to \emph{ports} in component-based development approaches.
 
 \begin{figure}
   \centering
-  \includegraphics[width=1.00\linewidth]{soft_archi/com_chain_task_module}
+  \includegraphics[width=0.70\linewidth]{soft_archi/com_chain_task_module}
   \caption{Modules and tasks.}
   \label{fig:soft_archi_com_chain_task_module}
 \end{figure}

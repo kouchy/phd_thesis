@@ -38,9 +38,9 @@ brown_100  = "#6D4903"
 grid_color = "#6a6a6a"
 text_color = "#6a6a6a"
 
-my_line_width = "3.75"
+my_line_width = "2.0"
 my_axis_width = "1.2"
-my_ps = "0.75"
+my_ps = "0.90"
 
 set pointsize @my_ps
 

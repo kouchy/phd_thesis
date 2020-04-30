@@ -22,44 +22,18 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EDOC THESIS TEMPLATE: Variant 2.0 -> Utopia, Gabarrit A (lighter pages)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \usepackage{eulervm} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
-% %\usepackage{utopia} % on older systems -> use this package instead of fourier in combination with mathdesign for better looking results
-% %\usepackage[adobe-utopia]{mathdesign}
-% \setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
-% % \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-% % \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-% \setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
-% \setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
-% \setlength{\headheight}{14pt}
-
-% \makeatletter
-% \if@twoside
-% \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-% \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-% \else
-% \setlength{\oddsidemargin}{6mm} % 37mm - 1in (from hoffset)
-% \setlength{\evensidemargin}{6.2mm} % = 26.2mm - 1in (from hoffset)
-% \fi
-% \makeatother
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% EDOC THESIS TEMPLATE: Variant 2.0 -> Utopia, Gabarrit A (lighter pages)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{fourier} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
 %\usepackage{utopia} % on older systems -> use this package instead of fourier in combination with mathdesign for better looking results
 %\usepackage[adobe-utopia]{mathdesign}
-\setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
-\setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-\setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-\setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
-\setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
-\setlength{\headheight}{14pt}
+% \setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
+% \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
+% \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
+% \setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
+% \setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
+% \setlength{\headheight}{14pt}
+\usepackage[tmargin=20mm,bmargin=20mm,lmargin=20mm,rmargin=20mm]{geometry}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 \setlength{\parindent}{0pt}
 
@@ -147,12 +121,12 @@
 	{\gdef\chapterlabel{\thechapter\ }}     % the label
  	{0pt} % separation between label and chapter-title
  	  {\begin{tikzpicture}[remember picture,overlay]
-    \node[yshift=-8cm] at (current page.north west)
+    \node[yshift=-6cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=bleuUni,bleuUni] (0,0) rectangle(35.5mm,15mm);
-        \node[anchor=north east,yshift=-7.2cm,xshift=34mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
+        \draw[fill=bleuUni,bleuUni] (0,0) rectangle(18.5mm,15mm);
+        \node[anchor=north east,yshift=-5.2cm,xshift=17mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
         {\parbox[top][30mm][t]{15mm}{\raggedleft $\phantom{\textrm{l}}$\color{white}\chapterlabel}};  %the black l is just to get better base-line alingement
-        \node[anchor=north west,yshift=-7.2cm,xshift=37mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
+        \node[anchor=north west,yshift=-5.2cm,xshift=20mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
               {\parbox[top][30mm][t]{\textwidth}{\color{black}#1}};
        \end{tikzpicture}
       };
@@ -160,7 +134,7 @@
    \gdef\chapterlabel{}
   } % code before the title body
 
-\titlespacing*{\chapter}{0pt}{50pt}{30pt}
+\titlespacing*{\chapter}{0pt}{55pt}{10pt}
 \titlespacing*{\section}{0pt}{13.2pt}{*0}  % 13.2pt is line spacing for a text with 11pt font size
 \titlespacing*{\subsection}{0pt}{13.2pt}{*0}
 \titlespacing*{\subsubsection}{0pt}{13.2pt}{*0}
