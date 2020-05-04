@@ -33,10 +33,10 @@ chapter1_fig: main/chapter1/fig/intro/com_chain.svg \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt \
               main/chapter1/fig/other/com_chain_inter.svg
-	cd main/chapter1/fig/intro      && inkscape  com_chain.svg             --export-pdf=com_chain.pdf
-	cd main/chapter1/fig/simu       && inkscape  com_chain.svg             --export-pdf=com_chain.pdf
-	cd main/chapter1/fig/simu       && inkscape  in_out.svg                --export-pdf=in_out.pdf
-	cd main/chapter1/fig/other      && inkscape  com_chain_inter.svg       --export-pdf=com_chain_inter.pdf
+	cd main/chapter1/fig/intro      && inkscape  com_chain.svg       --export-pdf=com_chain.pdf
+	cd main/chapter1/fig/simu       && inkscape  com_chain.svg       --export-pdf=com_chain.pdf
+	cd main/chapter1/fig/simu       && inkscape  in_out.svg          --export-pdf=in_out.pdf
+	cd main/chapter1/fig/other      && inkscape  com_chain_inter.svg --export-pdf=com_chain_inter.pdf
 	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_bch_rs.tex
 	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_ldpc.tex
 	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_polar.tex

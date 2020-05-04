@@ -1,6 +1,10 @@
 \graphicspath{{main/chapter2/fig/}}
 
-\chapter{Algorithms and Efficient Methods of Receiver}
+\chapter{Algorithms and Efficient Methods of Digital Communication Receiver}
+
+% \vspace*{\fill}
+\minitoccustom
+% \vspace*{\fill}
 
 \section{Strategy for Optimizations}
 
@@ -1784,9 +1788,10 @@ between 10\% and 25\% higher on x86).
 
 \begin{figure}
   \centering
-  \subfloat[][Without compression.]{\includegraphics[height=5.0cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:polar_sc_gen_compression_wo}}
-  \qquad
-  \subfloat[][With compression.]{\includegraphics[height=5.0cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:polar_sc_gen_compression_w}}
+  \subfloat[][Without compression.]{\includegraphics[height=6.0cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:polar_sc_gen_compression_wo}}
+  % \qquad
+  \\
+  \subfloat[][With compression.]{\includegraphics[height=6.0cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:polar_sc_gen_compression_w}}
   \caption{Full decoding tree representation ($N = 128, K = 64$) without and
     with the compression sub-tree folding algorithm.}
   \label{fig:polar_sc_gen_compression}
@@ -3088,7 +3093,7 @@ final guesses at each user.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.50\linewidth]{scma/simd_norm/simd_norm}
+  \includegraphics[width=0.70\linewidth]{scma/simd_norm/simd_norm}
   \caption{Complex norm AVX algorithm using
            a) Array of Structures (AoS),
            b) Structure of Arrays (SoA).}
@@ -3127,7 +3132,7 @@ as SSE, NEON, AVX, AVX512 and KNCI thanks to the meta-programming techniques.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.50\linewidth]{scma/simd_exp_mul/simd_exp_mul}
+  \includegraphics[width=0.70\linewidth]{scma/simd_exp_mul/simd_exp_mul}
   \caption{a) Vectorized Exponentials ($N_ 0 = 2\sigma^2$),
            b) Vectorized calculation of final guess at user 4.}
   \label{fig:scma_simd_exp_mul}
