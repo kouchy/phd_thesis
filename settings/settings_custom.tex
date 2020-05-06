@@ -12,7 +12,8 @@
 \usepackage[toc,page]{appendix}
 \usepackage{pgfplots} % package pour les graphiques
 \usepackage[english,onelanguage,ruled,linesnumbered,vlined]{algorithm2e}
-\usepackage[labelnumber,
+\usepackage[
+  labelnumber  = true,
   backend      = biber,
   style        = alphabetic,
   citestyle    = alphabetic,
@@ -71,6 +72,8 @@
   urlcolor   = marronUni}
 \urlstyle{same}
 
+% separate multi-citations by a comma instead of a semicolon in 'biblatex'
+\renewcommand*{\multicitedelim}{\addcomma\addspace}
 % configure 'biblatex' for the multibib
 \DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{#1}}
 \renewbibmacro*{cite}{%
@@ -95,7 +98,7 @@
       \renewcommand*{\makelabel}[1]{\hss##1}}
   {\endlist}
   {\item}
-% configure 'biblatex' back references text
+% % configure 'biblatex' back references text
 % \DefineBibliographyStrings{english}{%
 %     backrefpage  = {see p.}, % for single page number
 %     backrefpages = {see pp.} % for multiple page numbers
