@@ -12,7 +12,18 @@
 \usepackage[toc,page]{appendix}
 \usepackage{pgfplots} % package pour les graphiques
 \usepackage[english,onelanguage,ruled,linesnumbered,vlined]{algorithm2e}
-\usepackage{multibib}
+\usepackage[labelnumber,
+  backend      = biber,
+  style        = alphabetic,
+  citestyle    = alphabetic,
+  maxnames     = 99,
+  backend      = biber,
+  defernumbers = true,
+  isbn         = false,
+  doi          = true,
+  backref      = true]{biblatex}
+\addbibresource{tail/bibliography.bib}
+\usepackage{verbatim}
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{xspace}
@@ -20,19 +31,17 @@
 \usepackage{pifont}
 \usepackage{hyperref}
 \usepackage{minted} % beautiful source code
-\usepackage{sourcecodepro} % beautiful source code
+\usepackage{sourcecodepro} % beautiful source code (works with 'minted')
 \usepackage{chngcntr}
 \usepackage{bm} % bold math
 \usepackage{geometry} % reduce margins
 \usepackage{tkz-kiviat}
 \usepackage{subfig} % multi figures
 \usepackage{adjustbox} % rotate big table 90 degree
-\usepackage{hyperref}
 
 % Parameters ------------------------------------------------------------------
 \setcounter{secnumdepth}{4} % package 'minitoc'
 \setcounter{tocdepth}{3} % package 'minitoc'
-\newcites{mine}{Publications} % package 'multibib'
 \newlength{\Oldarrayrulewidth} % package 'array'
 \setminted{fontsize=\small,framesep=2mm} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
@@ -54,12 +63,43 @@
 \newcommand{\minitoccustom}{\vspace*{1em}{\color{bleuUni}\hrule}\vspace*{-1ex}\minitoc\vspace*{-1ex}{\color{bleuUni}\hrule}}
 
 % package 'hyperref'
-\hypersetup{pdfborder={0 0 0},
-	colorlinks=true,
-	linkcolor=marronUni,
-	citecolor=bleuUni,
-	urlcolor=marronUni}
+\hypersetup{
+  pdfborder  = {0 0 0},
+  colorlinks = true,
+  linkcolor  = marronUni,
+  citecolor  = bleuUni,
+  urlcolor   = marronUni}
 \urlstyle{same}
+
+% configure 'biblatex' for the multibib
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{#1}}
+\renewbibmacro*{cite}{%
+  \printtext[bibhyperref]{%
+    \printfield{labelprefix}%
+    \ifkeyword{Cassagne}
+      {\printfield{labelnumber}}
+      {\printfield{labelalpha}%
+       \printfield{extraalpha}}}}
+% configure 'biblatex' for the multibib
+\defbibenvironment{bibliographyNUM}
+  {\list
+     {\printtext[labelnumberwidth]{%
+        \printfield{labelprefix}%
+        \printfield{labelnumber}}}
+     {\setlength{\labelwidth}{\labelnumberwidth}%
+      \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
+      \addtolength{\leftmargin}{\labelsep}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}%
+      \renewcommand*{\makelabel}[1]{\hss##1}}
+  {\endlist}
+  {\item}
+% configure 'biblatex' back references text
+% \DefineBibliographyStrings{english}{%
+%     backrefpage  = {see p.}, % for single page number
+%     backrefpages = {see pp.} % for multiple page numbers
+% }
 
 % Math operators --------------------------------------------------------------
 \DeclareMathOperator{\card}{card}

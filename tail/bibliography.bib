@@ -81,7 +81,7 @@
   pages     = {348--357},
   address   = {New York, NY, USA},
   publisher = {ACM},
-  abstract  = {Most contemporary processors offer some version of Single Instruction Multiple Data (SIMD) machinery - vector registers and instructions to manipulate data stored in such registers. The central idea of this paper is to use these SIMD resources to improve the performance of the tail of recursive sorting algorithms. When the number of elements to be sorted reaches a set threshold, data is loaded into the vector registers, manipulated in-register, and the result stored back to memory. Three implementations of sorting with two different SIMD machineries - x86-64's SSE2 and G5's AltiVec - demonstrate that this idea delivers significant speed improvements. The improvements provided are orthogonal to the gains obtained through empirical search for a suitable sorting algorithm [11]. When integrated with the Dynamically Tuned Sorting Library (DTSL) this new code generation strategy reduces the time spent by DTSL up to 22% for moderately-sized arrays, with greater relative reductions for small arrays. Wall-clock performance of d-heaps is improved by up to 39% using a similar technique.},
+  abstract  = {Most contemporary processors offer some version of Single Instruction Multiple Data (SIMD) machinery - vector registers and instructions to manipulate data stored in such registers. The central idea of this paper is to use these SIMD resources to improve the performance of the tail of recursive sorting algorithms. When the number of elements to be sorted reaches a set threshold, data is loaded into the vector registers, manipulated in-register, and the result stored back to memory. Three implementations of sorting with two different SIMD machineries - x86-64's SSE2 and G5's AltiVec - demonstrate that this idea delivers significant speed improvements. The improvements provided are orthogonal to the gains obtained through empirical search for a suitable sorting algorithm [11]. When integrated with the Dynamically Tuned Sorting Library (DTSL) this new code generation strategy reduces the time spent by DTSL up to 22\% for moderately-sized arrays, with greater relative reductions for small arrays. Wall-clock performance of d-heaps is improved by up to 39\% using a similar technique.},
   acmid     = {1248436},
   doi       = {10.1145/1248377.1248436},
   file      = {:pdf/Furtak2007 - Using SIMD Registers and Instructions to Enable Instruction-Level Parallelism in Sorting Algorithms.pdf:PDF},
@@ -277,7 +277,7 @@ uBLAS provides templated C++ classes for dense, unit and sparse vectors, dense, 
   note     = {Accepted},
   abstract = {Recursive algorithms, like quick-sort and recursive data structures, like trees, play a central role in programming. In the context of scientific computing, recursive algorithms and memory layouts are shown here to provide excellent cache and Translation Lookaside Buffer (TLB) locality independently of the platform. We show how, for the first time, generic programming and object-oriented programming allow us to abstract a multitude of dense-matrix memory layouts: from conventional row-major and column-major layouts over Z- and И-Morton orders to block-wise combinations of them. All are provided by a single class that is based on our new matrix abstraction.
 
-The algorithmic recursion is supported in generic fashion by classes modelling the new recursator, an analogue of the Standard Template Library iterator. Although this concept supports recursion in general, we focus again on matrix operations. Results are presented for matrix multiplication, on both conventional and tiled representations using both homogeneous and heterogeneous matrix representations. Reaching about 60% peak performance in portable C++ code establishes competitive performance without explicit prefetching and other platform-specific tuning. Comparisons with the manufacturers' libraries show superior locality. These new techniques are embedded in the Matrix Template Library, Version 4 (MTL4).},
+The algorithmic recursion is supported in generic fashion by classes modelling the new recursator, an analogue of the Standard Template Library iterator. Although this concept supports recursion in general, we focus again on matrix operations. Results are presented for matrix multiplication, on both conventional and tiled representations using both homogeneous and heterogeneous matrix representations. Reaching about 60\% peak performance in portable C++ code establishes competitive performance without explicit prefetching and other platform-specific tuning. Comparisons with the manufacturers' libraries show superior locality. These new techniques are embedded in the Matrix Template Library, Version 4 (MTL4).},
   doi      = {10.1080/17445760902758560},
   file     = {:pdf/Gottschling2009 - Generic Support of Algorithmic and Structural Recursion for Scientific Computing.pdf:PDF},
   keywords = {dilated integers},
@@ -346,7 +346,7 @@ The algorithmic recursion is supported in generic fashion by classes modelling t
   doi       = {10.1109/EUSIPCO.2016.7760327},
   file      = {:pdf/Cassagne2016b - Energy Consumption Analysis of Software Polar Decoders on Low Power Processors.pdf:PDF;:pdf/Cassagne2016b - Energy Consumption Analysis of Software Polar Decoders on Low Power Processors [poster].pdf:PDF},
   groups    = {Polar Codes, Software Decoders, HoF Polar - SC, AFF3CT},
-  keywords  = {decoding, energy consumption, software radio, telecommunication power management, ARM Cortex-A57, SC decoder implementation, SDR system, low power embedded processor, software defined radio system, software polar decoder energy consumption analysis, successive cancellation decoder implementation, Bit error rate, Decoding, Encoding, Energy consumption, Program processors, Throughput},
+  keywords  = {decoding, energy consumption, software radio, telecommunication power management, ARM Cortex-A57, SC decoder implementation, SDR system, low power embedded processor, software defined radio system, software polar decoder energy consumption analysis, successive cancellation decoder implementation, Bit error rate, Decoding, Encoding, Energy consumption, Program processors, Throughput, Cassagne},
 }
 
 @InProceedings{Cassagne2016a,
@@ -361,7 +361,7 @@ The algorithmic recursion is supported in generic fashion by classes modelling t
   doi       = {10.1109/ISTC.2016.7593092},
   file      = {:pdf/Cassagne2016a - Beyond Gbps Turbo Decoder on Multi-Core CPUs.pdf:PDF;:pdf/Cassagne2016a - Beyond Gbps Turbo Decoder on Multi-Core CPUs [poster].pdf:PDF},
   groups    = {Turbo Codes, Software Decoders, HoF Turbo - MAP, AFF3CT},
-  keywords  = {codecs, maximum likelihood decoding, microprocessor chips, turbo codes, Gbps turbo decoder, energy efficiency, enhanced max-log-MAP turbo decoding variant, inter-frame SIMD strategy, multicore CPU, portable software turbo decoder, rate-l/3 LTE codes, Instruction sets, Measurement},
+  keywords  = {codecs, maximum likelihood decoding, microprocessor chips, turbo codes, Gbps turbo decoder, energy efficiency, enhanced max-log-MAP turbo decoding variant, inter-frame SIMD strategy, multicore CPU, portable software turbo decoder, rate-l/3 LTE codes, Instruction sets, Measurement, Cassagne},
 }
 
 @Online{AFF3CT2016,
@@ -683,6 +683,7 @@ The algorithmic recursion is supported in generic fashion by classes modelling t
   file      = {:pdf/Cassagne2015c - An Efficient, Portable and Generic Library for Successive Cancellation Decoding of Polar Codes.pdf:PDF;:pdf/Cassagne2015c - An Efficient, Portable and Generic Library for Successive Cancellation Decoding of Polar Codes [slides].pdf:PDF;:pdf/Cassagne2015c - An Efficient, Portable and Generic Library for Successive Cancellation Decoding of Polar Codes [poster].pdf:PDF},
   groups    = {Polar Codes, Software Decoders, HoF Polar - SC, AFF3CT},
   journal   = {Languages and Compilers for Parallel Computing},
+  keywords  = {Cassagne},
 }
 
 @InProceedings{Sarkis2014,
@@ -2165,12 +2166,13 @@ You can find out more about this implementation of C++ wrappers for SIMD intrins
 @Online{Cassagne,
   author   = {A. Cassagne},
   title    = {My Intrinsics++ ({MIPP})},
-  year     = {2017},
+  year     = {2013},
   abstract = {MIPP is a portable and Open-source wrapper (MIT license) for vector intrinsic functions (SIMD) written in C++11. It works for SSE, AVX, AVX512 and ARM NEON instructions. MIPP wrapper supports simple/double precision floating-point numbers and also signed integer arithmetic (32-bit, 16-bit and 8-bit).
 
 With the MIPP wrapper you do not need to write a specific intrinsic code anymore. Just use provided functions and the wrapper will automatically generates the right intrisic calls for your specific architecture.},
   groups   = {Single Instruction Multiple Data (SIMD), Wrapper, C++},
   url      = {https://github.com/aff3ct/MIPP},
+  keywords = {Cassagne},
 }
 
 @Online{Fog,
@@ -2471,7 +2473,7 @@ As the 5G mobile standard, and its associated channel coding algorithms, are now
   doi       = {10.1145/3178433.3178435},
   file      = {:pdf/Cassagne2018 - MIPP\: A Portable C++ SIMD Wrapper and its use for Error Correction Coding in 5G Standard.pdf:PDF;:pdf/Cassagne2018 - MIPP\: A Portable C++ SIMD Wrapper and its use for Error Correction Coding in 5G Standard [slides].pdf:PDF},
   groups    = {Wrapper, Polar Codes, LDPC Codes, Software Decoders, Pseudo-Random Number Generator (PRNG), 5G, AFF3CT},
-  keywords  = {SIMD, wrapper, C++, channel code, SSE, AVX, AVX-512, NEON},
+  keywords  = {SIMD, wrapper, C++, channel code, SSE, AVX, AVX-512, NEON, Cassagne},
 }
 
 @TechReport{Cassagne2017,
@@ -2485,6 +2487,7 @@ canal. Après avoir présenté les enjeux liés à la simulation, nous identifio
   doi         = {10.13140/RG.2.2.13492.91520},
   file        = {:pdf/Cassagne2017 - AFF3CT \: Un environnement de simulation pour le codage de canal [poster].pdf:PDF;:pdf/Cassagne2017 - AFF3CT \: Un environnement de simulation pour le codage de canal.pdf:PDF},
   groups      = {Software Decoders, AFF3CT},
+  keywords    = {Cassagne},
 }
 
 @Conference{Cassagne2017a,
@@ -2499,6 +2502,7 @@ canal. Après avoir présenté les enjeux liés à la simulation, nous identifio
   file      = {:pdf/Cassagne2017a - Fast Simulation and Prototyping with AFF3CT [poster].pdf:PDF;:pdf/Cassagne2017a - Fast Simulation and Prototyping with AFF3CT [abstract].pdf:PDF},
   groups    = {Software Decoders, Hardware Decoders, AFF3CT},
   url       = {https://sips2017.sciencesconf.org/data/demo_9.pdf},
+  keywords  = {Cassagne},
 }
 
 @TechReport{Eltablawy2017,
@@ -2546,7 +2550,7 @@ are also included to test and enhance learning, making this an essential resourc
 
 This paper presents the Generic SIMD Library (https://github.com/genericsimd/generic_simd/), an open-source, portable C++ interface that provides an abstraction of short vectors and overloads most C/C++ operators for short vectors. The library provides several mappings from platform-specific intrinsics to the generic SIMD intrinsic interface so that codes developed based on the library are portable across different SIMD platforms.
 
-We have evaluated the library with several applications from the multimedia, data analytics and math domains. Compared with platform-specific intrinsics codes, using Generic SIMD Library results in less line-of-code, a 22% reduction on average, and achieves similar performance as platform-specific intrinsics versions.},
+We have evaluated the library with several applications from the multimedia, data analytics and math domains. Compared with platform-specific intrinsics codes, using Generic SIMD Library results in less line-of-code, a 22\% reduction on average, and achieves similar performance as platform-specific intrinsics versions.},
   acmid     = {2568059},
   doi       = {10.1145/2568058.2568059},
   file      = {:pdf/Wang2014a - Simple, Portable and Fast SIMD Intrinsic Programming\: Generic Simd Library.pdf:PDF},
@@ -2875,7 +2879,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   note     = {Presentation at the IMS laboratory, Bordeaux, France.},
   file     = {:pdf/Cassagne2018a - A Fast Forward Error Correction Toolbox\: Seminary.pdf:PDF},
   groups   = {AFF3CT, Error-Correcting Codes (ECC), Polar Codes, Turbo Codes, LDPC Codes},
-  keywords = {AFF3CT},
+  keywords = {AFF3CT, Cassagne},
   url      = {https://aff3ct.github.io/publications/Cassagne2018a - A Fast Forward Error Correction Toolbox Seminary.pdf}
 }
 
@@ -2890,7 +2894,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   abstract = { The recent evolution of mobile communication systems toward a 5G network is associated with the search for new types of non-orthogonal modulations such as Sparse Code Multiple Access (SCMA). Such modulations are proposed in response to demands for increasing the number of connected users. SCMA is a non-orthogonal multiple access technique that offers improved Bit-Error Rate (BER) performance and higher spectral efficiency than other comparable techniques, but these improvements come at the cost of complex decoders. There are many challenges in designing near-optimum high throughput SCMA decoders. This paper explores means to enhance the performance of SCMA decoders. To achieve this goal, in this paper, various improvements to the MPA algorithms are proposed. They notably aim at adapting SCMA decoding to the Single Instruction Multiple Data (SIMD) paradigm. An approximate modeling of noise is performed to reduce the complexity of floating point calculations. The effects of forward error corrections such as Polar codes, Turbo codes and LDPC, as well as different ways of accessing memory and improving power efficiency of  modified MPAs are investigated. The results show that the throughput of a SCMA decoder can be increased by 3.1 to 21 times when compared to the original MPA on different computing platforms using the suggested improvements. },
   doi      = {10.1109/ACCESS.2019.2891597},
   file     = {:pdf/Ghaffari2019 - Toward High Performance Implementation of 5G SCMA Algorithms.pdf:PDF;:pdf/Ghaffari2019 - Toward High Performance Implementation of 5G SCMA Algorithms [word].pdf:PDF},
-  keywords = {5G, SCMA, Maximum Likelihood (ML), Message Passing Algorithm (MPA), log-MPA, iterative multi-user detection, BER, Single Instruction Multiple Data (SIMD), Intel Advanced Vector Extensions (AVX), Streaming SIMD Extension (SSE), Knights Corner Instruction (KNCI), power efficiency, exponential estimations. },
+  keywords = {5G, SCMA, Maximum Likelihood (ML), Message Passing Algorithm (MPA), log-MPA, iterative multi-user detection, BER, Single Instruction Multiple Data (SIMD), Intel Advanced Vector Extensions (AVX), Streaming SIMD Extension (SSE), Knights Corner Instruction (KNCI), power efficiency, exponential estimations, Cassagne},
 }
 
 @Article{Li2016a,
@@ -3105,7 +3109,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   number    = {5},
   pages     = {675},
   month     = may,
-  abstract  = {Polar codes are capacity-achieving error-correcting codes with an explicit construction that can be decoded with low-complexity algorithms. In this work, we show how the state-of-the-art low-complexity decoding algorithm can be improved to better accommodate low-rate codes. More constituent codes are recognized in the updated algorithm and dedicated hardware is added to efficiently decode these new constituent codes. We also alter the polar code construction to further decrease the latency and increase the throughput with little to no noticeable effect on error-correction performance. Rate-flexible decoders for polar codes of length 1024 and 2048 are implemented on FPGA. Over the previous work, they are shown to have from 22 % to 28 % lower latency and 26 % to 34 % greater throughput when decoding low-rate codes. On 65 nm ASIC CMOS technology, the proposed decoder for a (1024, 512) polar code is shown to compare favorably against the state-of-the-art ASIC decoders. With a clock frequency of 400 MHz and a supply voltage of 0.8 V, it has a latency of 0.41 μs and an area efficiency of 1.8 Gbps/mm 2 for an energy efficiency of 77 pJ/info. bit. At 600 MHz with a supply of 1 V, the latency is reduced to 0.27 μs and the area efficiency increased to 2.7 Gbps/mm 2 at 115 pJ/info. bit.},
+  abstract  = {Polar codes are capacity-achieving error-correcting codes with an explicit construction that can be decoded with low-complexity algorithms. In this work, we show how the state-of-the-art low-complexity decoding algorithm can be improved to better accommodate low-rate codes. More constituent codes are recognized in the updated algorithm and dedicated hardware is added to efficiently decode these new constituent codes. We also alter the polar code construction to further decrease the latency and increase the throughput with little to no noticeable effect on error-correction performance. Rate-flexible decoders for polar codes of length 1024 and 2048 are implemented on FPGA. Over the previous work, they are shown to have from 22\% to 28\% lower latency and 26\% to 34\% greater throughput when decoding low-rate codes. On 65 nm ASIC CMOS technology, the proposed decoder for a (1024, 512) polar code is shown to compare favorably against the state-of-the-art ASIC decoders. With a clock frequency of 400 MHz and a supply voltage of 0.8 V, it has a latency of 0.41 μs and an area efficiency of 1.8 Gbps/mm 2 for an energy efficiency of 77 pJ/info. bit. At 600 MHz with a supply of 1 V, the latency is reduced to 0.27 μs and the area efficiency increased to 2.7 Gbps/mm 2 at 115 pJ/info. bit.},
   date      = {2018-05-01},
   doi       = {10.1007/s11265-016-1173-y},
   file      = {:pdf/Giard2018 - Fast Low-Complexity Decoders for Low-Rate Polar Codes.pdf:PDF},
@@ -3181,7 +3185,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   booktitle = {International Symposium on Turbo Codes and Iterative Information Processing (ISTC)},
   year      = {2018},
   publisher = {IEEE},
-  abstract  = {In this paper, the first transport triggered architecture (TTA) customized for the decoding of polar codes is proposed. A first version of this programmable processor is optimized for the successive cancellation (SC) decoding of polar codes while a second architecture is further specialized to also support Soft CANcellation (SCAN) decoding. Both architectures were fully validated on FPGA device by prototyping. The first architecture was also synthesized in 28nm ASIC technology. The designed processor runs at a frequency of 800 MHz and reaches a throughput of 352 Mbps for a (1024, 512) polar code decoded with the SC algorithm. Compared to previous work, the energy consumption is reduced by an order of magnitude (0.14 nJ / bit) and the throughput is increased fivefold. Compared to an optimized software implementation on a general purpose processor (x86 architecture), the throughput is 37 % higher and the energy consumption is two orders of magnitude lower. TTA can be seen as a way to reduce the gap between programmable and dedicated polar decoders.},
+  abstract  = {In this paper, the first transport triggered architecture (TTA) customized for the decoding of polar codes is proposed. A first version of this programmable processor is optimized for the successive cancellation (SC) decoding of polar codes while a second architecture is further specialized to also support Soft CANcellation (SCAN) decoding. Both architectures were fully validated on FPGA device by prototyping. The first architecture was also synthesized in 28nm ASIC technology. The designed processor runs at a frequency of 800 MHz and reaches a throughput of 352 Mbps for a (1024, 512) polar code decoded with the SC algorithm. Compared to previous work, the energy consumption is reduced by an order of magnitude (0.14 nJ / bit) and the throughput is increased fivefold. Compared to an optimized software implementation on a general purpose processor (x86 architecture), the throughput is 37\% higher and the energy consumption is two orders of magnitude lower. TTA can be seen as a way to reduce the gap between programmable and dedicated polar decoders.},
   doi       = {10.1109/ISTC.2018.8625310},
   file      = {:pdf/Leonardon2018b - Transport Triggered Polar Decoders.pdf:PDF},
   groups    = {Polar Codes, Hardware Decoders, ASIP},
@@ -3264,7 +3268,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   pages     = {417--420},
   month     = {May},
   publisher = {IEEE},
-  abstract  = {In this paper, we propose a 3-phase polar codes Successive Cancellation (SC) decoder. Benefiting from the local properties of the decoding tree, 3 zones are defined and associated to 3 distinct sub-decoders. This approach reduces the memory footprint while guaranteeing a better scalability in comparison with state of the art SC decoders. Several 3-phase SC decoders are implemented on an FPGA circuit and compare favorably to state-of-the-art implementations in terms of distributed hardware resources (LUT, D-FF) and throughput. Moreover, the memory of the decoder is reduced by 37% for a N = 2^21 polar codes.},
+  abstract  = {In this paper, we propose a 3-phase polar codes Successive Cancellation (SC) decoder. Benefiting from the local properties of the decoding tree, 3 zones are defined and associated to 3 distinct sub-decoders. This approach reduces the memory footprint while guaranteeing a better scalability in comparison with state of the art SC decoders. Several 3-phase SC decoders are implemented on an FPGA circuit and compare favorably to state-of-the-art implementations in terms of distributed hardware resources (LUT, D-FF) and throughput. Moreover, the memory of the decoder is reduced by 37\% for a N = 2^21 polar codes.},
   doi       = {10.1109/ISCAS.2016.7527259},
   file      = {:pdf/LeGal2016a - A Scalable 3-Phase Polar Decoder.pdf:PDF},
   groups    = {Polar Codes, Hardware Decoders},
@@ -3368,7 +3372,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   year     = {2018},
   pages    = {1},
   issn     = {0090-6778},
-  abstract = {The interest in polar codes has been increasing significantly since their adoption for use in the 5th generation wireless systems standard. Successive cancellation (SC) decoding algorithm has low implementation complexity, but yields mediocre error-correction performance at the code lengths of interest. SC-Flip algorithm improves the error-correction performance of SC by identifying possibly erroneous decisions made by SC and re-iterates after flipping one bit. It was recently shown that only a portion of bit-channels are most likely to be in error. In this work, we investigate the average log-likelihood ratio (LLR) values and their distribution related to the erroneous bitchannels, and develop the Thresholded SC-Flip (TSCF) decoding algorithm. We also replace the LLR selection and sorting of SCFlip with a comparator to reduce the implementation complexity. Simulation results demonstrate that for practical code lengths and a wide range of rates, TSCF shows negligible loss compared to the error-correction performance obtained when all singleerrors are corrected. At matching maximum iterations, TSCF has an error-correction performance gain of up to 0.45 dB compared with SC-Flip decoding. At matching error-correction performance, the computational complexity of TSCF is reduced by up to 40% on average, and requires up to 5× lower maximum number of iterations.},
+  abstract = {The interest in polar codes has been increasing significantly since their adoption for use in the 5th generation wireless systems standard. Successive cancellation (SC) decoding algorithm has low implementation complexity, but yields mediocre error-correction performance at the code lengths of interest. SC-Flip algorithm improves the error-correction performance of SC by identifying possibly erroneous decisions made by SC and re-iterates after flipping one bit. It was recently shown that only a portion of bit-channels are most likely to be in error. In this work, we investigate the average log-likelihood ratio (LLR) values and their distribution related to the erroneous bitchannels, and develop the Thresholded SC-Flip (TSCF) decoding algorithm. We also replace the LLR selection and sorting of SCFlip with a comparator to reduce the implementation complexity. Simulation results demonstrate that for practical code lengths and a wide range of rates, TSCF shows negligible loss compared to the error-correction performance obtained when all singleerrors are corrected. At matching maximum iterations, TSCF has an error-correction performance gain of up to 0.45 dB compared with SC-Flip decoding. At matching error-correction performance, the computational complexity of TSCF is reduced by up to 40\% on average, and requires up to 5× lower maximum number of iterations.},
   doi      = {10.1109/TCOMM.2018.2873322},
   file     = {:pdf/Ercan2018 - Improved Bit-Flipping Algorithm for Successive Cancellation Decoding of Polar Codes.pdf:PDF},
   groups   = {Error-Correcting Codes (ECC), Polar Codes},
@@ -3383,7 +3387,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   pages     = {1--6},
   month     = {Dec},
   publisher = {IEEE},
-  abstract  = {In successive cancellation (SC) polar decoding, an incorrect estimate of any prior unfrozen bit may bring about severe error propagation in the following decoding, thus it is desirable to find out and correct an error as early as possible. In this paper, we first construct a critical set S of unfrozen bits, which with high probability (typically &gt;99%) includes the bit where the first error happens. Then we develop a progressive multi- level bit-flipping decoding algorithm to correct multiple errors over the multiple-layer critical sets each of which is constructed using the remaining undecoded subtree associated with the previous layer. The level in fact indicates the number of independent errors that could be corrected. We show that as the level increases, the block error rate (BLER) performance of the proposed progressive bit flipping decoder competes with the corresponding cyclic redundancy check (CRC) aided successive cancellation list (CA-SCL) decoder, e.g., a level 4 progressive bit-flipping decoder is comparable to the CA-SCL decoder with a list size of L=32. Furthermore, the average complexity of the proposed algorithm is much lower than that of a SCL decoder (and is similar to that of SC decoding) at medium to high signal to noise ratio (SNR).},
+  abstract  = {In successive cancellation (SC) polar decoding, an incorrect estimate of any prior unfrozen bit may bring about severe error propagation in the following decoding, thus it is desirable to find out and correct an error as early as possible. In this paper, we first construct a critical set S of unfrozen bits, which with high probability (typically &gt;99\%) includes the bit where the first error happens. Then we develop a progressive multi- level bit-flipping decoding algorithm to correct multiple errors over the multiple-layer critical sets each of which is constructed using the remaining undecoded subtree associated with the previous layer. The level in fact indicates the number of independent errors that could be corrected. We show that as the level increases, the block error rate (BLER) performance of the proposed progressive bit flipping decoder competes with the corresponding cyclic redundancy check (CRC) aided successive cancellation list (CA-SCL) decoder, e.g., a level 4 progressive bit-flipping decoder is comparable to the CA-SCL decoder with a list size of L=32. Furthermore, the average complexity of the proposed algorithm is much lower than that of a SCL decoder (and is similar to that of SC decoding) at medium to high signal to noise ratio (SNR).},
   doi       = {10.1109/GLOCOM.2017.8254149},
   file      = {:pdf/Zhang2017a - Progressive Bit-Flipping Decoding of Polar Codes Over Layered Critical Sets.pdf:PDF},
   groups    = {Error-Correcting Codes (ECC), Polar Codes},
@@ -3428,7 +3432,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   pages     = {19--24},
   month     = {April},
   publisher = {IEEE},
-  abstract  = {Polar codes are a class of linear block codes that provably achieves channel capacity, and have been selected as a coding scheme for 5thgeneration wireless communication standards. Successive-cancellation (SC) decoding of polar codes has mediocre error-correction performance on short to moderate codeword lengths: the SC-Flip decoding algorithm is one of the solutions that have been proposed to overcome this issue. On the other hand, SC-Flip has a higher implementation complexity compared to SC due to the required log-likelihood ratio (LLR) selection and sorting process. Moreover, it requires a high number of iterations to reach good error-correction performance. In this work, we propose two techniques to improve the SC-Flip decoding algorithm for low-rate codes, based on the observation of channel-induced error distributions. The first one is a fixed index selection (FIS) scheme to avoid the substantial implementation cost of LLR selection and sorting with no cost on error-correction performance. The second is an enhanced index selection (EIS) criterion to improve the error-correction performance of SC-Flip decoding. A reduction of 24.6% in the implementation cost of logic elements is estimated with the FIS approach, while simulation results show that EIS leads to an improvement on error-correction performance improvement up to 0.34 dB at a target FER of 10-4.},
+  abstract  = {Polar codes are a class of linear block codes that provably achieves channel capacity, and have been selected as a coding scheme for 5thgeneration wireless communication standards. Successive-cancellation (SC) decoding of polar codes has mediocre error-correction performance on short to moderate codeword lengths: the SC-Flip decoding algorithm is one of the solutions that have been proposed to overcome this issue. On the other hand, SC-Flip has a higher implementation complexity compared to SC due to the required log-likelihood ratio (LLR) selection and sorting process. Moreover, it requires a high number of iterations to reach good error-correction performance. In this work, we propose two techniques to improve the SC-Flip decoding algorithm for low-rate codes, based on the observation of channel-induced error distributions. The first one is a fixed index selection (FIS) scheme to avoid the substantial implementation cost of LLR selection and sorting with no cost on error-correction performance. The second is an enhanced index selection (EIS) criterion to improve the error-correction performance of SC-Flip decoding. A reduction of 24.6\% in the implementation cost of logic elements is estimated with the FIS approach, while simulation results show that EIS leads to an improvement on error-correction performance improvement up to 0.34 dB at a target FER of 10-4.},
   doi       = {10.1109/WCNCW.2018.8368991},
   file      = {:pdf/Condo2018 - Improved Successive Cancellation Flip Decoding of Polar Codes Based on Error Distribution.pdf:PDF},
   groups    = {Polar Codes},
@@ -3511,7 +3515,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   doi      = {10.1007/s11265-018-1430-3},
   file     = {:pdf/Leonardon2019 - Fast and Flexible Software Polar List Decoders.pdf:PDF},
   groups   = {Polar Codes, Software Decoders, HoF Polar - SCL, AFF3CT},
-  keywords = {Polar codes, Adaptive successive cancellation list decoder, Software implementation, 5G standard, Generic decoder, Flexible decoder},
+  keywords = {Polar codes, Adaptive successive cancellation list decoder, Software implementation, 5G standard, Generic decoder, Flexible decoder, Cassagne},
 }
 
 @InProceedings{Cavatassi2019b,
@@ -3540,7 +3544,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   booktitle = {Wireless Communications and Networking Conference (WCNC)},
   year      = {2019},
   publisher = {IEEE},
-  abstract  = {Polar  codes  are  a  class  of  linear  error  correctioncodes   which   provably   attain   channel   capacity   with   infinitecodeword  lengths.  Finite  length  polar  codes  have  been  adoptedinto  the  5th  Generation  3GPP  standard  for  New  Radio,  thoughtheir  native  length  is  limited  to  powers  of  2.  Utilizing  multiplepolarizing matrices increases the length flexibility of polar codesat the expense of a more complicated decoding process. Successivecancellation  (SC)  is  the  standard  polar  decoder  and  has  timecomplexityO(NlogN)due  to  its  sequential  nature.  However,some  patterns  in  the  frozen  set  mirror  simple  linear  codes  withlow latency decoders, which allows for a significant reduction inSC latency by pruning the decoding schedule. Such fast decodingtechniques have only previously been used for traditional Arıkanpolar codes, causing multi-kernel polar codes to be an impracticallength-compatibility  technique  with  no  fast  decoders  available.We propose fast simplified successive cancellation decoding nodepatterns,  which  are  compatible  with  polar  codes  constructedwith  both  the  Arıkan  and  ternary  kernels,  and  generalizationtechniques.  We  outline  efficient  implementations,  made  possibleby  imposing  constraints  on  ternary  node  parameters.  We  showthat  fast  decoding  of  multi-kernel  polar  codes  has  at  least  72%reduced  latency  compared  with  an  SC  decoder  in  all  casesconsidered  where  codeword  lengths  are  (96,  432,  768,  2304).},
+  abstract  = {Polar  codes  are  a  class  of  linear  error  correctioncodes   which   provably   attain   channel   capacity   with   infinitecodeword  lengths.  Finite  length  polar  codes  have  been  adoptedinto  the  5th  Generation  3GPP  standard  for  New  Radio,  thoughtheir  native  length  is  limited  to  powers  of  2.  Utilizing  multiplepolarizing matrices increases the length flexibility of polar codesat the expense of a more complicated decoding process. Successivecancellation  (SC)  is  the  standard  polar  decoder  and  has  timecomplexityO(NlogN)due  to  its  sequential  nature.  However,some  patterns  in  the  frozen  set  mirror  simple  linear  codes  withlow latency decoders, which allows for a significant reduction inSC latency by pruning the decoding schedule. Such fast decodingtechniques have only previously been used for traditional Arıkanpolar codes, causing multi-kernel polar codes to be an impracticallength-compatibility  technique  with  no  fast  decoders  available.We propose fast simplified successive cancellation decoding nodepatterns,  which  are  compatible  with  polar  codes  constructedwith  both  the  Arıkan  and  ternary  kernels,  and  generalizationtechniques.  We  outline  efficient  implementations,  made  possibleby  imposing  constraints  on  ternary  node  parameters.  We  showthat  fast  decoding  of  multi-kernel  polar  codes  has  at  least  72\% reduced  latency  compared  with  an  SC  decoder  in  all  casesconsidered  where  codeword  lengths  are  (96,  432,  768,  2304).},
   comment   = {- se focalisent sur du multi kernel avec du Arikan (2x2) et du 3x3 donné par Gabry et Bioglio (Huawei)
 - propose des simplifications dans l'arbre de décodage : 'R0', 'R1', 'SPC' et 'Rep'
 - 'R0', 'R1' et 'SPC', pareil que sur du Arikan classique
@@ -3650,7 +3654,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   journal  = {IEEE Transactions on Communications (TCOM)},
   year     = {2019},
   pages    = {1},
-  abstract = {The successive-cancellation list (SCL) and successive-cancellation flip (SCF) decoding can be used to improve the performance of polar codes, especially for short to moderate length codes. However, their serial decoding nature results in significant decoding latencies. Implementing some operations in parallel can reduce their decoding latency. This work presents fast implementations of the SCL and SCF decoders. In particular, we propose fast parallel list decoders for five newly-identified types of nodes in the decoding tree of a polar code, which significantly improve the decoding latency. We also present novel fast SCF decoders that decode some special nodes in the decoding tree of a polar code without serially computing bit log-likelihood ratios. Using our proposed fast parallel SCF decoders, we observed an improvement up to 81% with respect to the original SCF decoder. This significant reduction in the decoding latency is observed without sacrificing the bit-error-rate performance of the code.},
+  abstract = {The successive-cancellation list (SCL) and successive-cancellation flip (SCF) decoding can be used to improve the performance of polar codes, especially for short to moderate length codes. However, their serial decoding nature results in significant decoding latencies. Implementing some operations in parallel can reduce their decoding latency. This work presents fast implementations of the SCL and SCF decoders. In particular, we propose fast parallel list decoders for five newly-identified types of nodes in the decoding tree of a polar code, which significantly improve the decoding latency. We also present novel fast SCF decoders that decode some special nodes in the decoding tree of a polar code without serially computing bit log-likelihood ratios. Using our proposed fast parallel SCF decoders, we observed an improvement up to 81\% with respect to the original SCF decoder. This significant reduction in the decoding latency is observed without sacrificing the bit-error-rate performance of the code.},
   doi      = {10.1109/tcomm.2019.2906232},
   file     = {:pdf/Ardakani2019 - Fast Successive-Cancellation Based Decoders of Polar Codes.pdf:PDF},
 }
@@ -3668,7 +3672,7 @@ Finally, our experience in the area of LDPC decoders led us to propose a formal 
   doi      = {10.1016/j.softx.2019.100345},
   file     = {:pdf/Cassagne2019a - AFF3CT\: A Fast Forward Error Correction Toolbox.pdf:PDF;:pdf/Cassagne2019a - AFF3CT\: A Fast Forward Error Correction Toolbox [poster].pdf:PDF},
   groups   = {C/C++ Librairies},
-  keywords = {Communication chain, Channel coding, Monte Carlo simulation, Forward error correction library, Digital modulation, Reproducible science, Multi-node, Multi-thread, Vectorization},
+  keywords = {Communication chain, Channel coding, Monte Carlo simulation, Forward error correction library, Digital modulation, Reproducible science, Multi-node, Multi-thread, Vectorization, Cassagne},
 }
 
 @Article{LeGal2019a,
@@ -4184,9 +4188,10 @@ Question posée sur les issues, résultats étonnants Figure6},
 }
 
 @Online{CRCWiki2017,
-  title = {Cyclic redundancy check},
-  note  = {Accessed: 2017-03-13},
-  url   = {https://en.wikipedia.org/wiki/Cyclic_redundancy_check},
+  author = {Wikipedia},
+  title  = {Cyclic redundancy check},
+  url    = {https://en.wikipedia.org/wiki/Cyclic_redundancy_check},
+  year   = {2017}
 }
 
 @Article{Gallager1962,
@@ -4550,6 +4555,7 @@ Question posée sur les issues, résultats étonnants Figure6},
   title  = {The 1st {5G} Algorithm Innovation Competition-{SCMA}},
   file   = {:pdf/AlteraSCMA - The 1st 5G Algorithm Innovation Competition-SCMA.pdf:PDF},
   groups = {5G, SCMA},
+  year   = {2015},
   url    = {http://www.innovateasia.com/5g/images/pdf/1st 5G Algorithm Innovation Competition-ENV1.0 - SCMA.pdf},
 }
 
@@ -4561,7 +4567,7 @@ Question posée sur les issues, résultats étonnants Figure6},
   pages     = {2918--2923},
   month     = jun,
   publisher = {IEEE},
-  abstract  = {Sparse code multiple access (SCMA) is a novel non-orthogonal multiple access scheme, in which multiple users access the same channel with user-specific sparse codewords. In this paper, we consider an uplink SCMA system employing channel coding, and develop an iterative multiuser receiver which fully utilizes the diversity gain and coding gain in the system. The simulation results demonstrate the superiority of the proposed iterative receiver over the non-iterative one, and the performance gain increases with the system load. It is also shown that SCMA can work well in highly overloaded scenario, and the link-level performance does not degrade even if the load is as high as 300%.},
+  abstract  = {Sparse code multiple access (SCMA) is a novel non-orthogonal multiple access scheme, in which multiple users access the same channel with user-specific sparse codewords. In this paper, we consider an uplink SCMA system employing channel coding, and develop an iterative multiuser receiver which fully utilizes the diversity gain and coding gain in the system. The simulation results demonstrate the superiority of the proposed iterative receiver over the non-iterative one, and the performance gain increases with the system load. It is also shown that SCMA can work well in highly overloaded scenario, and the link-level performance does not degrade even if the load is as high as 300\%.},
   doi       = {10.1109/ICC.2015.7248770},
   file      = {:pdf/Wu2015 - Iterative Multiuser Receiver in Sparse Code Multiple Access Systems.pdf:PDF},
   groups    = {SCMA},
@@ -4702,7 +4708,7 @@ Question posée sur les issues, résultats étonnants Figure6},
 
 This work implemented three existing turbo decoder architectures with HLS to produce quality hardware which reaches handcrafted performance. Each targeted design was analyzed to determine its functionality and algorithm so a C implementation could be developed. Then the C code was modified and HLS directives were added to refine the design through the HLS tools. The process of code modification and processing through the HLS tools continued until the desired architecture and performance were reached.
 
-Each design was implemented and the bottlenecks were identified and dealt with through appropriate usage of directives and C style. The use of pipelining to bypass bottlenecks added a small overhead from the ramp-up and ramp-down of the pipeline, reducing the performance by at most 1.24%. The impact of the clock constraint set within the HLS tools was also explored. It was found that the clock period and resource usage estimate generated by the HLS tools is not accurate and all evaluations should occur after hardware synthesis.},
+Each design was implemented and the bottlenecks were identified and dealt with through appropriate usage of directives and C style. The use of pipelining to bypass bottlenecks added a small overhead from the ramp-up and ramp-down of the pipeline, reducing the performance by at most 1.24\%. The impact of the clock constraint set within the HLS tools was also explored. It was found that the clock period and resource usage estimate generated by the HLS tools is not accurate and all evaluations should occur after hardware synthesis.},
   file     = {:pdf/Cenova2019 - Exploring HLS Coding Techniques to Achieve Desired Turbo Decoder Architectures Decoder Architectures.pdf:PDF},
   groups   = {Turbo Codes, Hardware Decoders},
   keywords = {Turbo codes, Hardware architecture, HLS},

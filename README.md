@@ -5,10 +5,12 @@
 The document compilation has only been tested on `Linux Ubuntu 16.04 LTS`, there
 is no guarantee it will compile without issues on other systems.
 
-The document has been written using `LaTeX`:
+The document has been written using `LaTeX` and `Biber` as the bibliography
+information processing program (`Biber` replaces the traditionnal `BibTeX`
+program):
 
 ```bash
-sudo apt install texlive-full
+sudo apt install texlive-full biber
 ```
 
 The source code samples use the `minted` package which is based on the `Python`
