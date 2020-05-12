@@ -42,7 +42,7 @@
 
 % Parameters ------------------------------------------------------------------
 \setcounter{secnumdepth}{4} % package 'minitoc'
-\setcounter{tocdepth}{3} % package 'minitoc'
+\setcounter{tocdepth}{2} % package 'minitoc'
 \newlength{\Oldarrayrulewidth} % package 'array'
 \setminted{fontsize=\small,framesep=2mm} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
@@ -127,8 +127,9 @@
 % \newcommand{\xmark}{\ding{55}}
 \newcommand{\cmark}{\textcolor{btfGreen}{\ding{51}}}
 \newcommand{\xmark}{\textcolor{btfRed}{\ding{55}}}
+\newcommand{\Arikan}{Ar{\i}kan\xspace}
 \newcommand{\AFFECT}{AFF3CT\xspace}
-\newcommand{\MIPP}{\texttt{MIPP}\xspace}
+\newcommand{\MIPP}{MIPP\xspace}
 \newcommand{\longMIPP}{\textsc{MyIntrinsics++}\xspace}
 \newcommand{\TSIMD}{\texttt{T-SIMD}\xspace}
 \newcommand{\xsimd}{\texttt{xsimd}\xspace}
@@ -137,6 +138,7 @@
 \newcommand{\VCL}{\texttt{VCL}\xspace}
 \newcommand{\BoostSIMD}{\texttt{Boost.SIMD}\xspace}
 \newcommand{\bSIMD}{\texttt{bSIMD}\xspace}
+\newcommand{\C}{\texttt{C}\xspace}
 \newcommand{\Cxx}{\texttt{C++}\xspace}
 \newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
 \newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
@@ -152,3 +154,13 @@
 \def\odrx{\textsc{Odroid-XU+E}\xspace}
 \def\juno{\textsc{Juno}\xspace}
 \def\mus{\si{\micro\second}}
+
+% -----------------------------------------------------------------------------
+\usepackage{letltxmacro}
+% https://tex.stackexchange.com/q/88001/5764
+\LetLtxMacro\oldttfamily\ttfamily
+\DeclareRobustCommand{\ttfamily}{\oldttfamily\csname ttsize\endcsname}
+\newcommand{\setttsize}[1]{\def\ttsize{#1}}%
+
+\setttsize{\small}% \ttfamily will be \Large
+% -----------------------------------------------------------------------------

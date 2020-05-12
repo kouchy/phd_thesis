@@ -1,0 +1,87 @@
+\graphicspath{{main/chapter6/fig/}}
+
+\chapter{Embedded Domain Specific Language for the Software Defined Radio}
+
+% \vspace*{\fill}
+\minitoccustom
+% \vspace*{\fill}
+
+\section{Introduction}
+
+bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+
+\begin{itemize}
+  \item Algorithmes de synchronisation avant la démodulation
+  \item Tâches séquentielles (avec état)
+\end{itemize}
+
+\section{Dataflow Model}
+
+\begin{itemize}
+  \item géneral dataflow
+  \item synchronous dataflow
+  \item cyclo static dataflow
+\end{itemize}
+
+\section{Related Works}
+
+\subsection{Dedicated Languages}
+
+\subsection{Ad Hoc Solutions}
+
+\subsection{GNU Radio}
+
+\section{Runtime Embedded DSL}
+
+\subsection{Serial Blocks}
+
+\begin{itemize}
+  \item tâches = les traitements (effectués sur des trames)
+  \item modules = les données internes à une ou plusieurs tâches
+  \item sockets = les données échangées entre les tâches
+  \item boucles = permet de répéter une sous-séquence
+  \item routeurs = permet d'aiguiller vers différentes sous-séquences
+\end{itemize}
+
+\subsection{Parallel Blocks}
+
+\begin{itemize}
+  \item séquence = un enchaînement de tâches dont l'ordre est défini par les
+        connections entre les sockets
+  \item pipeline
+\end{itemize}
+
+\subsection{Rules}
+
+\begin{itemize}
+  \item une socket d'entrée ne peut être connectée qu'à une seule socket de
+    sortie
+  \item toutes les sockets d'entrée d'une tâche doivent être connectées pour
+    qu'elle puisse s'exécuter
+  \item une socket de sortie peut être connectée à aucune, une ou plus d'une
+    socket d'entrée
+  \item l'ordonnancement d'une séquence est implicitement défini par le binding,
+    quand la dernière socket d'input d'une tâche est connectée, alors on va
+    passer aux tâches suivantes
+\end{itemize}
+
+\section{Implementation}
+
+\subsection{Clone}
+
+\subsection{Processes}
+
+\subsection{0-Copy}
+
+\section{Application on the DVB-S2 Standard}
+
+\subsection{Transmitter}
+
+\subsection{Receiver}
+
+\subsection{Evaluations}
+
+\subsection{Discussion}

@@ -1,12 +1,12 @@
 \graphicspath{{main/chapter4/fig/}}
 
-\chapter{AFF3CT: A Fast Forward Error Correcting Toolbox}
+\chapter{\AFFECT: A Fast Forward Error Correcting Toolbox}
 
 % \vspace*{\fill}
 \minitoccustom
 % \vspace*{\fill}
 
-\section{Philosophy~\cite{Cassagne2019a}}
+\section{Philosophy}
 
 \subsection{High Performance}
 
@@ -28,41 +28,41 @@
 
 \begin{table}
   \centering
-  \caption{\texttt{C}/\Cxx open source channel coding simulators/libraries.}
+  \caption{\C/\Cxx open source channel coding simulators/libraries.}
   \label{tab:fec_libraries_comparison}
-  \begin{adjustbox}{angle=90}
-  % {\resizebox{0.975\textheight}{!}{
-  \begin{tabular}{r  r | r | r | r | r | c | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
-  \multicolumn{2}{c |}{\multirow{4}{*}{\textbf{Name}}} &                  & \multirow{4}{*}{\textbf{Lines}} & \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{Commit}}}           & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{70}{Erasure}} \\
-                     &                                 & \textbf{Contri-} &                                 & \multicolumn{2}{c |}{}                                           &                                   &        &        &        &        &        &        &        &        &        &         \\ \cline{5-6}
-                     &                                 & \textbf{butors}  &                                 & \multirow{2}{*}{\textbf{First}} & \multirow{2}{*}{\textbf{Last}} &                                   &        &        &        &        &        &        &        &        &        &         \\
-                     &                                 &                  &                                 &                                 &                                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline\hline
-                                                                                                                                                                                                                   % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
-  {AFF3CT}           & \cite{Cassagne2019a}            &               11 &                             76k & 2016                            & 2019                           & MIT                               & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
-  {aicodix GmbH}     & \cite{Aicodix}                  &                1 &                              7k & 2018                            & 2020                           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {eccpage}          & \cite{ECCpage}                  &               20 &                               - & 1989                            & 2006                           & -                                 & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark  \\
-  {EZPWD}            & \cite{EZPWDRS}                  &                2 &                              6k & 2014                            & 2018                           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {FastECC}          & \cite{FastECC}                  &                2 &                              1k & 2015                            & 2018                           & Apache 2.0                        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {FEC-AL}           & \cite{FEC-AL}                   &                1 &                              3k & 2018                            & 2018                           & BSD 3-Clause                      & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
-  {FECpp}            & \cite{FECpp}                    &                1 &                              2k & 2009                            & 2018                           & -                                 & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark  \\
-  {GNURadio}         & \cite{GNURadio}                 &              192 &                            270k & 2006                            & 2019                           & GPLv3                             & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \cmark & \xmark  \\
-  {Inan}             & \cite{Inan-LDPC}                &                2 &                             13k & 2018                            & 2019                           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {IT++}             & \cite{ITpp}                     &               20 &                            109k & 2005                            & 2018                           & GPLv3                             & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {Le Gal}           & \cite{LeGal-LDPC}               &                1 &                             83k & 2015                            & 2019                           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Leopard}          & \cite{Leopard}                  &                4 &                              5k & 2017                            & 2018                           & BSD 3-Clause                      & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {libcorrect}       & \cite{Libcorrect}               &                6 &                              5k & 2016                            & 2018                           & BSD 3-Clause                      & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {Neal}             & \cite{Neal-LDPC}                &                1 &                              5k & 2006                            & 2012                           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {OpenAir}          & \cite{OpenAir}                  &              148 &                            740k & 2013                            & 2019                           & OAI Public                        & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {OpenFEC}          & \cite{OpenFEC}                  &                8 &                             55k & 2009                            & 2014                           & CeCCIL-C                          & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Schifra}          & \cite{Schifra}                  &                1 &                              7k & 2010                            & 2018                           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Siamese}          & \cite{Siamese}                  &                1 &                             11k & 2018                            & 2018                           & BSD 3-Clause                      & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
-  {Tavildar (Polar)} & \cite{Tavildar-Polar}           &                1 &                              2k & 2016                            & 2017                           & -                                 & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Tavildar (LDPC)}  & \cite{Tavildar-LDPC}            &                1 &                              1k & 2016                            & 2016                           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {the-art-of-ecc}   & \cite{The-art-of-ecc}           &                1 &                               - & 2006                            & 2009                           & Copyright                         & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {TurboFEC}         & \cite{TurboFEC}                 &                2 &                              4k & 2015                            & 2018                           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  % \begin{adjustbox}{angle=90}
+  {\resizebox{\linewidth}{!}{
+  \begin{tabular}{r   r  r  r  r  r | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
+  \multirow{4}{*}{\textbf{Name}} & \multirow{4}{*}{\textbf{Ref.}} &                  &                &                & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
+                                 &                                & \textbf{Contri-} & \textbf{Code}  & \textbf{Start} &                                   &        &        &        &        &        &        &        &        &        &         \\ %\cline{5-6}
+                                 &                                & \textbf{butors}  & \textbf{Lines} & \textbf{Year}  &                                   &        &        &        &        &        &        &        &        &        &         \\
+                                 &                                &                  &                &                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline\hline
+                                                                                                                                                           % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
+  {\AFFECT}                      & \cite{Cassagne2019a}           &               11 &            76k & 2016           & MIT                               & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
+  {aicodix GmbH}                 & \cite{Aicodix}                 &                1 &             7k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {eccpage}                      & \cite{ECCpage}                 &               20 &              - & 1989           & -                                 & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark  \\
+  {EZPWD}                        & \cite{EZPWDRS}                 &                2 &             6k & 2014           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {FastECC}                      & \cite{FastECC}                 &                2 &             1k & 2015           & Apache 2.0                        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {FEC-AL}                       & \cite{FEC-AL}                  &                1 &             3k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+  {FECpp}                        & \cite{FECpp}                   &                1 &             2k & 2009           & -                                 & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark  \\
+  {GNURadio}                     & \cite{GNURadio}                &              192 &           270k & 2006           & GPLv3                             & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \cmark & \xmark  \\
+  {Inan}                         & \cite{Inan-LDPC}               &                2 &            13k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {IT++}                         & \cite{ITpp}                    &               20 &           109k & 2005           & GPLv3                             & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {Le Gal}                       & \cite{LeGal-LDPC}              &                1 &            83k & 2015           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Leopard}                      & \cite{Leopard}                 &                4 &             5k & 2017           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {libcorrect}                   & \cite{Libcorrect}              &                6 &             5k & 2016           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {Neal}                         & \cite{Neal-LDPC}               &                1 &             5k & 2006           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {OpenAir}                      & \cite{OpenAir}                 &              148 &           740k & 2013           & OAI Public                        & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {OpenFEC}                      & \cite{OpenFEC}                 &                8 &            55k & 2009           & CeCCIL-C                          & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Schifra}                      & \cite{Schifra}                 &                1 &             7k & 2010           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Siamese}                      & \cite{Siamese}                 &                1 &            11k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+  {Tavildar (Polar)}             & \cite{Tavildar-Polar}          &                1 &             2k & 2016           & -                                 & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Tavildar (LDPC)}              & \cite{Tavildar-LDPC}           &                1 &             1k & 2016           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {the-art-of-ecc}               & \cite{The-art-of-ecc}          &                1 &              - & 2006           & Copyright                         & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {TurboFEC}                     & \cite{TurboFEC}                &                2 &             4k & 2015           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
   \end{tabular}
-  % }}
-  \end{adjustbox}
+  }}
+  % \end{adjustbox}
 \end{table}
 
 In the digital communications community, many scientists implement their own
@@ -89,12 +89,13 @@ codes\footnote{FEC Software Decoders Hall of Fame: \url{http://aff3ct.github.io/
 
 \section{Use Cases}
 
-\subsection{Simulator~\cite{Cassagne2017,Cassagne2017a}}
+\subsection{Simulator}
 
 \begin{itemize}
   \item documentation
   \item résultats de simulation, comparateur BER/FER (travaux de Mehdi)
   \item multi-noeuds
+  \item \cite{Cassagne2017,Cassagne2017a}
 \end{itemize}
 
 \begin{table}
@@ -205,7 +206,7 @@ capabilities of \AFFECT.} For instance, when using 32 MPI nodes on the given
 (2048,1723) polar code, it takes about one minute to estimate the $E_b/N_0=4.5$
 dB SNR point (BER = 4.34e-10, FER = 5.17e-08).
 
-\subsection{Library~\cite{Cassagne2019a}}
+\subsection{Library}
 
 \begin{itemize}
   \item pleins d'implem autre que les décodeurs
@@ -234,39 +235,39 @@ in Table~\ref{tab:lib_codecs}.
   \label{tab:lib_codecs}
 % {\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{ c | c | c }
-  \multirow{2}{*}{\textbf{Channel Code}}   & \multirow{2}{*}{\textbf{Standards}} & \multirow{2}{*}{\textbf{Decoders}}     \\
-                                           &                                     &                                        \\
+  \multirow{2}{*}{\textbf{Channel Code}}  & \multirow{2}{*}{\textbf{Standards}} & \multirow{2}{*}{\textbf{Decoders}}     \\
+                                          &                                     &                                        \\
   \hline
   \hline
-  \multirow{5}{*}{{LDPC}}                  & 5G (data), WiFi,                    & Scheduling: Flooding and H./V. Layered \\
-                                           & WiMAX, WRAN,                        & Sum-Product Algorithm (SPA)            \\
-                                           & 10 Gigabit Eth.,                    & Min-Sum (NMS, OMS)                     \\
-                                           & DVB-S2, CCSDS                       & Approximate Min-Star (AMS)             \\
-                                           & etc.                                & Bit Flipping: GallagerA/B/E, PPBF, WBF \\
+  \multirow{5}{*}{{LDPC}}                 & 5G (data), WiFi,                    & Scheduling: Flooding and H./V. Layered \\
+                                          & WiMAX, WRAN,                        & Sum-Product Algorithm (SPA)            \\
+                                          & 10 Gigabit Eth.,                    & Min-Sum (NMS, OMS)                     \\
+                                          & DVB-S2, CCSDS                       & Approximate Min-Star (AMS)             \\
+                                          & etc.                                & Bit Flipping: GallagerA/B/E, PPBF, WBF \\
   \hline
-  \multirow{4}{*}{{Polar}}                 &                                     & Successive Cancellation (SC)           \\
-                                           & 5G                                  & Successive Cancellation List (SCL)     \\
-                                           & (control channel)                   & CRC Aided SCL (CA-SCL, Adaptive SCL)   \\
-                                           &                                     & Soft Cancellation (SCAN)               \\
+  \multirow{4}{*}{{Polar}}                &                                     & Successive Cancellation (SC)           \\
+                                          & 5G                                  & Successive Cancellation List (SCL)     \\
+                                          & (control channel)                   & CRC Aided SCL (CA-SCL, Adaptive SCL)   \\
+                                          &                                     & Soft Cancellation (SCAN)               \\
   \hline
-  \multirow{1}{*}{{Turbo Parallel}}        & LTE (3G, 4G),                       & Turbo BCJR                             \\
-  (single and double                       & DVB-RCS,                            & Turbo BCJR + Early Termination (CRC)   \\
-  binary)                                  & CCSDS, etc.                         & Post proc.: Flip aNd Check (FNC)       \\
+  \multirow{1}{*}{{Turbo Parallel}}       & LTE (3G, 4G),                       & Turbo BCJR                             \\
+  (single and double                      & DVB-RCS,                            & Turbo BCJR + Early Termination (CRC)   \\
+  binary)                                 & CCSDS, etc.                         & Post proc.: Flip aNd Check (FNC)       \\
   \hline
-  \multirow{2}{*}{{Turbo Product}}         & \multirow{2}{*}{WiMAX (opt.)}       & \multirow{2}{*}{Turbo Chase-Pyndiah}   \\
-                                           &                                     &                                        \\
+  \multirow{2}{*}{{Turbo Product}}        & \multirow{2}{*}{WiMAX (opt.)}       & \multirow{2}{*}{Turbo Chase-Pyndiah}   \\
+                                          &                                     &                                        \\
   \hline
-  \multirow{3}{*}{{BCH}}                   & CD, DVD,                            &                                        \\
-                                           & SSD, DVB-S2,                        & Berlekamp-Massey + Chien search        \\
-                                           & Bitcoin, etc.                       &                                        \\
+  \multirow{3}{*}{{BCH}}                  & CD, DVD,                            &                                        \\
+                                          & SSD, DVB-S2,                        & Berlekamp-Massey + Chien search        \\
+                                          & Bitcoin, etc.                       &                                        \\
   \hline
-  \multirow{3}{*}{{Reed-Solomon}}          & CD, DVD,                            &                                        \\
-                                           & SSD, DVB-T,                         & Berlekamp-Massey + Chien search        \\
-                                           & ADSL, etc.                          &                                        \\
+  \multirow{3}{*}{{Reed-Solomon}}         & CD, DVD,                            &                                        \\
+                                          & SSD, DVB-T,                         & Berlekamp-Massey + Chien search        \\
+                                          & ADSL, etc.                          &                                        \\
   \hline
-  \multirow{1}{*}{{Convolutional}}         &                                     & BCJR - Maximum A Posteriori (MAP)      \\
-  (single and double                       & NASA                                & BCJR - Linear Approximation            \\
-  binary)                                  &                                     & BCJR - Max Approximation               \\
+  \multirow{1}{*}{{Convolutional}}        &                                     & BCJR - Maximum A Posteriori (MAP)      \\
+  (single and double                      & NASA                                & BCJR - Linear Approximation            \\
+  binary)                                 &                                     & BCJR - Max Approximation               \\
   \end{tabular}
 % }%}
 \end{table}
@@ -295,33 +296,33 @@ purpose. Table~\ref{tab:lib_modems} lists all the supported modems.
   \label{tab:lib_modems}
   %{\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{ c | c | c }
-  \multirow{2}{*}{\textbf{Modem}}        & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Characteristics}} \\
-                                         &                                    &                                           \\
+  \multirow{2}{*}{\textbf{Modem}} & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Characteristics}} \\
+                                  &                                    &                                           \\
   \hline
   \hline
-  \multirow{3}{*}{{N-PSK}}               & IEEE 802.16 (WiMAX)                &                                           \\
-                                         & UMTS (2G, 2G+)                     & Phase-Shift Keying                        \\
-                                         & EDGE (8-PSK), ...                  &                                           \\
+  \multirow{3}{*}{{N-PSK}}        & IEEE 802.16 (WiMAX)                &                                           \\
+                                  & UMTS (2G, 2G+)                     & Phase-Shift Keying                        \\
+                                  & EDGE (8-PSK), ...                  &                                           \\
   \hline
-  \multirow{3}{*}{{N-QAM}}               & IEEE 802.16 (WiMAX)                &                                           \\
-                                         & UMTS (2G, 2G+)                     & Quadrature Amplitude Modulation           \\
-                                         & 3G, 4G, 5G, ...                    &                                           \\
+  \multirow{3}{*}{{N-QAM}}        & IEEE 802.16 (WiMAX)                &                                           \\
+                                  & UMTS (2G, 2G+)                     & Quadrature Amplitude Modulation           \\
+                                  & 3G, 4G, 5G, ...                    &                                           \\
   \hline
-  \multirow{3}{*}{{N-PAM}}               & IEEE 802.16 (WiMAX)                &                                           \\
-                                         & UMTS (2G, 2G+)                     & Pulse Amplitude Modulation                \\
-                                         & 3G, 4G, 5G, ...                    &                                           \\
+  \multirow{3}{*}{{N-PAM}}        & IEEE 802.16 (WiMAX)                &                                           \\
+                                  & UMTS (2G, 2G+)                     & Pulse Amplitude Modulation                \\
+                                  & 3G, 4G, 5G, ...                    &                                           \\
   \hline
-  \multirow{2}{*}{{CPM}}                 & GMSK, Bluetooth                    & Continuous Phase Modulation               \\
-                                         & IEEE 802.11 FHSS                   & Coded (convolutional-based) modulation    \\
+  \multirow{2}{*}{{CPM}}          & GMSK, Bluetooth                    & Continuous Phase Modulation               \\
+                                  & IEEE 802.11 FHSS                   & Coded (convolutional-based) modulation    \\
   \hline
-  \multirow{2}{*}{{OOK}}                 & IrDA (Infrared)                    & On-Off Keying                             \\
-                                         & ISM bands                          & Used in optical communication systems     \\
+  \multirow{2}{*}{{OOK}}          & IrDA (Infrared)                    & On-Off Keying                             \\
+                                  & ISM bands                          & Used in optical communication systems     \\
   \hline
-  \multirow{2}{*}{{SCMA}}                & \multirow{2}{*}{Considered for 5G} & Sparse Code Multiple Access               \\
-                                         &                                    & Multi-user modulation                     \\
+  \multirow{2}{*}{{SCMA}}         & \multirow{2}{*}{Considered for 5G} & Sparse Code Multiple Access               \\
+                                  &                                    & Multi-user modulation                     \\
   \hline
-  \multirow{2}{*}{{User defined}}        & \multirow{2}{*}{-}                 & Constellation and order can be            \\
-                                         &                                    & defined from an external file             \\
+  \multirow{2}{*}{{User defined}} & \multirow{2}{*}{-}                 & Constellation and order can be            \\
+                                  &                                    & defined from an external file             \\
   \end{tabular}
   %}%}
 \end{table}
@@ -428,10 +429,11 @@ is possible to specialize the code depending on whether it is a socket or a
 task. Strongly typed enumerates are checked at compile time (contrary to
 standard enumerates), making it impossible to use wrong values.
 
-\subsection{Prototyping~\cite{Cassagne2017,Cassagne2017a}}
+\subsection{Prototyping}
 
 \begin{itemize}
   \item hardware in the loop (travaux d'Olivier)
+  \item \cite{Cassagne2017,Cassagne2017a}
 \end{itemize}
 
 \section{Software Architecture}
@@ -469,39 +471,41 @@ Figure~\ref{fig:soft_archi_com_chain_task_module} presents common modules and
 tasks typically found in a basic communication chain. It shows that the number
 of tasks per module can vary depending on the module type.
 
-\subsection{Factory}
+\subsection{Source Code Organization}
 
-\subsection{Module}
+\subsubsection{Factory}
 
-\subsection{Tools}
+\subsubsection{Module}
 
-\subsection{Simulation}
+\subsubsection{Tools}
 
-\section{Sub-projects}
+\subsubsection{Simulation}
 
-\subsection{\texttt{MIPP}}
+\subsection{Sub-projects}
 
-\texttt{MIPP}: \url{https://github.com/aff3ct/MIPP}.
+\subsubsection{\MIPP}
 
-\subsection{\texttt{my\_project\_with\_aff3ct}}
+\MIPP: \url{https://github.com/aff3ct/MIPP}.
 
-\texttt{my\_project\_with\_aff3ct}: \url{https://github.com/aff3ct/my_project_with_aff3ct}.
+\subsubsection{My Project with \AFFECT}
 
-\subsection{\texttt{polar\_decoder\_gen}}
+\verb|my_project_with_aff3ct|: \url{https://github.com/aff3ct/my_project_with_aff3ct}.
 
-\texttt{polar\_decoder\_gen}: \url{https://github.com/aff3ct/polar_decoder_gen}.
+\subsubsection{Polar Decoder Generation}
 
-\subsection{\texttt{PyBER}}
+\verb|polar_decoder_gen|: \url{https://github.com/aff3ct/polar_decoder_gen}.
 
-\texttt{PyBER}: \url{https://github.com/aff3ct/PyBER}.
+\subsubsection{PyBER}
 
-\subsection{\texttt{aff3ct.github.io}}
+\verb|PyBER|: \url{https://github.com/aff3ct/PyBER}.
 
-\texttt{aff3ct.github.io}: \url{https://github.com/aff3ct/aff3ct.github.io}.
+\subsubsection{aff3ct.github.io}
 
-\subsection{\texttt{cli}}
+\verb|aff3ct.github.io|: \url{https://github.com/aff3ct/aff3ct.github.io}.
 
-\texttt{cli}: \url{https://github.com/aff3ct/cli}.
+\subsubsection{Command Line Interface}
+
+\verb|cli|: \url{https://github.com/aff3ct/cli}.
 
 \section{CI/CD}
 

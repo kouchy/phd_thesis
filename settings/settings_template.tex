@@ -1,11 +1,11 @@
-\documentclass[a4paper,11pt,fleqn,oneside]{book} %% ajouter oneside pour la version numérique
+\documentclass[a4paper,11pt,fleqn,twoside]{book} %% ajouter oneside pour la version numérique
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,french]{babel}
-\usepackage{fourier} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
-% \usepackage[a4paper,top=25mm,bottom=25mm,left=20mm,right=30mm]{geometry} % two sided document (for print)
-\usepackage[a4paper,top=25mm,bottom=25mm,left=25mm,right=25mm]{geometry} % one sided document (digital version)
+\usepackage{eulervm}
+\usepackage[a4paper,top=25mm,bottom=25mm,left=30mm,right=20mm]{geometry} % two sided document (for print)
+% \usepackage[a4paper,top=25mm,bottom=25mm,left=25mm,right=25mm]{geometry} % one sided document (digital version)
 \usepackage{setspace} % increase interline spacing slightly
 \usepackage{graphicx,xcolor}
 \usepackage{booktabs}
@@ -27,26 +27,26 @@
 \makeatletter
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
 \pagestyle{fancy}
-	\fancyhf{}
-	\renewcommand{\headrulewidth}{0.4pt}
-%	 \renewcommand{\headrule}{\hbox to\headwidth{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0.4pt}
+%  \renewcommand{\headrule}{\hbox to\headwidth{%
 %    \color{bleuUni}\leaders\hrule height \headrulewidth\hfill}}
 \renewcommand{\headrule}{{\color{bleuUni}%
 \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
-	\renewcommand{\footrulewidth}{0.0pt}
-	\fancyhead[OR]{\bfseries \nouppercase{\rightmark}}
-	\fancyhead[EL]{\bfseries \nouppercase{\leftmark}}
-	\fancyfoot[EL,OR]{\thepage}
+  \renewcommand{\footrulewidth}{0.0pt}
+  \fancyhead[OR]{\bfseries \nouppercase{\rightmark}}
+  \fancyhead[EL]{\bfseries \nouppercase{\leftmark}}
+  \fancyfoot[EL,OR]{\thepage}
 \fancypagestyle{plain}{
-	\fancyhf{}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
-	\fancyfoot[EL,OR]{\thepage}}
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancyfoot[EL,OR]{\thepage}}
 \fancypagestyle{addpagenumbersforpdfimports}{
-	\fancyhead{}
-	\renewcommand{\headrulewidth}{0pt}
-	\fancyfoot{}
-	\fancyfoot[RO,LE]{\thepage}
+  \fancyhead{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot{}
+  \fancyfoot[RO,LE]{\thepage}
 }
 \makeatother
 
@@ -69,10 +69,10 @@
     {\begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-6cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=bleuUni,bleuUni] (0,0) rectangle(23.5mm,15mm);
-        \node[anchor=north east,yshift=-5.2cm,xshift=23mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
+        \draw[fill=bleuUni,bleuUni] (0,0) rectangle(28.5mm,15mm);
+        \node[anchor=north east,yshift=-5.2cm,xshift=27mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
         {\parbox[top][30mm][t]{15mm}{\raggedleft $\phantom{\textrm{l}}$\color{white}\chapterlabel}};  %the black l is just to get better base-line alingement
-        \node[anchor=north west,yshift=-5.2cm,xshift=25mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
+        \node[anchor=north west,yshift=-5.2cm,xshift=30mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
               {\parbox[top][30mm][t]{\textwidth}{\color{black}#1}};
        \end{tikzpicture}
       };
