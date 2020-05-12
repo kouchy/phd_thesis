@@ -32,7 +32,7 @@
 \usepackage{pifont}
 \usepackage{hyperref}
 \usepackage{minted} % beautiful source code
-\usepackage{sourcecodepro} % beautiful source code (works with 'minted')
+% \usepackage{sourcecodepro} % beautiful source code (works with 'minted')
 \usepackage{chngcntr}
 \usepackage{bm} % bold math
 \usepackage{geometry} % reduce margins
@@ -44,7 +44,7 @@
 \setcounter{secnumdepth}{4} % package 'minitoc'
 \setcounter{tocdepth}{2} % package 'minitoc'
 \newlength{\Oldarrayrulewidth} % package 'array'
-\setminted{fontsize=\small,framesep=2mm} % package 'minted'
+\setminted{fontsize=\normalsize,framesep=2mm,tabsize=4} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
 \counterwithin{listing}{chapter} % package 'chngcntr'
 \usetikzlibrary{arrows} % package 'tikz'
@@ -154,13 +154,3 @@
 \def\odrx{\textsc{Odroid-XU+E}\xspace}
 \def\juno{\textsc{Juno}\xspace}
 \def\mus{\si{\micro\second}}
-
-% -----------------------------------------------------------------------------
-\usepackage{letltxmacro}
-% https://tex.stackexchange.com/q/88001/5764
-\LetLtxMacro\oldttfamily\ttfamily
-\DeclareRobustCommand{\ttfamily}{\oldttfamily\csname ttsize\endcsname}
-\newcommand{\setttsize}[1]{\def\ttsize{#1}}%
-
-\setttsize{\small}% \ttfamily will be \Large
-% -----------------------------------------------------------------------------

@@ -232,8 +232,8 @@ Source codes are compiled with the GNU \Cxx~5 compiler using the common flags:
 are:
 1) \verb|-march=armv7-a| \verb|-mfpu=neon-vfpv4| on Cortex-A15,
 2) \verb|-march=armv8-a| on Cortex-A72,
-3) \verb|-msse4.2| for \verb|SSE| or \verb|-mavx2 -mfma| for \verb|AVX| on
-Core\TM i5, 4) \verb|-mavx512f| \verb|-mfma| on Xeon Phi\TM.
+3) \verb|-msse4.2| for SSE or \verb|-mavx2 -mfma| for AVX on Core\TM i5,
+4) \verb|-mavx512f| \verb|-mfma| on Xeon Phi\TM.
 All experiments have been performed in single-threaded. All studied problem
 sizes fit into the last level cache (LLC) of CPUs. The references for the
 speedup computations are always sequential versions of the SIMD codes. Those
