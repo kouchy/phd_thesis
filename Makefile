@@ -88,7 +88,8 @@ chapter1_fig: main/chapter1/fig/intro/com_chain.svg \
 	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_tpc.tex
 	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_turbo.tex
 
-chapter2_fig: main/chapter2/fig/polar/algos_comparison/algos_comparison.tex \
+chapter2_fig: main/chapter2/fig/polar/tree_pruning_example.fig \
+              main/chapter2/fig/polar/algos_comparison/algos_comparison.tex \
               main/chapter2/fig/polar/algos_comparison/colors \
               main/chapter2/fig/polar/algos_comparison/dat/SC_8.txt \
               main/chapter2/fig/polar/algos_comparison/dat/SC_12.txt \

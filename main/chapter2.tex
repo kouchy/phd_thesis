@@ -7,16 +7,13 @@
 % \vspace*{\fill}
 
 \section{Polar Decoders}
+\label{sec:alg_polar_decoders}
 
-\subsection{Fast Implementations}
-
-\subsubsection{Related Works}
-
-HoF polar: \url{http://aff3ct.github.io/hof_polar.html}
+\subsection{\Arikan's Kernel}
 
 \subsubsection{Successive Cancellation Algorithm}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/sc_decoder}
   \caption{Full SC decoding tree (N = 16)}
@@ -136,7 +133,7 @@ grows as $O(LN\log_2N)$. This linear increase in complexity with L leads to
 significant improvements in BER/FER performances, especially for small code
 lengths.
 
-\paragraph{CRC concatenation scheme}
+\subsubsection{CRC concatenation scheme}
 
 The authors in~\cite{Tal2011} observed that when a decoding error occurs, the
 right codeword is often in the final list, but not with the best path metric.
@@ -147,7 +144,38 @@ this algorithm CA-SCL and its simplified version CA-SSCL. In terms of
 computational complexity, the overhead consists in the computation of $L$ CRC at
 the end of each decoding.
 
-\paragraph{Adaptive SCL decoding algorithm}
+\subsubsection{Simplified Decoders}
+\label{sec:alg_polar_simplified_decoders}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.00\textwidth]{polar/tree_pruning_example}
+  \caption{Example of tree pruning on a small binary tree ($N = 8$). The tree is
+    cut and the computations are versioned according to the location of the
+    frozen bit}
+  \label{fig:tree_pruning_example}
+\end{figure}
+
+Frozen bits fully define the decoders leaf values, hence some part of the
+traversal can be cut and its computation avoided, depending on the location of
+the frozen bits. More generally, the tree computation can be versioned depending
+on these bits. In~\cite{Alamdar-Yazdi2011}, a tree pruning technique called the
+Simplified SC (SSC) was applied to SC decoding. An improved version was proposed
+in~\cite{Sarkis2014a}. This technique relies on the fact that, depending on the
+frozen bits location in the leaves of the tree, the definition of dedicated
+nodes enables to prune the decoding tree: Rate-0 nodes (\verb|R0|) correspond to
+a sub-tree whose all leaves are frozen bits, Rate-1 nodes (\verb|R1|) correspond
+to a sub-tree in which all leaves are information bits, REPetition (\verb|REP|)
+and Single Parity Check (\verb|SPC|) nodes correspond to repetition and SPC
+codes sub-trees. These special nodes, originally defined for SC decoding, can be
+employed in the case of SCL decoding as long as some modifications are made in
+the path metric calculation~\cite{Sarkis2016}. This tree-pruned version of the
+algorithm is called Simplified SCL (SSCL). The tree pruning technique can
+drastically reduce the amount of computation in the decoding process. The
+Fig.~\ref{fig:tree_pruning_example} shows that more than half of the tree nodes
+can be removed for $N = 8$.
+
+\subsubsection{Adaptive SCL decoding algorithm}
 
 The presence of the CRC can be further used to reduce the decoding time by
 gradually increasing $L$. This variation of SCL is called Adaptive SCL
@@ -171,7 +199,7 @@ high. This will be further discussed in Section~\ref{sec:polar_genericity}.
 
 \subsubsection{Algorithmic Comparison}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Throughput and latency comparison of polar decoding algorithms.}
   \label{tab:polar_algos}
@@ -212,7 +240,7 @@ SCL algorithms reduce the decoding time with no impact on BER and FER
 performances. Furthermore, a tradeoff between throughput and worst case latency
 is possible with the use of either PA-SSCL or FA-SSCL decoding algorithms.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{polar/algos_comparison/algos_comparison}
   \caption{Decoding performance comparison between CA-SCL and SC decoders.
@@ -330,7 +358,7 @@ the configuration of the software decoder for any given polar code.
 
 \subparagraph{List size}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_l/scl_l}
   \caption{Tradeoffs between CA-SSCL decoding and throughput performances
@@ -349,9 +377,18 @@ much faster. Indeed, there is no overhead due to the management of different
 candidate paths during the decoding. For $L\geq4$ and $E_b/N_0=2$, the FER is
 also approximately halved when the list size $L$ is doubled.
 
+\subparagraph{Tree pruning strategy}
+
+A second degree of flexibility is the customization of the SCL tree pruning. The
+authors in~\cite{Alamdar-Yazdi2011,Sarkis2016} defined dedicated nodes to prune
+the decoding tree and therefore to reduce the computational complexity. In this
+proposed decoder, each dedicated node can be activated separately. The ability
+to activate dedicated nodes at will is useful in order to explore the
+contribution of each node type on the throughput.
+
 \subparagraph{LLR Quantization}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer}
   \caption{Decoding performance of the SSCL and the A-SSCL decoders.
@@ -386,7 +423,7 @@ Besides the $L$ values, the tree pruning and quantization aspects, the proposed
 software polar decoder supports different variants of the SCL algorithm:
 CA-SSCL, PA-SSCL, FA-SSCL.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_adaptive/scl_adaptive}
   \caption{Frame Error Rate (FER) performance and throughput of the Fully and
@@ -435,24 +472,20 @@ in the proposed decoders to keep a low decoding time.
 \subsubsection{Others}
 
 \begin{itemize}
-  \item factorisation automatique de kernels et génération du code source
+  \item \xmark~factorisation automatique de kernels et génération du code source
     associé
-  \item décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non
+  \item \xmark~décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non
     systématique et systématique)
 \end{itemize}
 
 \section{Turbo Decoders}
 
-\subsection{Related Works}
-
-HoF turbo: \url{http://aff3ct.github.io/hof_turbo.html}
-
 \subsection{Overview of the Turbo decoding process}
 \label{sec:turbo_overview}
 
 \begin{itemize}
-  \item décodeur Turbo LTE (3G/4G)
-  \item treillis
+  \item \xmark~décodeur Turbo LTE (3G/4G)
+  \item \xmark~treillis
 \end{itemize}
 
 % SHORT VERSION ---------------------------------------------------------------
@@ -558,7 +591,7 @@ $\gamma^k_1 = 0.5(L_{sys}^k + L_a^k - L_p^k)$, $-\gamma^k_0$, and $-\gamma^k_1$.
 
 The forward state metrics can be computed iteratively from trellis step to
 trellis step. The forward state metrics of step $k+1$ correspond to the vector
-$\mathbf{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
+$\bm{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
 $j^{th}$ forward state metric $\alpha_j^{k+1}$ only depends on two forward
 state metrics of stage $k$. These state metrics are computed by:
 \begin{equation}
@@ -584,7 +617,7 @@ decoding algorithm the \emph{Enhanced} max-log-MAP (EML-MAP).
 
 Computation of the backward state metrics is similar to that of the forward
 trellis traversal in Eq.~\ref{eq:turbo_alpha}. The vector of backward state
-metrics, denoted by $\mathbf{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is
+metrics, denoted by $\bm{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is
 computed as:
 \begin{equation}
   \label{eq:turbo_beta}
@@ -647,7 +680,7 @@ respectively (because of the BPSK modulation).
 
 \subsubsection{BER/FER performance}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{turbo/bfer/bfer}
   \caption{Bit Error Rate (BER) and Frame Error Rate (FER) of the decoder for
@@ -666,10 +699,6 @@ inside the decoder are responsible for this small performance loss.
 
 \section{LDPC Decoders}
 
-\subsection{Related Works}
-
-HoF LDPC: \url{http://aff3ct.github.io/hof_ldpc.html}
-
 \subsection{BP Algorithms}
 
 \begin{itemize}
@@ -681,7 +710,7 @@ communication systems. They have been chosen in many communication standards
 (Wifi, WiMAX, DVB-S2, 10Gbps Ethernet, etc.). They were also selected for the
 future 5G standard data transport.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.60\textwidth]{ldpc/ldpc_tanner_graph}
   \caption{Tanner graph of a simple parity check $H$ matrix}
@@ -722,7 +751,7 @@ representation enables to pack more elements into SIMD registers.
 \subsection{Generic Implementation}
 
 \begin{itemize}
-  \item décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
+  \item \xmark~décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
 \end{itemize}
 
 \section{SCMA Demodulators}
@@ -851,7 +880,7 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 \subsection{Overview of the SCMA System Model}
 \label{sec:scma_overview}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{scma/codec/codec}
   \caption{a) SCMA encoder with 6 users (layers) and 4 physical resources,
@@ -1069,7 +1098,7 @@ can be used as a systematic replacement to the exponential calculations.
 \subsection{Evaluation of Error Performance}
 \label{sec:scma_perf}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \subfloat[][BER performance comparison of ML, MPA and E-MPA for 5 iterations.]
   {
@@ -1132,7 +1161,7 @@ be run to measure various metrics such as the BER and BLER performance, or the
 throughputs and latencies of each module, e.g. FEC encoders and decoders,
 modulation and demodulation blocks, or different channel models.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \subfloat[][Code rate $R=1/3$.]
   {

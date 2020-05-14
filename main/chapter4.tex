@@ -26,7 +26,7 @@
   \item \cmark~Bibliothèques FEC: \url{http://aff3ct.github.io/fec_libraries.html}
 \end{itemize}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{\C/\Cxx open source channel coding simulators/libraries.}
   \label{tab:fec_libraries_comparison}
@@ -98,7 +98,7 @@ codes\footnote{FEC Software Decoders Hall of Fame: \url{http://aff3ct.github.io/
   \item \cite{Cassagne2017,Cassagne2017a}
 \end{itemize}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
   \label{tab:simu_cpus_specs}
@@ -118,7 +118,7 @@ codes\footnote{FEC Software Decoders Hall of Fame: \url{http://aff3ct.github.io/
   }}
 \end{table}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \subfloat[][Simulator speedups.]{\includegraphics[width=0.70\textwidth]{simu/speedup/speedup}\label{plot:simu_speedup}}
   % \quad
@@ -169,7 +169,7 @@ especially true for the ThunderX2\R CN9975 and Xeon\TM Gold 6140 targets. The
 SMT technology helps to improve the usage of the available instruction-level
 parallelism.
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
   \label{tab:simu_speedup_mpi}
@@ -229,7 +229,7 @@ The \AFFECT software functionalities can be decomposed in three main parts: the
 the main part of the toolbox. There is a broad range of supported codes listed
 in Table~\ref{tab:lib_codecs}.
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{List of supported channel codes (codecs).}
   \label{tab:lib_codecs}
@@ -290,7 +290,7 @@ to the physical support. This operation is performed by the modulator and
 conversely by the demodulator. \AFFECT comes with a rich set of modems to this
 purpose. Table~\ref{tab:lib_modems} lists all the supported modems.
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{List of supported modulations/demodulations (modems).}
   \label{tab:lib_modems}
@@ -341,7 +341,7 @@ layer. This is the role of the channel. There are many possible configurations
 depending on the physics phenomena to simulate.
 Table~\ref{tab:lib_channels} reports all the supported channels.
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{List of supported channels.}
   \label{tab:lib_channels}
@@ -380,7 +380,7 @@ additional functional functionalities available are skipped here for concision.
 
 \subsubsection{Illustrative Example}
 
-\begin{listing}
+\begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter4/src/library/modules_allocation.cpp}
   \caption{Modules allocation.}
   \label{lst:library_modules_allocation}
@@ -400,7 +400,7 @@ in \AFFECT and it is an aggregation of the encoder and decoder modules. For
 simplicity, we chose not to use the codec module here. In this basic example, a
 repetition code is selected, it simply repeats the information bits $N/K$ times.
 
-\begin{listing}
+\begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter4/src/library/sockets_binding.cpp}
   \caption{Sockets binding.}
   \label{lst:library_sockets_binding}
@@ -412,7 +412,7 @@ output socket \verb|src::sck::generate::U_K| is connected to the
 input socket \verb|enc::sck::encode::U_K| of the \textit{encoder}, and so
 on, for all the sockets of the tasks.
 
-\begin{listing}
+\begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter4/src/library/tasks_execution.cpp}
   \caption{Tasks execution.}
   \label{lst:library_tasks_execution}
@@ -455,7 +455,7 @@ the task will consume and/or produce data. There are three kinds of sockets:
 \textit{input}, \textit{output} and \textit{input/output}, following a
 philosophy close to \emph{ports} in component-based development approaches.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{soft_archi/com_chain_task_module}
   \caption{Modules and tasks.}

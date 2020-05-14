@@ -8,40 +8,254 @@
 
 \section{Polar Decoders}
 
-\subsection{Successive Cancellation - Energy and Dynamic}
+\subsection{Generated/Unrolled Successive Cancellation Decoders}
 
-\begin{table}
+In this section we first discuss the results of our tree compression technique,
+then we describe the protocol we used. At the end we provide a performance
+comparison between the state-of-the-art and P-EDGE.
+
+\subsubsection{Source Code Compression}
+
+For all the test series, the bandwidth first increases with codeword size, as
+the tree pruning becomes increasingly more effective with larger trees. The
+effect is stronger for Intra-SIMD where pruning also results in removing
+inefficient scalar nodes. However, beyond a codeword size point which depends on
+the architecture and on the selected SIMD version, performance decreases again
+due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
+generated as straight-line code (no recursive calls), with all node computations
+put in sequence. This improves performance for small to medium codeword size, up
+to the point where the compiled binary exceeds the L1I cache size.
+% ---- to remove, already explained in chap 3
+We mitigated this issue by reducing decoder binary sizes using two compression
+techniques: 1) in the generated code, we moved the buffer offsets from template
+arguments to function arguments, which enabled the compiler to factorize more
+function calls than before (improvement by a factor of 10), 2) we implemented a
+sub-tree folding algorithm in the generator.
+% ---- to remove, already explained in chap 3
+
+\begin{table}[htp]
+  \begin{center}
+  \begin{tabular}{r r r r r r r}
+    \textbf{Decoder}         & $\bm{N = 2^6}$ & $\bm{N = 2^8}$ & $\bm{N = 2^{10}}$ & $\bm{N = 2^{12}}$ & $\bm{N = 2^{14}}$ & $\bm{N = 2^{16}}$           \\
+    \hline
+    \hline
+    inter 32-bit, $R = 1/2$  & 1 (7)          & 2 (24)         & 7 (\textbf{77})   & 9 (\textbf{254})  & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
+    % \hline
+    inter 32-bit, $R = 5/6$  & 1 (4)          & 2 (19)         & 4 (\textbf{53})   & 7 (\textbf{167})  & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
+    % \hline
+    intra 32-bit, $R = 1/2$  & 1 (4)          & 3 (16)         & 9 (\textbf{56})   & 8 (\textbf{182})  & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
+    % \hline
+    intra 32-bit, $R = 5/6$  & 1 (3)          & 3 (13)         & 6 (\textbf{38})   & 7 (\textbf{126})  & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
+    % \hline
+    inter ~8-bit, $R = 1/2$  & 1 (5)          & 2 (22)         & 7 (\textbf{72})   & 8 (\textbf{252})  & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
+    % \hline
+    inter ~8-bit, $R = 5/6$  & 1 (4)          & 2 (18)         & 4 (\textbf{51})   & 6 (\textbf{191})  & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
+  \end{tabular}
+  \end{center}
+  \caption{Code size (in KB) of the generated decoders depending on the number
+    of bits $N$ per frame (code respectively compiled with AVX instructions for
+    the 32-bit decoders and with SSE4.1 instructions for the 8-bit decoders).
+    For comparison, code size without compression are shown in parentheses.}
+  \label{tab:eval_polar_sc_gen_l1i_size}
+\end{table}
+
+\begin{figure}[htp]
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
+  \caption{P-EDGE generated decoder binary sizes depending on the frame size
+    (R=1/2).}
+  \label{plot:eval_polar_sc_gen_l1i_size}
+\end{figure}
+
+Table~\ref{tab:eval_polar_sc_gen_l1i_size} and
+Fig.~\ref{plot:eval_polar_sc_gen_l1i_size} show the binary code size of the
+decoders depending on $N$. The results which exceed the 32KB of the L1I cache
+are highlighted in bold font. Sub-tree folding was enabled starting from
+$N=2^{12}$ because there is an overhead (at run-time) when using this technique.
+P-EDGE decoder code sizes without compression are shown in parentheses: we can
+observe a huge improvement, until $N=2^{14}$ the code size never exceeds the L1I
+cache anymore. In~\cite{Giard2016b}, authors report that they can't compile
+codes longer than $N = 2^{15}$. The proposed compression technique allows to
+exceed that limit.
+
+\subsubsection{Testbed}
+
+\begin{table}[htp]
+  \begin{center}
+  %{\scriptsize
+  \begin{tabular}{c | c c c}
+                                     & \textbf{x86-based}     & \textbf{ARMv7-based} & \textbf{prev. work arch.}\cite{Sarkis2014} \\
+  \hline
+  \hline
+  \multirow{2}{*}{\textbf{CPU}}      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15     & Intel\R Core\TM i7-2600 \\
+                                     & 3.10Ghz                & MPCore~2.32GHz       & 3.40GHz                 \\
+  \hline
+  \multirow{2}{*}{\textbf{Cache}}    & 32KB L1I/L1D,          & 32KB L1I/L1D,        & 32KB L1I/L1D,           \\
+                                     & 256KB L2, 6MB L3       & 1024KB L2, No L3     & 256KB L2, 8MB L3        \\
+  \hline
+  \multirow{1}{*}{\textbf{Compiler}} & GNU g++~4.8            & GNU g++~4.8          & GNU g++~4.8             \\
+  % \hline
+  % Flags for 32-bit& \verb|-std=c++11 -Ofast -funroll-loops -mavx|\\
+  % Flags for 8-bit & \verb|-std=c++11 -Ofast -funroll-loops -msse4.1|\\
+  \end{tabular}
+  %}
+  \end{center}
+  \caption{Performance evaluation platforms.}
+  \label{tab:eval_polar_sc_gen_thr_specs}
+  % \vspace{-1.5em}
+\end{table}
+
+The platforms used for performance evaluation are shown in
+Table~\ref{tab:eval_polar_sc_gen_thr_specs}. Unless stated otherwise, each
+measure is obtained as the best of ten runs of a 10~second simulation, taking
+into account frame loading and result storing. SNR (Signal Noise Ratio) is set
+to 2.5~dB for tests with 1/5 and 1/2 rates, and to 4.0 dB for the 5/6, 0.84, and
+9/10 rate tests. Colors differentiate the codes rates of the Polar Code, point
+shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
+
+\subsubsection{Comparison between P-EDGE and the State of the Art}
+
+\begin{figure}[htp]
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra}
+  \caption{Performance comparison between several code rates of 32-bit floating
+    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\TM CPU A15).}
+  \label{plot:eval_polar_sc_gen_thr_intra}
+\end{figure}
+
+\begin{table}[htp]
+  \begin{center}
+  \begin{tabular}{r  r  r  r}
+    $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} (Mb/s) & \textbf{Latency} ($\mu$s)\\
+    \hline
+    \hline
+  %%this performance is included in the graphs
+  % \multirow{2}{*}{(2048, 1024)}   & \cite{Sarkis2014}    & 147                      & 7               \\
+  %                                 & \cite{Cassagne2015c} & 195                      & 5               \\
+  % \hline
+  %%this performance is included in the graphs
+  % \multirow{2}{*}{(2048, 1707)}   & \cite{Sarkis2014}    & 335                      & 5               \\
+  %                                 & \cite{Cassagne2015c} & 402                      & 4               \\
+  % \hline
+    \multirow{2}{*}{(16384, 14746)} & \cite{Sarkis2014}    & 292                      & 50              \\
+                                    & \cite{Cassagne2015c} & 341                      & 43              \\
+    \hline
+    \multirow{2}{*}{(32768, 27568)} & \cite{Sarkis2014}    & 220                      & 125             \\
+                                    & \cite{Cassagne2015c} & 241                      & 114             \\
+    \hline
+    \multirow{2}{*}{(32768, 29492)} & \cite{Sarkis2014}    & 261                      & 113             \\
+                                    & \cite{Cassagne2015c} & 293                      & 101             \\
+  \end{tabular}
+  \end{center}
+  \caption{Comparing P-EDGE with a state-of-art software polar decoder, for
+    codes of rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
+    state-of-the art performance results reported in~\cite{Sarkis2014}, for
+    comparison.}
+  \label{tab:eval_polar_sc_gen_thr_comparison}
+\end{table}
+
+\begin{figure}[htp]
+  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter}
+  \caption{Performance comparison between several code rates of 8-bit fixed
+    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
+    respectively, on the Nvidia\R Jetson TK1\TM CPU A15). Circles show P-EDGE
+    results. Triangles show our former ``handwritten'' implementation
+    results~\cite{LeGal2015a}.}
+  \label{plot:eval_polar_sc_gen_thr_inter}
+\end{figure}
+
+Fig.~\ref{plot:eval_polar_sc_gen_thr_intra} shows P-EDGE intra-frame throughput
+on different architectures. Our generic framework performance outperforms
+previous work decoder results (between 10\% and 25\% higher). This is confirmed
+in Tab.~\ref{tab:eval_polar_sc_gen_thr_comparison} which compares P-EDGE with
+the state-of-the-art result samples for some specific rates reported
+in~\cite{Sarkis2014}. The throughput of the inter-frame implementation is shown
+in Figure~\ref{plot:eval_polar_sc_gen_thr_inter} for different architectures.
+Again, the results confirm that our generic approach overtakes handwritten code
+(also between 10\% and 25\% higher on x86).
+
+\subsection{Dynamic/Flexible Successive Cancellation Decoders}
+
+The objective and originality of this study is to explore different software and
+hardware parameters for the execution of a software SC decoder on modern ARM
+architectures. For a software decoder such as AFF3CT, many parameters can be
+explored, influencing performance and energy efficiency. The target rate and
+frame size are applicative parameters. The SIMDization strategies (intra-frame
+or inter-frame) and the features of decoders (generated or dynamic) are software
+parameters. The target architecture, its frequency and its voltage are hardware
+parameters. This study investigates the correlations between these parameters,
+in order to better choose the right implementation for a given applicative
+purpose. The low-power general purpose ARM32 and ARM64 processor testbeds based
+on big.LITTLE architecture are selected as representative of modern multi-core
+and heterogeneous architectures.
+
+The flexibility of the AFF3CT software allows to alter many parameters and turn
+many optimizations on or off, leading to a large amount of potential
+combinations. For the purpose of this study, computations are performed with
+8-bit fixed-point data types, with all tree pruning optimizations activated. The
+main metric considered is the average amount of energy in Joules to decode one
+bit of information, expressed  as  $E_b = (P \times l) / (K \times n_f)$ where
+$P$ is the average power (Watts), $l$ is the latency (s), $K$ the number of
+information bits and $n_f$ is the number of frames decoded in parallel (in the
+inter-frame implementation $n_f > 1$).
+
+\subsubsection{Dynamic versus Generated Approach}
+
+By design, generated decoders are still faster than the dynamic decoder
+(up to 20\%). However each generated decoder is optimized for a single
+SNR. For very large frame sizes, the dynamic decoder outperforms generated
+decoders because the heavily unrolled generated decoders exceed Level 1
+instruction cache size capacity.
+
+\subsubsection{Testbed}
+
+\begin{table}[htp]
   \caption{Specifications of the \odr and the \juno boards.}
   \label{tab:eval_polar_energy_arm_specs}
   \begin{center}
   % {\footnotesize
-  \begin{tabular}{c | c  c}
-                                      & \textbf{ODROID-XU+E}      &          \textbf{\juno} \\
+  \begin{tabular}{c | c c c}
+                                      & \textbf{ODROID-XU+E}      &          \textbf{\juno} &  \textbf{i7-4850HQ} \\
     \hline
     \hline
-    \multirow{2}{*}{\textbf{SoC}}     &  Samsung\R Exynos\TM 5410 &               ARM64 \bl \\
-                                      &           (Exynos 5 Octa) &         (dev. platform) \\
+    \multirow{2}{*}{\textbf{SoC}}     &  Samsung\R Exynos\TM 5410 &               ARM64 \bl &     Intel\R Core\TM \\
+                                      &           (Exynos 5 Octa) &         (dev. platform) &          i7-4850HQ  \\
     \hline
-    \multirow{1}{*}{\textbf{Arch.}}   &             32-bit, ARMv7 &           64-bit, ARMv8 \\
+    \multirow{1}{*}{\textbf{Arch.}}   &             32-bit, ARMv7 &           64-bit, ARMv8 & 64-bit, x86 Haswell \\
     \hline
-    \multirow{1}{*}{\textbf{Process}} &                      28nm &  unspecified (32/28 nm) \\
+    \multirow{1}{*}{\textbf{Process}} &                      28nm &  unspecified (32/28 nm) &                22nm \\
 
     \hline
-    \multirow{4}{*}{\textbf{\big}}    &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore \\
-                                      &        freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] \\
-                                      &        L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB \\
-                                      &                    L2 2MB &                  L2 2MB \\
+    \multirow{4}{*}{\textbf{\big}}    &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore &  4 cores (with SMT) \\
+                                      &        freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] &  freq. [2.3-3.5GHz] \\
+                                      &        L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB &  L1I 32KB, L1D 32KB \\
+                                      &                    L2 2MB &                  L2 2MB &    L2 256KB, L3 6MB \\
     \hline
-    \multirow{4}{*}{\textbf{\little}} &        4xCortex-A7 MPCore &     4xCortex-A53 MPCore \\
-                                      &        freq. [250-600MHz] &      freq. [450-850MHz] \\
-                                      &        L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB \\
-                                      &                  L2 512KB &                  L2 1MB \\
+    \multirow{4}{*}{\textbf{\little}} &        4xCortex-A7 MPCore &     4xCortex-A53 MPCore &  \multirow{4}{*}{-} \\
+                                      &        freq. [250-600MHz] &      freq. [450-850MHz] &                     \\
+                                      &        L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB &                     \\
+                                      &                  L2 512KB &                  L2 1MB &                     \\
   \end{tabular}
   % }
   \end{center}
 \end{table}
 
-\begin{table}
+The experiments are conducted on two ARM~\bl platforms, an \odrx board using a
+32-bit Samsung Exynos 5410 CPU and the reference 64-bit \juno Development
+Platform from ARM running a Linux operating system, detailed in
+Table~\ref{tab:eval_polar_energy_arm_specs}.
+
+The \big and the \little clusters of cores on the \odr board are on/off in a
+mutually exclusive way. The active cluster is selected through the Linux
+\verb|cpufreq| mechanism. Both clusters can be activated together or separately
+on the \juno board. Both platforms report details on supply voltage, current
+amperage, power consumption for each cluster. Only the \odr platform reports
+details for the RAM. Consequently, most experiments have been primarily
+conducted on the \odr platform to benefit from the additional insight provided
+by the RAM metrics.
+
+\subsubsection{Experiments and Measurements}
+
+\begin{table}[htp]
   \caption{Characteristics for each cluster ($T_i$ is the information
     throughput), for dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
     consumption is not included in $E_b$ and in $P$.}
@@ -102,10 +316,10 @@ more than the scalar pipeline.
 For comparison, the results for the Intel\R Core\TM i7-4850HQ, using SSE4.1
 instructions (same vector length as ARM\R NEON vectors) are also included. Even
 if the i7 is competitive with the ARM\R big cores in term of
-\textit{energy-per-bit} ($E b$), these results show it is not well suited for
+\textit{energy-per-bit} ($E_b$), these results show it is not well suited for
 the low power SDR systems because of its high power requirements.
 
-\begin{table}
+\begin{table}[htp]
   \caption{Comparison of 8-bit fixed-point decoders with intra-frame
     vectorization. $N = 32768$ and $R = 5/6$.}
   \label{tab:eval_polar_energy_comparison}
@@ -135,7 +349,7 @@ On a x86 CPU, our dynamic decoder is 2.8 times faster than the state-of-the-art
 decoder. Even if we used a more recent CPU, we also used the same set of
 instructions (SSE4.1) and the frequencies are comparable.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/sc_energy_implems_vs/sc_energy_implems_vs}
   \caption{Variation of the \emph{energy-per-bit} for different frame sizes and
@@ -168,7 +382,7 @@ inter-frame strategy for small frame sizes, whereas it is better to apply
 intra-frame strategy for larger frame sizes (comparable energy consumption with
 much lower latency).
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
   \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the
@@ -197,7 +411,7 @@ throughput and smaller latency for a small additional energy cost); On the
 \big cluster, where the RAM consumption is less significant, it is better to
 clock the CPU at a low frequency.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/sc_energy_rate/sc_energy_rate_N32768}
   \caption{Variation of the \emph{energy-per-bit} ($E_b$) for $N = 32768$
@@ -217,7 +431,7 @@ available on the A15). The \little A7 is more energy efficient than the \big
 A57, and the \little A53 is itself more energy efficient than the \little A7
 ($E_{b_{A53}} < E_{b_{A7}} < E_{b_{A57}}$).
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \begin{tikzpicture}
   \tkzKiviatDiagram[rotate         = 90,
@@ -262,187 +476,15 @@ Finally, it is important to notice that multi-core implementations of the
 proposed ARM\R decoders is still possible on these ARM\R targets to improve the
 decoding throughputs.
 
-\subsection{Successive Cancellation - inter/intra-SIMD Generated (aka Unrolled)}
-
-In this section we first describe the protocol we used, after that we provide a
-performance comparison between the state-of-the-art and P-EDGE. At the end we
-discuss the exploring capabilities of our framework.
-
-\begin{table}
-  \begin{center}
-  %{\scriptsize
-  \begin{tabular}{c | c c c}
-                                     & \textbf{x86-based}     & \textbf{ARMv7-based} & \textbf{prev. work arch.}\cite{Sarkis2014} \\
-  \hline
-  \hline
-  \multirow{2}{*}{\textbf{CPU}}      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15     & Intel\R Core\TM i7-2600 \\
-                                     & 3.10Ghz                & MPCore~2.32GHz       & 3.40GHz                 \\
-  \hline
-  \multirow{2}{*}{\textbf{Cache}}    & 32KB L1I/L1D,          & 32KB L1I/L1D,        & 32KB L1I/L1D,           \\
-                                     & 256KB L2, 6MB L3       & 1024KB L2, No L3     & 256KB L2, 8MB L3        \\
-  \hline
-  \multirow{1}{*}{\textbf{Compiler}} & GNU g++~4.8            & GNU g++~4.8          & GNU g++~4.8             \\
-  % \hline
-  % Flags for 32-bit& \verb|-std=c++11 -Ofast -funroll-loops -mavx|\\
-  % Flags for 8-bit & \verb|-std=c++11 -Ofast -funroll-loops -msse4.1|\\
-  \end{tabular}
-  %}
-  \end{center}
-  \caption{Performance evaluation platforms.}
-  \label{tab:eval_polar_sc_gen_thr_specs}
-  % \vspace{-1.5em}
-\end{table}
-
-
-
-The platforms used for performance evaluation are shown in
-Table~\ref{tab:eval_polar_sc_gen_thr_specs}. Unless stated otherwise, each
-measure is obtained as the best of ten runs of a 10~second simulation, taking
-into account frame loading and result storing. SNR (Signal Noise Ratio) is set
-to 2.5~dB for tests with 1/5 and 1/2 rates, and to 4.0 dB for the 5/6, 0.84, and
-9/10 rate tests. Colors differentiate the codes rates of the Polar Code, point
-shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
-
-\subsubsection{Comparison between P-EDGE and the State of the Art}
-
-\begin{figure}
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra}
-  \caption{Performance comparison between several code rates of 32-bit floating
-    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\TM CPU A15).}
-  \label{plot:eval_polar_sc_gen_thr_intra}
-\end{figure}
-
-\begin{table}
-  \begin{center}
-  \begin{tabular}{r  r  r  r}
-    $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} (Mb/s) & \textbf{Latency} ($\mu$s)\\
-    \hline
-    \hline
-  %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1024)}   & \cite{Sarkis2014}    & 147                      & 7               \\
-  %                                 & \cite{Cassagne2015c} & 195                      & 5               \\
-  % \hline
-  %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1707)}   & \cite{Sarkis2014}    & 335                      & 5               \\
-  %                                 & \cite{Cassagne2015c} & 402                      & 4               \\
-  % \hline
-    \multirow{2}{*}{(16384, 14746)} & \cite{Sarkis2014}    & 292                      & 50              \\
-                                    & \cite{Cassagne2015c} & 341                      & 43              \\
-    \hline
-    \multirow{2}{*}{(32768, 27568)} & \cite{Sarkis2014}    & 220                      & 125             \\
-                                    & \cite{Cassagne2015c} & 241                      & 114             \\
-    \hline
-    \multirow{2}{*}{(32768, 29492)} & \cite{Sarkis2014}    & 261                      & 113             \\
-                                    & \cite{Cassagne2015c} & 293                      & 101             \\
-  \end{tabular}
-  \end{center}
-  \caption{Comparing P-EDGE with a state-of-art software polar decoder, for
-    codes of rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
-    state-of-the art performance results reported in~\cite{Sarkis2014}, for
-    comparison.}
-  \label{tab:eval_polar_sc_gen_thr_comparison}
-\end{table}
-
-\begin{figure}
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter}
-  \caption{Performance comparison between several code rates of 8-bit fixed
-    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\TM CPU A15). Circles show P-EDGE
-    results. Triangles show our former ``handwritten'' implementation
-    results~\cite{LeGal2015a}.}
-  \label{plot:eval_polar_sc_gen_thr_inter}
-\end{figure}
-
-Fig.~\ref{plot:eval_polar_sc_gen_thr_intra} shows P-EDGE intra-frame throughput
-on different architectures. Our generic framework performance outperforms
-previous work decoder results (between 10\% and 25\% higher). This is confirmed
-in Tab.~\ref{tab:eval_polar_sc_gen_thr_comparison} which compares P-EDGE with
-the state-of-the-art result samples for some specific rates reported
-in~\cite{Sarkis2014}. The throughput of the inter-frame implementation is shown
-in Figure~\ref{plot:eval_polar_sc_gen_thr_inter} for different architectures.
-Again, the results confirm that our generic approach overtakes handwritten code
-(also between 10\% and 25\% higher on x86).
-
-\begin{figure}
-  \centering
-  \subfloat[][Without compression.]{\includegraphics[height=6.0cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:eval_polar_sc_gen_compression_wo}}
-  % \qquad
-  \\
-  \subfloat[][With compression.]{\includegraphics[height=6.0cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:eval_polar_sc_gen_compression_w}}
-  \caption{Full decoding tree representation ($N = 128, K = 64$) without and
-    with the compression sub-tree folding algorithm.}
-  \label{fig:eval_polar_sc_gen_compression}
-\end{figure}
-
-For all the test series, the bandwidth first increases with codeword size, as
-the tree pruning becomes increasingly more effective with larger trees. The
-effect is stronger for Intra-SIMD where pruning also results in removing
-inefficient scalar nodes. However, beyond a codeword size point which depends on
-the architecture and on the selected SIMD version, performance decreases again
-due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
-generated as straight-line code (no recursive calls), with all node computations
-put in sequence. This improves performance for small to medium codeword size, up
-to the point where the compiled binary exceeds the L1I cache size. We mitigated
-this issue by reducing decoder binary sizes using two compression techniques: 1)
-in the generated code, we moved the buffer offsets from template arguments to
-function arguments, which enabled the compiler to factorize more function calls
-than before (improvement by a factor of 10), 2) we implemented a sub-tree
-folding algorithm in the generator (see
-Fig.~\ref{fig:eval_polar_sc_gen_compression}), to detect multiple occurrences of
-a same sub-tree and to put the corresponding code into a dedicated function
-(improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
-with the size of the tree).
-
-\begin{table}
-  \begin{center}
-  \begin{tabular}{r r r r r r r}
-    \textbf{Decoder}         & $\bm{N = 2^6}$ & $\bm{N = 2^8}$ & $\bm{N = 2^{10}}$ & $\bm{N = 2^{12}}$ & $\bm{N = 2^{14}}$ & $\bm{N = 2^{16}}$           \\
-    \hline
-    \hline
-    inter 32-bit, $R = 1/2$  & 1 (7)          & 2 (24)         & 7 (\textbf{77})   & 9 (\textbf{254})  & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
-    % \hline
-    inter 32-bit, $R = 5/6$  & 1 (4)          & 2 (19)         & 4 (\textbf{53})   & 7 (\textbf{167})  & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
-    % \hline
-    intra 32-bit, $R = 1/2$  & 1 (4)          & 3 (16)         & 9 (\textbf{56})   & 8 (\textbf{182})  & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
-    % \hline
-    intra 32-bit, $R = 5/6$  & 1 (3)          & 3 (13)         & 6 (\textbf{38})   & 7 (\textbf{126})  & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
-    % \hline
-    inter ~8-bit, $R = 1/2$  & 1 (5)          & 2 (22)         & 7 (\textbf{72})   & 8 (\textbf{252})  & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
-    % \hline
-    inter ~8-bit, $R = 5/6$  & 1 (4)          & 2 (18)         & 4 (\textbf{51})   & 6 (\textbf{191})  & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
-  \end{tabular}
-  \end{center}
-  \caption{Code size (in KB) of the generated decoders depending on the number
-    of bits $N$ per frame (code respectively compiled with AVX instructions for
-    the 32-bit decoders and with SSE4.1 instructions for the 8-bit decoders).
-    For comparison, code size without compression are shown in parentheses.}
-  \label{tab:eval_polar_sc_gen_l1i_size}
-\end{table}
-
-\begin{figure}
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
-  \caption{P-EDGE generated decoder binary sizes depending on the frame size
-    (R=1/2).}
-  \label{plot:eval_polar_sc_gen_l1i_size}
-\end{figure}
-
-Table~\ref{tab:eval_polar_sc_gen_l1i_size} and
-Fig.~\ref{plot:eval_polar_sc_gen_l1i_size} show the binary code size of the
-decoders depending on $N$. The results which exceed the 32KB of the L1I cache
-are highlighted in bold font. Sub-tree folding was enabled starting from
-$N=2^{12}$ because there is an overhead (at run-time) when using this technique.
-P-EDGE decoder code sizes without compression are shown in parentheses: we can
-observe a huge improvement, until $N=2^{14}$ the code size never exceeds the L1I
-cache anymore.
-
-\subsection{Successive Cancellation List - Experiments and Measurements}
+\subsection{Dynamic/Flexible Successive Cancellation List Decoders}
 
 Throughput and latency measurements are detailed in this section. The proposed
 decoder implementation is compared with the previous software decoders. Despite
 the additional levels of genericity and flexibility, the proposed implementation
 is very competitive with its counterparts. Note that all the results presented
 in the following can be reproduced with the \AFFECT tool.
+
+\subsubsection{Testbed}
 
 During our investigations, all the throughput and latency measurements have been
 obtained on a single core of an Intel\R Core\TM i5-6600K CPU (Skylake
@@ -453,13 +495,51 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
 
 \subsubsection{Fully Adaptive SCL}
 
+\begin{table}[htp]
+  %\renewcommand{\arraystretch}{1.1}
+  \centering
+  \caption{Throughput and latency comparisons between floating-point (32-bit)
+    and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
+    $L = 32$ and 32-bit CRC (Gzip).}
+  \label{tab:eval_polar_scl_perfs_fixed}
+  %{\small\resizebox{\linewidth}{!}{
+  \begin{tabular}{r  r  r  r  r |  r  r | r  r}
+    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c|}{\textbf{3.5 dB}} & \multicolumn{2}{c|}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
+    \cline{4-9}
+    & & & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ \\
+    % \hline
+    \hline
+    \hline
+    \multirow{3}{*}{PA-SSCL} & 32-bit &  635 & 232.3 &   7.6 & 41.7 &  42.1 & 7.4 & 237.6 \\
+    %\cline{3-9}
+                             & 16-bit &  622 & 219.6 &   8.0 & 40.1 &  43.8 & 6.6 & 267.5 \\
+    %\cline{3-9}
+                             &  8-bit &  651 & 232.4 &   7.6 & 41.2 &  42.6 & 6.5 & 268.3 \\
+    \hline
+    \multirow{3}{*}{FA-SSCL} & 32-bit & 1201 &  67.2 &  26.1 &  8.5 & 207.8 & 5.1 & 345.5 \\
+    %\cline{3-9}
+                             & 16-bit & 1198 &  68.7 &  25.6 &  7.7 & 225.7 & 4.3 & 408.7 \\
+    %\cline{3-9}
+                             &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
+  \end{tabular}
+  %}}
+\end{table}
+
 Being able to easily change the list size of the SCL decoders enables the use of
 the FA-SSCL algorithm. With an unrolled decoder as proposed
 in~\cite{Sarkis2016}, the fully adaptive decoder would imply to generate a fully
 unrolled decoder for each value of the list depth. In our work, only one source
 code gives the designer the possibility to run each variation of the SCL
 decoders. FA-SSCL algorithm is the key to achieve the highest possible
-throughput. As shown in Table~\ref{tab:eval_polar_scl_perfs_fixed}, with an
+throughput. In Table~\ref{tab:eval_polar_scl_perfs_fixed}, maximum latency
+($\mathcal{L}_{worst}$ in $\mu s$), average latency ($\mathcal{L}_{avg}$ in
+$\mu s$) and information throughput ($\mathcal{T}_i$ in Mb/s) are given. Note
+that in 8-bit configuration only the \texttt{REP}$_{\texttt{8-}}$ nodes are
+used. The fixed-point implementation reduces, on average, the latency. In the
+high SNR region, the frame errors are less frequent. Therefore, the SCL
+algorithm is less necessary than in low SNR regions for Adaptive SCL algorithms.
+As the gain of fixed-point implementation benefits more to the SC algorithm than
+to the SCL algorithm, the throughput is higher in high SNR regions. With an
 8-bit fixed point representation of the decoder inner values, the achieved
 throughput in the case of the ($2048$,$1723$) polar code is about $425$ Mb/s on
 the i5-6600K for an $E_b/N_0$ value of $4.5$ dB. It corresponds to a FER of
@@ -481,7 +561,7 @@ average throughput is better with the FA-SSCL algorithm.
 
 \subsubsection{Comparison With State-Of-The-Art SCL Decoders}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Throughput and latency comparison with state-of-the-art SCL decoders.
     32-bit floating-point representation. Code (2048,1723), $L = 32$, 32-bit
@@ -527,10 +607,10 @@ average throughput is better with the FA-SSCL algorithm.
 The throughput and latency of the proposed decoder compared to other reported
 implementations are detailed in Table~\ref{tab:eval_polar_scl_perfs_comparison}.
 For all the decoders, all the available tree pruning optimizations are applied
-excluding the \verb|SPC4+| nodes because of the performance degradation. Each
-decoder is based on a 32-bit floating-point representation. The polar code
-parameters are $N=2048$, $K=1723$ and the 32-bit GZip CRC is used. The list size
-is $L=32$.
+excluding the $\texttt{SPC}_\texttt{4+}$ nodes because of the performance
+degradation. Each decoder is based on a 32-bit floating-point representation.
+The polar code parameters are $N=2048$, $K=1723$ and the 32-bit GZip CRC is
+used. The list size is $L=32$.
 
 The latency given in Table~\ref{tab:eval_polar_scl_perfs_comparison} is the
 worst case latency and the throughput is the average information throughput. The
@@ -556,56 +636,10 @@ extraction in the SC decoder. Finally, as mentioned before, the throughput of
 the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
 
-\subparagraph{LLR Quantization}
-
-\begin{table}
-  %\renewcommand{\arraystretch}{1.1}
-  \centering
-  \caption{Throughput and latency comparisons between floating-point (32-bit)
-    and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
-    $L = 32$ and 32-bit CRC (Gzip).}
-  \label{tab:eval_polar_scl_perfs_fixed}
-  %{\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{r  r  r  r  r |  r  r | r  r}
-    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c|}{\textbf{3.5 dB}} & \multicolumn{2}{c|}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
-    \cline{4-9}
-    & & & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ \\
-    % \hline
-    \hline
-    \hline
-    \multirow{3}{*}{PA-SSCL} & 32-bit &  635 & 232.3 &   7.6 & 41.7 &  42.1 & 7.4 & 237.6 \\
-    %\cline{3-9}
-                             & 16-bit &  622 & 219.6 &   8.0 & 40.1 &  43.8 & 6.6 & 267.5 \\
-    %\cline{3-9}
-                             &  8-bit &  651 & 232.4 &   7.6 & 41.2 &  42.6 & 6.5 & 268.3 \\
-    \hline
-    \multirow{3}{*}{FA-SSCL} & 32-bit & 1201 &  67.2 &  26.1 &  8.5 & 207.8 & 5.1 & 345.5 \\
-    %\cline{3-9}
-                             & 16-bit & 1198 &  68.7 &  25.6 &  7.7 & 225.7 & 4.3 & 408.7 \\
-    %\cline{3-9}
-                             &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
-  \end{tabular}
-  %}}
-\end{table}
-
-In Table~\ref{tab:eval_polar_scl_perfs_fixed}, maximum latency
-($\mathcal{L}_{worst}$ in $\mu s$), average latency ($\mathcal{L}_{avg}$ in
-$\mu s$) and information throughput ($\mathcal{T}_i$ in Mb/s) are given. Note
-that in 8-bit configuration only the \texttt{REP}$_{\texttt{8-}}$ nodes are
-used. The fixed-point implementation reduces, on average, the latency. In the
-high SNR region, the frame errors are less frequent. Therefore, the SCL
-algorithm is less necessary than in low SNR regions for Adaptive SCL algorithms.
-As the gain of fixed-point implementation benefits more to the SC algorithm than
-to the SCL algorithm, the throughput is higher in high SNR regions. For
-instance, up to 425.9 Mb/s is achieved in 8-bit representation with the FA-SSCL
-decoder. Note that the improvements described in Section~\ref{sec:polar_implem}
-are applied to the decoders that are given in
-Table~\ref{tab:eval_polar_scl_perfs_fixed}.
-
 \section{Turbo Decoders}
 \label{sec:eval_turbo}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
   % {\scriptsize
@@ -639,7 +673,7 @@ Linux (Ubuntu 14.04 LTS) with the GNU compiler (version 4.8) and with the
 
 \subsection{Throughput performance}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{turbo/thr/thr}
   \caption{Information throughput depending on $K$ for various number of cores
@@ -661,7 +695,7 @@ bandwidth to feed all the cores. This explains the decreasing throughput for
 $K > 4096$, in AVX mode. Nonetheless, on P3 target, the throughput exceeds 1Gbps
 for all codes with $K<4096$.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{turbo/energy/energy}
   \caption{\emph{Energy-per-bit} ($E_d$) depending on the number of cores and
@@ -776,7 +810,7 @@ instructions (128-bit SIMD) and four cores (no SMT) running at 2.0 GHz and 3) an
 Intel\R Xeon Phi\TM Knight-Corner 7120P with KNCI instructions (512-bit SIMD)
 and 61 cores using 4-way SMT and running at 1.2 GHz.
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Throughput, Latency, Power and Energy Characteristics~\cite{Ghaffari2019}.}
   \label{tab:eval_scma_thr}
@@ -887,7 +921,7 @@ options such as \verb|-no-prec-div| \verb|-no-prec-sqrt|
 \verb|-fp-speculation=fast| \verb|-fp-model-fast=2| do not change the results
 significantly with the Intel\R compiler.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{scma/energy/energy}
   \caption{Graphical comparison of the energy consumed per decoded bit for
@@ -907,7 +941,7 @@ scalable up to the number of processing units dedicated to them.
 \subsection{Memory (Cache) Access Efficiency}
 \label{sec:eval_scma_memory}
 
-\begin{table}
+\begin{table}[htp]
   \centering
   \caption{Cache Performance Characterization}
   \label{tab:eval_scma_cache}
@@ -986,9 +1020,9 @@ calculations. In this section, the time complexity of the various forms of SCMA
 decoders are investigated using the Intel\R VTune\TM profiler\footnote{Intel\R
 VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{scma/profiling/profiling}
+  \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
   \caption{Profiling results of different MPA algorithms using Intel\R VTune\TM
     Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
   \label{plot:eval_scma_profiling}

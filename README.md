@@ -42,6 +42,13 @@ of the available targets:
 - `mrproper`: removes all generated intermediate files including the PDFs.
 - `open`: shows the thesis with the appropriate PDF reader.
 
+## Known Issues
+
+- There is a bug with the `titlesec` package on `Linux Ubuntu 16.04 LTS`, the
+numbering of the sections and subsections is broken. Installing the latest
+version from [https://www.ctan.org/pkg/titlesec](https://www.ctan.org/pkg/titlesec)
+solves the problem.
+
 ## Plan of the Thesis
 
-[Follow this link.](plan.md)
+[Follow this link.](plan.md) -> outdated now :-(

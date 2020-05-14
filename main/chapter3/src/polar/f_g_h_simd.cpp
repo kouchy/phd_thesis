@@ -1,7 +1,8 @@
-class API_polar
+template <typename B, typename R>
+class API_polar_simd : public API_polar
 {
-	template <typename R>
-	mipp::Reg<R> f_simd(const mipp::Reg<R> &la, const mipp::Reg<R> &lb)
+public:
+	static mipp::Reg<R> f(const mipp::Reg<R> &la, const mipp::Reg<R> &lb)
 	{
 		auto abs_la  = mipp::abs(la);
 		auto abs_lb  = mipp::abs(lb);
@@ -11,17 +12,15 @@ class API_polar
 
 		return lc;
 	}
-	template <typename B, typename R>
-	mipp::Reg<R> g_simd(const mipp::Reg<R> &la, const mipp::Reg<R> &lb,
-	                    const mipp::Reg<B> &sa)
+	static mipp::Reg<R> g(const mipp::Reg<R> &la, const mipp::Reg<R> &lb,
+	                      const mipp::Reg<B> &sa)
 	{
 		auto neg_la = mipp::neg(la, sa);
 		auto lc     = neg_la + lb;
 
 		return lc;
 	}
-	template <typename B>
-	mipp::Reg<B> h_simd(const mipp::Reg<B>& sa, const mipp::Reg<B>& sb)
+	static mipp::Reg<B> h(const mipp::Reg<B>& sa, const mipp::Reg<B>& sb)
 	{
 		return sa ^ sb;
 	}
