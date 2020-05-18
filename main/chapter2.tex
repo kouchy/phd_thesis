@@ -64,6 +64,10 @@ the root node in the form of a $N$-bit partial sum vectors.
 
 \subsubsection{Successive Cancellation List Algorithm}
 
+\begin{itemize}
+  \item \xmark~Prendre le schéma de Mathieu pour mieux décrire l'algo SCL
+\end{itemize}
+
 \begin{algorithm}
   \caption{SCL decoding algorithm}\label{alg:polar_scl}
 
@@ -279,6 +283,17 @@ section.
 \subsubsection{Generic and Flexible Polar Decoders}
 \label{sec:polar_genericity}
 
+\begin{itemize}{}
+  \item \xmark~Revoir le discours pour qu'il soit moins parti pris pour les
+    décodeurs "Génériques/dynamiques"
+  \item \xmark~Si on laisse ça ici il faut une section sur les décodeurs
+    "générés/déroulés" au même niveau que la
+    Section~\ref{sec:alg_polar_genericity} (tous les décodeurs proposés (SC et
+    SCL) sont flexibles mais pas génériques)
+  \item \xmark~Lever l'ambiguité entre génériques/dynamiques/flexibles dans tout
+    le document
+\end{itemize}
+
 The main contribution of this work lies in the flexibility and the genericity of
 the proposed software decoder. These terms need to be clearly defined in order
 to circumvent possible ambiguity. In the remainder of the paper, the
@@ -298,6 +313,7 @@ degrees of freedom to the decoder in order to find the best tradeoff between
 decoding performance, throughput or latency for a given polar code.
 
 \paragraph{Genericity}
+\label{sec:alg_polar_genericity}
 
 In the context of wireless communications, the standards enforce several
 different code lengths $N$ that have to be supported to share bandwidth between
@@ -484,8 +500,10 @@ in the proposed decoders to keep a low decoding time.
 \label{sec:turbo_overview}
 
 \begin{itemize}
-  \item \xmark~décodeur Turbo LTE (3G/4G)
-  \item \xmark~treillis
+  \item \xmark~prendre le shémas du treillis de Thibaud pour illustrer le BCJR
+    LTE (3G/4G)
+  \item \xmark~prendre le schémas du décodeur Turbo de Thibaud pour mieux
+    expliquer le décodeur complet
 \end{itemize}
 
 % SHORT VERSION ---------------------------------------------------------------
@@ -699,11 +717,11 @@ inside the decoder are responsible for this small performance loss.
 
 \section{LDPC Decoders}
 
-\subsection{BP Algorithms}
-
 \begin{itemize}
-  \item graphe biparti
+  \item \xmark~tout est à faire pour présenter les décodeurs LDPC BP
 \end{itemize}
+
+\subsection{BP Algorithms}
 
 LDPC codes is a family of channel codes that is well spread in current digital
 communication systems. They have been chosen in many communication standards
@@ -751,10 +769,17 @@ representation enables to pack more elements into SIMD registers.
 \subsection{Generic Implementation}
 
 \begin{itemize}
-  \item \xmark~décodeurs génériques (BP-flooding/HL/VL) sur les "update nodes"
+  \item \xmark~décodeurs génériques avec "separation of concerns":
+    1) "scheduling" (BP-flooding/HL/VL), 2) "update nodes" (SPA, log-SPA, MS,
+    ...)
 \end{itemize}
 
 \section{SCMA Demodulators}
+
+\begin{itemize}
+  \item \cmark~si on laisse le SCMA, je crois qu'il y a tout
+  \item \xmark~refaire les vilains schémas
+\end{itemize}
 
 \subsection{Introduction and Related Works}
 
@@ -1254,3 +1279,14 @@ has a cost in terms of decoding performance. This trade-off should be considered
 in order to meet the system constraints.
 
 \section{Discussion}
+
+\begin{itemize}
+  \item \xmark~mettre en avant le challenge d'avoir des algorithmes assez
+    différents avec des structures de données variées
+  \item \xmark~indiquer quelques utilisations typiques des algos les plus
+    utilisés (5G, satellite, etc.)
+  \item \xmark~dire que les décodeurs/démodulateurs présentés ne sont pas
+    exhausitifs par famille de code, ils sont juste représentatifs des plus
+    utilisés et discutés dans la littérature today (en citer quelques autres qui
+    semblent prometteurs)
+\end{itemize}

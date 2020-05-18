@@ -10,6 +10,10 @@
 
 \subsection{Generated/Unrolled Successive Cancellation Decoders}
 
+\begin{itemize}
+  \item \xmark~Remplacer P-EDGE par AFF3CT
+\end{itemize}
+
 In this section we first discuss the results of our tree compression technique,
 then we describe the protocol we used. At the end we provide a performance
 comparison between the state-of-the-art and P-EDGE.
@@ -77,7 +81,7 @@ cache anymore. In~\cite{Giard2016b}, authors report that they can't compile
 codes longer than $N = 2^{15}$. The proposed compression technique allows to
 exceed that limit.
 
-\subsubsection{Testbed}
+\subsubsection{Experimentation Protocol}
 
 \begin{table}[htp]
   \begin{center}
@@ -173,7 +177,7 @@ in Figure~\ref{plot:eval_polar_sc_gen_thr_inter} for different architectures.
 Again, the results confirm that our generic approach overtakes handwritten code
 (also between 10\% and 25\% higher on x86).
 
-\subsection{Dynamic/Flexible Successive Cancellation Decoders}
+\subsection{Dynamic/Generic Successive Cancellation Decoders}
 
 The objective and originality of this study is to explore different software and
 hardware parameters for the execution of a software SC decoder on modern ARM
@@ -206,7 +210,7 @@ SNR. For very large frame sizes, the dynamic decoder outperforms generated
 decoders because the heavily unrolled generated decoders exceed Level 1
 instruction cache size capacity.
 
-\subsubsection{Testbed}
+\subsubsection{Experimentation Protocol}
 
 \begin{table}[htp]
   \caption{Specifications of the \odr and the \juno boards.}
@@ -476,7 +480,7 @@ Finally, it is important to notice that multi-core implementations of the
 proposed ARM\R decoders is still possible on these ARM\R targets to improve the
 decoding throughputs.
 
-\subsection{Dynamic/Flexible Successive Cancellation List Decoders}
+\subsection{Dynamic/Generic Successive Cancellation List Decoders}
 
 Throughput and latency measurements are detailed in this section. The proposed
 decoder implementation is compared with the previous software decoders. Despite
@@ -484,7 +488,7 @@ the additional levels of genericity and flexibility, the proposed implementation
 is very competitive with its counterparts. Note that all the results presented
 in the following can be reproduced with the \AFFECT tool.
 
-\subsubsection{Testbed}
+\subsubsection{Experimentation Protocol}
 
 During our investigations, all the throughput and latency measurements have been
 obtained on a single core of an Intel\R Core\TM i5-6600K CPU (Skylake
@@ -494,6 +498,11 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
 \verb|-Ofast -march=native -funroll-loops|.
 
 \subsubsection{Fully Adaptive SCL}
+
+\begin{itemize}
+  \item \xmark~ajouter des perfs sur ARM
+  \item \xmark~ajouter des mesures de consommation énergétique ?
+\end{itemize}
 
 \begin{table}[htp]
   %\renewcommand{\arraystretch}{1.1}
@@ -639,6 +648,15 @@ the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 \section{Turbo Decoders}
 \label{sec:eval_turbo}
 
+\begin{itemize}
+  \item \xmark~ajouter des perfs sur ARM (il doit falloir prendre des petites
+    trames pour que ça marche)
+  \item \xmark~perf version version vectorisée inter/intra-frame, expliquer
+    pourquoi c'est intéressant
+  \item \xmark~se comparer au décodeur intra-frame de Bertrand, justifier les
+    moins bonnes performances globales par une plus grande généricité
+\end{itemize}
+
 \begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
@@ -711,57 +729,6 @@ on the P2 CPU target. For small codewords ($K=1024$) it is more energy efficient
 to resort to AVX. But this is not so clear on larger codewords ($K=6144$) since
 with 3/4 cores, the code using SSE outperforms the AVX one.
 
-\begin{table*}
-  % \renewcommand{\arraystretch}{0.7}
-  % \tabcolsep=6pt
-  \centering
-  \caption{Performance comparison with the other works. All the reported metrics
-    are normalized to one iteration.
-    $NThr. = (Thr. \times Iters) / 6~$,
-    $TNDC  = NThr. / (Freq. \times Cores \times SIMD)$ see \cite{Ying2012},
-    $E_d   = ( TDP / NThr. ) \times 10^3$.}
-  \label{tab:eval_turbo_hof}
-  \begin{adjustbox}{angle=90}
-  {\resizebox{0.95\textheight}{!}{
-  \begin{tabular}{|r|r|r||r|r|r|r|r|r|r|r|r|r|r||r|r|r|r||r|r|r|}
-  \hline
-  \multicolumn{3}{|c||}{\multirow{2}{*}{}} & \multicolumn{11}{c||}{\multirow{2}{*}{\textbf{Hardware and decoder parameters}}} & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Decoding performances}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
-  \multicolumn{3}{|c||}{}                  & \multicolumn{11}{c||}{}                                                          & \multicolumn{4}{c||}{}                                                & \multicolumn{3}{c|}{}                                  \\
-  \hline
-  \multicolumn{2}{|r|}{\textbf{Work}}                                                                    & \textbf{Year}         & \textbf{Platform}        & \textbf{Arch.}                  & \textbf{TDP}          & \textbf{Cores}     & \textbf{Freq.}         & \textbf{Algorithm}       & \textbf{Pre.}       & \textbf{SIMD}       & \textbf{Inter}      & $\boldsymbol{K}$      & \textbf{Iters}     & \textbf{BER}                  & \textbf{FER}             & \textbf{Lat.} & \textbf{Thr.}    & \textbf{NThr.} & \textbf{TNDC} & $\boldsymbol{E_d}$ \\ \cline{15-16}
-  \multicolumn{2}{|r|}{}                                                                                 &                       &                          &                                 & Watts                 & or SM              & GHz                    &                          & bit                 & length              & level               &                       &                    & \multicolumn{2}{c|}{at 0.7 dB}                           & $\mu$s        & Mbps             & Mbps           &               & nJ                 \\
-  \hline
-  \hline
-  \multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{GPU-based}}} & \cite{Wu2010}                         & 2010                  & Tesla C1060              & \textit{Tesla}                   & 200                  & 15                 & 1.30                   &  ML-MAP                  & 32                  & 16                  & 100                 & 6144                  & 5                  & 1e-04                         & \multicolumn{1}{c|}{$-$} &  76800        &    8.0           &   6.7          & 0.021         &  29851             \\ \cline{2-21}
-                                                                 & \cite{Wu2011}                         & 2011                  & GTX 470                  & \textit{Fermi}                   & 215                  & 14                 & 1.22                   &  ML-MAP                  & 32                  & 32                  & 100                 & 6144                  & 5                  & 4e-05                         & \multicolumn{1}{c|}{$-$} &  20827        &   29.5           &  24.6          & 0.045         &   8740             \\ \cline{2-21}
-                                                                 & \cite{Chinnici2012}                   & 2012                  & Tesla C2050              & \textit{Fermi}                   & 247                  & 14                 & 1.15                   &   L-MAP                  & 32                  & 32                  & 32                  & 11918                 & 5                  & \multicolumn{1}{c|}{$-$}      & \multicolumn{1}{c|}{$-$} & 108965        &    3.5           &   2.9          & 0.0057        &  85172             \\ \cline{2-21}
-                                                                 & \cite{Yoge2012}                       & 2012                  & 9800 GX2                 & \textit{Tesla}                   & 197                  & 16                 & 1.50                   &  ML-MAP                  & 32                  & 16                  & 1                   & 6144                  & 5                  & 1e-02                         & \multicolumn{1}{c|}{$-$} &   3072        &    2.0           &   1.7          & 0.0043        & 115882             \\ \cline{2-21}
-                                                                 & \cite{Liu2013}                        & 2013                  & GTX 550 Ti               & \textit{Fermi}                   & 116                  & 6                  & 1.80                   & EML-MAP                  & 32                  & 32                  & 1                   & 6144                  & 6                  & 1e-02                         & \multicolumn{1}{c|}{$-$} &     72$^*$    &   85.3           &  85.3          & 0.247         &   1360             \\ \cline{2-21}
-                                                                 & \cite{Chen2013}                       & 2013                  & GTX 580                  & \textit{Fermi}                   & 244                  & 16                 & 1.54                   &  ML-MAP                  & 32                  & 32                  & 1                   & 6144                  & 6                  & 3e-04                         & \multicolumn{1}{c|}{$-$} &   1660        &    3.7           &   3.7          & 0.0047        &  63946             \\ \cline{2-21}
-                                                                 & \cite{Xianjun2013}                    & 2013                  & GTX 480                  & \textit{Fermi}                   & 250                  & 15                 & 1.40                   & EML-MAP                  & 32                  & 32                  & 1                   & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & \multicolumn{1}{c|}{$-$} &     50$^*$    &  122.8           & 122.8          & 0.183         &   2036             \\ \cline{2-21}
-                                                                 & \cite{Wu2013}                         & 2013                  & GTX 680                  & \textit{Kepler}                  & 195                  & 8                  & 1.01                   & EML-MAP                  & 32                  & 192                 & 16                  & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & 1e-02                    &   2657        &   37.0           &  37.0          & 0.024         &   5270             \\ \cline{2-21}
-                                                                 & \cite{Zhang2014}                      & 2014                  & Tesla K20c               & \textit{Kepler}                  & 225                  & 13                 & 0.71                   &  ML-MAP                  & 32                  & 192                 & 1                   & 6144                  & 5                  & 1e-04                         & \multicolumn{1}{c|}{$-$} &   1097        &    5.6           &   4.7          & 0.0026        &  47872             \\ \cline{2-21}
-                                                                 & \cite{Li2014}                         & 2014                  & GTX 580                  & \textit{Fermi}                   & 244                  & 16                 & 1.54                   & BR-SOVA                  & 8                   & 32                  & 4                   & 6144                  & 5                  & 2e-02                         & \multicolumn{1}{c|}{$-$} &    192$^*$    &  127.8           & 106.5          & 0.135         &   2291             \\ \cline{2-21}
-                                                                 & \multirow{2}{*}{\cite{Li2016a}}       & \multirow{2}{*}{2016} & \multirow{2}{*}{GTX 680} & \multirow{2}{*}{\textit{Kepler}} & \multirow{2}{*}{195} & \multirow{2}{*}{8} & \multirow{2}{*}{1.01}  & EML-MAP                  & \multirow{2}{*}{32} & \multirow{2}{*}{192} & \multirow{2}{*}{1} & \multirow{2}{*}{6144} & 7                  & \multirow{2}{*}{9e-03}        & \multicolumn{1}{c|}{$-$} &    817        &    8.2$^\dagger$ &   9.6          & 0.0062        &  20313             \\ \cline{9-9} \cline{14-14} \cline{16-21}
-                                                                 &                                       &                       &                          &                                  &                      &                    &                        & FPTD                     &                     &                      &                    &                       & 36                 &                               & \multicolumn{1}{c|}{$-$} &    403        &   18.7$^\dagger$ & $\ddagger$     & $\ddagger$    &  10428$^\ddagger$  \\
-  \hline
-  \hline
-  \multirow{9}{*}{\rotatebox[origin=c]{90}{\textbf{CPU-based}}}  & \cite{Huang2011}                      & 2011                  & i7-960                   & \textit{Nehalem}                 & 130                  & 1                  & 3.20                   &  ML-MAP                  & 16                  & 8                   & 1                   & 1008                  & 8                  & 3e-03                         & 7e-02                    &    138        &    7.3           &    9.7         & 0.380         &  13402             \\ \cline{2-21}
-                                                                 & \cite{Zhang2012}                      & 2012                  & X5670                    & \textit{Westmere}                & 95                   & 6                  & 2.93                   & EML-MAP                  & 8                   & 16                  & 6                   & 5824                  & 3                  & 6e-02                         & \multicolumn{1}{c|}{$-$} &    157        &  222.6           &  111.3         & 0.396         &    854             \\ \cline{2-21}
-                                                                 & \cite{Wu2013}                         & 2013                  & i7-3770K                 & \textit{Ivy Bridge}              & 77                   & 4                  & 3.50                   & EML-MAP                  & 16                  & 8                   & 4                   & 6144                  & 6                  & \multicolumn{1}{c|}{$-$}      & 1e-01                    &    323        &   76.2           &   76.2         & 0.680         &   1011             \\ \Cline{0.8pt}{2-21}
-                                                                 & \multirow{6}{*}{\cite{Cassagne2016a}} & \multirow{6}{*}{2016} & E5-2650                  & \textit{Ivy Bridge}              & 95                   & 8                  & 2.50                   & \multirow{6}{*}{EML-MAP} & \multirow{3}{*}{16} & \multirow{3}{*}{8}  & 64                  & \multirow{6}{*}{6144} & \multirow{6}{*}{6} & \multirow{3}{*}{6e-06}        & \multirow{3}{*}{6e-03}   &   3665        &  107.3           &  107.3         & 0.669         &    885             \\ \cline{4-8} \cline{12-12} \cline{17-21}
-                                                                 &                                       &                       & i7-4960HQ                & \textit{Haswell}                 & 47                   & 4                  & 3.20                   &                          &                     &                     & 32                  &                       &                    &                               &                          &   2212        &   88.9           &   88.9         & 0.868         &    527             \\ \cline{4-8} \cline{12-12} \cline{17-21}
-                                                                 &                                       &                       & $2\times$E5-2680v3       & \textit{Haswell}                 & 240                  & 24                 & 2.50                   &                          &                     &                     & 192                 &                       &                    &                               &                          &   2657        &  443.7           &  443.7         & 0.924         &    541             \\ \cline{4-8} \cline{10-12} \cline{15-21}
-                                                                 &                                       &                       & E5-2650                  & \textit{Ivy Bridge}              & 95                   & 8                  & 2.50                   &                          & \multirow{3}{*}{8}  & \multirow{3}{*}{16} & 128                 &                       &                    & \multirow{3}{*}{8e-05}        & \multirow{3}{*}{5e-02}   &   3492        &  225.2           &  225.2         & 0.704         &    422             \\ \cline{4-8} \cline{12-12} \cline{17-21}
-                                                                 &                                       &                       & i7-4960HQ                & \textit{Haswell}                 & 47                   & 4                  & 3.20                   &                          &                     &                     & 64                  &                       &                    &                               &                          &   2837        &  138.6           &  138.6         & 0.677         &    339             \\ \cline{4-8} \cline{12-12} \cline{17-21}
-                                                                 &                                       &                       & $2\times$E5-2680v3       & \textit{Haswell}                 & 240                  & 24                 & 2.50                   &                          &                     &                     & 384                 &                       &                    &                               &                          &   3293        &  716.4           &  716.4         & 0.746         &    335             \\ \cline{2-21}
-                                                                 & \cite{LeGal2019a}                     & 2019                  & $2\times$E5-2680v3       & \textit{Haswell}                 & 240                  & 24                 & 2.50                   & EML-MAP                  & 8                   & 32                  & 24                  & 6144                  & 6                  & 1e-03                         & 3e-01                    &     84        & 1735.0           & 1735.0         & 0.904         &    138             \\
-  \hline
-  \end{tabular}
-  }}
-  \end{adjustbox}
-\end{table*}
-
 Table~\ref{tab:eval_turbo_hof} shows a performance comparison with related
 works\footnote{To be as fair as possible with the other works, we assume that
 the \emph{Intel\R Turbo Boost} (ITB) technology was disabled on their CPUs. For
@@ -784,11 +751,11 @@ alternative to GPU in future channel coding functions in cloud-based RAN.
 \label{sec:eval_scma}
 
 In this section, the effects of the various optimizations considered in
-Section~\ref{sec:scma_improvements} are investigated. A key concern is to ensure
-that the decoding error performance is not affected by the execution time
-improvements, particularly when approximations are involved. Energy efficiency
-and power consumption, throughput, memory access efficiency, hardware complexity
-analysis are all important aspects that must be considered.
+Section~\ref{sec:opt_scma} are investigated. A key concern is to ensure that the
+decoding error performance is not affected by the execution time improvements,
+particularly when approximations are involved. Energy efficiency and power
+consumption, throughput, memory access efficiency, hardware complexity analysis
+are all important aspects that must be considered.
 
 \subsection{Characterizing Throughput Gains, Energy Efficiency and Power Consumption}
 \label{sec:eval_scma_throughput}

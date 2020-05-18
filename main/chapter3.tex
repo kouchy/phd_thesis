@@ -256,6 +256,15 @@ Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
 
 \subsubsection{\Cxx SIMD Wrappers}
 
+\begin{itemize}
+  \item \xmark~mettre à jour les wrappers SIMD, il y en a de nouveaux et les
+    actuels ont évolués
+  \item \xmark~problème: il faudrait refaire les XP
+    Figure~\ref{plot:vec_mandelbrot} et tout le discours qui va avec... :-(
+    (solution possible : citer et dater l'article pour dire de quand date la
+    mise à jour)
+\end{itemize}
+
 % \begin{table}
 %   \renewcommand{\arraystretch}{0.95}
 %   \tabcolsep=6pt
@@ -459,15 +468,37 @@ implementations of the same code are possible. \MIPP offers to the programmer
 the control on the intrinsics taken and ensures portability.
 
 \section{Vectorization Strategies}
+\label{sec:opt_vec_strat}
+
+\begin{itemize}
+  \item \xmark~présenter la vectorisation intra-frame et inter-frame, c'est
+    redondant dans toutes les sections suivantes
+  \item \xmark~présenter intra-frame et inter-frame sans donner d'avis, l'avis
+    sera donné dans la partie discussion
+\end{itemize}
 
 \subsection{Intra-frame}
+\label{sec:opt_vec_strat_intra}
 
 \subsection{Inter-frame}
+\label{sec:opt_vec_strat_inter}
 
 \subsection{Inter/Intra-frame}
 
 % \section{Error Correction Coding in 5G}
 \section{Efficient Monte Carlo Simulations}
+
+\begin{itemize}
+  \item \cmark~l'idée de cette section est de regrouper les algos utiles dans la
+    simulation qui prennent un temps non négligeable et qui ont été optimisés
+    pour que la chaîne complète soit performante
+  \item \xmark~le texte d'introduction est à modifier
+  \item \xmark~on pourrait rajouter le démodulateur générique, c'est un mix de
+    SIMD et code séquentiel, je pense que c'est assez astucieux et ça montre
+    qu'avec MIPP on peut facilement mixer du code séquentiel avec du code
+    vectorisé ce qui est plus dur avec des wrappers de plus haut niveau (qui
+    mangent les boucles)
+\end{itemize}
 
 It is now viable to implement channel coding algorithms on programmable
 processors under real time constraints. This kind of optimized software
@@ -1007,6 +1038,11 @@ compression ratio increases with the size of the tree).
 
 \subsubsection{Dynamic Implementation}
 
+\begin{itemize}
+  \item \xmark~expliquer l'unrolling partiel à base de templates.
+  \item \xmark~"dynamic" = "generic" présenté dans les algos
+\end{itemize}
+
 We extend the AFF3CT software with a new version of the Fast-SSC decoder,
 called \emph{dynamic} decoder. This version uses the same building blocks (the
 polar API) as the generated versions, but the same code is able to accommodate
@@ -1017,15 +1053,13 @@ is the first non-generated version (to the best of our knowledge) to support
 both multi-precision (32-bit, 16-bit and 8-bit) and multi-SIMD strategies
 (intra-frame or inter-frame).
 
+% ceci est redit dans la section evaluation -----------------------------------
 By design, generated decoders are still faster than the dynamic decoder (up to
 20\%). However each generated decoder is optimized for a single SNR. For very
 large frame sizes, the dynamic decoder outperforms generated decoders because
-the heavily unrolled generated decoders exceed Level 1 instruction cache size
+the heavily unrolled generated decoders exceed Level 1 instruction cache sizeF
 capacity.
-
-\begin{itemize}
-  \item \xmark~expliquer l'unrolling partiel à base de templates.
-\end{itemize}
+% ceci est redit dans la section evaluation -----------------------------------
 
 \subsubsection{LLRs and Partial Sum Memory Management}
 
@@ -1251,9 +1285,17 @@ SCL since it includes an additional SC decoder.
 
 \section{Turbo Decoders}
 
+\begin{itemize}
+  \item \xmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
+    elle doit aller dans la Section~\ref{sec:opt_vec_strat_inter} à terme
+  \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
+  \item \xmark~introduire la version version vectorisée inter/intra-frame,
+    expliquer pourquoi c'est intéressant
+\end{itemize}
+
 \subsection{Intra-frame versus inter-frame parallelism}
 
-A Turbo decoder is in charge of decoding a large set of frames. Two strategies
+A Turbo decoder is in charge of decoding a large set of frames. Two strategies{}
 are then possible to speedup the decoding process. i)
 \textit{Intra-frame parallelism} : the decoder exploits the parallelism within
 the turbo-decoding process by executing concurrent tasks during
@@ -1458,6 +1500,16 @@ $\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are then never stored in the
 memory.
 
 \section{LDPC Decoders}
+
+\begin{itemize}
+  \item \xmark~section très incomplète
+  \item \xmark~on pourrait parler de la technique utilisée pour avoir des
+    décodeurs BP génériques (avec des illustrations de code, ça repose sur du
+    C++17), décodeurs séquentiels ou vectorisation inter-frame
+  \item \xmark~peut être mettre quelques petits résultats en terme de débit et
+    latence ici plutôt que dans la section évaluation puisqu'il n'y a pas de
+    publications
+\end{itemize}
 
 % LDPC codes is a family of channel codes that is well spread in current digital
 % communication systems. They have been chosen in many communication standards
@@ -1698,5 +1750,11 @@ throughput of the various message passing algorithms.
   \item \xmark~le temps d’exécution d’une tâche peut varier entre quelques
     microsecondes et quelques milliseconde -> faible latence -> adapté à la
     vectorisation
+  \item \xmark~rappeller les optimisations clefs (quantification, memory layout
+    adapté, vecto, ...)
   \item \xmark~inter-/intra vectorisation, point de vue
+  \item \xmark~faiblesses des architectures CPU actuelles, comment on pourrait
+    les améliorer pour ce type d'algos
+  \item \xmark~optimisations non implémentées qui pourraient être bénéfiques
+    (mixed-precision, bit packing à gogo)
 \end{itemize}
