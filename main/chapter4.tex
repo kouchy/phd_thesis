@@ -1,6 +1,6 @@
 \graphicspath{{main/chapter4/fig/}}
 
-\chapter{\AFFECT: A Fast Forward Error Correcting Toolbox}
+\chapter{\AFFECT: A Fast Forward Error Correction Toolbox}
 
 % \vspace*{\fill}
 \minitoccustom
@@ -146,9 +146,9 @@ script notes in the different tables, here is the meaning of these notes:
   \item $^\beta$: we have strong doubts on the veracity of the result,
   \item $^\gamma$: following the formula, the throughput should be lower but the
     authors performed a specific data transfers overlapping with CUDA streams
-    allowing to reach higher throughput.
+    allowing to reach higher throughput,
   \item $^\dagger$: we did not compute the metrics because the proposed
-    algorithm is too different to be compared with the others.
+    algorithm is too different to be compared with the others,
   \item $^\ddagger$: the inter-frame level has been deduced from the throughput
     and the latency.
 \end{itemize}
@@ -307,6 +307,12 @@ script notes in the different tables, here is the meaning of these notes:
   }}
   \end{adjustbox}
 \end{table}
+
+In some works the decoding algorithm is capable of \emph{early termination}
+(Early T.). This mean that the decoding process can stop before making all the
+decoding iterations if some criterion is reached. This lead to increased
+\emph{average} decoding performances. To be as fair as possible we decided to
+report \emph{worst} decoding performances in the HoFs.
 
 \section{Use Cases}
 
