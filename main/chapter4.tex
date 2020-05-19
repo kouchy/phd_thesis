@@ -88,7 +88,7 @@ interfaces, etc.) for all code families.
 Note that Table~\ref{tab:fec_libraries_comparison} does not aim at comparing
 channel code implementation performances.
 
-\subsection{Software Decoders Hall of Fames}
+\subsection{FEC Software Decoders Hall of Fame}
 
 On the \AFFECT website, an overview of software channel decoders
 state-of-the-art is provided for the mains channel codes. In this section, a
@@ -113,9 +113,9 @@ proposed some \emph{Metrics} in the last column. Those metrics aim to facilitate
 the comparison between the results. The \emph{normalized throughput} (NThr.) is
 different for each HoF but the idea is to normalize the throughput with a
 representative number of iterations/lists ($I$). Here is the normalized
-throughput formula:
+throughput:
 \begin{equation}
-  NThr. = (Thr. \times I) / 50,
+  NThr. = (Thr. \times i) / I,
 \end{equation}
 for the LDPC HoF $I = 50$, for the turbo HoF $I = 6$ and for the polar HoF
 $I = 1$.
@@ -149,6 +149,8 @@ script notes in the different tables, here is the meaning of these notes:
     allowing to reach higher throughput.
   \item $^\dagger$: we did not compute the metrics because the proposed
     algorithm is too different to be compared with the others.
+  \item $^\ddagger$: the inter-frame level has been deduced from the throughput
+    and the latency.
 \end{itemize}
 
 \begin{table}
