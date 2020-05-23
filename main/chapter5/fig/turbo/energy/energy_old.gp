@@ -75,7 +75,7 @@ set title "Energy-per-bit (E_b) depending on the number of cores"
 set xlabel "Number of cores"
 set ylabel "Energy-per-bit (nJ)"
 
-set output "./energy.pdf"
+set output "./energy_old.pdf"
 datafile = "./dat/data.txt"
 plot for [IDX=0:3] datafile using 1:(1000 * ($5*$8) / ($1 * $2 * $3)) i IDX with linespoint title columnheader(1)
 

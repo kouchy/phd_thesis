@@ -1,0 +1,48 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=1.0\linewidth, height=0.7\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
+                 xlabel=Number of cores, ylabel=Energy-per-bit (nJ), grid=both, grid style={gray!30},
+                 xtick={1,2,3,4},
+                 % tick align=outside, tickpos=left,
+                 grid style={dashed, gray!30},
+                 legend pos=south east, legend columns=1]
+
+        \addplot[mark=square,  Paired-1,     semithick                              ] table [x index=0, y expr=(\thisrowno{4}*\thisrowno{7}*1000)/(\thisrowno{0}*\thisrowno{1}*\thisrowno{2})] {./dat/data_K1024_AVX.txt}; \label{plot:line1}
+        \addplot[mark=square,  Paired-1!70,  semithick, dashed, mark options={solid}] table [x index=0, y expr=(\thisrowno{4}*\thisrowno{7}*1000)/(\thisrowno{0}*\thisrowno{1}*\thisrowno{2})] {./dat/data_K1024_SSE.txt}; \label{plot:line2}
+        \addplot[mark=o,        Paired-3,     semithick                              ] table [x index=0, y expr=(\thisrowno{4}*\thisrowno{7}*1000)/(\thisrowno{0}*\thisrowno{1}*\thisrowno{2})] {./dat/data_K6144_AVX.txt}; \label{plot:line3}
+        \addplot[mark=o,        Paired-3!70,  semithick, dashed, mark options={solid}] table [x index=0, y expr=(\thisrowno{4}*\thisrowno{7}*1000)/(\thisrowno{0}*\thisrowno{1}*\thisrowno{2})] {./dat/data_K6144_SSE.txt}; \label{plot:line4}
+
+    \end{axis}
+
+    \matrix (table) [draw,
+             matrix of nodes,
+             nodes in empty cells,
+             anchor=north,
+             inner sep=2.3pt,
+             fill=white] at (8.8,6.5)
+    {
+          $K$  & \small{AVX}       & \small{SSE}      \\
+          1024 & \ref{plot:line1}  & \ref{plot:line2} \\
+          6144 & \ref{plot:line3}  & \ref{plot:line4} \\
+               &                   &                  \\
+    };
+
+  \end{tikzpicture}
+\end{document}

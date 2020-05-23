@@ -91,7 +91,7 @@ set title "Throughput depending on the frame size"
 set xlabel "Code dimension K"
 set ylabel "Throughput (Mbps)"
 
-set output "./thr.pdf"
+set output "./thr_old.pdf"
 datafile = "./dat/data.txt"
 plot for [IDX=0:15] datafile using 1:5 i IDX with linespoint title columnheader(1)
 

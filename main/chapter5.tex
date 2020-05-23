@@ -63,13 +63,6 @@ sub-tree folding algorithm in the generator.
   \label{tab:eval_polar_sc_gen_l1i_size}
 \end{table}
 
-% \begin{figure}[htp]
-%   \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
-%   \caption{P-EDGE generated decoder binary sizes depending on the frame size
-%     (R=1/2).}
-%   \label{plot:eval_polar_sc_gen_l1i_size}
-% \end{figure}
-
 \begin{figure}[htp]
   \centering
   \subfloat[][Without compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
@@ -666,8 +659,8 @@ the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
 \begin{itemize}
   \item \xmark~ajouter des perfs sur ARM (il doit falloir prendre des petites
     trames pour que ça marche)
-  \item \xmark~perf version version vectorisée inter/intra-frame, expliquer
-    pourquoi c'est intéressant
+  \item \xmark~perf version vectorisée inter/intra-frame, expliquer pourquoi
+    c'est intéressant
   \item \xmark~se comparer au décodeur intra-frame de Bertrand, justifier les
     moins bonnes performances globales par une plus grande généricité
 \end{itemize}
@@ -708,7 +701,7 @@ Linux (Ubuntu 14.04 LTS) with the GNU compiler (version 4.8) and with the
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.7\textwidth]{turbo/thr/thr}
+  \includegraphics[width=1.00\textwidth]{turbo/thr/thr}
   \caption{Information throughput depending on $K$ for various number of cores
     and SIMD instruction types. 6 iterations, 8-bit fixed-point.}
   \label{plot:eval_turbo_thr}

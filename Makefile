@@ -314,10 +314,28 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter5/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp.tex \
               main/chapter5/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
               main/chapter5/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat \
-              main/chapter5/fig/turbo/thr/thr.gp \
+              main/chapter5/fig/turbo/thr/thr_old.gp \
               main/chapter5/fig/turbo/thr/dat/data.txt \
-              main/chapter5/fig/turbo/energy/energy.gp \
+              main/chapter5/fig/turbo/thr/thr.tex \
+              main/chapter5/fig/turbo/thr/dat/data_E5_01c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_01c_SSE.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_04c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_04c_SSE.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_12c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_12c_SSE.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_24c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_E5_24c_SSE.txt \
+              main/chapter5/fig/turbo/thr/dat/data_i7_01c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_i7_01c_SSE.txt \
+              main/chapter5/fig/turbo/thr/dat/data_i7_04c_AVX.txt \
+              main/chapter5/fig/turbo/thr/dat/data_i7_04c_SSE.txt \
+              main/chapter5/fig/turbo/energy/energy_old.gp \
               main/chapter5/fig/turbo/energy/dat/data.txt \
+              main/chapter5/fig/turbo/energy/energy.tex \
+              main/chapter5/fig/turbo/energy/dat/data_K1024_AVX.txt \
+              main/chapter5/fig/turbo/energy/dat/data_K1024_SSE.txt \
+              main/chapter5/fig/turbo/energy/dat/data_K6144_AVX.txt \
+              main/chapter5/fig/turbo/energy/dat/data_K6144_SSE.txt \
               main/chapter5/fig/scma/energy/energy.tex \
               main/chapter5/fig/scma/energy/colors \
               main/chapter5/fig/scma/profiling/profiling.tex \
@@ -340,8 +358,10 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && gnuplot   sc_gen_l1i_size_old.gp
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_w_comp.tex
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_wo_comp.tex
-	cd main/chapter5/fig/turbo/thr/                  && gnuplot   thr.gp
-	cd main/chapter5/fig/turbo/energy/               && gnuplot   energy.gp
+	cd main/chapter5/fig/turbo/thr/                  && gnuplot   thr_old.gp
+	cd main/chapter5/fig/turbo/thr/                  && rubber -d thr.tex
+	cd main/chapter5/fig/turbo/energy/               && gnuplot   energy_old.gp
+	cd main/chapter5/fig/turbo/energy/               && rubber -d energy.tex
 	cd main/chapter5/fig/scma/energy/                && rubber -d energy.tex
 	cd main/chapter5/fig/scma/profiling/             && rubber -d profiling.tex
 
@@ -394,6 +414,8 @@ clean: clean4all
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean sc_energy_implems_vs_mem
 	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber --clean sc_energy_rate_N2048
 	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber --clean sc_energy_rate_N32768
+	cd main/chapter5/fig/turbo/thr/                        && rubber --clean thr
+	cd main/chapter5/fig/turbo/energy/                     && rubber --clean energy
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean energy
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean profiling
 
@@ -456,8 +478,10 @@ mrproper: clean4all
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rm -f             sc_gen_l1i_size_small_old.pdf
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean -d sc_gen_l1i_size_w_comp.tex
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean -d sc_gen_l1i_size_wo_comp.tex
-	cd main/chapter5/fig/turbo/thr/                        && rm -f             thr.pdf
-	cd main/chapter5/fig/turbo/energy/                     && rm -f             energy.pdf
+	cd main/chapter5/fig/turbo/thr/                        && rm -f             thr_old.pdf
+	cd main/chapter5/fig/turbo/thr/                        && rubber --clean -d thr.tex
+	cd main/chapter5/fig/turbo/energy/                     && rm -f             energy_old.pdf
+	cd main/chapter5/fig/turbo/energy/                     && rubber --clean -d energy.tex
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean -d energy.tex
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean -d profiling.tex
 
