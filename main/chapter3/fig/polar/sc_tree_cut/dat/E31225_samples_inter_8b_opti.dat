@@ -1,5 +1,5 @@
 # Command line:
-# ./bin/polar_inter_8_sse41 -n N -k K --snr-min SNR --snr-max SNR --snr-step 0.1 --max-fe FE --enable-sys-enc --enable-azcw --decoding-algo ALGO --stop-time 10 --benchs 100 
+# ./bin/polar_inter_8_sse41 -n N -k K --snr-min SNR --snr-max SNR --snr-step 0.1 --max-fe FE --enable-sys-enc --enable-azcw --decoding-algo ALGO --stop-time 10 --benchs 100
 #
 #-		-		---		----	---	----	-------	----------	--------------	------------------ 	------------------	------------------  --------
 #N		K		HACK	RATE	SNR	CTHR	CTHR C0	CTHR C0+C1	CTHR C0+C1+REP	CTHR C0+C1+REP+SPC2 CTHR C0+C1+REP+SPC4	CTHR C0+C1+REP+SPC6 MAX OPTI

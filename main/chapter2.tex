@@ -406,10 +406,10 @@ contribution of each node type on the throughput.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer}
-  \caption{Decoding performance of the SSCL and the A-SSCL decoders.
+  \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer_rep}
+  \caption{Impact of the \texttt{REP} node size on fixed-point SSCL decoding.
     Code ($2048$,$1723$), $L=32$.}
-  \label{plot:polar_scl_bfer}
+  \label{plot:polar_scl_bfer_rep}
 \end{figure}
 
 Another important parameter in both software and hardware implementations is the
@@ -422,14 +422,14 @@ fixed-point representations of LLRs and internal path metrics. In the 8-bit mode
 LLRs and path metrics are saturated between $-127$ and $+127$ after each
 operation. Moreover, to avoid overflows, the path metrics are normalized after
 each \textit{update\_paths()} call (cf. Alg.~\ref{alg:polar_scl}) by subtracting
-the smallest metric to each one of them. Figure~\ref{plot:polar_scl_bfer}a shows
-the BER and FER performances of the CA-SSCL decoder for 32-bit floating-point,
-16-bit and 8-bit fixed-point representations. One can observe that the
-\verb|REP| nodes degrade the decoding performance in a 8-bit representation
-because of accumulation (red triangles curve). Indeed, it is necessary to add
-all the LLRs of a \verb|REP| node together in order to process it, which may
-lead to an overflow in the case of fixed-point representation. It can happen
-when the size of the repetition nodes is not limited
+the smallest metric to each one of them. Figure~\ref{plot:polar_scl_bfer_rep}
+shows the BER and FER performances of the CA-SSCL decoder for 32-bit
+floating-point, 16-bit and 8-bit fixed-point representations. One can observe
+that the \verb|REP| nodes degrade the decoding performance in a 8-bit
+representation because of accumulation (red triangles curve). Indeed, it is
+necessary to add all the LLRs of a \verb|REP| node together in order to process
+it, which may lead to an overflow in the case of fixed-point representation. It
+can happen when the size of the repetition nodes is not limited
 ($\texttt{REP}_\texttt{2+}$). However, the size limitation of the repetition
 nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue.
 
@@ -468,11 +468,19 @@ the throughput of FA-SSCL is double that of PA-SSCL with $L = 8$, while it is
 multiplied by a factor of $7$ with $L=32$. The drawback of FA-SSCL is that
 although the average latency decreases, the worst case latency increases.
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer_crc}
+  \caption{Impact of the CRC size on SCL and A-SCL decoding. Code ($2048$,
+    $1723$), $L=32$.}
+  \label{plot:polar_scl_bfer_crc}
+\end{figure}
+
 The adaptive versions of the algorithm achieve better throughputs, but CA-SCL
 may also be chosen depending on the CRC. One may observe in
-Figure~\ref{plot:polar_scl_bfer}b that an adaptive decoder dedicated to an 8-bit
-CRC with a ($2048$,$1723$) polar code and $L=32$ leads to a loss of $0.5$ dB for
-a FER of $10^{-5}$ compared to its non adaptive counterpart.
+Figure~\ref{plot:polar_scl_bfer_crc} that an adaptive decoder dedicated to an
+8-bit CRC with a ($2048$,$1723$) polar code and $L=32$ leads to a loss of $0.5$
+dB for a FER of $10^{-5}$ compared to its non adaptive counterpart.
 
 Both polar code genericity and decoding algorithm flexibility are helpful to
 support the recommendations of wireless communications in an SDR or cloud RAN

@@ -63,8 +63,19 @@ sub-tree folding algorithm in the generator.
   \label{tab:eval_polar_sc_gen_l1i_size}
 \end{table}
 
+% \begin{figure}[htp]
+%   \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
+%   \caption{P-EDGE generated decoder binary sizes depending on the frame size
+%     (R=1/2).}
+%   \label{plot:eval_polar_sc_gen_l1i_size}
+% \end{figure}
+
 \begin{figure}[htp]
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size}
+  \centering
+  \subfloat[][Without compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
+  % \quad
+  \\
+  \subfloat[][With compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
   \caption{P-EDGE generated decoder binary sizes depending on the frame size
     (R=1/2).}
   \label{plot:eval_polar_sc_gen_l1i_size}
@@ -119,17 +130,22 @@ shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
 \subsubsection{Comparison between P-EDGE and the State of the Art}
 
 \begin{figure}[htp]
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra}
+  \centering
+  \subfloat[][Intel\R Xeon\TM E31225 (SSE4.1 SIMD)]{\includegraphics[width=0.485\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra_x86}\label{plot:eval_polar_sc_gen_thr_intra_x86}}
+  \quad
+  % \\
+  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
   \caption{Performance comparison between several code rates of 32-bit floating
-    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\TM CPU A15).}
+    point decoding stages (intra-frame vectorization). Squares show AFF3CT
+    results. Crosses show the implementation results from~\cite{Sarkis2014}.}
   \label{plot:eval_polar_sc_gen_thr_intra}
 \end{figure}
 
 \begin{table}[htp]
   \begin{center}
   \begin{tabular}{r  r  r  r}
-    $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} (Mb/s) & \textbf{Latency} ($\mu$s)\\
+    $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} & \textbf{Latency} \\
+                                    &                      &            (Mb/s) &         ($\mu$s) \\
     \hline
     \hline
   %%this performance is included in the graphs
@@ -158,12 +174,15 @@ shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
 \end{table}
 
 \begin{figure}[htp]
-  \includegraphics[width=1.00\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter}
+  \centering
+  \subfloat[][Intel\R Xeon\TM E31225 (SSE4.1 SIMD)]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter_x86}\label{plot:eval_polar_sc_gen_thr_inter_x86}}
+  % \quad
+  \\
+  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
   \caption{Performance comparison between several code rates of 8-bit fixed
-    point decoding stages (running on the Intel\R Xeon\TM CPU E31225 and,
-    respectively, on the Nvidia\R Jetson TK1\TM CPU A15). Circles show P-EDGE
-    results. Triangles show our former ``handwritten'' implementation
-    results~\cite{LeGal2015a}.}
+    point decoding stages (inter-frame vectorization). Squares show AFF3CT
+    results. Circles show the ``handwritten'' implementation results
+    from~\cite{LeGal2015a}.}
   \label{plot:eval_polar_sc_gen_thr_inter}
 \end{figure}
 
@@ -267,13 +286,8 @@ by the RAM metrics.
   \begin{center}
   %{\footnotesize
   \begin{tabular}{r r r r r r r}
-    \textbf{Cluster} &
-    \textbf{Freq. (MHz)} &
-    \textbf{Impl.} &
-    $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
-    $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)} &
-    $\boldsymbol{E_b}$ \textbf{(nJ)} &
-    $\boldsymbol{P}$   \textbf{(W)}\\
+    \textbf{Cluster} & \textbf{Freq.} & \textbf{Impl.} & $\bm{T_i}$ &  $\bm{l}$ & $\boldsymbol{E_b}$ & $\bm{P}$ \\
+                     &          (MHz) &                &     (Mb/s) & ($\mu$s)  &               (nJ) &      (W) \\
     \hline
     \hline
     \multirow{3}{*}{A7}        & \multirow{3}{*}{ 450} & seq.  &  3.1 &  655.0 &  37.8 & 0.117 \\
@@ -324,18 +338,14 @@ if the i7 is competitive with the ARM\R big cores in term of
 the low power SDR systems because of its high power requirements.
 
 \begin{table}[htp]
-  \caption{Comparison of 8-bit fixed-point decoders with intra-frame
-    vectorization. $N = 32768$ and $R = 5/6$.}
+  \caption{Comparison of 8-bit fixed-point decoders (intra-frame SIMD).
+    $N = 32768$ and $R = 5/6$.}
   \label{tab:eval_polar_energy_comparison}
   \begin{center}
   %{\footnotesize
   \begin{tabular}{r r r r r r}
-    \textbf{Decoder} &
-    \textbf{Platform} &
-    \textbf{Freq. (GHz)} &
-    \textbf{SIMD} &
-    $\boldsymbol{T_i}$ \textbf{(Mb/s)} &
-    $\boldsymbol{l}$   \textbf{($\boldsymbol{\mu}$s)}\\
+    \textbf{Decoder} & \textbf{Platform} & \textbf{Freq.} & \textbf{SIMD} & $\bm{T_i}$ & $\bm{l}$ \\
+                     &                   &          (GHz) &               &     (Mb/s) & ($\mu$s) \\
     \hline
     \hline
     \cite{Giard2014}     & i7-2600   & 3.4 & SSE4.1 &         204  &  135 \\ % \hline
@@ -355,7 +365,10 @@ instructions (SSE4.1) and the frequencies are comparable.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{polar/sc_energy_implems_vs/sc_energy_implems_vs}
+  \subfloat[][Total (cluster + memory)]{\includegraphics[height=7cm]{polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
+  \quad
+  % \\
+  \subfloat[][Memory only]{\includegraphics[height=7cm]{polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
   \caption{Variation of the \emph{energy-per-bit} for different frame sizes and
     implementations: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz.
     Fixed rate $R = 1/2$.}
@@ -388,12 +401,14 @@ much lower latency).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.00\textwidth]{polar/sc_energy_freq/sc_energy_freq}
+  \subfloat[][ARM\R Cortex-A7]{\includegraphics[width=0.485\textwidth]{polar/sc_energy_freq/sc_energy_freq_a7}\label{plot:eval_polar_sc_energy_freq_a7}}
+  \quad
+  % \\
+  \subfloat[][ARM\R Cortex-A15]{\includegraphics[width=0.485\textwidth]{polar/sc_energy_freq/sc_energy_freq_a15}\label{plot:eval_polar_sc_energy_freq_a15}}
   \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the
-    cluster frequency (dynamic code, intra-, inter-frame).
-    A7 performance is on the left and A15 on the right. $N = 4096$ and $R = 1/2$.
-    Dark colors and light colors stand for CPU cluster and RAM energy consumption,
-    resp.}
+    cluster frequency (dynamic code, intra-, inter-frame). $N = 4096$ and
+    $R = 1/2$. Dark colors and light colors stand for CPU cluster and RAM energy
+    consumption, resp.}
   \label{plot:eval_polar_sc_energy_freq}
 \end{figure}
 
@@ -450,10 +465,10 @@ A57, and the \little A53 is itself more energy efficient than the \little A7
                                         Lower latency,
                                         Lower energy per bit,
                                         Higher throughput}
-  \tkzKiviatLine[ultra thick,color=red,mark=none,fill=red!20,opacity=.3](4,2,1,3,3)
-  \tkzKiviatLine[ultra thick,color=blue,fill=blue!20,opacity=.3](4,4,3,1,1)
-  \tkzKiviatLine[dotted,ultra thick,color=blue](2,3,4,2,2)
-  \tkzKiviatLine[dotted,ultra thick,color=red](2,1,2,4,4)
+  \tkzKiviatLine[ultra thick,color=Paired-5,mark=none,fill=Paired-5!20,opacity=.3](4,2,1,3,3)
+  \tkzKiviatLine[ultra thick,color=Paired-1,fill=Paired-1!20,opacity=.3](4,4,3,1,1)
+  \tkzKiviatLine[dotted,ultra thick,color=Paired-1](2,3,4,2,2)
+  \tkzKiviatLine[dotted,ultra thick,color=Paired-5](2,1,2,4,4)
   \end{tikzpicture}
   \caption{\label{fig:eval_polar_sc_colgate}Ranking of the different approaches
     along 5 metrics. In red, inter-frame vectorization performance and in blue,

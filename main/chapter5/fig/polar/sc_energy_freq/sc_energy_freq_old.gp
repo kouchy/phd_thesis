@@ -86,7 +86,7 @@ set ylabel "Energy-per-bit (nJ)"
 
 set yrange [0:30]
 
-set output 'sc_energy_freq.pdf'
+set output 'sc_energy_freq_old.pdf'
 
 set multiplot layout 1,2 title "Energy consumption depending on the frequency (N = 4096)"
 

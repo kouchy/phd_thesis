@@ -16,6 +16,7 @@
   \begin{axis}[
     name=plot1,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     ybar,
     legend style={at={(0.5,-0.2)},
       anchor=north,legend columns=-1},
@@ -45,6 +46,7 @@
     \begin{axis}[
     name=plot2,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     at={($(plot1.east)+(20,0)$)},anchor=west,
     ybar,
     title=\Large{MPA AVX},
@@ -74,6 +76,7 @@
   \begin{axis}[
     name=plot3,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     at={($(plot1.south) + (0,-70)$)},anchor=north,
     ybar,
     legend style={at={(0.5,-0.2)},
@@ -104,6 +107,7 @@
     \begin{axis}[
     name=plot4,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     at={($(plot3.east)+(20,0)$)},anchor=west,
     ybar,
     title=\Large{MPA ({\fontfamily{qcr}\selectfont-Ofast})},
@@ -133,6 +137,7 @@
   \begin{axis}[
     name=plot5,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     at={($(plot3.south) + (0,-70)$)},anchor=north,
     ybar,
     legend style={at={(0.5,-0.2)},
@@ -163,6 +168,7 @@
   \begin{axis}[
     name=plot6,
     yscale=0.65,
+    xticklabel style={gray}, yticklabel style={gray},
     at={($(plot5.east)+(20,0)$)},anchor=west,
     ybar,
     title=\Large{MPA},

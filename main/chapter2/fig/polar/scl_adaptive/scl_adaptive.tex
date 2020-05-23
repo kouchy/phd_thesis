@@ -17,11 +17,13 @@
   \begin{tikzpicture}
     \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
                       height=0.75\textwidth,  width=0.5\textwidth,
+                      xticklabel style={gray}, yticklabel style={gray},
                       % group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
                       group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
                       ymode = log, xmin=2.5, xmax=4.5, xtick={0,0.5,...,4.5},
                       xlabel=$E_b/N_0 \text{(dB)}$, grid=both, grid style={gray!30},
-                      tick align=outside, tickpos=left, legend pos=south west]
+                      %tick align=outside, tickpos=left,
+                      legend pos=south west]
       \nextgroupplot[ylabel=FER]
       \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=FER] {dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
       \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=FER] {dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
@@ -40,7 +42,7 @@
       % \coordinate (legend) at (axis description cs:0.97,0.03);
       \coordinate (legend) at (axis description cs:0.61,0.03);
 
-      \nextgroupplot[ylabel=Info. throughput (Mb/s), log basis y={2}, log ticks with fixed point]
+      \nextgroupplot[ylabel=Info. throughput (Mb/s), log basis y={2}, log ticks with fixed point, grid style={dashed, gray!30}]
       \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=ITHR] {dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
       \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=ITHR] {dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
       \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};

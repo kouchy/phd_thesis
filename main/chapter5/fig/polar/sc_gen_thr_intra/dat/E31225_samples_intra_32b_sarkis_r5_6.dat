@@ -1,0 +1,25 @@
+# Column  1 <=> N:       codeword size.
+# Column  2 <=> K:       number of information bits in the codeword.
+# Column  3 <=> SNR:     signal/noise ratio.
+# Column  4 <=> FE:      asked number of frame errors.
+# Column  5 <=> FRA:     number of frames simulated.
+# Column  6 <=> BE:      number of bit errors.
+# Column  7 <=> RFE:     real number of frame errors (can be limited by time).
+# Column  8 <=> BE/RFE:  ratio BE per RFE.
+# Column  9 <=> BER:     bit error rate.
+# Column 10 <=> FER:     frame error rate.
+# Column 11 <=> LOAD:    decoder data loading time (in ms).
+# Column 12 <=> STORE:   decoder data storing time (in ms).
+# Column 13 <=> DECODE:  decoder execution time (in ms).
+# Column 14 <=> CTHR:    decoder coded throughput (in Mb/s).
+# Column 15 <=> ITHR:    decoder info throughput (in Mb/s).
+# Column 16 <=> LATENCY: decoder latency (in us).
+#
+# Command line:
+# ./bin/polar_intra_32_avx -n N -k K --snr-min SNR --snr-max SNR --snr-step 0.1 --max-fe FE --enable-sys-enc --enable-azcw --decoding-algo ALGO --stop-time 10 --benchs 100
+#
+#"Intel(R) Core(R) CPU i7-2600 @ 3.40GHz" "Core i7-2600 @ 3.40GHz (AVX1)" "AVX1, 3.4Ghz, rate 5/6" "[11], rate 5/6"
+#-		-		---	--		---		--		---		------	---			---			----	-----	------	----	----	-------
+#N		K		SNR	FE		FRA		BE		RFE		BE\RFE	BER			FER			LOAD	STORE	DECODE	CTHR	ITHR	LATENCY
+#-		-		---	--		---		--		---		------	---			---			----	-----	------	----	----	-------
+ 2048	1707	0	0		0		0		0		0		0			0			0		0		0		402.18	335.17	5

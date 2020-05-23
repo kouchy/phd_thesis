@@ -5,6 +5,9 @@
 \usepackage{eulervm}
 \usepackage{pgfplots}
 
+\newcommand{\R}{\textsuperscript{\textregistered}}
+\newcommand{\TM}{\textsuperscript{\texttrademark}}
+
 \pgfplotsset{compat=newest}
 \input{colors}
 \usetikzlibrary{patterns}
@@ -50,13 +53,15 @@
 \begin{tikzpicture}
 \begin{axis}[
     ybar,
-    height=8cm,
-    width=14cm,
-    bar width=15pt,
+    width=1.0\linewidth, height=0.7\linewidth,
+    xticklabel style={gray}, yticklabel style={gray},
+    bar width=10pt,
     legend style={at={(0.1,0.90)},
       anchor=north west,legend columns=1},
     legend cell align=right,
     area legend,
+    ymajorgrids,
+    grid style={dashed, gray!30},
     ylabel={$\mu$ Joules / bit},
     symbolic x coords={E-MPA+SIMD,MPA+SIMD,Log-MPA(\ofast),Log-MPA,MPA(\ofast),MPA},
     xticklabel style={align=center},
@@ -92,7 +97,7 @@
         ]
         coordinates {(E-MPA+SIMD,0.518) (MPA+SIMD,0.9) (Log-MPA(\ofast),1.457) (Log-MPA,2.325) (MPA(\ofast),1.761) (MPA,4.21)};
 
-\legend{Intel Core-i7 6700HQ,Intel Xeon-Phi 7120P,ARM Cortex-A57}
+\legend{Intel\R Core\TM i7-6700HQ, Intel\R Xeon Phi\TM 7120P, ARM\R Cortex-A57}
 \end{axis}
 \end{tikzpicture}
 \end{document}

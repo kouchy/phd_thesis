@@ -17,12 +17,14 @@
   \begin{tikzpicture}
     \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
                       height=0.77\textwidth,  width=0.5\textwidth,
+                      xticklabel style={gray}, yticklabel style={gray},
                       group style={group name=scl_2048, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
                       ymode = log,
                       ymin=0.000000001, ymax=0.05,
                       xmin=3.5, xmax=4.5, xtick={0,0.5,...,4.5},
                       xlabel=$E_b/N_0~\text{(dB)}$, grid=both, grid style={gray!30},
-                      tick align=outside, tickpos=left, legend pos=south west]
+                      %tick align=outside, tickpos=left,
+                      legend pos=south west]
       % \nextgroupplot[ylabel=BER]
       % \addplot[mark=x,        black,    semithick]                               table [x=Eb/N0, y=BER] {dat/rep/polar_2048_1723_1.0_4.5_ASCL32_CRC32_SPC4.txt};           \label{plot:line1}
       % \addplot[mark=square*,  Paired-3, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {dat/rep/polar_2048_1723_1.0_4.5_ASCL32_CRC32_SPC4_16bits.txt};    \label{plot:line2}

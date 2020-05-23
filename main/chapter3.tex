@@ -397,8 +397,10 @@ teams of these wrappers.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.00\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup}
-  \caption{Speedups over the Mandelbrot naive auto-vectorized implementation}
+  \subfloat[][Float 32-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit}\label{plot:vec_mandelbrot_32}}
+  \quad
+  \subfloat[][Float 64-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit}\label{plot:vec_mandelbrot_64}}
+  \caption{Speedups over the Mandelbrot naive auto-vectorized implementation.}
   \label{plot:vec_mandelbrot}
 \end{figure}
 
@@ -410,11 +412,13 @@ compute-bound. The chosen implementation relies on a floating-point
 representation (available online\footnote{Mandelbrot set source code:
 \url{https://gitlab.inria.fr/acassagn/mandelbrot}}).
 Figure~\ref{plot:vec_mandelbrot} presents the speedups obtained on various
-instruction sets. SSE stands for SSE4.2, NEON stands for NEONv2 (includes the
-FMA instructions), AVX stands for AVX2+FMA3 and AVX-512 stands for AVX-512F
-(with FMA instructions). The FMA benefit ranges from 17\% (AVX2) to 26\%
-(AVX-512). An SIMD with intrinsics version has been hand-coded for each
-specific instruction set. The intrinsics version is considered the
+instruction sets on single-precision floating-point format (cf.
+Fig.~\ref{plot:vec_mandelbrot_32}) and on double-precision floating-point format
+(cf. Fig.~\ref{plot:vec_mandelbrot_64}). SSE stands for SSE4.2, NEON stands for
+NEONv2 (includes the FMA instructions), AVX stands for AVX2+FMA3 and AVX-512
+stands for AVX-512F (with FMA instructions). The FMA benefit ranges from 17\%
+(AVX2) to 26\% (AVX-512). An SIMD with intrinsics version has been hand-coded
+for each specific instruction set. The intrinsics version is considered the
 ``\emph{golden}'' model.
 
 \textbf{\BoostSIMD} only supports the SSE instruction set, even when the code is
@@ -444,7 +448,9 @@ stable version.
 \textbf{\TSIMD} is a wrapper primarily designed for image processing purpose.
 It performs well in 32-bit NEON, SSE and AVX but it lacks from AVX-512. Support
 of the 64-bit types is not planed since it is not useful in traditional image
-computations. \textbf{\simdpp} supports an impressive number of instruction
+computations.
+
+\textbf{\simdpp} supports an impressive number of instruction
 sets. This may explain why it does not support mathematical functions so far. It
 matches the performance of the other wrappers for NEON and SSE, but falls behind
 for AVX, and even more for AVX-512.
@@ -674,12 +680,23 @@ fully flatten, depending on the size of the code length.
 \subsection{Tree Pruning Strategy}
 
 % SC --------------------------------------------------------------------------
+% \begin{figure}[htp]
+% \includegraphics[width=1.00\textwidth]{polar/sc_tree_cut/sc_tree_cut}
+% \caption{Throughput of the SC decoder depending on the different optimizations
+%   for $N = 2048$, for intra-frame vectorization on the left and inter-frame
+%   vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
+% \label{plot:polar_sc_tree_cut}
+% \end{figure}
+
 \begin{figure}[htp]
-\includegraphics[width=1.00\textwidth]{polar/sc_tree_cut/sc_tree_cut}
-\caption{Throughput of the SC decoder depending on the different optimizations
+  \centering
+  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:polar_sc_tree_cut_intra}}
+  \quad
+  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:polar_sc_tree_cut_inter}}
+  \caption{Throughput of the SC decoder depending on the different optimizations
   for $N = 2048$, for intra-frame vectorization on the left and inter-frame
   vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
-\label{plot:polar_sc_tree_cut}
+  \label{plot:polar_sc_tree_cut}
 \end{figure}
 
 The tree pruning step has a dramatical effect in general. For example, on the SC

@@ -1,0 +1,39 @@
+# Column  1 <=> N:       codeword size.
+# Column  2 <=> K:       number of information bits in the codeword.
+# Column  3 <=> SNR:     signal/noise ratio.
+# Column  4 <=> FE:      asked number of frame errors.
+# Column  5 <=> FRA:     number of frames simulated.
+# Column  6 <=> BE:      number of bit errors.
+# Column  7 <=> RFE:     real number of frame errors (can be limited by time).
+# Column  8 <=> BE/RFE:  ratio BE per RFE.
+# Column  9 <=> BER:     bit error rate.
+# Column 10 <=> FER:     frame error rate.
+# Column 11 <=> LOAD:    decoder data loading time (in ms).
+# Column 12 <=> STORE:   decoder data storing time (in ms).
+# Column 13 <=> DECODE:  decoder execution time (in ms).
+# Column 14 <=> CTHR:    decoder coded throughput (in Mb/s).
+# Column 15 <=> ITHR:    decoder info throughput (in Mb/s).
+# Column 16 <=> LATENCY: decoder latency (in us).
+#
+# Command line:
+# ./bin/polar_intra_32_avx -n N -k K --snr-min SNR --snr-max SNR --snr-step 0.1 --max-fe FE --enable-sys-enc --enable-azcw --decoding-algo ALGO --stop-time 10 --benchs 100
+#
+#"Nvidia(R) Jetson TK1(R) CPU A15 @ 2.30GHz" "A15 @ 2.32GHz (NEON)" "P-Edge NEON, 2.3Ghz, rate 5/6" "P-Edge, rate 5/6"
+#-		-		---	--		---		--		---		------	---			---			----	-----	------	----	----	-------
+#N		K		SNR	FE		FRA		BE		RFE		BE\RFE	BER			FER			LOAD	STORE	DECODE	CTHR	ITHR	LATENCY
+#-		-		---	--		---		--		---		------	---			---			----	-----	------	----	----	-------
+ 4	3	4.0	300000	5078768	0	0	0.00	6.56e-08	1.97e-07	91.64	92.23	107.23	69.52	52.14	0.92
+ 8	7	4.0	150000	3765008	0	0	0.00	3.79e-08	2.66e-07	68.06	68.41	83.73	136.43	119.37	0.94
+ 16	13	4.0	75000	2404336	0	0	0.00	3.20e-08	4.16e-07	54.01	43.31	81.13	215.04	174.72	1.19
+ 32	27	4.0	37500	1397744	0	0	0.00	2.65e-08	7.15e-07	36.12	25.25	84.33	307.09	259.11	1.67
+ 64	53	4.0	18750	768880	0	0	0.00	2.45e-08	1.30e-06	25.43	13.83	76.25	424.88	351.85	2.41
+ 128	107	4.0	9375	151904	44872	9376	4.79	2.76e-03	6.17e-02	7.03	3.35	31.32	465.74	389.33	4.40
+ 256	213	4.0	4687	93584	35517	4687	7.58	1.78e-03	5.01e-02	7.04	2.42	45.11	438.26	364.65	9.35
+ 512	427	4.0	2343	54144	26213	2344	11.18	1.13e-03	4.33e-02	7.49	1.82	54.19	436.22	363.8	18.78
+ 1024	853	4.0	1171	43696	19310	1171	16.49	5.18e-04	2.68e-02	13.65	2.26	97.13	395.55	329.5	41.42
+ 2048	1707	4.0	585	24432	7254	307	23.63	1.74e-04	1.26e-02	20.52	2.13	132.82	320.60	267.22	102.21
+ 4096	3413	4.0	292	11952	1594	44	36.23	3.91e-05	3.68e-03	21.7	1.89	148.12	281.64	234.68	232.7
+ 8192	6827	4.0	146	5744	243	8	30.38	6.20e-06	1.39e-03	29.63	1.88	162.88	240.72	200.61	544.49
+ 16384	13653	4.0	73	2336	0	0	0.00	3.14e-08	4.28e-04	38.12	2.0	159.44	212.0	176.67	1236.5
+ 32768	27307	4.0	36	1344	0	0	0.00	2.72e-08	7.44e-04	37.46	3.47	190.27	190.46	158.72	2752.77
+ 65536	54613	4.0	18	624	0	0	0.00	2.93e-08	1.60e-03	62.73	5.51	212.88	144.01	120.01	7281.16

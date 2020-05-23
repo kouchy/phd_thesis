@@ -60,7 +60,7 @@ set xtics ("2" 4, "3" 8, "4" 16, "5" 32, "6" 64, "7" 128, "8" 256, "9" 512, "10"
 
 ###############################################################################
 
-set output "sc_gen_thr_intra.pdf"
+set output "sc_gen_thr_intra_old.pdf"
 set multiplot layout 1,2 title "{/:Bold=16 Intra frame vectorization (32-bit, float)}"
 
 # set the style for the set 1, 2, 3...

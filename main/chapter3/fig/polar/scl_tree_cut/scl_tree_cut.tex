@@ -15,9 +15,11 @@
 
 \begin{document}
   \begin{tikzpicture}
-    \begin{axis}[/pgfplots/table/ignore chars={|}, footnotesize,
+    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
                  width=1.0\linewidth, height=0.70\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
                  ybar stacked, bar width=14pt,
+                 % tick align=outside, tickpos=left,
                  legend style={at={(0.5,0.95)}, anchor=north}, legend columns=-1,
                  ylabel={Coded throughput (Mb/s)}, xlabel={Code rate ($R = K / N$)}, %symbolic x coords={tool1, tool2, tool3, tool4, tool5, tool6, tool7},
                  ytick={0,1,2,3,4,5,6,7}, ymajorgrids, grid style={gray!30}, grid style={dashed, gray!50}, ymin=0, ymax=7.0, xtick=data,

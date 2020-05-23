@@ -1,0 +1,45 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=1.0\linewidth, height=0.7\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
+                 xmode = log,
+                 log basis x={2},
+                 xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
+                 xmin=4, xmax=65536,
+                 % tick align=outside, tickpos=left,
+                 %label style={font=\large},
+                 % tick label style={font=\large},
+                 grid style={dashed, gray!30},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=square, Paired-1,    semithick                              ] table [x index=0, y index=13] {./dat/A15_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:line1}
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x index=0, y index=13] {./dat/A15_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:line2}
+    \end{axis}
+
+    \matrix [draw,
+             matrix of nodes,
+             anchor=north,
+             inner sep=2.3pt,
+             fill=white] at (7.9,1.5)
+    {
+               & $R = 5/6$        & $R = 1/2$        \\
+        AFF3CT & \ref{plot:line1} & \ref{plot:line2} \\
+    };
+
+  \end{tikzpicture}
+\end{document}

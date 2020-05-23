@@ -14,12 +14,13 @@
   \begin{tikzpicture}
     \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
                  width=0.675\linewidth, height=1.000\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
                  xlabel=$E_b/N_0$ (dB), grid=both, grid style={gray!30},
                  ylabel=Bit and Frame Error Rate,
                  %ylabel=BER,
                  %xmin=0, xmax=14,
                  ymode = log,
-                 tick align=outside, tickpos=left, %legend style={at={(0.5,-0.2)},anchor=north}]
+                 %tick align=outside, tickpos=left,
                  legend pos=south west, legend columns=1]
         \addplot[mark=o,      Dark2-4,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/BCH_N255_K231_algebraic_T3.txt}; \label{plot:line1}
         \addplot[mark=o,      Dark2-4!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/BCH_N255_K231_algebraic_T3.txt}; \label{plot:line2}

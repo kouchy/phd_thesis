@@ -66,7 +66,7 @@ set style line 2 linetype 2 linecolor rgbcolor green_050 linewidth @my_line_widt
 set style line 3 linetype 3 linecolor rgbcolor brown_050 linewidth @my_line_width
 set style line 4 linetype 7 linecolor rgbcolor   red_050 linewidth @my_line_width
 
-set output "./sc_gen_l1i_size_small.pdf"
+set output "./sc_gen_l1i_size_small_old.pdf"
 
 set key on
 set key top left width -3
@@ -85,7 +85,7 @@ plot datafile using 1:2 with linespoint title "32-bit Inter-SIMD",\
 
 set terminal pdf enhanced font 'Helvetica,14' size 10,4
 
-set output "./sc_gen_l1i_size.pdf"
+set output "./sc_gen_l1i_size_old.pdf"
 # set multiplot layout 1,2 title "{/:Bold=16 P-EDGE generated decoder binary sizes depending on the frame size (R=1/2)}"
 set multiplot layout 1,2
 

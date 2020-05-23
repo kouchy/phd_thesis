@@ -1,0 +1,120 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\input{colors}
+\usetikzlibrary{patterns}
+
+\pagestyle{empty}
+
+\tikzset{
+    hatch distance/.store in=\hatchdistance,
+    hatch distance=7pt,
+    hatch thickness/.store in=\hatchthickness,
+    hatch thickness=0.5pt
+}
+
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north east}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north west}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{\hatchdistance}{0pt}}
+    \pgfpathlineto{\pgfqpoint{0pt}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatother
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ybar,
+             width=1.0\linewidth, height=0.700\linewidth,
+             bar width=4pt,
+             legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
+             legend cell align=right,
+             area legend,
+             ylabel={Speeedup}, ytick={0,1,...,6},
+             symbolic x coords={intr,mippl,mippm,vcl,simdpp,tsimd,vc,xsimd,boost},
+             xticklabel style={align=center, gray},
+             yticklabel style={gray},
+             xticklabels={Intrinsics,
+                          MIPP low,
+                          MIPP med.,
+                          VCL,
+                          simdpp,
+                          T-SIMD,
+                          Vc,
+                          xsimd,
+                          Boost.SIMD},
+             xtick=data,
+             ymajorgrids,
+             grid style={dashed, gray!30},
+             ymin=0,
+             ymax=6.5,
+             %nodes near coords,
+             %nodes near coords align={vertical},
+             every node near coord/.append style={rotate=90, anchor=west},
+             x tick label style={rotate=-45},
+             %label style={font=\large},
+             %tick label style={font=\large},
+             % tick align=outside, tickpos=left,
+            ]
+
+    % NEON
+    \addplot[black!25!Paired-5,fill=Paired-5!40,draw=Paired-5,
+             postaction={pattern color = black!50!Paired-5!70,
+                         pattern=crosshatch dots}
+            ]
+            coordinates {(intr,1.21) (mippl,1.12) (mippm,1.11) (vcl,0) (simdpp,1.06) (tsimd,0) (vc,0) (xsimd,0) (boost,0)};
+    \label{plot1}
+
+    % SSE
+    \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
+              postaction={pattern color = black!50!Paired-3!70,
+                          pattern=horizontal lines}
+             ]
+             coordinates {(intr,1.82) (mippl,1.65) (mippm,1.65) (vcl,1.78) (simdpp,1.70) (tsimd,0) (vc,0.47) (xsimd,1.68) (boost,0.52)};
+    \label{plot2}
+
+    % AVX
+    \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
+             postaction={pattern color = black!50!Paired-7!70,
+                         pattern=grid}
+            ]
+            coordinates {(intr,3.38) (mippl,3.19) (mippm,3.20) (vcl,3.29) (simdpp,2.96) (tsimd,0) (vc,3.35) (xsimd,3.35) (boost,0.42)};
+    \label{plot4}
+
+    % AVX-512
+    \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
+             postaction={pattern color = black!50!Paired-1!70,
+                         pattern=flexible hatch north west}
+            ]
+            coordinates {(intr,5.93) (mippl,5.36) (mippm,5.64) (vcl,5.93) (simdpp,3.57) (tsimd,0) (vc,2.39) (boost,0.43)};
+    \label{plot5}
+
+    % \legend{NEON,
+    %         SSE,
+    %         AVX,
+    %         AVX-512,}
+\end{axis}
+\end{tikzpicture}
+\end{document}

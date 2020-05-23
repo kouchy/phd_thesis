@@ -1,0 +1,51 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=0.675\linewidth, height=1\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
+                 xmode = log,
+                 log basis x={2},
+                 xlabel=Codeword size ($N$), ylabel=Percentage of energy-per-bit (nJ), grid=both, grid style={gray!30},
+                 xmin=256, xmax=1048576,
+                 ymin=0, ymax=0.13,
+                 ytick={0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12},
+                 yticklabels={1\%, 2\%, 3\%, 4\%, 5\%, 6\%, 7\%, 8\%, 9\%, 10\%, 11\%, 12\%},
+                 % tick align=outside, tickpos=left,
+                 %label style={font=\large},
+                 % tick label style={font=\large},
+                 grid style={dashed, gray!30},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=square, Paired-1,    semithick                              ] table [x index=4, y expr=(\thisrowno{19}-\thisrowno{18})/\thisrowno{19}] {./dat/A15_1100MHz_R05_intra_dyn.dat}; \label{plot:line1}
+        \addplot[mark=o,      Paired-5,    semithick                              ] table [x index=4, y expr=(\thisrowno{19}-\thisrowno{18})/\thisrowno{19}] {./dat/A15_1100MHz_R05_inter_dyn.dat}; \label{plot:line2}
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x index=4, y expr=(\thisrowno{19}-\thisrowno{18})/\thisrowno{19}] {./dat/A15_1100MHz_R05_intra_gen.dat}; \label{plot:line3}
+        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x index=4, y expr=(\thisrowno{19}-\thisrowno{18})/\thisrowno{19}] {./dat/A15_1100MHz_R05_inter_gen.dat}; \label{plot:line4}
+    \end{axis}
+
+    \matrix [draw,
+             matrix of nodes,
+             anchor=north,
+             inner sep=2.3pt,
+             fill=white] at (3.9,1.7)
+    {
+                       & Dyn.             & Gen.             \\
+      intra-frame SIMD & \ref{plot:line1} & \ref{plot:line3} \\
+      inter-frame SIMD & \ref{plot:line2} & \ref{plot:line4} \\
+    };
+
+  \end{tikzpicture}
+\end{document}

@@ -81,7 +81,7 @@ set xrange [1:9]
 #set title "Energy consumption depending on the frame rate (N = 2048)"
 set title ""
 datafile = "./dat/rate_N2048_SNR25.dat"
-set output "sc_energy_rate_N2048.pdf"
+set output "sc_energy_rate_N2048_old.pdf"
 plot datafile using 1:20 i 0 with linespoint title columnheader(1),\
      datafile using 1:20 i 1 with linespoint title columnheader(1),\
      datafile using 1:20 i 2 with linespoint title columnheader(1),\
@@ -94,7 +94,7 @@ set xrange [1:9]
 #set title "Energy consumption depending on the frame rate (N = 32768)"
 set title ""
 datafile = "./dat/rate_N32768_SNR25.dat"
-set output "sc_energy_rate_N32768.pdf"
+set output "sc_energy_rate_N32768_old.pdf"
 plot datafile using 1:20 i 0 with linespoint title columnheader(2),\
      datafile using 1:20 i 1 with linespoint title columnheader(2),\
      datafile using 1:20 i 2 with linespoint title columnheader(2),\

@@ -16,11 +16,13 @@
 \begin{document}
   \begin{tikzpicture}
     \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
-                 width=1.0\linewidth, height=0.675\linewidth,
+                 width=1.0\linewidth, height=0.7\linewidth,
+                 xticklabel style={gray}, yticklabel style={gray},
                  xlabel=Number of threads, ylabel=Speedup, grid=both, grid style={gray!30},
                  xmin=1, xmax=256, xtick={1,32,64,...,256}, ytick={1,16,32,...,96},
                  ymin=-5, ymax=102,
-                 tick align=outside, tickpos=left, %legend style={at={(0.5,-0.2)},anchor=north}]
+                 grid style={dashed, gray!30},
+                 % tick align=outside, tickpos=left,
                  %label style={font=\large},
                  %tick label style={font=\large},
                  legend pos=south east, legend columns=1]

@@ -1,0 +1,50 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{semilogyaxis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                         width=1.0\linewidth, height=0.70\linewidth,
+                         xticklabel style={gray}, yticklabel style={gray},
+                         ymode = log,
+                         ymin=0.000000001, ymax=0.05,
+                         xmin=3.5, xmax=4.5, xtick={0,0.25,...,4.5},
+                         ylabel=FER, xlabel=$E_b/N_0~\text{(dB)}$,
+                         grid=both, grid style={gray!30},
+                         %tick align=outside, tickpos=left,
+                         legend pos=south west]
+      \addplot[mark=o,        Paired-1,    semithick                              ] table [x=Eb/N0, y=FER] {dat/crc/SCL+CRC8.txt};     \label{plot:line1}
+      \addplot[mark=o,        Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {dat/crc/FA-SCL+CRC8.txt};  \label{plot:line2}
+      \addplot[mark=triangle, Paired-3,                                           ] table [x=Eb/N0, y=FER] {dat/crc/SCL+CRC16.txt};    \label{plot:line3}
+      \addplot[mark=triangle, Paired-3!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {dat/crc/FA-SCL+CRC16.txt}; \label{plot:line4}
+      \addplot[mark=square,   Paired-5,                                           ] table [x=Eb/N0, y=FER] {dat/crc/SCL+CRC32.txt};    \label{plot:line5}
+      \addplot[mark=square,   Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {dat/crc/FA-SCL+CRC32.txt}; \label{plot:line6}
+
+      \coordinate (legend) at (axis description cs:0.435,0.04);
+    \end{semilogyaxis}
+
+    \matrix [
+        draw,
+        matrix of nodes,
+        anchor=south east,
+        fill=white
+    ] at (legend) {
+        \small{CRC}    & \small{CA-SSCL}  & \small{A-SSCL}   \\
+        \small{8-bit}  & \ref{plot:line1} & \ref{plot:line2} \\
+        \small{16-bit} & \ref{plot:line3} & \ref{plot:line4} \\
+        \small{32-bit} & \ref{plot:line5} & \ref{plot:line6} \\
+    };
+  \end{tikzpicture}
+\end{document}

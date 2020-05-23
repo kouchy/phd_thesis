@@ -72,7 +72,7 @@ set xlabel "Codeword size (N)"
 
 ###############################################################################
 
-set output 'sc_energy_implems_vs.pdf'
+set output 'sc_energy_implems_vs_old.pdf'
 #set multiplot layout 1,2 title "Energy consumption depending on the codeword size"
 set multiplot layout 1,2
 datafile = "dat/A15_1100MHz_R05_intra_inter_bis.dat"

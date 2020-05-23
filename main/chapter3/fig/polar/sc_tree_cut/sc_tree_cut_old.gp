@@ -88,7 +88,7 @@ set xrange [0:5]
 
 ## begin histogram -------------------------------------------------------------
 
-set output "./sc_tree_cut.pdf"
+set output "./sc_tree_cut_old.pdf"
 set multiplot layout 1,2 title "{/:Bold=16 Impact of the different optimizations on the throughput}"
 
 set key off

@@ -52,7 +52,7 @@ set border 31 lw @my_axis_width lc rgb text_color
 
 #set terminal pngcairo  transparent enhanced font "arial,10" fontscale 1.0 size 600, 400
 set terminal pdf enhanced font "arial,10" fontscale 1.0 size 12,4
-set output 'mandelbrot_speedup.pdf'
+set output 'mandelbrot_speedup_old.pdf'
 set bar 1.000000 front
 set boxwidth 0.9 absolute
 #set style fill solid 1.00 border lt -1

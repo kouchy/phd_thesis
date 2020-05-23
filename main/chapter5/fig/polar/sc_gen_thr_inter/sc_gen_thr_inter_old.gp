@@ -66,7 +66,7 @@ set style line 3 linetype  7 linecolor rgbcolor green_025 linewidth @my_line_wid
 set style line 4 linetype  9 linecolor rgbcolor green_075 linewidth @my_line_width
 
 
-set output "sc_gen_thr_inter.pdf"
+set output "sc_gen_thr_inter_old.pdf"
 set multiplot layout 1,2 title "{/:Bold=16 Inter frame vectorization (8-bit, char)}"
 
 set key on

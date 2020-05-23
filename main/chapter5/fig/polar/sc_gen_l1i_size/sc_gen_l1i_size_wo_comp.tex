@@ -1,0 +1,53 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=1.0\linewidth, height=0.7\linewidth,
+                 ymode = log,
+                 log basis y={2},
+                 xticklabel style={gray}, yticklabel style={gray},
+                 xlabel=Codeword size ($N$), ylabel=Decoder binary size (KB), grid=both, grid style={gray!30},
+                 xmin=6, xmax=16,
+                 xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
+                 % yticklabels={2,4,8,16,32,64,128,256,512,1024,2048,4096},
+                 yticklabels={2,8,32,128,512,2048},
+                 grid style={dashed, gray!30},
+                 %ymin=-5, ymax=102,
+                 % tick align=outside, tickpos=left,
+                 %label style={font=\large},
+                 % tick label style={font=\large},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=square,   Paired-7,    semithick] table [x index=0, y index=1] {./dat/samples_generated_decoders_sizes.dat}; \label{plot:line1}
+        \addplot[mark=triangle, Paired-3,    semithick] table [x index=0, y index=3] {./dat/samples_generated_decoders_sizes.dat}; \label{plot:line2}
+        \addplot[mark=o,        Paired-1,    semithick] table [x index=0, y index=5] {./dat/samples_generated_decoders_sizes.dat}; \label{plot:line3}
+        \addplot[mark=none,     Paired-5              ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+    \end{axis}
+
+    \matrix [draw,
+             matrix of nodes,
+             anchor=north,
+             inner sep=2.3pt,
+             fill=white] at (2.3,6.7)
+    {
+        \ref{plot:line1} & 32-bit & inter-frame \\
+        \ref{plot:line2} & 32-bit & intra-frame \\
+        \ref{plot:line3} & ~8-bit & intra-frame \\
+        \ref{plot:line4} &        & L1I size    \\
+    };
+
+  \end{tikzpicture}
+\end{document}
