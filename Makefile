@@ -425,7 +425,7 @@ mrproper: clean4all
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rm -f             mandelbrot_speedup_old.pdf
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_32bit.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_64bit.tex
-	cd main/chapter3/fig/polar/sc_tree_cut/                && rm -f             sc_tree_cut.pdf
+	cd main/chapter3/fig/polar/sc_tree_cut/                && rm -f             sc_tree_cut_old.pdf
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean -d sc_tree_cut_inter.tex
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean -d sc_tree_cut_intra.tex
 	cd main/chapter3/fig/polar/scl_tree_cut/               && rubber --clean -d scl_tree_cut.tex
