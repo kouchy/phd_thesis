@@ -38,7 +38,14 @@ sub-tree folding algorithm in the generator.
 % ---- to remove, already explained in chap 3
 
 \begin{table}[htp]
-  \begin{center}
+  \centering
+  \caption
+    [Code size (in KB) of the generated SC decoders.]
+    {Code size (in KB) of the generated decoders depending on the number of bits
+    $N$ per frame (code respectively compiled with AVX instructions for the
+    32-bit decoders and with SSE4.1 instructions for the 8-bit decoders). For
+    comparison, code size without compression are shown in parentheses.}
+  \label{tab:eval_polar_sc_gen_l1i_size}
   \begin{tabular}{r r r r r r r}
     \textbf{Decoder}         & $\bm{N = 2^6}$ & $\bm{N = 2^8}$ & $\bm{N = 2^{10}}$ & $\bm{N = 2^{12}}$ & $\bm{N = 2^{14}}$ & $\bm{N = 2^{16}}$           \\
     \hline
@@ -55,12 +62,6 @@ sub-tree folding algorithm in the generator.
     % \hline
     inter ~8-bit, $R = 5/6$  & 1 (4)          & 2 (18)         & 4 (\textbf{51})   & 6 (\textbf{191})  & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
   \end{tabular}
-  \end{center}
-  \caption{Code size (in KB) of the generated decoders depending on the number
-    of bits $N$ per frame (code respectively compiled with AVX instructions for
-    the 32-bit decoders and with SSE4.1 instructions for the 8-bit decoders).
-    For comparison, code size without compression are shown in parentheses.}
-  \label{tab:eval_polar_sc_gen_l1i_size}
 \end{table}
 
 \begin{figure}[htp]
@@ -69,8 +70,8 @@ sub-tree folding algorithm in the generator.
   % \quad
   \\
   \subfloat[][With compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
-  \caption{P-EDGE generated decoder binary sizes depending on the frame size
-    (R=1/2).}
+  \caption{Generated SC decoder binary sizes depending on the frame size
+    ($R=1/2$).}
   \label{plot:eval_polar_sc_gen_l1i_size}
 \end{figure}
 
@@ -88,7 +89,9 @@ exceed that limit.
 \subsubsection{Experimentation Protocol}
 
 \begin{table}[htp]
-  \begin{center}
+  \centering
+  \caption{Performance evaluation platforms.}
+  \label{tab:eval_polar_sc_gen_thr_specs}
   %{\scriptsize
   \begin{tabular}{c | c c c}
                                      & \textbf{x86-based}     & \textbf{ARMv7-based} & \textbf{prev. work arch.}\cite{Sarkis2014} \\
@@ -106,9 +109,6 @@ exceed that limit.
   % Flags for 8-bit & \verb|-std=c++11 -Ofast -funroll-loops -msse4.1|\\
   \end{tabular}
   %}
-  \end{center}
-  \caption{Performance evaluation platforms.}
-  \label{tab:eval_polar_sc_gen_thr_specs}
   % \vspace{-1.5em}
 \end{table}
 
@@ -128,14 +128,24 @@ shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
   \quad
   % \\
   \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
-  \caption{Performance comparison between several code rates of 32-bit floating
-    point decoding stages (intra-frame vectorization). Squares show AFF3CT
-    results. Crosses show the implementation results from~\cite{Sarkis2014}.}
+  \caption
+    [SC performance comparison between several code rates (intra-frame
+     vectorization).]
+    {Performance comparison between several code rates of 32-bit floating-point
+    decoding stages (intra-frame vectorization). Squares show AFF3CT results.
+    Crosses show the implementation results from~\cite{Sarkis2014}.}
   \label{plot:eval_polar_sc_gen_thr_intra}
 \end{figure}
 
 \begin{table}[htp]
-  \begin{center}
+  \centering
+  \caption
+    [Comparing SC software decoder with the state-of-art (intra-frame SIMD).]
+    {Comparing SC with a state-of-art software polar decoder, for codes of
+    rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
+    state-of-the art performance results reported in~\cite{Sarkis2014}, for
+    comparison.}
+  \label{tab:eval_polar_sc_gen_thr_comparison}
   \begin{tabular}{r  r  r  r}
     $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} & \textbf{Latency} \\
                                     &                      &            (Mb/s) &         ($\mu$s) \\
@@ -158,12 +168,6 @@ shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
     \multirow{2}{*}{(32768, 29492)} & \cite{Sarkis2014}    & 261                      & 113             \\
                                     & \cite{Cassagne2015c} & 293                      & 101             \\
   \end{tabular}
-  \end{center}
-  \caption{Comparing P-EDGE with a state-of-art software polar decoder, for
-    codes of rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
-    state-of-the art performance results reported in~\cite{Sarkis2014}, for
-    comparison.}
-  \label{tab:eval_polar_sc_gen_thr_comparison}
 \end{table}
 
 \begin{figure}[htp]
@@ -172,9 +176,12 @@ shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
   % \quad
   \\
   \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
-  \caption{Performance comparison between several code rates of 8-bit fixed
-    point decoding stages (inter-frame vectorization). Squares show AFF3CT
-    results. Circles show the ``handwritten'' implementation results
+  \caption
+    [SC performance comparison between several code rates (inter-frame
+     vectorization).]
+    {Performance comparison between several code rates of 8-bit fixed-point
+    decoding stages (inter-frame vectorization). Squares show AFF3CT results.
+    Circles show the ``handwritten'' implementation results
     from~\cite{LeGal2015a}.}
   \label{plot:eval_polar_sc_gen_thr_inter}
 \end{figure}
@@ -225,9 +232,9 @@ instruction cache size capacity.
 \subsubsection{Experimentation Protocol}
 
 \begin{table}[htp]
+  \centering
   \caption{Specifications of the \odr and the \juno boards.}
   \label{tab:eval_polar_energy_arm_specs}
-  \begin{center}
   % {\footnotesize
   \begin{tabular}{c | c c c}
                                       & \textbf{ODROID-XU+E}      &          \textbf{\juno} &  \textbf{i7-4850HQ} \\
@@ -252,7 +259,6 @@ instruction cache size capacity.
                                       &                  L2 512KB &                  L2 1MB &                     \\
   \end{tabular}
   % }
-  \end{center}
 \end{table}
 
 The experiments are conducted on two ARM~\bl platforms, an \odrx board using a
@@ -272,11 +278,13 @@ by the RAM metrics.
 \subsubsection{Experiments and Measurements}
 
 \begin{table}[htp]
-  \caption{Characteristics for each cluster ($T_i$ is the information
-    throughput), for dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
+  \centering
+  \caption
+    [Throughput, latency and \emph{energy-per-bit} of the dyn. SC decoders.]
+    {Characteristics for each cluster ($T_i$ is the information throughput), for
+    dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
     consumption is not included in $E_b$ and in $P$.}
   \label{tab:eval_polar_energy_results}
-  \begin{center}
   %{\footnotesize
   \begin{tabular}{r r r r r r r}
     \textbf{Cluster} & \textbf{Freq.} & \textbf{Impl.} & $\bm{T_i}$ &  $\bm{l}$ & $\boldsymbol{E_b}$ & $\bm{P}$ \\
@@ -304,7 +312,6 @@ by the RAM metrics.
                                &                       & inter & 632.2 &   51.8 &  15.8 & 9.997 \\
   \end{tabular}
   %}
-  \end{center}
 \end{table}
 
 Table~\ref{tab:eval_polar_energy_results} gives an overview of the decoder
@@ -331,10 +338,12 @@ if the i7 is competitive with the ARM\R big cores in term of
 the low power SDR systems because of its high power requirements.
 
 \begin{table}[htp]
-  \caption{Comparison of 8-bit fixed-point decoders (intra-frame SIMD).
-    $N = 32768$ and $R = 5/6$.}
+  \centering
+  \caption
+    [Comparison of 8-bit fixed-point SC decoders (intra-frame SIMD).]
+    {Comparison of 8-bit fixed-point decoders (intra-frame SIMD). $N = 32768$
+    and $R = 5/6$.}
   \label{tab:eval_polar_energy_comparison}
-  \begin{center}
   %{\footnotesize
   \begin{tabular}{r r r r r r}
     \textbf{Decoder} & \textbf{Platform} & \textbf{Freq.} & \textbf{SIMD} & $\bm{T_i}$ & $\bm{l}$ \\
@@ -347,7 +356,6 @@ the low power SDR systems because of its high power requirements.
     \cite{Cassagne2016b} & A57       & 1.1 & NEON   &          73  &  374 \\
   \end{tabular}
   %}
-  \end{center}
 \end{table}
 
 Table~\ref{tab:eval_polar_energy_comparison} shows a performance comparison
@@ -362,7 +370,10 @@ instructions (SSE4.1) and the frequencies are comparable.
   \quad
   % \\
   \subfloat[][Memory only]{\includegraphics[height=7cm]{polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
-  \caption{Variation of the \emph{energy-per-bit} for different frame sizes and
+  \caption
+    [SC variation of the \emph{energy-per-bit} for different frame sizes and
+    implementations.]
+    {Variation of the \emph{energy-per-bit} for different frame sizes and
     implementations: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz.
     Fixed rate $R = 1/2$.}
   \label{plot:eval_polar_sc_energy_implems_vs}
@@ -398,9 +409,12 @@ much lower latency).
   \quad
   % \\
   \subfloat[][ARM\R Cortex-A15]{\includegraphics[width=0.485\textwidth]{polar/sc_energy_freq/sc_energy_freq_a15}\label{plot:eval_polar_sc_energy_freq_a15}}
-  \caption{Variation of the \emph{energy-per-bit} ($E_b$) depending on the
-    cluster frequency (dynamic code, intra-, inter-frame). $N = 4096$ and
-    $R = 1/2$. Dark colors and light colors stand for CPU cluster and RAM energy
+  \caption
+    [SC variation of the \emph{energy-per-bit} depending on the cluster
+    frequency.]
+    {Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
+    frequency (dynamic code, intra-, inter-frame). $N = 4096$ and $R = 1/2$.
+    Dark colors and light colors stand for CPU cluster and RAM energy
     consumption, resp.}
   \label{plot:eval_polar_sc_energy_freq}
 \end{figure}
@@ -426,9 +440,11 @@ clock the CPU at a low frequency.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/sc_energy_rate/sc_energy_rate_N32768}
-  \caption{Variation of the \emph{energy-per-bit} ($E_b$) for $N = 32768$
-    depending on the rate $R = K / N$ (various impl.: intra-, inter-frame, code
-    gen. on). Running on A7, A53 and A57 @ 450MHz.}
+  \caption
+    [SC variation of the \emph{energy-per-bit} depending on the code rate.]
+    {Variation of the \emph{energy-per-bit} ($E_b$) for $N = 32768$ depending on
+    the rate $R = K / N$ (various impl.: intra-, inter-frame, code gen. on).
+    Running on A7, A53 and A57 @ 450MHz.}
   \label{plot:eval_polar_sc_energy_rate}
 \end{figure}
 
@@ -463,8 +479,10 @@ A57, and the \little A53 is itself more energy efficient than the \little A7
   \tkzKiviatLine[dotted,ultra thick,color=Paired-1](2,3,4,2,2)
   \tkzKiviatLine[dotted,ultra thick,color=Paired-5](2,1,2,4,4)
   \end{tikzpicture}
-  \caption{\label{fig:eval_polar_sc_colgate}Ranking of the different approaches
-    along 5 metrics. In red, inter-frame vectorization performance and in blue,
+  \caption
+    [SC ranking of intra-/inter-frame SIMD approaches along 5 metrics.]
+    {\label{fig:eval_polar_sc_colgate}Ranking of the different approaches along
+    5 metrics. In red, inter-frame vectorization performance and in blue,
     intra-frame performance. Solid color is for the dynamic versions, dotted is
     for the generated versions. Each version is sorted along each of the 5 axes
     and the best version for one axe is placed further from the center.}
@@ -515,8 +533,11 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
 \begin{table}[htp]
   %\renewcommand{\arraystretch}{1.1}
   \centering
-  \caption{Throughput and latency comparisons between floating-point (32-bit)
-    and fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
+  \caption
+    [Throughput comparisons between floating-point and fixed-point A-SSCL
+     decoders.]
+    {Throughput and latency comparisons between floating-point (32-bit) and
+    fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
     $L = 32$ and 32-bit CRC (Gzip).}
   \label{tab:eval_polar_scl_perfs_fixed}
   %{\small\resizebox{\linewidth}{!}{
@@ -580,7 +601,9 @@ average throughput is better with the FA-SSCL algorithm.
 
 \begin{table}[htp]
   \centering
-  \caption{Throughput and latency comparison with state-of-the-art SCL decoders.
+  \caption
+    [Throughput and latency comparison with state-of-the-art SCL decoders.]
+    {Throughput and latency comparison with state-of-the-art SCL decoders.
     32-bit floating-point representation. Code (2048,1723), $L = 32$, 32-bit
     CRC.}
   \label{tab:eval_polar_scl_perfs_comparison}
@@ -702,8 +725,10 @@ Linux (Ubuntu 14.04 LTS) with the GNU compiler (version 4.8) and with the
 \begin{figure}[htp]
   \centering
   \includegraphics[width=1.00\textwidth]{turbo/thr/thr}
-  \caption{Information throughput depending on $K$ for various number of cores
-    and SIMD instruction types. 6 iterations, 8-bit fixed-point.}
+  \caption
+    [Information throughput of the turbo decoder depending on $K$.]
+    {Information throughput depending on $K$ for various number of cores and
+    SIMD instruction types. 6 iterations, 8-bit fixed-point.}
   \label{plot:eval_turbo_thr}
 \end{figure}
 
@@ -724,9 +749,11 @@ for all codes with $K<4096$.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{turbo/energy/energy}
-  \caption{\emph{Energy-per-bit} ($E_d$) depending on the number of cores and
-    the instruction types. 6 iterations, 8-bit fixed-point. The throughput and
-    power measurements were conducted on P2 with the
+  \caption
+    [Turbo decoder \emph{energy-per-bit} depending on the number of cores.]
+    {\emph{Energy-per-bit} ($E_d$) depending on the number of cores and the
+    instruction types. 6 iterations, 8-bit fixed-point. The throughput and power
+    measurements were conducted on P2 with the
     \emph{Intel\R Power Gadget} tool.}
   \label{plot:eval_turbo_energy}
 \end{figure}
@@ -787,7 +814,9 @@ and 61 cores using 4-way SMT and running at 1.2 GHz.
 
 \begin{table}[htp]
   \centering
-  \caption{Throughput, Latency, Power and Energy Characteristics~\cite{Ghaffari2019}.}
+  \caption
+    [MPA throughput, latency, power and energy characteristics.]
+    {Throughput, latency, power and energy characteristics~\cite{Ghaffari2019}.}
   \label{tab:eval_scma_thr}
   % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c | r r r r r}
@@ -899,8 +928,10 @@ significantly with the Intel\R compiler.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{scma/energy/energy}
-  \caption{Graphical comparison of the energy consumed per decoded bit for
-           three different platforms.}
+  \caption
+    [MPA graphical comparison of the energy consumed per decoded bit.]
+    {Graphical comparison of the energy consumed per decoded bit for
+    three different platforms.}
   \label{plot:eval_scma_energy}
 \end{figure}
 
@@ -918,7 +949,9 @@ scalable up to the number of processing units dedicated to them.
 
 \begin{table}[htp]
   \centering
-  \caption{Cache Performance Characterization}
+  \caption
+    [MPA cache performance characterization.]
+    {Cache performance characterization.}
   \label{tab:eval_scma_cache}
   % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c r r r r r}
@@ -998,7 +1031,10 @@ VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
-  \caption{Profiling results of different MPA algorithms using Intel\R VTune\TM
+  \caption
+    [Profiling results of different MPA algorithms using Intel\R VTune\TM
+    Profiler.]
+    {Profiling results of different MPA algorithms using Intel\R VTune\TM
     Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
   \label{plot:eval_scma_profiling}
 \end{figure}

@@ -680,22 +680,16 @@ fully flatten, depending on the size of the code length.
 \subsection{Tree Pruning Strategy}
 
 % SC --------------------------------------------------------------------------
-% \begin{figure}[htp]
-% \includegraphics[width=1.00\textwidth]{polar/sc_tree_cut/sc_tree_cut}
-% \caption{Throughput of the SC decoder depending on the different optimizations
-%   for $N = 2048$, for intra-frame vectorization on the left and inter-frame
-%   vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
-% \label{plot:polar_sc_tree_cut}
-% \end{figure}
-
 \begin{figure}[htp]
   \centering
   \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:polar_sc_tree_cut_intra}}
   \quad
   \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:polar_sc_tree_cut_inter}}
-  \caption{Throughput of the SC decoder depending on the different optimizations
-  for $N = 2048$, for intra-frame vectorization on the left and inter-frame
-  vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
+  \caption
+    [Throughput of the SC decoder depending on the different optimizations.]
+    {Throughput of the SC decoder depending on the different optimizations for
+    $N = 2048$, for intra-frame vectorization on the left and inter-frame
+    vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
   \label{plot:polar_sc_tree_cut}
 \end{figure}
 
@@ -718,7 +712,9 @@ may benefit from fine tuning.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_tree_cut/scl_tree_cut}
-  \caption{Impact of the specialized nodes on the SCL coded throughput,
+  \caption
+    [Impact of the specialized nodes on the SCL coded throughput.]
+    {Impact of the specialized nodes on the SCL coded throughput,
     intra-frame vectorization, $N=2048$ and $L=32$.}
   \label{plot:polar_scl_tree_cut}
 \end{figure}
@@ -753,7 +749,7 @@ order to offer a tradeoff between throughput and decoding performance.
   \includegraphics[width=0.70\textwidth]{polar/scl_spc/scl_spc_diff}
   % \caption{Impact of the specialized nodes on the SCL coded throughput.
   \caption{Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @
-    $10^{-5}$ FER}
+    $10^{-5}$ FER.}
   \label{plot:polar_scl_spc}
 \end{figure}
 
@@ -966,7 +962,7 @@ This tag is initially set to \emph{standard}.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=1.0\textwidth]{polar/patterns}
-  \caption{Subtree rewriting rules for processing specialization.}
+  \caption{Polar sub-tree rewriting rules for processing specialization.}
   \label{fig:polar_patterns}
 \end{figure}
 
@@ -1035,7 +1031,9 @@ Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
   % \qquad
   \\
   \subfloat[][With compression.]{\includegraphics[height=7.5cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:eval_polar_sc_gen_compression_w}}
-  \caption{Full decoding tree representation ($N = 128, K = 64$) without and
+  \caption
+    [Full polar decoding tree representation without and with compression.]
+    {Full polar decoding tree representation ($N = 128, K = 64$) without and
     with the compression sub-tree folding algorithm.}
   \label{fig:eval_polar_sc_gen_compression}
 \end{figure}
@@ -1060,7 +1058,7 @@ compression ratio increases with the size of the tree).
   \item \xmark~"dynamic" = "generic" présenté dans les algos
 \end{itemize}
 
-We extend the AFF3CT software with a new version of the Fast-SSC decoder,
+We extend the \AFFECT software with a new version of the Fast-SSC decoder,
 called \emph{dynamic} decoder. This version uses the same building blocks (the
 polar API) as the generated versions, but the same code is able to accommodate
 with different frozen bit layouts and different parameters (length, SNR).
@@ -1236,7 +1234,9 @@ called SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}
-  \caption{Information throughput of the SSCL decoder depending on the codeword
+  \caption
+    [Throughput of the SSCL decoder depending on the partial sums management.]
+    {Information throughput of the SSCL decoder depending on the codeword
     size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$.}
   \label{plot:polar_scl_cpy_vs_ptr}
 \end{figure}
@@ -1271,7 +1271,7 @@ beneficial in any use case.
 
 \begin{table}[htp]
   \centering
-  \caption{Polar decoders memory footprint (in bytes)}
+  \caption{Polar decoders memory footprint (in bytes).}
   \label{tab:polar_scl_memory_footprint}
   %{\small
    \begin{tabular}{r r}
@@ -1359,8 +1359,10 @@ in the intra-frame strategy.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{turbo/reordering_process_inter_simd}
-  \caption{Frame reordering process before and after the decoding process.
-    Performed 3 times: for systematic, first and second parity information.}
+  \caption
+    [Frame reordering operation before and after the turbo decoding process.]
+    {Frame reordering operation before and after the decoding process. Performed
+    3 times: for systematic, first and second parity information.}
   \label{fig:turbo_reordering_process_inter_simd}
 \end{figure}
 
@@ -1669,9 +1671,11 @@ final guesses at each user.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{scma/simd_norm/simd_norm}
-  \caption{Complex norm AVX algorithm using
-           a) Array of Structures (AoS),
-           b) Structure of Arrays (SoA).}
+  \caption
+    [MPA complex norm AVX algorithm using AoS and SoA.]
+    {MPA complex norm AVX algorithm using
+     a) Array of Structures (AoS),
+     b) Structure of Arrays (SoA).}
   \label{fig:scma_simd_norm}
 \end{figure}
 
@@ -1708,8 +1712,10 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\linewidth]{scma/simd_exp_mul/simd_exp_mul}
-  \caption{a) Vectorized Exponentials ($N_ 0 = 2\sigma^2$),
-           b) Vectorized calculation of final guess at user 4.}
+  \caption
+    [MPA vectorized Exponentials ($N_0 = 2\sigma^2$).]
+    {a) Vectorized Exponentials ($N_0 = 2\sigma^2$),
+     b) Vectorized calculation of final guess at user 4.}
   \label{fig:scma_simd_exp_mul}
 \end{figure}
 
