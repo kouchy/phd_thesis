@@ -43,7 +43,27 @@ perform the inverse operations to retrieve the message produced by the source.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{intro/com_chain}
+  \begin{scaletikzpicturetowidth}{0.70\linewidth}
+  \begin{tikzpicture}[scale=\tikzscale]
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1            ] (src) at ( 0, 4) {Source};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=left] (enc) at ( 4, 4) {Channel\\Encoder};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1            ] (mod) at ( 8, 4) {Modulator};
+    \node[draw,          rounded corners=0pt, minimum height=1cm, minimum width=2.0cm,                          ] (chn) at (10, 2) {Channel};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3            ] (dem) at ( 8, 0) {Demodulator};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (dec) at ( 4, 0) {Channel\\Decoder};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3            ] (snk) at ( 0, 0) {Sink};
+
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=2cm, dashed, fit=(src) (enc) (mod)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=2cm, dashed, fit=(dem) (dec) (snk)] {};
+
+    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white] {$\bm{m}$};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white] {$\bm{c}$};
+    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white] {$\bm{x}$};
+    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white] {$\bm{y}$};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white] {$\bm{t}$};
+    \draw[->,>=latex] (dec) -- (snk) node [midway, below, fill=white] {$\bm{\hat{m}}$};
+  \end{tikzpicture}
+  \end{scaletikzpicturetowidth}
   \caption{Digital communication chain.}
   \label{fig:intro_com_chain}
 \end{figure}
@@ -134,15 +154,90 @@ and \textbf{open-source software}. These are the purposes of \AFFECT.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{simu/com_chain}
+  % \begin{scaletikzpicturetowidth}{0.70\linewidth}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (src) at ( 0, 4) {Source};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (enc) at ( 4, 4) {Channel\\Encoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (mod) at ( 8, 4) {Modulator};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1            ] (chn) at (10, 2) {Channel};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (dem) at ( 8, 0) {Demodulator};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (dec) at ( 4, 0) {Channel\\Decoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (snk) at ( 0, 0) {Sink};
+
+    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white, text=Paired-3] {$K$};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white, text=Paired-3] {$N$};
+    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white               ] {};
+    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white               ] {};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white, text=Paired-3] {$N$};
+    \draw[->,>=latex] (dec) -- (snk) node [midway, below, fill=white, text=Paired-3] {$K$};
+
+    \node[draw=black, rounded corners=2pt, minimum height=2cm, dashed, fit=(src) (enc) (mod) (chn) (dem) (dec) (snk)] (sim) {};
+
+    \node[text width=0.3cm, text centered, text=Paired-3] (C) at (-2.5, 3.875) {$C$};
+    \node[text width=0.3cm, text centered, text=Paired-3] (K) at (-2.5, 3.125) {$K$};
+    \node[text width=0.3cm, text centered, text=Paired-3] (N) at (-2.5, 2.375) {$N$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (m) at (-2.5, 1.625) {$m$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (M) at (-2.5, 0.875) {$M$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (s) at (-2.5, 0.125) {$s$};
+
+    \draw[->,>=latex, dashed, Paired-3] (C) -- (sim);
+    \draw[->,>=latex, dashed, Paired-3] (K) -- (sim);
+    \draw[->,>=latex, dashed, Paired-3] (N) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (m) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (M) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (s) -- (sim);
+
+    \node[text width=4cm, text centered, text=Paired-3] (C2) at (4, 2) {$C$ = \{Polar, LDPC, Turbo, ...\}};
+
+    \draw[->, dotted, Paired-3] (C2) -- (enc);
+    \draw[->, dotted, Paired-3] (C2) -- (dec);
+  \end{tikzpicture}
+  % \end{scaletikzpicturetowidth}
   \caption{Main simulation parameters.}
   \label{fig:simu_com_chain}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{simu/in_out}
-  \caption{Inpout simulation parameters and output BER results.}
+  % \begin{scaletikzpicturetowidth}{0.70\linewidth}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[draw=black, rounded corners=2pt, minimum height=4cm, minimum width=2.5cm, text=black, dashed] (sim) at (0, 2) {Simulation};
+
+    \node[text width=0.3cm, text centered, text=black   ] (C) at (-2.5, 3.875) {$C$};
+    \node[text width=0.3cm, text centered, text=black   ] (K) at (-2.5, 3.125) {$K$};
+    \node[text width=0.3cm, text centered, text=black   ] (N) at (-2.5, 2.375) {$N$};
+    \node[text width=0.3cm, text centered, text=Paired-3] (m) at (-2.5, 1.625) {$m$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (M) at (-2.5, 0.875) {$M$};
+    \node[text width=0.3cm, text centered, text=Paired-5] (s) at (-2.5, 0.125) {$s$};
+
+    \draw[->,>=latex, dashed, black   ] (C) -- (sim);
+    \draw[->,>=latex, dashed, black   ] (K) -- (sim);
+    \draw[->,>=latex, dashed, black   ] (N) -- (sim);
+    \draw[->,>=latex, dashed, Paired-3] (m) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (M) -- (sim);
+    \draw[->,>=latex, dashed, Paired-5] (s) -- (sim);
+
+    \draw[->,>=latex, black] (1.40, 2) -> (2.0, 2);
+
+    \draw (2.15, 3.15) -- (6.30, 3.15);
+    \draw (3.90, 3.75) -- (3.90, 0.20);
+
+    \node[text width=1.5cm, text centered                            ] (SNR1) at (3, 3.50) {$E_b/N_0$};
+    \node[text width=0.5cm, text centered, label={[Paired-3]left:$m$}] (SNR2) at (3, 2.75) {$1.0$};
+    \node[text width=0.5cm, text centered                            ] (SNR3) at (3, 2.00) {$2.0$};
+    \node[text width=0.5cm, text centered                            ] (SNR4) at (3, 1.25) {$3.0$};
+    \node[text width=0.5cm, text centered, label={[Paired-1]left:$M$}] (SNR5) at (3, 0.50) {$4.0$};
+
+    \draw[->,>=latex, Paired-5] (SNR3.west) to[bend right=70] (SNR4.west) node [left, yshift=0.4cm, xshift=-0.2cm] {$s$};
+
+    \node[text width=2cm, text centered] (BER1) at (5.15, 3.50) {BER};
+    \node[text width=2cm, text centered] (BER2) at (5.15, 2.75) {$9.23 \times 10^{-2}$};
+    \node[text width=2cm, text centered] (BER3) at (5.15, 2.00) {$7.05 \times 10^{-2}$};
+    \node[text width=2cm, text centered] (BER4) at (5.15, 1.25) {$2.43 \times 10^{-2}$};
+    \node[text width=2cm, text centered] (BER5) at (5.15, 0.50) {$2.93 \times 10^{-4}$};
+  \end{tikzpicture}
+  % \end{scaletikzpicturetowidth}
+  \caption{Input simulation parameters and output BER results.}
   \label{fig:intro_in_out}
 \end{figure}
 
