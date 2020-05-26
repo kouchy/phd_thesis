@@ -959,13 +959,6 @@ internal node has a tag indicating the type of processing required at that node
 (recursive children processing, $f$/$g$/$h$ functions to be applied or not).
 This tag is initially set to \emph{standard}.
 
-% \begin{figure}[htp]
-%   \centering
-%   \includegraphics[width=1.0\textwidth]{polar/patterns}
-%   \caption{Polar sub-tree rewriting rules for processing specialization.}
-%   \label{fig:polar_patterns}
-% \end{figure}
-
 \begin{figure}[htp]
   \centering
   % \begin{scaletikzpicturetowidth}{0.70\linewidth}
@@ -1309,10 +1302,228 @@ Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Without compression.]{\includegraphics[height=7.5cm]{polar/sc_gen_compression/sc_gen_no_compression}\label{fig:eval_polar_sc_gen_compression_wo}}
-  % \qquad
+
+  \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+  \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+  \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+  \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+  \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+  \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+  \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+  \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+  \subfloat[][Legend.]{
+  \begin{tikzpicture}[baseline]
+    \node[any,  label={[black,align=center]above:\small{Any}}                       ] (any)  at ( 0.0, 0.0) {};
+    \node[frzn, label={[black,align=center]above:\small{Frozen bit}\\\small{(leaf)}}] (frz)  at ( 2.0, 0.0) {};
+    \node[info, label={[black,align=center]above:\small{Info. bit}\\\small{(leaf)}} ] (ufrz) at ( 4.0, 0.0) {};
+    \node[r0,   label={[black,align=center]above:\small{\texttt{R0}}}               ] (r0)   at ( 6.0, 0.0) {};
+    \node[r1,   label={[black,align=center]above:\small{\texttt{R1}}}               ] (r1)   at ( 8.0, 0.0) {};
+    \node[rep,  label={[black,align=center]above:\small{\texttt{REP}}}              ] (rep)  at (10.0, 0.0) {};
+    \node[spc4, label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4}$}} ] (spc4) at (12.0, 0.0) {};
+    \node[spc,  label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4+}$}}] (spc)  at (14.0, 0.0) {};
+
+    \draw[<-,>=latex        ] (2.5, -1.25) -- ( 5.5, -1.25) node [midway, above, text=black] {Left edge ($f$)};
+    \draw[->,>=latex, dashed] (8.5, -1.25) -- (11.5, -1.25) node [midway, above, text=black] {Right edge ($g$)};
+  \end{tikzpicture}
+  }
   \\
-  \subfloat[][With compression.]{\includegraphics[height=7.5cm]{polar/sc_gen_compression/sc_gen_compression}\label{fig:eval_polar_sc_gen_compression_w}}
+  \subfloat[][Without compression.]{
+  \label{fig:eval_polar_sc_gen_compression_wo}
+  \begin{tikzpicture}[baseline]
+    \node[any] (l0_n0)  at ( 6.5, 6.0) {};
+
+    \node[any] (l1_n0)  at ( 4.5, 5.0) {};
+    \node[any] (l1_n1)  at ( 8.5, 5.0) {};
+
+    \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
+    \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
+
+    \node[any] (l2_n0)  at ( 1.5, 4.0) {};
+    \node[any] (l2_n1)  at ( 4.5, 4.0) {};
+    \node[any] (l2_n2)  at ( 8.5, 4.0) {};
+    \node[any] (l2_n3)  at (11.5, 4.0) {};
+
+    \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
+    \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
+    \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
+    \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
+
+    \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
+    \node[any] (l3_n1)  at ( 1.5, 3.0) {};
+    \node[any] (l3_n2)  at ( 4.0, 3.0) {};
+    \node[any] (l3_n3)  at ( 5.0, 3.0) {};
+    \node[any] (l3_n4)  at ( 8.0, 3.0) {};
+    \node[any] (l3_n5)  at ( 9.0, 3.0) {};
+    \node[any] (l3_n6)  at (11.5, 3.0) {};
+    \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
+
+    \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
+    \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
+    \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
+    \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
+    \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
+    \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
+    \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
+    \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+
+    \node[r0 ] (l4_n0)  at ( 0.5, 2.0) {};
+    \node[any] (l4_n1)  at ( 1.5, 2.0) {};
+    \node[r0 ] (l4_n2)  at ( 3.0, 2.0) {};
+    \node[any] (l4_n3)  at ( 4.0, 2.0) {};
+    \node[any] (l4_n4)  at ( 5.0, 2.0) {};
+    \node[spc] (l4_n5)  at ( 6.0, 2.0) {};
+    \node[rep] (l4_n6)  at ( 7.0, 2.0) {};
+    \node[any] (l4_n7)  at ( 8.0, 2.0) {};
+    \node[any] (l4_n8)  at ( 9.0, 2.0) {};
+    \node[r1 ] (l4_n9)  at (10.0, 2.0) {};
+    \node[any] (l4_n10) at (11.5, 2.0) {};
+    \node[r1 ] (l4_n11) at (12.5, 2.0) {};
+
+    \draw[->,>=latex        ] (l3_n1) -- (l4_n0);
+    \draw[->,>=latex, dashed] (l3_n1) -- (l4_n1);
+    \draw[->,>=latex        ] (l3_n2) -- (l4_n2);
+    \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
+    \draw[->,>=latex        ] (l3_n3) -- (l4_n4);
+    \draw[->,>=latex, dashed] (l3_n3) -- (l4_n5);
+    \draw[->,>=latex        ] (l3_n4) -- (l4_n6);
+    \draw[->,>=latex, dashed] (l3_n4) -- (l4_n7);
+    \draw[->,>=latex        ] (l3_n5) -- (l4_n8);
+    \draw[->,>=latex, dashed] (l3_n5) -- (l4_n9);
+    \draw[->,>=latex        ] (l3_n6) -- (l4_n10);
+    \draw[->,>=latex, dashed] (l3_n6) -- (l4_n11);
+
+    \node[r0  ] (l5_n0)  at ( 0.5, 1.0) {};
+    \node[any ] (l5_n1)  at ( 1.5, 1.0) {};
+    \node[rep ] (l5_n2)  at ( 3.0, 1.0) {};
+    \node[spc4] (l5_n3)  at ( 4.0, 1.0) {};
+    \node[rep ] (l5_n4)  at ( 5.0, 1.0) {};
+    \node[spc4] (l5_n5)  at ( 6.0, 1.0) {};
+    \node[rep ] (l5_n6)  at ( 7.0, 1.0) {};
+    \node[spc4] (l5_n7)  at ( 8.0, 1.0) {};
+    \node[rep ] (l5_n8)  at ( 9.0, 1.0) {};
+    \node[spc4] (l5_n9)  at (10.0, 1.0) {};
+    \node[any ] (l5_n10) at (11.5, 1.0) {};
+    \node[r1  ] (l5_n11) at (12.5, 1.0) {};
+
+    \draw[->,>=latex        ] (l4_n1)  -- (l5_n0);
+    \draw[->,>=latex, dashed] (l4_n1)  -- (l5_n1);
+    \draw[->,>=latex        ] (l4_n3)  -- (l5_n2);
+    \draw[->,>=latex, dashed] (l4_n3)  -- (l5_n3);
+    \draw[->,>=latex        ] (l4_n4)  -- (l5_n4);
+    \draw[->,>=latex, dashed] (l4_n4)  -- (l5_n5);
+    \draw[->,>=latex        ] (l4_n7)  -- (l5_n6);
+    \draw[->,>=latex, dashed] (l4_n7)  -- (l5_n7);
+    \draw[->,>=latex        ] (l4_n8)  -- (l5_n8);
+    \draw[->,>=latex, dashed] (l4_n8)  -- (l5_n9);
+    \draw[->,>=latex        ] (l4_n10) -- (l5_n10);
+    \draw[->,>=latex, dashed] (l4_n10) -- (l5_n11);
+
+    \node[r0] (l6_n0) at ( 1.0, 0.0) {};
+    \node[r1] (l6_n1) at ( 2.0, 0.0) {};
+    \node[r0] (l6_n2) at (11.0, 0.0) {};
+    \node[r1] (l6_n3) at (12.0, 0.0) {};
+
+    \draw[->,>=latex        ] (l5_n1)  -- (l6_n0);
+    \draw[->,>=latex, dashed] (l5_n1)  -- (l6_n1);
+    \draw[->,>=latex        ] (l5_n10) -- (l6_n2);
+    \draw[->,>=latex, dashed] (l5_n10) -- (l6_n3);
+
+    \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
+    \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n10) (l6_n2) (l6_n3)] {};
+
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n4) (l5_n4) (l5_n5)] {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n7) (l5_n6) (l5_n7)] {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n8) (l5_n8) (l5_n9)] {};
+  \end{tikzpicture}
+  }
+  \\
+  \subfloat[][With compression.]{
+  \label{fig:eval_polar_sc_gen_compression_w}
+  \begin{tikzpicture}[baseline]
+
+    \node[any] (l0_n0)  at ( 6.5, 6.0) {};
+
+    \node[any] (l1_n0)  at ( 4.5, 5.0) {};
+    \node[any] (l1_n1)  at ( 8.5, 5.0) {};
+
+    \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
+    \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
+
+    \node[any] (l2_n0)  at ( 1.5, 4.0) {};
+    \node[any] (l2_n1)  at ( 4.5, 4.0) {};
+    \node[any] (l2_n2)  at ( 8.5, 4.0) {};
+    \node[any] (l2_n3)  at (11.5, 4.0) {};
+
+    \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
+    \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
+    \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
+    \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
+
+    \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
+    \node[any] (l3_n1)  at ( 1.5, 3.0) {};
+    \node[any] (l3_n2)  at ( 4.0, 3.0) {};
+    \node[any] (l3_n3)  at ( 5.0, 3.0) {};
+    \node[any] (l3_n4)  at ( 8.0, 3.0) {};
+    \node[any] (l3_n5)  at ( 9.0, 3.0) {};
+    \node[any] (l3_n6)  at (11.5, 3.0) {};
+    \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
+
+    \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
+    \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
+    \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
+    \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
+    \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
+    \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
+    \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
+    \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+
+    \node[any] (l4_n0) at ( 1.50, 2.0) {};
+    \node[r0 ] (l4_n1) at ( 2.75, 2.0) {};
+    \node[spc] (l4_n2) at ( 5.00, 2.0) {};
+    \node[any] (l4_n3) at ( 6.50, 2.0) {};
+    \node[rep] (l4_n4) at ( 8.00, 2.0) {};
+    \node[r1 ] (l4_n5) at (10.25, 2.0) {};
+    \node[any] (l4_n6) at (11.50, 2.0) {};
+
+    \draw[->,>=latex, dashed] (l3_n1) -- (l4_n0);
+    \draw[->,>=latex        ] (l3_n1) -- (l4_n1);
+    \draw[->,>=latex        ] (l3_n2) -- (l4_n1);
+    \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n3) -- (l4_n2);
+    \draw[->,>=latex        ] (l3_n3) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n4) -- (l4_n3);
+    \draw[->,>=latex        ] (l3_n4) -- (l4_n4);
+    \draw[->,>=latex        ] (l3_n5) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n5) -- (l4_n5);
+    \draw[->,>=latex, dashed] (l3_n6) -- (l4_n5);
+    \draw[->,>=latex        ] (l3_n6) -- (l4_n6);
+
+    \node[r0  ] (l5_n0)  at ( 0.50, 1.0) {};
+    \node[any ] (l5_n1)  at ( 1.50, 1.0) {};
+    \node[rep ] (l5_n2)  at ( 6.00, 1.0) {};
+    \node[spc4] (l5_n3)  at ( 7.00, 1.0) {};
+    \node[r1  ] (l5_n4)  at (12.50, 1.0) {};
+
+    \draw[->,>=latex        ] (l4_n0) -- (l5_n0);
+    \draw[->,>=latex, dashed] (l4_n0) -- (l5_n1);
+    \draw[->,>=latex        ] (l4_n3) -- (l5_n2);
+    \draw[->,>=latex, dashed] (l4_n3) -- (l5_n3);
+    \draw[->,>=latex        ] (l4_n6) -- (l5_n1);
+    \draw[->,>=latex, dashed] (l4_n6) -- (l5_n4);
+
+    \node[r0] (l6_n0) at ( 1.0, 0.0) {};
+    \node[r1] (l6_n1) at ( 2.0, 0.0) {};
+
+    \draw[->,>=latex        ] (l5_n1) -- (l6_n0);
+    \draw[->,>=latex, dashed] (l5_n1) -- (l6_n1);
+
+    \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
+  \end{tikzpicture}
+  }
+
   \caption
     [Full polar decoding tree representation without and with compression.]
     {Full polar decoding tree representation ($N = 128, K = 64$) without and
