@@ -489,6 +489,350 @@ the control on the intrinsics taken and ensures portability.
 \subsection{Inter-frame}
 \label{sec:opt_vec_strat_inter}
 
+\begin{figure}[htp]
+  \centering
+
+  \tikzset{ e1_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-1!20}, pattern=grid,             pattern color=black!40!Paired-1!70} }
+  \tikzset{ e2_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-1!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-1!70} }
+  \tikzset{ e3_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-1!20}, pattern=north west lines, pattern color=black!40!Paired-1!70} }
+  \tikzset{ e4_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-1!20}, pattern=horizontal lines, pattern color=black!40!Paired-1!70} }
+  \tikzset{ ex_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, fill=Paired-1!20, label={[black!40!Paired-1!70,yshift=-0.45cm]above:\tiny{...}}           } }
+  \tikzset{ en_f1/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-1!20}, pattern=north east lines, pattern color=black!40!Paired-1!70} }
+
+  \tikzset{ e1_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-3!20}, pattern=grid,             pattern color=black!40!Paired-3!70} }
+  \tikzset{ e2_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-3!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-3!70} }
+  \tikzset{ e3_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-3!20}, pattern=north west lines, pattern color=black!40!Paired-3!70} }
+  \tikzset{ e4_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-3!20}, pattern=horizontal lines, pattern color=black!40!Paired-3!70} }
+  \tikzset{ ex_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, fill=Paired-3!20, label={[black!40!Paired-3!70,yshift=-0.45cm]above:\tiny{...}}           } }
+  \tikzset{ en_f2/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-3!20}, pattern=north east lines, pattern color=black!40!Paired-3!70} }
+
+  \tikzset{ e1_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-5!20}, pattern=grid,             pattern color=black!40!Paired-5!70} }
+  \tikzset{ e2_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-5!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-5!70} }
+  \tikzset{ e3_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-5!20}, pattern=north west lines, pattern color=black!40!Paired-5!70} }
+  \tikzset{ e4_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-5!20}, pattern=horizontal lines, pattern color=black!40!Paired-5!70} }
+  \tikzset{ ex_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, fill=Paired-5!20, label={[black!40!Paired-5!70,yshift=-0.45cm]above:\tiny{...}}           } }
+  \tikzset{ en_f3/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-5!20}, pattern=north east lines, pattern color=black!40!Paired-5!70} }
+
+  \tikzset{ e1_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+  \tikzset{ e2_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+  \tikzset{ e3_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+  \tikzset{ e4_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+  \tikzset{ ex_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+  \tikzset{ en_fy/.style ={draw=black, dotted, minimum width=0.4cm, minimum height=0.4cm, text=black, label={[black!80,yshift=-0.45cm]above:\tiny{...}}} }
+
+  \tikzset{ e1_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-7!20}, pattern=grid,             pattern color=black!40!Paired-7!70} }
+  \tikzset{ e2_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-7!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-7!70} }
+  \tikzset{ e3_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-7!20}, pattern=north west lines, pattern color=black!40!Paired-7!70} }
+  \tikzset{ e4_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-7!20}, pattern=horizontal lines, pattern color=black!40!Paired-7!70} }
+  \tikzset{ ex_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, fill=Paired-7!20, label={[black!40!Paired-7!70,yshift=-0.45cm]above:\tiny{...}}           } }
+  \tikzset{ en_ff/.style ={draw=black, minimum width=0.4cm, minimum height=0.4cm, text=black, preaction={fill=Paired-7!20}, pattern=north east lines, pattern color=black!40!Paired-7!70} }
+
+  \begin{tikzpicture}
+    % input
+    \node[e1_f1] (in_e1_f1) at ( 0.0, 3.75) {};
+    \node[e2_f1] (in_e2_f1) at ( 0.4, 3.75) {};
+    \node[e3_f1] (in_e3_f1) at ( 0.8, 3.75) {};
+    \node[e4_f1] (in_e4_f1) at ( 1.2, 3.75) {};
+    \node[ex_f1] (in_ex_f1) at ( 1.6, 3.75) {};
+    \node[en_f1] (in_en_f1) at ( 2.0, 3.75) {};
+
+    \node[e1_f2] (in_e1_f2) at ( 2.8, 3.75) {};
+    \node[e2_f2] (in_e2_f2) at ( 3.2, 3.75) {};
+    \node[e3_f2] (in_e3_f2) at ( 3.6, 3.75) {};
+    \node[e4_f2] (in_e4_f2) at ( 4.0, 3.75) {};
+    \node[ex_f2] (in_ex_f2) at ( 4.4, 3.75) {};
+    \node[en_f2] (in_en_f2) at ( 4.8, 3.75) {};
+
+    \node[e1_f3] (in_e1_f3) at ( 5.6, 3.75) {};
+    \node[e2_f3] (in_e2_f3) at ( 6.0, 3.75) {};
+    \node[e3_f3] (in_e3_f3) at ( 6.4, 3.75) {};
+    \node[e4_f3] (in_e4_f3) at ( 6.8, 3.75) {};
+    \node[ex_f3] (in_ex_f3) at ( 7.2, 3.75) {};
+    \node[en_f3] (in_en_f3) at ( 7.6, 3.75) {};
+
+    \node[e1_fy] (in_e1_fy) at ( 8.4, 3.75) {};
+    \node[e2_fy] (in_e2_fy) at ( 8.8, 3.75) {};
+    \node[e3_fy] (in_e3_fy) at ( 9.2, 3.75) {};
+    \node[e4_fy] (in_e4_fy) at ( 9.6, 3.75) {};
+    \node[ex_fy] (in_ex_fy) at (10.0, 3.75) {};
+    \node[en_fy] (in_en_fy) at (10.4, 3.75) {};
+
+    \node[e1_ff] (in_e1_ff) at (11.2, 3.75) {};
+    \node[e2_ff] (in_e2_ff) at (11.6, 3.75) {};
+    \node[e3_ff] (in_e3_ff) at (12.0, 3.75) {};
+    \node[e4_ff] (in_e4_ff) at (12.4, 3.75) {};
+    \node[ex_ff] (in_ex_ff) at (12.8, 3.75) {};
+    \node[en_ff] (in_en_ff) at (13.2, 3.75) {};
+
+    % reordered input
+    \node[e1_f1] (rei_e1_f1) at (-0.2, 1.75) {};
+    \node[e1_f2] (rei_e1_f2) at ( 0.2, 1.75) {};
+    \node[e1_f3] (rei_e1_f3) at ( 0.6, 1.75) {};
+    \node[e1_fy] (rei_e1_fy) at ( 1.0, 1.75) {};
+    \node[e1_ff] (rei_e1_ff) at ( 1.4, 1.75) {};
+
+    \node[e2_f1] (rei_e2_f1) at ( 2.2, 1.75) {};
+    \node[e2_f2] (rei_e2_f2) at ( 2.6, 1.75) {};
+    \node[e2_f3] (rei_e2_f3) at ( 3.0, 1.75) {};
+    \node[e2_fy] (rei_e2_fy) at ( 3.4, 1.75) {};
+    \node[e2_ff] (rei_e2_ff) at ( 3.8, 1.75) {};
+
+    \node[e3_f1] (rei_e3_f1) at ( 4.6, 1.75) {};
+    \node[e3_f2] (rei_e3_f2) at ( 5.0, 1.75) {};
+    \node[e3_f3] (rei_e3_f3) at ( 5.4, 1.75) {};
+    \node[e3_fy] (rei_e3_fy) at ( 5.8, 1.75) {};
+    \node[e3_ff] (rei_e3_ff) at ( 6.2, 1.75) {};
+
+    \node[e4_f1] (rei_e4_f1) at ( 7.0, 1.75) {};
+    \node[e4_f2] (rei_e4_f2) at ( 7.4, 1.75) {};
+    \node[e4_f3] (rei_e4_f3) at ( 7.8, 1.75) {};
+    \node[e4_fy] (rei_e4_fy) at ( 8.2, 1.75) {};
+    \node[e4_ff] (rei_e4_ff) at ( 8.6, 1.75) {};
+
+    \node[ex_f1] (rei_ex_f1) at ( 9.4, 1.75) {};
+    \node[ex_f2] (rei_ex_f2) at ( 9.8, 1.75) {};
+    \node[ex_f3] (rei_ex_f3) at (10.2, 1.75) {};
+    \node[ex_fy] (rei_ex_fy) at (10.6, 1.75) {};
+    \node[ex_ff] (rei_ex_ff) at (11.0, 1.75) {};
+
+    \node[en_f1] (rei_en_f1) at (11.8, 1.75) {};
+    \node[en_f2] (rei_en_f2) at (12.2, 1.75) {};
+    \node[en_f3] (rei_en_f3) at (12.6, 1.75) {};
+    \node[en_fy] (rei_en_fy) at (13.0, 1.75) {};
+    \node[en_ff] (rei_en_ff) at (13.4, 1.75) {};
+
+    % connexions input -> reordered
+    \draw[->,>=latex, dashed, Paired-1] (in_e1_f1.south) -- (rei_e1_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (in_e2_f1.south) -- (rei_e2_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (in_e3_f1.south) -- (rei_e3_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (in_e4_f1.south) -- (rei_e4_f1.north);
+    % \draw[->,>=latex, dashed, Paired-1] (in_ex_f1.south) -- (rei_ex_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (in_en_f1.south) -- (rei_en_f1.north);
+
+    \draw[->,>=latex, dashed, Paired-3] (in_e1_f2.south) -- (rei_e1_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (in_e2_f2.south) -- (rei_e2_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (in_e3_f2.south) -- (rei_e3_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (in_e4_f2.south) -- (rei_e4_f2.north);
+    % \draw[->,>=latex, dashed, Paired-3] (in_ex_f2.south) -- (rei_ex_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (in_en_f2.south) -- (rei_en_f2.north);
+
+    \draw[->,>=latex, dashed, Paired-5] (in_e1_f3.south) -- (rei_e1_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (in_e2_f3.south) -- (rei_e2_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (in_e3_f3.south) -- (rei_e3_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (in_e4_f3.south) -- (rei_e4_f3.north);
+    % \draw[->,>=latex, dashed, Paired-5] (in_ex_f3.south) -- (rei_ex_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (in_en_f3.south) -- (rei_en_f3.north);
+
+    \draw[->,>=latex, dashed, Paired-7] (in_e1_ff.south) -- (rei_e1_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (in_e2_ff.south) -- (rei_e2_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (in_e3_ff.south) -- (rei_e3_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (in_e4_ff.south) -- (rei_e4_ff.north);
+    % \draw[->,>=latex, dashed, Paired-7] (in_ex_ff.south) -- (rei_ex_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (in_en_ff.south) -- (rei_en_ff.north);
+
+    % inter-frame processing
+    \node[draw=black, minimum width=14.0cm, minimum height=2.0cm] (inter_proc) at (6.6, 0.0) {Inter-frame SIMD process};
+
+    % connexions input reordered -> process
+    \draw[->,>=latex        ] (rei_e1_f1.south) -- (-0.2, 1.0);
+    \draw[->,>=latex        ] (rei_e1_f2.south) -- ( 0.2, 1.0);
+    \draw[->,>=latex        ] (rei_e1_f3.south) -- ( 0.6, 1.0);
+    \draw[->,>=latex, dotted] (rei_e1_fy.south) -- ( 1.0, 1.0);
+    \draw[->,>=latex        ] (rei_e1_ff.south) -- ( 1.4, 1.0);
+
+    \draw[->,>=latex        ] (rei_e2_f1.south) -- ( 2.2, 1.0);
+    \draw[->,>=latex        ] (rei_e2_f2.south) -- ( 2.6, 1.0);
+    \draw[->,>=latex        ] (rei_e2_f3.south) -- ( 3.0, 1.0);
+    \draw[->,>=latex, dotted] (rei_e2_fy.south) -- ( 3.4, 1.0);
+    \draw[->,>=latex        ] (rei_e2_ff.south) -- ( 3.8, 1.0);
+
+    \draw[->,>=latex        ] (rei_e3_f1.south) -- ( 4.6, 1.0);
+    \draw[->,>=latex        ] (rei_e3_f2.south) -- ( 5.0, 1.0);
+    \draw[->,>=latex        ] (rei_e3_f3.south) -- ( 5.4, 1.0);
+    \draw[->,>=latex, dotted] (rei_e3_fy.south) -- ( 5.8, 1.0);
+    \draw[->,>=latex        ] (rei_e3_ff.south) -- ( 6.2, 1.0);
+
+    \draw[->,>=latex        ] (rei_e4_f1.south) -- ( 7.0, 1.0);
+    \draw[->,>=latex        ] (rei_e4_f2.south) -- ( 7.4, 1.0);
+    \draw[->,>=latex        ] (rei_e4_f3.south) -- ( 7.8, 1.0);
+    \draw[->,>=latex, dotted] (rei_e4_fy.south) -- ( 8.2, 1.0);
+    \draw[->,>=latex        ] (rei_e4_ff.south) -- ( 8.6, 1.0);
+
+    \draw[->,>=latex        ] (rei_ex_f1.south) -- ( 9.4, 1.0);
+    \draw[->,>=latex        ] (rei_ex_f2.south) -- ( 9.8, 1.0);
+    \draw[->,>=latex        ] (rei_ex_f3.south) -- (10.2, 1.0);
+    \draw[->,>=latex, dotted] (rei_ex_fy.south) -- (10.6, 1.0);
+    \draw[->,>=latex        ] (rei_ex_ff.south) -- (11.0, 1.0);
+
+    \draw[->,>=latex        ] (rei_en_f1.south) -- (11.8, 1.0);
+    \draw[->,>=latex        ] (rei_en_f2.south) -- (12.2, 1.0);
+    \draw[->,>=latex        ] (rei_en_f3.south) -- (12.6, 1.0);
+    \draw[->,>=latex, dotted] (rei_en_fy.south) -- (13.0, 1.0);
+    \draw[->,>=latex        ] (rei_en_ff.south) -- (13.4, 1.0);
+
+    % reordered output
+    \node[e1_f1] (reo_e1_f1) at (-0.2, -1.75) {};
+    \node[e1_f2] (reo_e1_f2) at ( 0.2, -1.75) {};
+    \node[e1_f3] (reo_e1_f3) at ( 0.6, -1.75) {};
+    \node[e1_fy] (reo_e1_fy) at ( 1.0, -1.75) {};
+    \node[e1_ff] (reo_e1_ff) at ( 1.4, -1.75) {};
+
+    \node[e2_f1] (reo_e2_f1) at ( 2.2, -1.75) {};
+    \node[e2_f2] (reo_e2_f2) at ( 2.6, -1.75) {};
+    \node[e2_f3] (reo_e2_f3) at ( 3.0, -1.75) {};
+    \node[e2_fy] (reo_e2_fy) at ( 3.4, -1.75) {};
+    \node[e2_ff] (reo_e2_ff) at ( 3.8, -1.75) {};
+
+    \node[e3_f1] (reo_e3_f1) at ( 4.6, -1.75) {};
+    \node[e3_f2] (reo_e3_f2) at ( 5.0, -1.75) {};
+    \node[e3_f3] (reo_e3_f3) at ( 5.4, -1.75) {};
+    \node[e3_fy] (reo_e3_fy) at ( 5.8, -1.75) {};
+    \node[e3_ff] (reo_e3_ff) at ( 6.2, -1.75) {};
+
+    \node[e4_f1] (reo_e4_f1) at ( 7.0, -1.75) {};
+    \node[e4_f2] (reo_e4_f2) at ( 7.4, -1.75) {};
+    \node[e4_f3] (reo_e4_f3) at ( 7.8, -1.75) {};
+    \node[e4_fy] (reo_e4_fy) at ( 8.2, -1.75) {};
+    \node[e4_ff] (reo_e4_ff) at ( 8.6, -1.75) {};
+
+    \node[ex_f1] (reo_ex_f1) at ( 9.4, -1.75) {};
+    \node[ex_f2] (reo_ex_f2) at ( 9.8, -1.75) {};
+    \node[ex_f3] (reo_ex_f3) at (10.2, -1.75) {};
+    \node[ex_fy] (reo_ex_fy) at (10.6, -1.75) {};
+    \node[ex_ff] (reo_ex_ff) at (11.0, -1.75) {};
+
+    \node[en_f1] (reo_en_f1) at (11.8, -1.75) {};
+    \node[en_f2] (reo_en_f2) at (12.2, -1.75) {};
+    \node[en_f3] (reo_en_f3) at (12.6, -1.75) {};
+    \node[en_fy] (reo_en_fy) at (13.0, -1.75) {};
+    \node[en_ff] (reo_en_ff) at (13.4, -1.75) {};
+
+    % connexions process -> output reordered
+    \draw[->,>=latex        ] (-0.2, -1.0) -- (reo_e1_f1.north);
+    \draw[->,>=latex        ] ( 0.2, -1.0) -- (reo_e1_f2.north);
+    \draw[->,>=latex        ] ( 0.6, -1.0) -- (reo_e1_f3.north);
+    \draw[->,>=latex, dotted] ( 1.0, -1.0) -- (reo_e1_fy.north);
+    \draw[->,>=latex        ] ( 1.4, -1.0) -- (reo_e1_ff.north);
+
+    \draw[->,>=latex        ] ( 2.2, -1.0) -- (reo_e2_f1.north);
+    \draw[->,>=latex        ] ( 2.6, -1.0) -- (reo_e2_f2.north);
+    \draw[->,>=latex        ] ( 3.0, -1.0) -- (reo_e2_f3.north);
+    \draw[->,>=latex, dotted] ( 3.4, -1.0) -- (reo_e2_fy.north);
+    \draw[->,>=latex        ] ( 3.8, -1.0) -- (reo_e2_ff.north);
+
+    \draw[->,>=latex        ] ( 4.6, -1.0) -- (reo_e3_f1.north);
+    \draw[->,>=latex        ] ( 5.0, -1.0) -- (reo_e3_f2.north);
+    \draw[->,>=latex        ] ( 5.4, -1.0) -- (reo_e3_f3.north);
+    \draw[->,>=latex, dotted] ( 5.8, -1.0) -- (reo_e3_fy.north);
+    \draw[->,>=latex        ] ( 6.2, -1.0) -- (reo_e3_ff.north);
+
+    \draw[->,>=latex        ] ( 7.0, -1.0) -- (reo_e4_f1.north);
+    \draw[->,>=latex        ] ( 7.4, -1.0) -- (reo_e4_f2.north);
+    \draw[->,>=latex        ] ( 7.8, -1.0) -- (reo_e4_f3.north);
+    \draw[->,>=latex, dotted] ( 8.2, -1.0) -- (reo_e4_fy.north);
+    \draw[->,>=latex        ] ( 8.6, -1.0) -- (reo_e4_ff.north);
+
+    \draw[->,>=latex        ] ( 9.4, -1.0) -- (reo_ex_f1.north);
+    \draw[->,>=latex        ] ( 9.8, -1.0) -- (reo_ex_f2.north);
+    \draw[->,>=latex        ] (10.2, -1.0) -- (reo_ex_f3.north);
+    \draw[->,>=latex, dotted] (10.6, -1.0) -- (reo_ex_fy.north);
+    \draw[->,>=latex        ] (11.0, -1.0) -- (reo_ex_ff.north);
+
+    \draw[->,>=latex        ] (11.8, -1.0) -- (reo_en_f1.north);
+    \draw[->,>=latex        ] (12.2, -1.0) -- (reo_en_f2.north);
+    \draw[->,>=latex        ] (12.6, -1.0) -- (reo_en_f3.north);
+    \draw[->,>=latex, dotted] (13.0, -1.0) -- (reo_en_fy.north);
+    \draw[->,>=latex        ] (13.4, -1.0) -- (reo_en_ff.north);
+
+    % output
+    \node[e1_f1] (out_e1_f1) at ( 0.0, -3.75) {};
+    \node[e2_f1] (out_e2_f1) at ( 0.4, -3.75) {};
+    \node[e3_f1] (out_e3_f1) at ( 0.8, -3.75) {};
+    \node[e4_f1] (out_e4_f1) at ( 1.2, -3.75) {};
+    \node[ex_f1] (out_ex_f1) at ( 1.6, -3.75) {};
+    \node[en_f1] (out_en_f1) at ( 2.0, -3.75) {};
+
+    \node[e1_f2] (out_e1_f2) at ( 2.8, -3.75) {};
+    \node[e2_f2] (out_e2_f2) at ( 3.2, -3.75) {};
+    \node[e3_f2] (out_e3_f2) at ( 3.6, -3.75) {};
+    \node[e4_f2] (out_e4_f2) at ( 4.0, -3.75) {};
+    \node[ex_f2] (out_ex_f2) at ( 4.4, -3.75) {};
+    \node[en_f2] (out_en_f2) at ( 4.8, -3.75) {};
+
+    \node[e1_f3] (out_e1_f3) at ( 5.6, -3.75) {};
+    \node[e2_f3] (out_e2_f3) at ( 6.0, -3.75) {};
+    \node[e3_f3] (out_e3_f3) at ( 6.4, -3.75) {};
+    \node[e4_f3] (out_e4_f3) at ( 6.8, -3.75) {};
+    \node[ex_f3] (out_ex_f3) at ( 7.2, -3.75) {};
+    \node[en_f3] (out_en_f3) at ( 7.6, -3.75) {};
+
+    \node[e1_fy] (out_e1_fy) at ( 8.4, -3.75) {};
+    \node[e2_fy] (out_e2_fy) at ( 8.8, -3.75) {};
+    \node[e3_fy] (out_e3_fy) at ( 9.2, -3.75) {};
+    \node[e4_fy] (out_e4_fy) at ( 9.6, -3.75) {};
+    \node[ex_fy] (out_ex_fy) at (10.0, -3.75) {};
+    \node[en_fy] (out_en_fy) at (10.4, -3.75) {};
+
+    \node[e1_ff] (out_e1_ff) at (11.2, -3.75) {};
+    \node[e2_ff] (out_e2_ff) at (11.6, -3.75) {};
+    \node[e3_ff] (out_e3_ff) at (12.0, -3.75) {};
+    \node[e4_ff] (out_e4_ff) at (12.4, -3.75) {};
+    \node[ex_ff] (out_ex_ff) at (12.8, -3.75) {};
+    \node[en_ff] (out_en_ff) at (13.2, -3.75) {};
+
+    % connexions reordered -> output
+    \draw[->,>=latex, dashed, Paired-1] (reo_e1_f1.south) -- (out_e1_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (reo_e2_f1.south) -- (out_e2_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (reo_e3_f1.south) -- (out_e3_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (reo_e4_f1.south) -- (out_e4_f1.north);
+    % \draw[->,>=latex, dashed, Paired-1] (reo_ex_f1.south) -- (out_ex_f1.north);
+    \draw[->,>=latex, dashed, Paired-1] (reo_en_f1.south) -- (out_en_f1.north);
+
+    \draw[->,>=latex, dashed, Paired-3] (reo_e1_f2.south) -- (out_e1_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (reo_e2_f2.south) -- (out_e2_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (reo_e3_f2.south) -- (out_e3_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (reo_e4_f2.south) -- (out_e4_f2.north);
+    % \draw[->,>=latex, dashed, Paired-3] (reo_ex_f2.south) -- (out_ex_f2.north);
+    \draw[->,>=latex, dashed, Paired-3] (reo_en_f2.south) -- (out_en_f2.north);
+
+    \draw[->,>=latex, dashed, Paired-5] (reo_e1_f3.south) -- (out_e1_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (reo_e2_f3.south) -- (out_e2_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (reo_e3_f3.south) -- (out_e3_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (reo_e4_f3.south) -- (out_e4_f3.north);
+    % \draw[->,>=latex, dashed, Paired-5] (reo_ex_f3.south) -- (out_ex_f3.north);
+    \draw[->,>=latex, dashed, Paired-5] (reo_en_f3.south) -- (out_en_f3.north);
+
+    \draw[->,>=latex, dashed, Paired-7] (reo_e1_ff.south) -- (out_e1_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (reo_e2_ff.south) -- (out_e2_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (reo_e3_ff.south) -- (out_e3_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (reo_e4_ff.south) -- (out_e4_ff.north);
+    % \draw[->,>=latex, dashed, Paired-7] (reo_ex_ff.south) -- (out_ex_ff.north);
+    \draw[->,>=latex, dashed, Paired-7] (reo_en_ff.south) -- (out_en_ff.north);
+
+    % info / descriptions / comments
+    \node[text width=4cm, text centered, text=Paired-1] (in_f1) at ( 1.0, 4.25) {Frame $1$};
+    \node[text width=4cm, text centered, text=Paired-3] (in_f2) at ( 3.8, 4.25) {Frame $2$};
+    % \node[text width=4cm, text centered, text=Paired-5] (in_f3) at ( 6.6, 4.25) {Frame $3$};
+    \node[text width=4cm, text centered, text=Paired-7] (in_ff) at (12.2, 4.25) {Frame $F$};
+
+    \draw[<->,>=latex] ( 5.4, 4.25) -- ( 7.8, 4.25) node [midway, text=black, fill=white] {\small{$N$ LLRs}};
+    \draw[<->,>=latex] (-0.2, 4.75) -- (13.4, 4.75) node [midway, text=black, fill=white] {\small{$F$ frames and $F \times N$ LLRs}};
+    \draw[<->,>=latex] ( 9.2, 2.25) -- (11.2, 2.25) node [midway, text=black, fill=white] {\small{$F$ LLRs}};
+
+    % \node[text width=4cm, text centered, text=Paired-1] (out_f1) at ( 1.0, -4.25) {Frame $1$};
+    % \node[text width=4cm, text centered, text=Paired-3] (out_f2) at ( 3.8, -4.25) {Frame $2$};
+    % \node[text width=4cm, text centered, text=Paired-5] (out_f3) at ( 6.6, -4.25) {Frame $3$};
+    % \node[text width=4cm, text centered, text=Paired-7] (out_ff) at (12.2, -4.25) {Frame $F$};
+
+    \draw[o->,>=latex, line width=1.0pt] (14,  3.95) -- (14,  1.55) node [midway, text=black, above, rotate=-90              ] {\small{Reordering}};
+    \draw[o->,>=latex, line width=1.0pt] (14, -1.55) -- (14, -3.95) node [midway, text=black, above, rotate=-90, align=center] {\small{Reversed}\\\small{Reordering}};
+  \end{tikzpicture}
+  \caption
+    [Frame reordering operation before and after an inter-frame SIMD process.]
+    {Frame reordering operation before and after an inter-frame SIMD process.}
+  \label{fig:vec_reordering_process_inter_simd}
+\end{figure}
+
 \subsection{Inter/Intra-frame}
 
 % \section{Error Correction Coding in 5G}
@@ -1335,8 +1679,8 @@ Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
     \node[spc4, label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4}$}} ] (spc4) at (12.0, 0.0) {};
     \node[spc,  label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4+}$}}] (spc)  at (14.0, 0.0) {};
 
-    \draw[<-,>=latex        ] (2.5, -1.25) -- ( 5.5, -1.25) node [midway, above, text=black] {Left edge ($f$)};
-    \draw[->,>=latex, dashed] (8.5, -1.25) -- (11.5, -1.25) node [midway, above, text=black] {Right edge ($g$)};
+    \draw[<-,>=latex        ] (2.5, -1.25) -- ( 5.5, -1.25) node [midway, above, text=black] {\small{Left edge ($f$)}};
+    \draw[->,>=latex, dashed] (8.5, -1.25) -- (11.5, -1.25) node [midway, above, text=black] {\small{Right edge ($g$)}};
   \end{tikzpicture}
   }
   \\
@@ -1811,7 +2155,7 @@ SCL since it includes an additional SC decoder.
 \section{Turbo Decoders}
 
 \begin{itemize}
-  \item \xmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
+  \item \cmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
     elle doit aller dans la Section~\ref{sec:opt_vec_strat_inter} à terme
   \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
   \item \xmark~introduire la version version vectorisée inter/intra-frame,
@@ -1864,22 +2208,12 @@ in the intra-frame strategy.
 
 \subsubsection{Inter-frame parallelism on multi-core CPUs}
 
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.70\textwidth]{turbo/reordering_process_inter_simd}
-  \caption
-    [Frame reordering operation before and after the turbo decoding process.]
-    {Frame reordering operation before and after the decoding process. Performed
-    3 times: for systematic, first and second parity information.}
-  \label{fig:turbo_reordering_process_inter_simd}
-\end{figure}
-
 The contribution of this work is to propose an efficient mapping of multiple
 frames on the CPU SIMD units (inter-frame strategy): the decoding of $M$ frames
 is vectorized. Before the decoding process can be launched, this new approach
 requires to: (a) buffer a set of $M$ frames and (b) reorder the input LLRs in
 order to make the SIMDization efficient with memory aligned transactions (see
-Fig.~\ref{fig:turbo_reordering_process_inter_simd}). Similarly, a
+Fig.~\ref{fig:vec_reordering_process_inter_simd}). Similarly, a
 reversed-reordering step has to be performed at the end of the decoding process.
 These reordering operations are expensive but they make the complete decoding
 process very regular and efficient for SIMD parallelization. Moreover,
