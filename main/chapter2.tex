@@ -1099,18 +1099,423 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 \subsection{Overview of the SCMA System Model}
 \label{sec:scma_overview}
 
+% \begin{figure}[htp]
+%   \centering
+%   \includegraphics[width=0.70\linewidth]{scma/codec/codec}
+%   \caption
+%     [SCMA encoding and decoding schemes.]
+%     {a) SCMA encoder with 6 users (layers) and 4 physical resources,
+%      b) SCMA uplink chain with channel coding,
+%      c) Factor graph representation of a decoder,
+%      d) Message Passing Algorithm based on Bayesian factor graph:
+%         (I)   Resource to user message,
+%         (II)  Guess swap at each user and user to resource message,
+%         (III) Final guess at each user.}
+%   \label{fig:scma_codec}
+% \end{figure}
+
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{scma/codec/codec}
+  \subfloat[][SCMA encoder with 6 users (layers) and 4 physical resources.]{
+  \begin{tikzpicture}[baseline]
+    \tikzset{ cbemp/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=white       } }
+    \tikzset{ cbue1/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ cbue2/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ cbue3/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ cbue4/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-7!40 } }
+    \tikzset{ cbue5/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-9!40 } }
+    \tikzset{ cbue6/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-11!40} }
+    \tikzset{ cbadd/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=black!40    } }
+
+    \newcommand\yshft{2.00}
+
+    \node[cbemp] (ue1_cb_0_0) at (0.00+0.00, \yshft+0.00) {};
+    \node[cbemp] (ue1_cb_1_0) at (0.00+0.25, \yshft+0.00) {};
+    \node[cbemp] (ue1_cb_2_0) at (0.00+0.50, \yshft+0.00) {};
+    \node[cbemp] (ue1_cb_3_0) at (0.00+0.75, \yshft+0.00) {};
+    \node[cbemp] (ue1_cb_0_1) at (0.00+0.00, \yshft+0.25) {};
+    \node[cbemp] (ue1_cb_1_1) at (0.00+0.25, \yshft+0.25) {};
+    \node[cbemp] (ue1_cb_2_1) at (0.00+0.50, \yshft+0.25) {};
+    \node[cbemp] (ue1_cb_3_1) at (0.00+0.75, \yshft+0.25) {};
+    \node[cbue1] (ue1_cb_0_2) at (0.00+0.00, \yshft+0.50) {};
+    \node[cbue1] (ue1_cb_1_2) at (0.00+0.25, \yshft+0.50) {};
+    \node[cbue1] (ue1_cb_2_2) at (0.00+0.50, \yshft+0.50) {};
+    \node[cbue1] (ue1_cb_3_2) at (0.00+0.75, \yshft+0.50) {};
+    \node[cbue1] (ue1_cb_0_3) at (0.00+0.00, \yshft+0.75) {};
+    \node[cbue1] (ue1_cb_1_3) at (0.00+0.25, \yshft+0.75) {};
+    \node[cbue1] (ue1_cb_2_3) at (0.00+0.50, \yshft+0.75) {};
+    \node[cbue1] (ue1_cb_3_3) at (0.00+0.75, \yshft+0.75) {};
+
+    \node[cbue2] (ue2_cb_0_0) at (1.50+0.00, \yshft+0.00) {};
+    \node[cbue2] (ue2_cb_1_0) at (1.50+0.25, \yshft+0.00) {};
+    \node[cbue2] (ue2_cb_2_0) at (1.50+0.50, \yshft+0.00) {};
+    \node[cbue2] (ue2_cb_3_0) at (1.50+0.75, \yshft+0.00) {};
+    \node[cbue2] (ue2_cb_0_1) at (1.50+0.00, \yshft+0.25) {};
+    \node[cbue2] (ue2_cb_1_1) at (1.50+0.25, \yshft+0.25) {};
+    \node[cbue2] (ue2_cb_2_1) at (1.50+0.50, \yshft+0.25) {};
+    \node[cbue2] (ue2_cb_3_1) at (1.50+0.75, \yshft+0.25) {};
+    \node[cbemp] (ue2_cb_0_2) at (1.50+0.00, \yshft+0.50) {};
+    \node[cbemp] (ue2_cb_1_2) at (1.50+0.25, \yshft+0.50) {};
+    \node[cbemp] (ue2_cb_2_2) at (1.50+0.50, \yshft+0.50) {};
+    \node[cbemp] (ue2_cb_3_2) at (1.50+0.75, \yshft+0.50) {};
+    \node[cbemp] (ue2_cb_0_3) at (1.50+0.00, \yshft+0.75) {};
+    \node[cbemp] (ue2_cb_1_3) at (1.50+0.25, \yshft+0.75) {};
+    \node[cbemp] (ue2_cb_2_3) at (1.50+0.50, \yshft+0.75) {};
+    \node[cbemp] (ue2_cb_3_3) at (1.50+0.75, \yshft+0.75) {};
+
+    \node[cbemp] (ue3_cb_0_0) at (3.00+0.00, \yshft+0.00) {};
+    \node[cbemp] (ue3_cb_1_0) at (3.00+0.25, \yshft+0.00) {};
+    \node[cbemp] (ue3_cb_2_0) at (3.00+0.50, \yshft+0.00) {};
+    \node[cbemp] (ue3_cb_3_0) at (3.00+0.75, \yshft+0.00) {};
+    \node[cbue3] (ue3_cb_0_1) at (3.00+0.00, \yshft+0.25) {};
+    \node[cbue3] (ue3_cb_1_1) at (3.00+0.25, \yshft+0.25) {};
+    \node[cbue3] (ue3_cb_2_1) at (3.00+0.50, \yshft+0.25) {};
+    \node[cbue3] (ue3_cb_3_1) at (3.00+0.75, \yshft+0.25) {};
+    \node[cbemp] (ue3_cb_0_2) at (3.00+0.00, \yshft+0.50) {};
+    \node[cbemp] (ue3_cb_1_2) at (3.00+0.25, \yshft+0.50) {};
+    \node[cbemp] (ue3_cb_2_2) at (3.00+0.50, \yshft+0.50) {};
+    \node[cbemp] (ue3_cb_3_2) at (3.00+0.75, \yshft+0.50) {};
+    \node[cbue3] (ue3_cb_0_3) at (3.00+0.00, \yshft+0.75) {};
+    \node[cbue3] (ue3_cb_1_3) at (3.00+0.25, \yshft+0.75) {};
+    \node[cbue3] (ue3_cb_2_3) at (3.00+0.50, \yshft+0.75) {};
+    \node[cbue3] (ue3_cb_3_3) at (3.00+0.75, \yshft+0.75) {};
+
+    \node[cbue4] (ue4_cb_0_0) at (4.50+0.00, \yshft+0.00) {};
+    \node[cbue4] (ue4_cb_1_0) at (4.50+0.25, \yshft+0.00) {};
+    \node[cbue4] (ue4_cb_2_0) at (4.50+0.50, \yshft+0.00) {};
+    \node[cbue4] (ue4_cb_3_0) at (4.50+0.75, \yshft+0.00) {};
+    \node[cbemp] (ue4_cb_0_1) at (4.50+0.00, \yshft+0.25) {};
+    \node[cbemp] (ue4_cb_1_1) at (4.50+0.25, \yshft+0.25) {};
+    \node[cbemp] (ue4_cb_2_1) at (4.50+0.50, \yshft+0.25) {};
+    \node[cbemp] (ue4_cb_3_1) at (4.50+0.75, \yshft+0.25) {};
+    \node[cbue4] (ue4_cb_0_2) at (4.50+0.00, \yshft+0.50) {};
+    \node[cbue4] (ue4_cb_1_2) at (4.50+0.25, \yshft+0.50) {};
+    \node[cbue4] (ue4_cb_2_2) at (4.50+0.50, \yshft+0.50) {};
+    \node[cbue4] (ue4_cb_3_2) at (4.50+0.75, \yshft+0.50) {};
+    \node[cbemp] (ue4_cb_0_3) at (4.50+0.00, \yshft+0.75) {};
+    \node[cbemp] (ue4_cb_1_3) at (4.50+0.25, \yshft+0.75) {};
+    \node[cbemp] (ue4_cb_2_3) at (4.50+0.50, \yshft+0.75) {};
+    \node[cbemp] (ue4_cb_3_3) at (4.50+0.75, \yshft+0.75) {};
+
+    \node[cbue5] (ue5_cb_0_0) at (6.00+0.00, \yshft+0.00) {};
+    \node[cbue5] (ue5_cb_1_0) at (6.00+0.25, \yshft+0.00) {};
+    \node[cbue5] (ue5_cb_2_0) at (6.00+0.50, \yshft+0.00) {};
+    \node[cbue5] (ue5_cb_3_0) at (6.00+0.75, \yshft+0.00) {};
+    \node[cbemp] (ue5_cb_0_1) at (6.00+0.00, \yshft+0.25) {};
+    \node[cbemp] (ue5_cb_1_1) at (6.00+0.25, \yshft+0.25) {};
+    \node[cbemp] (ue5_cb_2_1) at (6.00+0.50, \yshft+0.25) {};
+    \node[cbemp] (ue5_cb_3_1) at (6.00+0.75, \yshft+0.25) {};
+    \node[cbemp] (ue5_cb_0_2) at (6.00+0.00, \yshft+0.50) {};
+    \node[cbemp] (ue5_cb_1_2) at (6.00+0.25, \yshft+0.50) {};
+    \node[cbemp] (ue5_cb_2_2) at (6.00+0.50, \yshft+0.50) {};
+    \node[cbemp] (ue5_cb_3_2) at (6.00+0.75, \yshft+0.50) {};
+    \node[cbue5] (ue5_cb_0_3) at (6.00+0.00, \yshft+0.75) {};
+    \node[cbue5] (ue5_cb_1_3) at (6.00+0.25, \yshft+0.75) {};
+    \node[cbue5] (ue5_cb_2_3) at (6.00+0.50, \yshft+0.75) {};
+    \node[cbue5] (ue5_cb_3_3) at (6.00+0.75, \yshft+0.75) {};
+
+    \node[cbemp] (ue6_cb_0_0) at (7.50+0.00, \yshft+0.00) {};
+    \node[cbemp] (ue6_cb_1_0) at (7.50+0.25, \yshft+0.00) {};
+    \node[cbemp] (ue6_cb_2_0) at (7.50+0.50, \yshft+0.00) {};
+    \node[cbemp] (ue6_cb_3_0) at (7.50+0.75, \yshft+0.00) {};
+    \node[cbue6] (ue6_cb_0_1) at (7.50+0.00, \yshft+0.25) {};
+    \node[cbue6] (ue6_cb_1_1) at (7.50+0.25, \yshft+0.25) {};
+    \node[cbue6] (ue6_cb_2_1) at (7.50+0.50, \yshft+0.25) {};
+    \node[cbue6] (ue6_cb_3_1) at (7.50+0.75, \yshft+0.25) {};
+    \node[cbue6] (ue6_cb_0_2) at (7.50+0.00, \yshft+0.50) {};
+    \node[cbue6] (ue6_cb_1_2) at (7.50+0.25, \yshft+0.50) {};
+    \node[cbue6] (ue6_cb_2_2) at (7.50+0.50, \yshft+0.50) {};
+    \node[cbue6] (ue6_cb_3_2) at (7.50+0.75, \yshft+0.50) {};
+    \node[cbemp] (ue6_cb_0_3) at (7.50+0.00, \yshft+0.75) {};
+    \node[cbemp] (ue6_cb_1_3) at (7.50+0.25, \yshft+0.75) {};
+    \node[cbemp] (ue6_cb_2_3) at (7.50+0.50, \yshft+0.75) {};
+    \node[cbemp] (ue6_cb_3_3) at (7.50+0.75, \yshft+0.75) {};
+
+    \newcommand\xshft{1.875}
+
+    \node[cbemp] (ue1_cb_0) at (\xshft+0.00+0.00, 0.00+0.00) {};
+    \node[cbemp] (ue1_cb_1) at (\xshft+0.00+0.00, 0.00+0.25) {};
+    \node[cbue1] (ue1_cb_2) at (\xshft+0.00+0.00, 0.00+0.50) {};
+    \node[cbue1] (ue1_cb_3) at (\xshft+0.00+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (p1) at (\xshft+0.00+0.325, 0.00+0.375) {\small{$+$}};
+
+    \node[cbue2] (ue2_cb_0) at (\xshft+0.75+0.00, 0.00+0.00) {};
+    \node[cbue2] (ue2_cb_1) at (\xshft+0.75+0.00, 0.00+0.25) {};
+    \node[cbemp] (ue2_cb_2) at (\xshft+0.75+0.00, 0.00+0.50) {};
+    \node[cbemp] (ue2_cb_3) at (\xshft+0.75+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (p2) at (\xshft+0.75+0.325, 0.00+0.375) {\small{$+$}};
+
+    \node[cbemp] (ue3_cb_0) at (\xshft+1.50+0.00, 0.00+0.00) {};
+    \node[cbue3] (ue3_cb_1) at (\xshft+1.50+0.00, 0.00+0.25) {};
+    \node[cbemp] (ue3_cb_2) at (\xshft+1.50+0.00, 0.00+0.50) {};
+    \node[cbue3] (ue3_cb_3) at (\xshft+1.50+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (p3) at (\xshft+1.50+0.325, 0.00+0.375) {\small{$+$}};
+
+    \node[cbue4] (ue4_cb_0) at (\xshft+2.25+0.00, 0.00+0.00) {};
+    \node[cbemp] (ue4_cb_1) at (\xshft+2.25+0.00, 0.00+0.25) {};
+    \node[cbue4] (ue4_cb_2) at (\xshft+2.25+0.00, 0.00+0.50) {};
+    \node[cbemp] (ue4_cb_3) at (\xshft+2.25+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (p4) at (\xshft+2.25+0.325, 0.00+0.375) {\small{$+$}};
+
+    \node[cbue5] (ue5_cb_0) at (\xshft+3.00+0.00, 0.00+0.00) {};
+    \node[cbemp] (ue5_cb_1) at (\xshft+3.00+0.00, 0.00+0.25) {};
+    \node[cbemp] (ue5_cb_2) at (\xshft+3.00+0.00, 0.00+0.50) {};
+    \node[cbue5] (ue5_cb_3) at (\xshft+3.00+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (p5) at (\xshft+3.00+0.325, 0.00+0.375) {\small{$+$}};
+
+    \node[cbemp] (ue6_cb_0) at (\xshft+3.75+0.00, 0.00+0.00) {};
+    \node[cbue6] (ue6_cb_1) at (\xshft+3.75+0.00, 0.00+0.25) {};
+    \node[cbue6] (ue6_cb_2) at (\xshft+3.75+0.00, 0.00+0.50) {};
+    \node[cbemp] (ue6_cb_3) at (\xshft+3.75+0.00, 0.00+0.75) {};
+
+    \node[text width=0.2cm] (a1) at (\xshft+3.75+0.325, 0.00+0.375) {\small{$\rightarrow$}};
+
+    \node[cbadd] (uea_cb_0) at (\xshft+4.50+0.00, 0.00+0.00) {};
+    \node[cbadd] (uea_cb_1) at (\xshft+4.50+0.00, 0.00+0.25) {};
+    \node[cbadd] (uea_cb_2) at (\xshft+4.50+0.00, 0.00+0.50) {};
+    \node[cbadd] (uea_cb_3) at (\xshft+4.50+0.00, 0.00+0.75) {};
+
+    \draw[->,>=latex] (ue1_cb_1_0.south east) -- (ue1_cb_3.north) node [midway, fill=white] {\tiny{$h_1$}};
+    \draw[->,>=latex] (ue2_cb_1_0.south east) -- (ue2_cb_3.north) node [midway, fill=white] {\tiny{$h_2$}};
+    \draw[->,>=latex] (ue3_cb_1_0.south east) -- (ue3_cb_3.north) node [midway, fill=white] {\tiny{$h_3$}};
+    \draw[->,>=latex] (ue4_cb_1_0.south east) -- (ue4_cb_3.north) node [midway, fill=white] {\tiny{$h_4$}};
+    \draw[->,>=latex] (ue5_cb_1_0.south east) -- (ue5_cb_3.north) node [midway, fill=white] {\tiny{$h_5$}};
+    \draw[->,>=latex] (ue6_cb_1_0.south east) -- (ue6_cb_3.north) node [midway, fill=white] {\tiny{$h_6$}};
+
+    \node[text width=1.5cm, align=center] (t1) at (\xshft-1.0, 0.00+0.50) {\tiny{Users chosen}};
+    \node[text width=1.5cm, align=center] (t2) at (\xshft-1.0, 0.00+0.25) {\tiny{codewords}};
+
+    \node[text width=1.5cm, align=center] (t3) at (0.00+0.375, \yshft+1.00) {\tiny{$UE1$ CB}};
+    \node[text width=1.5cm, align=center] (t4) at (1.50+0.375, \yshft+1.00) {\tiny{$UE2$ CB}};
+    \node[text width=1.5cm, align=center] (t5) at (3.00+0.375, \yshft+1.00) {\tiny{$UE3$ CB}};
+    \node[text width=1.5cm, align=center] (t6) at (4.50+0.375, \yshft+1.00) {\tiny{$UE4$ CB}};
+    \node[text width=1.5cm, align=center] (t7) at (6.00+0.375, \yshft+1.00) {\tiny{$UE5$ CB}};
+    \node[text width=1.5cm, align=center] (t8) at (7.50+0.375, \yshft+1.00) {\tiny{$UE6$ CB}};
+
+    \node[draw=Paired-1, rounded corners=2pt, minimum height=2cm, dashed, fit=(t3) (ue1_cb_0_3) (t8) (ue6_cb_3_3) (ue1_cb_0)] {};
+
+  \end{tikzpicture}
+  }
+  \\
+  \subfloat[][SCMA uplink chain with channel coding.]{
+  \begin{tikzpicture}[baseline]
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uej) at (0.0, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
+    % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uex) at (0.0, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue2) at (0.0, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue1) at (0.0, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
+
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uej) at (1.95+0.3, 0.225+0.000+0.0) {\tiny{Channel enc.}};
+    % \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uex) at (1.95+0.3, 0.225+0.450+0.2) {\tiny{Channel enc.}};
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue2) at (1.95+0.3, 0.225+0.900+0.4) {\tiny{Channel enc.}};
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue1) at (1.95+0.3, 0.225+1.350+0.6) {\tiny{Channel enc.}};
+
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uej) at (4.0+0.3, 0.225+0.000+0.0) {\tiny{SCMA enc.}};
+    % \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uex) at (4.0+0.3, 0.225+0.450+0.2) {\tiny{SCMA enc.}};
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue2) at (4.0+0.3, 0.225+0.900+0.4) {\tiny{SCMA enc.}};
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue1) at (4.0+0.3, 0.225+1.350+0.6) {\tiny{SCMA enc.}};
+
+    \node[minimum width=0.5cm, align=center] (xj) at (5.420+0.3, 0.225+0.000+0.0) {\tiny{$\bm{x}_j$}};
+    % \node[minimum width=0.5cm, align=center] (xx) at (5.420+0.3, 0.225+0.450+0.2) {\tiny{$\bm{x}_x$}};
+    \node[minimum width=0.5cm, align=center] (x2) at (5.420+0.3, 0.225+0.900+0.4) {\tiny{$\bm{x}_2$}};
+    \node[minimum width=0.5cm, align=center] (x1) at (5.420+0.3, 0.225+1.350+0.6) {\tiny{$\bm{x}_1$}};
+
+    \node[draw=black, circle, align=center, minimum width=0.60cm] (plus) at (6.7, 1.20) {\tiny{$+$}};
+    \node[align=center, minimum width=0.60cm] (n0) at (6.7, 2.20) {\tiny{$\bm{N_0$}}};
+
+    \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{PRE demapping}}] (dmap)  at (7.8,     1.20) {\tiny{}};
+    \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{SCMA decoder}} ] (dscma) at (8.8+0.3, 1.20) {\tiny{}};
+
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uej) at (10.65+0.3, 0.225+0.000+0.0) {\tiny{Channel dec.}};
+    % \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uex) at (10.65+0.3, 0.225+0.450+0.2) {\tiny{Channel dec.}};
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue2) at (10.65+0.3, 0.225+0.900+0.4) {\tiny{Channel dec.}};
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue1) at (10.65+0.3, 0.225+1.350+0.6) {\tiny{Channel dec.}};
+
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uej) at (13.05+0.3, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
+    % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uex) at (13.05+0.3, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue2) at (13.05+0.3, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue1) at (13.05+0.3, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
+
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:\tiny{SCMA encoding}}, minimum height=2cm, dashed, fit=(scma_uej) (scma_ue1) (plus)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:\tiny{SCMA decoding}}, minimum height=2cm, dashed, fit=(dscma)] {};
+
+    \draw[->,>=latex] (n0) -- (plus);
+
+    \draw[->,>=latex] (in_bs_uej) -- (cc_uej);
+    \draw[->,>=latex] (in_bs_ue2) -- (cc_ue2);
+    \draw[->,>=latex] (in_bs_ue1) -- (cc_ue1);
+
+    \draw[->,>=latex] (cc_uej) -- (scma_uej);
+    \draw[->,>=latex] (cc_ue2) -- (scma_ue2);
+    \draw[->,>=latex] (cc_ue1) -- (scma_ue1);
+
+    \draw[->,>=latex] (scma_uej) -- (xj);
+    \draw[->,>=latex] (scma_ue2) -- (x2);
+    \draw[->,>=latex] (scma_ue1) -- (x1);
+
+    \draw[->,>=latex] (xj) -- (plus) node [midway, below] {\tiny{$h_j$}};
+    \draw[->,>=latex] (x2) -- (plus) node [midway, below] {\tiny{$h_2$}};
+    \draw[->,>=latex] (x1) -- (plus) node [midway, above] {\tiny{$h_1$}};
+
+    \draw[->,>=latex] (plus) -- (dmap);
+
+    \draw[->,>=latex] (dmap) -- (dscma);
+
+    \draw[->,>=latex] (9.6, 0.225+0.000+0.0) -- (cd_uej);
+    \draw[->,>=latex] (9.6, 0.225+0.900+0.4) -- (cd_ue2);
+    \draw[->,>=latex] (9.6, 0.225+1.350+0.6) -- (cd_ue1);
+
+    \draw[->,>=latex] (cd_uej) -- (out_bs_uej);
+    \draw[->,>=latex] (cd_ue2) -- (out_bs_ue2);
+    \draw[->,>=latex] (cd_ue1) -- (out_bs_ue1);
+
+    \draw[dotted] (in_bs_ue2)  -- (in_bs_uej);
+    \draw[dotted] (cc_ue2)     -- (cc_uej);
+    \draw[dotted] (scma_ue2)   -- (scma_uej);
+    \draw[dotted] (cd_ue2)     -- (cd_uej);
+    \draw[dotted] (out_bs_ue2) -- (out_bs_uej);
+  \end{tikzpicture}
+  }
+  \\
+  \subfloat[][Factor graph representation of a decoder.]{
+  \begin{tikzpicture}[baseline]
+    \tikzset{ vn/.style={draw=black, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ cn/.style={draw=black        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+
+    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1) at (0.00, 0.00+0.00) {};
+    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2) at (0.00, 0.25+0.40) {};
+    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3) at (0.00, 0.50+0.80) {};
+    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4) at (0.00, 0.75+1.20) {};
+    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5) at (0.00, 1.00+1.60) {};
+    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6) at (0.00, 1.25+2.00) {};
+
+    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca) at (1.00, 0.25+0.40) {};
+    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb) at (1.00, 0.50+0.80) {};
+    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc) at (1.00, 0.75+1.20) {};
+    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd) at (1.00, 1.00+1.60) {};
+
+    \draw[] (v1) -- (ca);
+    \draw[] (v1) -- (cb);
+    \draw[] (v2) -- (cc);
+    \draw[] (v2) -- (cd);
+    \draw[] (v3) -- (ca);
+    \draw[] (v3) -- (cc);
+    \draw[] (v4) -- (cb);
+    \draw[] (v4) -- (cd);
+    \draw[] (v5) -- (ca);
+    \draw[] (v5) -- (cd);
+    \draw[] (v6) -- (cb);
+    \draw[] (v6) -- (cc);
+
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1) (v6) (ca) (cd)] {};
+  \end{tikzpicture}
+  }
+  \quad
+  \subfloat[][Message Passing Algorithm based on Bayesian factor graph:\linebreak
+              (I)   Resource to user message,
+              (II)  Guess swap at each user and user to resource message,
+              (III) Final guess at each user.]{
+  \begin{tikzpicture}[baseline]
+    \tikzset{ vn/.style={draw=black, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ cn/.style={draw=black        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+
+    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_i) at (0.00, 0.00+0.00) {};
+    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_i) at (0.00, 0.25+0.40) {};
+    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_i) at (0.00, 0.50+0.80) {};
+    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_i) at (0.00, 0.75+1.20) {};
+    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_i) at (0.00, 1.00+1.60) {};
+    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_i) at (0.00, 1.25+2.00) {};
+
+    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_i) at (1.00, 0.25+0.40) {};
+    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_i) at (1.00, 0.50+0.80) {};
+    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_i) at (1.00, 0.75+1.20) {};
+    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_i) at (1.00, 1.00+1.60) {};
+
+    \draw[dotted                                ] (v1_i) -- (ca_i);
+    \draw[dotted                                ] (v1_i) -- (cb_i);
+    \draw[dotted                                ] (v2_i) -- (cc_i);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v2_i) -- (cd_i);
+    \draw[dotted                                ] (v3_i) -- (ca_i);
+    \draw[dotted                                ] (v3_i) -- (cc_i);
+    \draw[dotted                                ] (v4_i) -- (cb_i);
+    \draw[->,>=latex, Paired-3, line width=0.7pt] (v4_i) -- (cd_i);
+    \draw[dotted                                ] (v5_i) -- (ca_i);
+    \draw[->,>=latex, Paired-3, line width=0.7pt] (v5_i) -- (cd_i);
+    \draw[dotted                                ] (v6_i) -- (cb_i);
+    \draw[dotted                                ] (v6_i) -- (cc_i);
+
+    \node (i) at (1.65, 0.00+0.00) {\small{(I)}};
+
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_i) (v6_i) (ca_i) (cd_i)] {};
+
+    \newcommand\xshft{3.5}
+
+    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_ii) at (\xshft+0.00, 0.00+0.00) {};
+    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_ii) at (\xshft+0.00, 0.25+0.40) {};
+    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_ii) at (\xshft+0.00, 0.50+0.80) {};
+    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_ii) at (\xshft+0.00, 0.75+1.20) {};
+    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_ii) at (\xshft+0.00, 1.00+1.60) {};
+    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_ii) at (\xshft+0.00, 1.25+2.00) {};
+
+    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_ii) at (\xshft+1.00, 0.25+0.40) {};
+    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_ii) at (\xshft+1.00, 0.50+0.80) {};
+    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_ii) at (\xshft+1.00, 0.75+1.20) {};
+    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_ii) at (\xshft+1.00, 1.00+1.60) {};
+
+    \draw[dotted                                ] (v1_ii) -- (ca_ii);
+    \draw[dotted                                ] (v1_ii) -- (cb_ii);
+    \draw[dotted                                ] (v2_ii) -- (cc_ii);
+    \draw[dotted                                ] (v2_ii) -- (cd_ii);
+    \draw[->,>=latex, Paired-5, line width=0.7pt] (v3_ii) -- (ca_ii);
+    \draw[<-,>=latex, Paired-3, line width=0.7pt] (v3_ii) -- (cc_ii);
+    \draw[dotted                                ] (v4_ii) -- (cb_ii);
+    \draw[dotted                                ] (v4_ii) -- (cd_ii);
+    \draw[dotted                                ] (v5_ii) -- (ca_ii);
+    \draw[dotted                                ] (v5_ii) -- (cd_ii);
+    \draw[dotted                                ] (v6_ii) -- (cb_ii);
+    \draw[dotted                                ] (v6_ii) -- (cc_ii);
+
+    \node (ii) at (\xshft+1.60, 0.00+0.00) {\small{(II)}};
+
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_ii) (v6_ii) (ca_ii) (cd_ii)] {};
+
+    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_iii) at (\xshft+\xshft+0.00, 0.00+0.00) {};
+    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_iii) at (\xshft+\xshft+0.00, 0.25+0.40) {};
+    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_iii) at (\xshft+\xshft+0.00, 0.50+0.80) {};
+    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_iii) at (\xshft+\xshft+0.00, 0.75+1.20) {};
+    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_iii) at (\xshft+\xshft+0.00, 1.00+1.60) {};
+    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_iii) at (\xshft+\xshft+0.00, 1.25+2.00) {};
+
+    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_iii) at (\xshft+\xshft+1.00, 0.25+0.40) {};
+    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_iii) at (\xshft+\xshft+1.00, 0.50+0.80) {};
+    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_iii) at (\xshft+\xshft+1.00, 0.75+1.20) {};
+    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_iii) at (\xshft+\xshft+1.00, 1.00+1.60) {};
+
+    \draw[dotted                                ] (v1_iii) -- (ca_iii);
+    \draw[dotted                                ] (v1_iii) -- (cb_iii);
+    \draw[dotted                                ] (v2_iii) -- (cc_iii);
+    \draw[dotted                                ] (v2_iii) -- (cd_iii);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (ca_iii);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (cc_iii);
+    \draw[dotted                                ] (v4_iii) -- (cb_iii);
+    \draw[dotted                                ] (v4_iii) -- (cd_iii);
+    \draw[dotted                                ] (v5_iii) -- (ca_iii);
+    \draw[dotted                                ] (v5_iii) -- (cd_iii);
+    \draw[dotted                                ] (v6_iii) -- (cb_iii);
+    \draw[dotted                                ] (v6_iii) -- (cc_iii);
+
+    \node (iii) at (\xshft+\xshft+1.55, 0.00+0.00) {\small{(III)}};
+
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_iii) (v6_iii) (ca_iii) (cd_iii)] {};
+  \end{tikzpicture}
+  }
   \caption
     [SCMA encoding and decoding schemes.]
-    {a) SCMA encoder with 6 users (layers) and 4 physical resources,
-     b) SCMA uplink chain with channel coding,
-     c) Factor graph representation of a decoder,
-     d) Message Passing Algorithm based on Bayesian factor graph:
-        (I)   Resource to user message,
-        (II)  Guess swap at each user and user to resource message,
-        (III) Final guess at each user.}
+    {SCMA encoding and decoding schemes.}
   \label{fig:scma_codec}
 \end{figure}
 
@@ -1122,7 +1527,7 @@ sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
 own codebook to generate the desired codeword according to the binary input
 stream. Fig.~\ref{fig:scma_codec} shows SCMA uplink chain with $J = 6$, $K = 4$
 and $N = 2$. SCMA codewords are spread over $K$ physical resources, such as
-OFDMA tones. Fig.~\ref{fig:scma_codec}a shows that in the multiplexed scheme of
+OFDM tones. Fig.~\ref{fig:scma_codec}a shows that in the multiplexed scheme of
 SCMA, all chosen codewords of the $J$ layers are added together after being
 multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
 is shown in Fig.~\ref{fig:scma_codec}b. The output of the SCMA encoder is
