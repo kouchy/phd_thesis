@@ -1099,24 +1099,10 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 \subsection{Overview of the SCMA System Model}
 \label{sec:scma_overview}
 
-% \begin{figure}[htp]
-%   \centering
-%   \includegraphics[width=0.70\linewidth]{scma/codec/codec}
-%   \caption
-%     [SCMA encoding and decoding schemes.]
-%     {a) SCMA encoder with 6 users (layers) and 4 physical resources,
-%      b) SCMA uplink chain with channel coding,
-%      c) Factor graph representation of a decoder,
-%      d) Message Passing Algorithm based on Bayesian factor graph:
-%         (I)   Resource to user message,
-%         (II)  Guess swap at each user and user to resource message,
-%         (III) Final guess at each user.}
-%   \label{fig:scma_codec}
-% \end{figure}
-
 \begin{figure}[htp]
   \centering
   \subfloat[][SCMA encoder with 6 users (layers) and 4 physical resources.]{
+  \label{fig:scma_enc}
   \begin{tikzpicture}[baseline]
     \tikzset{ cbemp/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=white       } }
     \tikzset{ cbue1/.style={draw=black, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
@@ -1280,12 +1266,12 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
     \node[cbadd] (uea_cb_2) at (\xshft+4.50+0.00, 0.00+0.50) {};
     \node[cbadd] (uea_cb_3) at (\xshft+4.50+0.00, 0.00+0.75) {};
 
-    \draw[->,>=latex] (ue1_cb_1_0.south east) -- (ue1_cb_3.north) node [midway, fill=white] {\tiny{$h_1$}};
-    \draw[->,>=latex] (ue2_cb_1_0.south east) -- (ue2_cb_3.north) node [midway, fill=white] {\tiny{$h_2$}};
-    \draw[->,>=latex] (ue3_cb_1_0.south east) -- (ue3_cb_3.north) node [midway, fill=white] {\tiny{$h_3$}};
-    \draw[->,>=latex] (ue4_cb_1_0.south east) -- (ue4_cb_3.north) node [midway, fill=white] {\tiny{$h_4$}};
-    \draw[->,>=latex] (ue5_cb_1_0.south east) -- (ue5_cb_3.north) node [midway, fill=white] {\tiny{$h_5$}};
-    \draw[->,>=latex] (ue6_cb_1_0.south east) -- (ue6_cb_3.north) node [midway, fill=white] {\tiny{$h_6$}};
+    \draw[->,>=latex] (ue1_cb_1_0.south east) -- (ue1_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_1$}};
+    \draw[->,>=latex] (ue2_cb_1_0.south east) -- (ue2_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_2$}};
+    \draw[->,>=latex] (ue3_cb_1_0.south east) -- (ue3_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_3$}};
+    \draw[->,>=latex] (ue4_cb_1_0.south east) -- (ue4_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_4$}};
+    \draw[->,>=latex] (ue5_cb_1_0.south east) -- (ue5_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_5$}};
+    \draw[->,>=latex] (ue6_cb_1_0.south east) -- (ue6_cb_3.north) node [midway, fill=white] {\tiny{$\bm{h}_6$}};
 
     \node[text width=1.5cm, align=center] (t1) at (\xshft-1.0, 0.00+0.50) {\tiny{Users chosen}};
     \node[text width=1.5cm, align=center] (t2) at (\xshft-1.0, 0.00+0.25) {\tiny{codewords}};
@@ -1303,6 +1289,7 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
   }
   \\
   \subfloat[][SCMA uplink chain with channel coding.]{
+  \label{fig:scma_codec}
   \begin{tikzpicture}[baseline]
     \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uej) at (0.0, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
     % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uex) at (0.0, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
@@ -1325,7 +1312,7 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
     \node[minimum width=0.5cm, align=center] (x1) at (5.420+0.3, 0.225+1.350+0.6) {\tiny{$\bm{x}_1$}};
 
     \node[draw=black, circle, align=center, minimum width=0.60cm] (plus) at (6.7, 1.20) {\tiny{$+$}};
-    \node[align=center, minimum width=0.60cm] (n0) at (6.7, 2.20) {\tiny{$\bm{N_0$}}};
+    \node[align=center, minimum width=0.60cm] (n0) at (6.7, 2.20) {\tiny{$\bm{n$}}};
 
     \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{PRE demapping}}] (dmap)  at (7.8,     1.20) {\tiny{}};
     \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{SCMA decoder}} ] (dscma) at (8.8+0.3, 1.20) {\tiny{}};
@@ -1357,9 +1344,9 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
     \draw[->,>=latex] (scma_ue2) -- (x2);
     \draw[->,>=latex] (scma_ue1) -- (x1);
 
-    \draw[->,>=latex] (xj) -- (plus) node [midway, below] {\tiny{$h_j$}};
-    \draw[->,>=latex] (x2) -- (plus) node [midway, below] {\tiny{$h_2$}};
-    \draw[->,>=latex] (x1) -- (plus) node [midway, above] {\tiny{$h_1$}};
+    \draw[->,>=latex] (xj) -- (plus) node [midway, below] {\tiny{$\bm{h}_j$}};
+    \draw[->,>=latex] (x2) -- (plus) node [midway, below] {\tiny{$\bm{h}_2$}};
+    \draw[->,>=latex] (x1) -- (plus) node [midway, above] {\tiny{$\bm{h}_1$}};
 
     \draw[->,>=latex] (plus) -- (dmap);
 
@@ -1382,6 +1369,7 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
   }
   \\
   \subfloat[][Factor graph representation of a decoder.]{
+  \label{fig:scma_dec_graph}
   \begin{tikzpicture}[baseline]
     \tikzset{ vn/.style={draw=black, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
     \tikzset{ cn/.style={draw=black        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
@@ -1419,21 +1407,24 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
               (I)   Resource to user message,
               (II)  Guess swap at each user and user to resource message,
               (III) Final guess at each user.]{
+  \label{fig:scma_dec_alg}
   \begin{tikzpicture}[baseline]
-    \tikzset{ vn/.style={draw=black, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
-    \tikzset{ cn/.style={draw=black        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ vn/.style ={draw=black   , circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ cn/.style ={draw=black           , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ vns/.style={draw=black!40, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ cns/.style={draw=black!40        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-2!40 } }
 
-    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_i) at (0.00, 0.00+0.00) {};
-    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_i) at (0.00, 0.25+0.40) {};
-    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_i) at (0.00, 0.50+0.80) {};
-    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_i) at (0.00, 0.75+1.20) {};
-    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_i) at (0.00, 1.00+1.60) {};
-    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_i) at (0.00, 1.25+2.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_i) at (0.00, 0.00+0.00) {};
+    \node[vn , label={[black   ]left:\tiny{$UE2$}}] (v2_i) at (0.00, 0.25+0.40) {};
+    \node[vns, label={[black!40]left:\tiny{$UE3$}}] (v3_i) at (0.00, 0.50+0.80) {};
+    \node[vn , label={[black   ]left:\tiny{$UE4$}}] (v4_i) at (0.00, 0.75+1.20) {};
+    \node[vn , label={[black   ]left:\tiny{$UE5$}}] (v5_i) at (0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_i) at (0.00, 1.25+2.00) {};
 
-    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_i) at (1.00, 0.25+0.40) {};
-    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_i) at (1.00, 0.50+0.80) {};
-    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_i) at (1.00, 0.75+1.20) {};
-    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_i) at (1.00, 1.00+1.60) {};
+    \node[cns, label={[black!40]right:\tiny{$RES1$}}] (ca_i) at (1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_i) at (1.00, 0.50+0.80) {};
+    \node[cns, label={[black!40]right:\tiny{$RES3$}}] (cc_i) at (1.00, 0.75+1.20) {};
+    \node[cn , label={[black   ]right:\tiny{$RES4$}}] (cd_i) at (1.00, 1.00+1.60) {};
 
     \draw[dotted                                ] (v1_i) -- (ca_i);
     \draw[dotted                                ] (v1_i) -- (cb_i);
@@ -1454,17 +1445,17 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 
     \newcommand\xshft{3.5}
 
-    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_ii) at (\xshft+0.00, 0.00+0.00) {};
-    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_ii) at (\xshft+0.00, 0.25+0.40) {};
-    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_ii) at (\xshft+0.00, 0.50+0.80) {};
-    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_ii) at (\xshft+0.00, 0.75+1.20) {};
-    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_ii) at (\xshft+0.00, 1.00+1.60) {};
-    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_ii) at (\xshft+0.00, 1.25+2.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_ii) at (\xshft+0.00, 0.00+0.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_ii) at (\xshft+0.00, 0.25+0.40) {};
+    \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_ii) at (\xshft+0.00, 0.50+0.80) {};
+    \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_ii) at (\xshft+0.00, 0.75+1.20) {};
+    \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_ii) at (\xshft+0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_ii) at (\xshft+0.00, 1.25+2.00) {};
 
-    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_ii) at (\xshft+1.00, 0.25+0.40) {};
-    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_ii) at (\xshft+1.00, 0.50+0.80) {};
-    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_ii) at (\xshft+1.00, 0.75+1.20) {};
-    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_ii) at (\xshft+1.00, 1.00+1.60) {};
+    \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_ii) at (\xshft+1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_ii) at (\xshft+1.00, 0.50+0.80) {};
+    \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_ii) at (\xshft+1.00, 0.75+1.20) {};
+    \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_ii) at (\xshft+1.00, 1.00+1.60) {};
 
     \draw[dotted                                ] (v1_ii) -- (ca_ii);
     \draw[dotted                                ] (v1_ii) -- (cb_ii);
@@ -1483,17 +1474,17 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 
     \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_ii) (v6_ii) (ca_ii) (cd_ii)] {};
 
-    \node[vn, label={[black]left:\tiny{$UE1$}}] (v1_iii) at (\xshft+\xshft+0.00, 0.00+0.00) {};
-    \node[vn, label={[black]left:\tiny{$UE2$}}] (v2_iii) at (\xshft+\xshft+0.00, 0.25+0.40) {};
-    \node[vn, label={[black]left:\tiny{$UE3$}}] (v3_iii) at (\xshft+\xshft+0.00, 0.50+0.80) {};
-    \node[vn, label={[black]left:\tiny{$UE4$}}] (v4_iii) at (\xshft+\xshft+0.00, 0.75+1.20) {};
-    \node[vn, label={[black]left:\tiny{$UE5$}}] (v5_iii) at (\xshft+\xshft+0.00, 1.00+1.60) {};
-    \node[vn, label={[black]left:\tiny{$UE6$}}] (v6_iii) at (\xshft+\xshft+0.00, 1.25+2.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_iii) at (\xshft+\xshft+0.00, 0.00+0.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_iii) at (\xshft+\xshft+0.00, 0.25+0.40) {};
+    \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_iii) at (\xshft+\xshft+0.00, 0.50+0.80) {};
+    \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_iii) at (\xshft+\xshft+0.00, 0.75+1.20) {};
+    \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_iii) at (\xshft+\xshft+0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_iii) at (\xshft+\xshft+0.00, 1.25+2.00) {};
 
-    \node[cn, label={[black]right:\tiny{$RES1$}}] (ca_iii) at (\xshft+\xshft+1.00, 0.25+0.40) {};
-    \node[cn, label={[black]right:\tiny{$RES2$}}] (cb_iii) at (\xshft+\xshft+1.00, 0.50+0.80) {};
-    \node[cn, label={[black]right:\tiny{$RES3$}}] (cc_iii) at (\xshft+\xshft+1.00, 0.75+1.20) {};
-    \node[cn, label={[black]right:\tiny{$RES4$}}] (cd_iii) at (\xshft+\xshft+1.00, 1.00+1.60) {};
+    \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_iii) at (\xshft+\xshft+1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_iii) at (\xshft+\xshft+1.00, 0.50+0.80) {};
+    \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_iii) at (\xshft+\xshft+1.00, 0.75+1.20) {};
+    \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_iii) at (\xshft+\xshft+1.00, 1.00+1.60) {};
 
     \draw[dotted                                ] (v1_iii) -- (ca_iii);
     \draw[dotted                                ] (v1_iii) -- (cb_iii);
@@ -1516,7 +1507,7 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
   \caption
     [SCMA encoding and decoding schemes.]
     {SCMA encoding and decoding schemes.}
-  \label{fig:scma_codec}
+  \label{fig:scma}
 \end{figure}
 
 An SCMA encoder with $J$ users (layers) and $K$ physical resources is a function
@@ -1525,13 +1516,13 @@ $f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
 $\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
 sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
 own codebook to generate the desired codeword according to the binary input
-stream. Fig.~\ref{fig:scma_codec} shows SCMA uplink chain with $J = 6$, $K = 4$
-and $N = 2$. SCMA codewords are spread over $K$ physical resources, such as
-OFDM tones. Fig.~\ref{fig:scma_codec}a shows that in the multiplexed scheme of
-SCMA, all chosen codewords of the $J$ layers are added together after being
-multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
-is shown in Fig.~\ref{fig:scma_codec}b. The output of the SCMA encoder is
-affected by the white additive noise $\bm{n}$.
+stream. Fig.~\ref{fig:scma} shows SCMA uplink chain with $J = 6$, $K = 4$ and
+$N = 2$. SCMA codewords are spread over $K$ physical resources, such as OFDM
+tones. Fig.~\ref{fig:scma_enc} shows that in the multiplexed scheme of SCMA, all
+chosen codewords of the $J$ layers are added together after being multiplied by
+the channel coefficient $\bm{h}_j$. Then, the entire uplink chain is shown in
+Fig.~\ref{fig:scma_codec}. The output of the SCMA encoder is affected by the
+white additive noise $\bm{n}$.
 \begin{equation}
   \label{eq:scma_1}
   \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
@@ -1574,7 +1565,7 @@ Gaussian channel with $\sigma^2$ variance:
 Although the ML method provides the best guess for $\bm{\hat{x}_{ML}}$,
 performing the computation with this method requires unacceptable complexity in
 real applications. In the case of six users and codebooks matrices size
-$4\times4$ as in Fig.~\ref{fig:scma_codec}a, the calculation of the soft output
+$4\times4$ as in Fig.~\ref{fig:scma_enc}, the calculation of the soft output
 for each bit in \eqref{eq:scma_4} needs 4096 exponential function computations,
 which is unacceptable. Nevertheless, in this article the result of this method
 is used to compare with practical methods to characterize the BER performance
@@ -1583,7 +1574,7 @@ degradation of MPA and log-MPA.
 \subsubsection{Message Passing Algorithm (MPA)}
 \label{sec:scma_mpa}
 
-Fig.~\ref{fig:scma_codec}c shows a Bayesian factor graph representation of an
+Fig.~\ref{fig:scma_dec_graph} shows a Bayesian factor graph representation of an
 MPA decoder with six users and four physical resources. Thanks to sparsity of
 the codebooks, exactly three users collide in each physical resource. There are
 four possible codewords for each of the three connected user's codebooks which
@@ -1618,7 +1609,7 @@ noise, these Euclidean distances can be expressed as probabilities using
 After calculating the residual probability of each codeword with
 \eqref{eq:scma_7}, iterative MPA starts exchanging beliefs (probabilities) on
 possible received codewords among the users and resources nodes of the
-factor-graph. According to Fig.~\ref{fig:scma_codec}d(I), a message from
+factor-graph. According to Fig.~\ref{fig:scma_dec_alg}(I), a message from
 resources to users has been defined to contain extrinsic information of two
 other connected users. For instance, a message from resource 4 to user 2
 containing the probability information of codeword $i$ can be expressed as:
@@ -1630,7 +1621,7 @@ containing the probability information of codeword $i$ can be expressed as:
   \times \mu_{UE4 \rightarrow RES4}(j) \times \mu_{UE5 \rightarrow RES4}(k).
   \end{split}
 \end{equation}
-As shown in Fig.~\ref{fig:scma_codec}d(II) there are only two resources
+As shown in Fig.~\ref{fig:scma_dec_alg}(II) there are only two resources
 connected to each user. A message from a user to a resource is a normalized
 guess swap at the user node:
 \begin{equation}
@@ -1641,9 +1632,9 @@ guess swap at the user node:
 message passing between users and resources (see \eqref{eq:scma_8} and
 \eqref{eq:scma_9}) will be repeated three to eight times to reach the desired
 decoding performance. The final belief at each user B (i) is the multiplication
-of all incoming messages as illustrated in Fig.~{\ref{fig:scma_codec}}d(III) and
-\eqref{eq:scma_10} for UE4 and codeword $i$. Finally, \eqref{eq:scma_11} is used
-to calculate soft outputs for bit $b_x$:
+of all incoming messages as illustrated in Fig.~{\ref{fig:scma_dec_alg}}(III)
+and \eqref{eq:scma_10} for UE4 and codeword $i$. Finally, \eqref{eq:scma_11} is
+used to calculate soft outputs for bit $b_x$:
 \begin{equation}
   \label{eq:scma_10}
   B_3(i) = \mu_{RES1 \rightarrow UE3}(i) \times \mu_{RES3 \rightarrow UE3}(i),
