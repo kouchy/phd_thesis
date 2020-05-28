@@ -2512,18 +2512,365 @@ final guesses at each user.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\linewidth]{scma/simd_norm/simd_norm}
+  \subfloat[][Array of Structures (AoS).]{
+  \label{fig:scma_simd_norm_aos}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ er/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ ei/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ erd/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ eid/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ ers/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-2!40 } }
+    \tikzset{ eis/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ ex/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40 } }
+    \tikzset{ ey/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ exd/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ ept/.style={            minimum width=0.7cm, minimum height=0.7cm]                              } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{intr}=[rounded corners=3pt, fill=white, draw=black]
+
+    \newcommand\vs{2.0}
+    \newcommand\lft{0.0}
+    \newcommand\ctr{4.9}
+    \newcommand\rth{9.8}
+
+    % \node[draw=black, minimum width=4.80cm, minimum height=3.30cm] (legend1) at (\lft+0.0+2.10, -\vs) {};
+    \node[draw=black, dotted             , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{Global memory (RAM)}}] (ram)   at (0.1, -1.1) {};
+    \node[draw=black,                    , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register}}      ] (simdr) at (0.1, -1.7) {};
+    \node[draw=black, dashed             , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register copy}} ] (simdc) at (0.1, -2.3) {};
+    \node[draw=black, rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD instruction}}   ] (simdi) at (0.1, -2.9) {};
+
+    % \node[draw=black, minimum width=4.80cm, minimum height=3.30cm] (legend2) at (\rth+0.7+2.10, -\vs) {};
+    \node[fill=Paired-1!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex real part $r$}}     ] (cr) at (\rth+0.7+4.10, -1.1) {};
+    \node[fill=Paired-3!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex imaginary part $i$}}] (ci) at (\rth+0.7+4.10, -1.7) {};
+    \node[fill=Paired-5!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex norm}}              ] (cn) at (\rth+0.7+4.10, -2.3) {};
+
+    \node[ept        ] (mi_er0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[ers, dotted] (mi_er1)  at ( 0.7, 0.00) {};
+    \node[eis, dotted] (mi_er2)  at ( 1.4, 0.00) {};
+    \node[ers, dotted] (mi_er3)  at ( 2.1, 0.00) {};
+    \node[eis, dotted] (mi_er4)  at ( 2.8, 0.00) {};
+    \node[ers, dotted] (mi_er5)  at ( 3.5, 0.00) {};
+    \node[eis, dotted] (mi_er6)  at ( 4.2, 0.00) {};
+    \node[er , dotted] (mi_er7)  at ( 4.9, 0.00) {};
+    \node[ei , dotted] (mi_er8)  at ( 5.6, 0.00) {};
+    \node[er , dotted] (mi_er9)  at ( 6.3, 0.00) {};
+    \node[ei , dotted] (mi_er10) at ( 7.0, 0.00) {};
+    \node[er , dotted] (mi_er11) at ( 7.7, 0.00) {};
+    \node[ei , dotted] (mi_er12) at ( 8.4, 0.00) {};
+    \node[er , dotted] (mi_er13) at ( 9.1, 0.00) {};
+    \node[ei , dotted] (mi_er14) at ( 9.8, 0.00) {};
+    \node[ers, dotted] (mi_er15) at (10.5, 0.00) {};
+    \node[eis, dotted] (mi_er16) at (11.2, 0.00) {};
+    \node[ers, dotted] (mi_er17) at (11.9, 0.00) {};
+    \node[eis, dotted] (mi_er18) at (12.6, 0.00) {};
+    \node[ers, dotted] (mi_er19) at (13.3, 0.00) {};
+    \node[eis, dotted] (mi_er20) at (14.0, 0.00) {};
+    \node[ept        ] (mi_er21) at (14.7, 0.00) {\tiny{...}};
+
+    \node[er] (r0_er0) at (\ctr+0.0, -\vs) {\tiny{$a_r$}};
+    \node[ei] (r0_er1) at (\ctr+0.7, -\vs) {\tiny{$a_i$}};
+    \node[er] (r0_er2) at (\ctr+1.4, -\vs) {\tiny{$b_r$}};
+    \node[ei] (r0_er3) at (\ctr+2.1, -\vs) {\tiny{$b_i$}};
+    \node[er] (r0_er4) at (\ctr+2.8, -\vs) {\tiny{$c_r$}};
+    \node[ei] (r0_er5) at (\ctr+3.5, -\vs) {\tiny{$c_i$}};
+    \node[er] (r0_er6) at (\ctr+4.2, -\vs) {\tiny{$d_r$}};
+    \node[ei] (r0_er7) at (\ctr+4.9, -\vs) {\tiny{$d_i$}};
+
+    \node[intr] (intr0) at (7.35, -\vs+1) {\footnotesize{\texttt{\_mm256\_loadu\_ps}}};
+
+    \draw[lnk] (7.35,-0.35) -- (intr0) ;
+    \draw[lnk] (intr0)      -- (r0_er3.north east);
+
+    \node[er] (r3_er0) at (\ctr+0.0, -\vs-\vs) {\tiny{$a_r^2$}};
+    \node[ei] (r3_er1) at (\ctr+0.7, -\vs-\vs) {\tiny{$a_i^2$}};
+    \node[er] (r3_er2) at (\ctr+1.4, -\vs-\vs) {\tiny{$b_r^2$}};
+    \node[ei] (r3_er3) at (\ctr+2.1, -\vs-\vs) {\tiny{$b_i^2$}};
+    \node[er] (r3_er4) at (\ctr+2.8, -\vs-\vs) {\tiny{$c_r^2$}};
+    \node[ei] (r3_er5) at (\ctr+3.5, -\vs-\vs) {\tiny{$c_i^2$}};
+    \node[er] (r3_er6) at (\ctr+4.2, -\vs-\vs) {\tiny{$d_r^2$}};
+    \node[ei] (r3_er7) at (\ctr+4.9, -\vs-\vs) {\tiny{$d_i^2$}};
+
+    \node[intr] (intr1) at (7.35, -\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_mul\_ps}}};
+
+    \draw[lnk] (r0_er0.south east) |- (intr1.west);
+    \draw[lnk] (r0_er7.south west) |- (intr1.east);
+    \draw[lnk] (intr1)             |- (7.35, -\vs-\vs+0.35);
+
+    \node[er, dashed] (r4_er0) at (\lft+0.0, -\vs-\vs-\vs) {\tiny{$a_r^2$}};
+    \node[ei, dashed] (r4_er1) at (\lft+0.7, -\vs-\vs-\vs) {\tiny{$a_i^2$}};
+    \node[er, dashed] (r4_er2) at (\lft+1.4, -\vs-\vs-\vs) {\tiny{$b_r^2$}};
+    \node[ei, dashed] (r4_er3) at (\lft+2.1, -\vs-\vs-\vs) {\tiny{$b_i^2$}};
+    \node[er, dashed] (r4_er4) at (\lft+2.8, -\vs-\vs-\vs) {\tiny{$c_r^2$}};
+    \node[ei, dashed] (r4_er5) at (\lft+3.5, -\vs-\vs-\vs) {\tiny{$c_i^2$}};
+    \node[er, dashed] (r4_er6) at (\lft+4.2, -\vs-\vs-\vs) {\tiny{$d_r^2$}};
+    \node[ei, dashed] (r4_er7) at (\lft+4.9, -\vs-\vs-\vs) {\tiny{$d_i^2$}};
+
+    \node[er] (r5_er0) at (\rth+0.0, -\vs-\vs-\vs) {\tiny{$c_r^2$}};
+    \node[ei] (r5_er1) at (\rth+0.7, -\vs-\vs-\vs) {\tiny{$c_i^2$}};
+    \node[er] (r5_er2) at (\rth+1.4, -\vs-\vs-\vs) {\tiny{$d_r^2$}};
+    \node[ei] (r5_er3) at (\rth+2.1, -\vs-\vs-\vs) {\tiny{$d_i^2$}};
+    \node[er] (r5_er4) at (\rth+2.8, -\vs-\vs-\vs) {\tiny{$a_r^2$}};
+    \node[ei] (r5_er5) at (\rth+3.5, -\vs-\vs-\vs) {\tiny{$a_i^2$}};
+    \node[er] (r5_er6) at (\rth+4.2, -\vs-\vs-\vs) {\tiny{$b_r^2$}};
+    \node[ei] (r5_er7) at (\rth+4.9, -\vs-\vs-\vs) {\tiny{$b_i^2$}};
+
+    \draw[shf] (r3_er0.south) -- (r5_er4.north);
+    \draw[shf] (r3_er1.south) -- (r5_er5.north);
+    \draw[shf] (r3_er2.south) -- (r5_er6.north);
+    \draw[shf] (r3_er3.south) -- (r5_er7.north);
+    \draw[shf] (r3_er4.south) -- (r5_er0.north);
+    \draw[shf] (r3_er5.south) -- (r5_er1.north);
+    \draw[shf] (r3_er6.south) -- (r5_er2.north);
+    \draw[shf] (r3_er7.south) -- (r5_er3.north);
+
+    \node[intr] (intr2) at (7.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_permute2f128\_ps}}};
+
+    \draw[lnk, dashed] (r3_er0.west)       -| (r4_er3.north east);
+    \draw[lnk        ] (7.35,-\vs-\vs+0.7) -- (intr2);
+    \draw[lnk        ] (intr2.east)        -| (r5_er3.north east);
+
+    \newcommand\ctrd{2.45}
+
+    \node[exd] (r6_er0) at (\ctrd+0.0, -\vs-\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r6_er1) at (\ctrd+1.4, -\vs-\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+    \node[exd] (r6_er2) at (\ctrd+2.8, -\vs-\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r6_er3) at (\ctrd+4.2, -\vs-\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r6_er4) at (\ctrd+5.6, -\vs-\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r6_er5) at (\ctrd+7.0, -\vs-\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r6_er6) at (\ctrd+8.4, -\vs-\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r6_er7) at (\ctrd+9.8, -\vs-\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+
+    \draw[shf] (r4_er0.south) -- (r6_er0.north);
+    \draw[shf] (r4_er1.south) -- (r6_er0.north);
+    \draw[shf] (r4_er2.south) -- (r6_er1.north);
+    \draw[shf] (r4_er3.south) -- (r6_er1.north);
+    \draw[shf] (r4_er4.south) -- (r6_er4.north);
+    \draw[shf] (r4_er5.south) -- (r6_er4.north);
+    \draw[shf] (r4_er6.south) -- (r6_er5.north);
+    \draw[shf] (r4_er7.south) -- (r6_er5.north);
+
+    \draw[shf] (r5_er0.south) -- (r6_er2.north);
+    \draw[shf] (r5_er1.south) -- (r6_er2.north);
+    \draw[shf] (r5_er2.south) -- (r6_er3.north);
+    \draw[shf] (r5_er3.south) -- (r6_er3.north);
+    \draw[shf] (r5_er4.south) -- (r6_er6.north);
+    \draw[shf] (r5_er5.south) -- (r6_er6.north);
+    \draw[shf] (r5_er6.south) -- (r6_er7.north);
+    \draw[shf] (r5_er7.south) -- (r6_er7.north);
+
+    \node[intr] (intr3) at (7.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_hadd\_ps}}};
+
+    \draw[lnk] (r4_er3.south east) |- (intr3.west);
+    \draw[lnk] (r5_er4.south west) |- (intr3.east);
+    \draw[lnk] (intr3.south)       -- (7.35, -\vs-\vs-\vs-\vs+0.35);
+
+    \node[exd] (r7_er0) at (\ctrd+2.8+0.0, -\vs-\vs-\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r7_er1) at (\ctrd+2.8+1.4, -\vs-\vs-\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+    \node[exd] (r7_er2) at (\ctrd+2.8+2.8, -\vs-\vs-\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r7_er3) at (\ctrd+2.8+4.2, -\vs-\vs-\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+
+    \draw[shf] (r6_er0.south) -- (r7_er0.north);
+    \draw[shf] (r6_er1.south) -- (r7_er1.north);
+    \draw[shf] (r6_er2.south) -- (r7_er2.north);
+    \draw[shf] (r6_er3.south) -- (r7_er3.north);
+
+    \node[intr] (intr4) at (7.35, -\vs-\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_extractf128\_ps}}};
+
+    \draw[lnk] (7.35, -\vs-\vs-\vs-\vs-0.35) -- (intr4);
+    \draw[lnk] (intr4)                       -- (7.35, -\vs-\vs-\vs-\vs-\vs+0.35);
+
+    \node[ept        ] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-\vs-\vs-\vs) {\tiny{...}};
+    \node[ex , dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-\vs-\vs-\vs) {};
+    \node[ept        ] (mo_er16) at (11.2, -\vs-\vs-\vs-\vs-\vs-\vs) {\tiny{...}};
+
+    \node[intr] (intr5) at (7.35, -\vs-\vs-\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm\_storeu\_ps}}};
+
+    \draw[lnk] (7.35, -\vs-\vs-\vs-\vs-\vs-0.35) -- (intr5);
+    \draw[lnk] (intr5)                           -- (7.35, -\vs-\vs-\vs-\vs-\vs-\vs+0.35);
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mo_er14) (mi_er0) (r4_er0) (r5_er7)] {};
+  \end{tikzpicture}
+  }
+  \\
+  \subfloat[][Structure of Arrays (SoA).]{
+  \label{fig:scma_simd_norm_soa}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ er/.style ={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ ei/.style ={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ erd/.style={draw=black        , minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ eid/.style={draw=black        , minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ ers/.style={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-2!40 } }
+    \tikzset{ eis/.style={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ ex/.style ={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40 } }
+    \tikzset{ ey/.style ={draw=black        , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ exd/.style ={draw=black       , minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ ept/.style={                    minimum width=0.7cm, minimum height=0.7cm] } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{intr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
+
+    \node[ept        ] (mi_er0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[er , dotted] (mi_er1)  at ( 0.7, 0.00) {};
+    \node[er , dotted] (mi_er2)  at ( 1.4, 0.00) {};
+    \node[er , dotted] (mi_er3)  at ( 2.1, 0.00) {};
+    \node[er , dotted] (mi_er4)  at ( 2.8, 0.00) {};
+    \node[er , dotted] (mi_er5)  at ( 3.5, 0.00) {};
+    \node[er , dotted] (mi_er6)  at ( 4.2, 0.00) {};
+    \node[er , dotted] (mi_er7)  at ( 4.9, 0.00) {};
+    \node[er , dotted] (mi_er8)  at ( 5.6, 0.00) {};
+    \node[ers, dotted] (mi_er9)  at ( 6.3, 0.00) {};
+    \node[ept        ] (mi_er10) at ( 7.0, 0.00) {\tiny{...}};
+    \node[ept        ] (mi_er11) at ( 7.7, 0.00) {\tiny{...}};
+    \node[ei , dotted] (mi_er12) at ( 8.4, 0.00) {};
+    \node[ei , dotted] (mi_er13) at ( 9.1, 0.00) {};
+    \node[ei , dotted] (mi_er14) at ( 9.8, 0.00) {};
+    \node[ei , dotted] (mi_er15) at (10.5, 0.00) {};
+    \node[ei , dotted] (mi_er16) at (11.2, 0.00) {};
+    \node[ei , dotted] (mi_er17) at (11.9, 0.00) {};
+    \node[ei , dotted] (mi_er18) at (12.6, 0.00) {};
+    \node[ei , dotted] (mi_er19) at (13.3, 0.00) {};
+    \node[eis, dotted] (mi_er20) at (14.0, 0.00) {};
+    \node[ept        ] (mi_er21) at (14.7, 0.00) {\tiny{...}};
+
+    \newcommand\vs{2.0}
+    \newcommand\lft{0.0}
+
+    \node[er] (r0_er0) at (\lft+0.0, -\vs) {\tiny{$a_r$}};
+    \node[er] (r0_er1) at (\lft+0.7, -\vs) {\tiny{$b_r$}};
+    \node[er] (r0_er2) at (\lft+1.4, -\vs) {\tiny{$c_r$}};
+    \node[er] (r0_er3) at (\lft+2.1, -\vs) {\tiny{$d_r$}};
+    \node[er] (r0_er4) at (\lft+2.8, -\vs) {\tiny{$e_r$}};
+    \node[er] (r0_er5) at (\lft+3.5, -\vs) {\tiny{$f_r$}};
+    \node[er] (r0_er6) at (\lft+4.2, -\vs) {\tiny{$g_r$}};
+    \node[er] (r0_er7) at (\lft+4.9, -\vs) {\tiny{$h_r$}};
+
+    \newcommand\rth{9.8}
+
+    \node[ei] (r1_ei0) at (\rth+0.0, -\vs) {\tiny{$a_i$}};
+    \node[ei] (r1_ei1) at (\rth+0.7, -\vs) {\tiny{$b_i$}};
+    \node[ei] (r1_ei2) at (\rth+1.4, -\vs) {\tiny{$c_i$}};
+    \node[ei] (r1_ei3) at (\rth+2.1, -\vs) {\tiny{$d_i$}};
+    \node[ei] (r1_ei4) at (\rth+2.8, -\vs) {\tiny{$e_i$}};
+    \node[ei] (r1_ei5) at (\rth+3.5, -\vs) {\tiny{$f_i$}};
+    \node[ei] (r1_ei6) at (\rth+4.2, -\vs) {\tiny{$g_i$}};
+    \node[ei] (r1_ei7) at (\rth+4.9, -\vs) {\tiny{$h_i$}};
+
+    \node[intr] (intr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_loadu\_ps}}};
+    \node[intr] (intr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_loadu\_ps}}};
+
+    \draw[lnk] (\lft+2.45,-0.35) -- (intr0);
+    \draw[lnk] (\rth+2.45,-0.35) -- (intr1);
+
+    \draw[lnk] (intr0) -- (r0_er3.north east);
+    \draw[lnk] (intr1) -- (r1_ei3.north east);
+
+    \node[er] (r2_er0) at (\lft+0.0, -\vs-\vs) {\tiny{$a_r^2$}};
+    \node[er] (r2_er1) at (\lft+0.7, -\vs-\vs) {\tiny{$b_r^2$}};
+    \node[er] (r2_er2) at (\lft+1.4, -\vs-\vs) {\tiny{$c_r^2$}};
+    \node[er] (r2_er3) at (\lft+2.1, -\vs-\vs) {\tiny{$d_r^2$}};
+    \node[er] (r2_er4) at (\lft+2.8, -\vs-\vs) {\tiny{$e_r^2$}};
+    \node[er] (r2_er5) at (\lft+3.5, -\vs-\vs) {\tiny{$f_r^2$}};
+    \node[er] (r2_er6) at (\lft+4.2, -\vs-\vs) {\tiny{$g_r^2$}};
+    \node[er] (r2_er7) at (\lft+4.9, -\vs-\vs) {\tiny{$h_r^2$}};
+
+    \node[ei] (r3_ei0) at (\rth+0.0, -\vs-\vs) {\tiny{$a_i^2$}};
+    \node[ei] (r3_ei1) at (\rth+0.7, -\vs-\vs) {\tiny{$b_i^2$}};
+    \node[ei] (r3_ei2) at (\rth+1.4, -\vs-\vs) {\tiny{$c_i^2$}};
+    \node[ei] (r3_ei3) at (\rth+2.1, -\vs-\vs) {\tiny{$d_i^2$}};
+    \node[ei] (r3_ei4) at (\rth+2.8, -\vs-\vs) {\tiny{$e_i^2$}};
+    \node[ei] (r3_ei5) at (\rth+3.5, -\vs-\vs) {\tiny{$f_i^2$}};
+    \node[ei] (r3_ei6) at (\rth+4.2, -\vs-\vs) {\tiny{$g_i^2$}};
+    \node[ei] (r3_ei7) at (\rth+4.9, -\vs-\vs) {\tiny{$h_i^2$}};
+
+    \node[intr] (intr2) at (     2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_mul\_ps}}};
+    \node[intr] (intr3) at (\rth+2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_mul\_ps}}};
+
+    \draw[lnk] (r0_er1.south west) |- (intr2);
+    \draw[lnk] (r0_er6.south east) |- (intr2);
+
+    \draw[lnk] (r1_ei1.south west) |- (intr3);
+    \draw[lnk] (r1_ei6.south east) |- (intr3);
+
+    \draw[lnk] (intr2) -- (\lft+2.45,-\vs-\vs+0.35);
+    \draw[lnk] (intr3) -- (\rth+2.45,-\vs-\vs+0.35);
+
+    \newcommand\ctrd{2.45}
+
+    \node[exd] (r4_er0) at (\ctrd+0.0, -\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r4_er1) at (\ctrd+1.4, -\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+    \node[exd] (r4_er2) at (\ctrd+2.8, -\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r4_er3) at (\ctrd+4.2, -\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r4_er4) at (\ctrd+5.6, -\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r4_er5) at (\ctrd+7.0, -\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r4_er6) at (\ctrd+8.4, -\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r4_er7) at (\ctrd+9.8, -\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+
+    \draw[shf] (r2_er0.south) -- (r4_er0.north);
+    \draw[shf] (r2_er1.south) -- (r4_er1.north);
+    \draw[shf] (r2_er2.south) -- (r4_er2.north);
+    \draw[shf] (r2_er3.south) -- (r4_er3.north);
+    \draw[shf] (r2_er4.south) -- (r4_er4.north);
+    \draw[shf] (r2_er5.south) -- (r4_er5.north);
+    \draw[shf] (r2_er6.south) -- (r4_er6.north);
+    \draw[shf] (r2_er7.south) -- (r4_er7.north);
+    \draw[shf] (r3_ei0.south) -- (r4_er0.north);
+    \draw[shf] (r3_ei1.south) -- (r4_er1.north);
+    \draw[shf] (r3_ei2.south) -- (r4_er2.north);
+    \draw[shf] (r3_ei3.south) -- (r4_er3.north);
+    \draw[shf] (r3_ei4.south) -- (r4_er4.north);
+    \draw[shf] (r3_ei5.south) -- (r4_er5.north);
+    \draw[shf] (r3_ei6.south) -- (r4_er6.north);
+    \draw[shf] (r3_ei7.south) -- (r4_er7.north);
+
+    \node[intr] (intr4) at (7.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_add\_ps}}};
+
+    \draw[lnk] (r2_er3.south east) |- (intr4);
+    \draw[lnk] (r3_ei4.south west) |- (intr4);
+
+    \draw[lnk] (intr4) -- (7.32,-\vs-\vs-\vs+0.35);
+
+    \node[ept        ] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-\vs) {\tiny{...}};
+    \node[ex , dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-\vs) {};
+    \node[ept        ] (mo_er16) at (11.2, -\vs-\vs-\vs-\vs) {\tiny{...}};
+
+    \node[intr] (intr5) at (7.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_storeu\_ps}}};
+
+    \draw[lnk] (7.35, -\vs-\vs-\vs-0.35) -- (intr5);
+    \draw[lnk] (intr5)                   -- (7.35, -\vs-\vs-\vs-\vs+0.35);
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mo_er16) (mi_er0) (r0_er0) (r1_ei7)] {};
+  \end{tikzpicture}
+  }
   \caption
     [MPA complex norm AVX algorithm using AoS and SoA.]
-    {MPA complex norm AVX algorithm using
-     a) Array of Structures (AoS),
-     b) Structure of Arrays (SoA).}
+    {MPA complex norm AVX algorithms.}
   \label{fig:scma_simd_norm}
 \end{figure}
 
 Equations~\eqref{eq:scma_5} and \eqref{eq:scma_6} use a complex norm function
 $||.||$, it can be optimized by using SIMD instructions. There are two ways to
-perform this computation: Fig.~\ref{fig:scma_simd_norm}a depicts how to
+perform this computation: Fig.~\ref{fig:scma_simd_norm_aos} depicts how to
 implement the norm function using an Array of Structures (AoS) for complex
 numbers. In this method, the complex numbers are represented as two consecutive
 floating-point numbers. The implementation with AoS uses six intrinsic
@@ -2531,7 +2878,7 @@ functions: one load (\verb|_mm256_loadu_ps|), one store
 (\verb|_mm256_storeu_ps|), one multiplication (\verb|_mm256_mul_ps|), one
 permutation of the lanes (\verb|_mm256_permute2f128_ps|), one horizontal
 addition (\verb|_mm256_hadd_ps|) and one extraction of the highest lane of the
-AVX register (\verb|_mm256_extractf128_ps|). Fig.~\ref{fig:scma_simd_norm}b
+AVX register (\verb|_mm256_extractf128_ps|). Fig.~\ref{fig:scma_simd_norm_soa}
 sketches the computation of the complex norm using a Structure of Array (SoA)
 data layout. This implementation also uses six intrinsic functions: two loads
 (\verb|_mm256_loadu_ps|), one store (\verb|_mm256_storeu_ps|), two standard
@@ -2562,8 +2909,8 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
 \end{figure}
 
 The flattened complex and normalized numbers are calculated as shown in
-Fig.~\ref{fig:scma_simd_norm}a and Fig.~\ref{fig:scma_simd_norm}b to produce the
-preliminary values used to compute the probabilities.
+Fig.~\ref{fig:scma_simd_norm_aos} and Fig.~\ref{fig:scma_simd_norm_soa} to
+produce the preliminary values used to compute the probabilities.
 Fig.~\ref{fig:scma_simd_exp_mul}a illustrates the full process on a vector of
 eight floating-point numbers. First the values are loaded into the YMM
 registers, then they are multiplied by $-1/2\sigma^2$ and finally the
