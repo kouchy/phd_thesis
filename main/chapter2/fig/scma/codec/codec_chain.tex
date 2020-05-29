@@ -1,76 +1,94 @@
-\begin{tikzpicture}[baseline]
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uej) at (0.0, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
-  % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uex) at (0.0, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue2) at (0.0, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue1) at (0.0, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
+\documentclass{standalone}
 
-  \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uej) at (1.95+0.3, 0.225+0.000+0.0) {\tiny{Channel enc.}};
-  % \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uex) at (1.95+0.3, 0.225+0.450+0.2) {\tiny{Channel enc.}};
-  \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue2) at (1.95+0.3, 0.225+0.900+0.4) {\tiny{Channel enc.}};
-  \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue1) at (1.95+0.3, 0.225+1.350+0.6) {\tiny{Channel enc.}};
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
 
-  \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uej) at (4.0+0.3, 0.225+0.000+0.0) {\tiny{SCMA enc.}};
-  % \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uex) at (4.0+0.3, 0.225+0.450+0.2) {\tiny{SCMA enc.}};
-  \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue2) at (4.0+0.3, 0.225+0.900+0.4) {\tiny{SCMA enc.}};
-  \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue1) at (4.0+0.3, 0.225+1.350+0.6) {\tiny{SCMA enc.}};
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
 
-  \node[minimum width=0.5cm, align=center] (xj) at (5.420+0.3, 0.225+0.000+0.0) {\tiny{$\bm{x}_j$}};
-  % \node[minimum width=0.5cm, align=center] (xx) at (5.420+0.3, 0.225+0.450+0.2) {\tiny{$\bm{x}_x$}};
-  \node[minimum width=0.5cm, align=center] (x2) at (5.420+0.3, 0.225+0.900+0.4) {\tiny{$\bm{x}_2$}};
-  \node[minimum width=0.5cm, align=center] (x1) at (5.420+0.3, 0.225+1.350+0.6) {\tiny{$\bm{x}_1$}};
+\input{colors}
 
-  \node[draw=black, circle, align=center, minimum width=0.60cm] (plus) at (6.7, 1.20) {\tiny{$+$}};
-  \node[align=center, minimum width=0.60cm] (n0) at (6.7, 2.20) {\tiny{$\bm{n$}}};
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uej) at (0.0, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
+    % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_uex) at (0.0, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue2) at (0.0, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (in_bs_ue1) at (0.0, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
 
-  \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{PRE demapping}}] (dmap)  at (7.8,     1.20) {\tiny{}};
-  \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{SCMA decoder}} ] (dscma) at (8.8+0.3, 1.20) {\tiny{}};
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uej) at (1.95+0.3, 0.225+0.000+0.0) {\tiny{Channel enc.}};
+    % \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_uex) at (1.95+0.3, 0.225+0.450+0.2) {\tiny{Channel enc.}};
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue2) at (1.95+0.3, 0.225+0.900+0.4) {\tiny{Channel enc.}};
+    \node[draw=black, minimum width=1.8cm, minimum height=0.45cm, align=center] (cc_ue1) at (1.95+0.3, 0.225+1.350+0.6) {\tiny{Channel enc.}};
 
-  \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uej) at (10.65+0.3, 0.225+0.000+0.0) {\tiny{Channel dec.}};
-  % \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uex) at (10.65+0.3, 0.225+0.450+0.2) {\tiny{Channel dec.}};
-  \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue2) at (10.65+0.3, 0.225+0.900+0.4) {\tiny{Channel dec.}};
-  \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue1) at (10.65+0.3, 0.225+1.350+0.6) {\tiny{Channel dec.}};
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uej) at (4.0+0.3, 0.225+0.000+0.0) {\tiny{SCMA enc.}};
+    % \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_uex) at (4.0+0.3, 0.225+0.450+0.2) {\tiny{SCMA enc.}};
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue2) at (4.0+0.3, 0.225+0.900+0.4) {\tiny{SCMA enc.}};
+    \node[draw=black, minimum width=1.7cm, minimum height=0.45cm, align=center] (scma_ue1) at (4.0+0.3, 0.225+1.350+0.6) {\tiny{SCMA enc.}};
 
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uej) at (13.05+0.3, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
-  % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uex) at (13.05+0.3, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue2) at (13.05+0.3, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
-  \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue1) at (13.05+0.3, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
+    \node[minimum width=0.5cm, align=center] (xj) at (5.420+0.3, 0.225+0.000+0.0) {\tiny{$\bm{x}_j$}};
+    % \node[minimum width=0.5cm, align=center] (xx) at (5.420+0.3, 0.225+0.450+0.2) {\tiny{$\bm{x}_x$}};
+    \node[minimum width=0.5cm, align=center] (x2) at (5.420+0.3, 0.225+0.900+0.4) {\tiny{$\bm{x}_2$}};
+    \node[minimum width=0.5cm, align=center] (x1) at (5.420+0.3, 0.225+1.350+0.6) {\tiny{$\bm{x}_1$}};
 
-  \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:\tiny{SCMA encoding}}, minimum height=2cm, dashed, fit=(scma_uej) (scma_ue1) (plus)] {};
-  \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:\tiny{SCMA decoding}}, minimum height=2cm, dashed, fit=(dscma)] {};
+    \node[draw=black, circle, align=center, minimum width=0.60cm] (plus) at (6.7, 1.20) {\tiny{$+$}};
+    \node[align=center, minimum width=0.60cm] (n0) at (6.7, 2.20) {\tiny{$\bm{n$}}};
 
-  \draw[->,>=latex] (n0) -- (plus);
+    \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{PRE demapping}}] (dmap)  at (7.8,     1.20) {\tiny{}};
+    \node[draw=black, align=center, minimum width=1.00cm, minimum height=2.40cm, label={[black, rotate=-90]center:\tiny{SCMA decoder}} ] (dscma) at (8.8+0.3, 1.20) {\tiny{}};
 
-  \draw[->,>=latex] (in_bs_uej) -- (cc_uej);
-  \draw[->,>=latex] (in_bs_ue2) -- (cc_ue2);
-  \draw[->,>=latex] (in_bs_ue1) -- (cc_ue1);
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uej) at (10.65+0.3, 0.225+0.000+0.0) {\tiny{Channel dec.}};
+    % \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_uex) at (10.65+0.3, 0.225+0.450+0.2) {\tiny{Channel dec.}};
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue2) at (10.65+0.3, 0.225+0.900+0.4) {\tiny{Channel dec.}};
+    \node[draw=black, minimum width=2.1cm, minimum height=0.45cm, align=center] (cd_ue1) at (10.65+0.3, 0.225+1.350+0.6) {\tiny{Channel dec.}};
 
-  \draw[->,>=latex] (cc_uej) -- (scma_uej);
-  \draw[->,>=latex] (cc_ue2) -- (scma_ue2);
-  \draw[->,>=latex] (cc_ue1) -- (scma_ue1);
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uej) at (13.05+0.3, 0.225+0.000+0.0) {\tiny{$UEJ$ bit stream}};
+    % \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_uex) at (13.05+0.3, 0.225+0.450+0.2) {\tiny{$UEX$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue2) at (13.05+0.3, 0.225+0.900+0.4) {\tiny{$UE2$ bit stream}};
+    \node[minimum width=2.1cm, minimum height=0.45cm, align=center] (out_bs_ue1) at (13.05+0.3, 0.225+1.350+0.6) {\tiny{$UE1$ bit stream}};
 
-  \draw[->,>=latex] (scma_uej) -- (xj);
-  \draw[->,>=latex] (scma_ue2) -- (x2);
-  \draw[->,>=latex] (scma_ue1) -- (x1);
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:\tiny{SCMA encoding}}, minimum height=2cm, dashed, fit=(scma_uej) (scma_ue1) (plus)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:\tiny{SCMA decoding}}, minimum height=2cm, dashed, fit=(dscma)] {};
 
-  \draw[->,>=latex] (xj) -- (plus) node [midway, below] {\tiny{$\bm{h}_j$}};
-  \draw[->,>=latex] (x2) -- (plus) node [midway, below] {\tiny{$\bm{h}_2$}};
-  \draw[->,>=latex] (x1) -- (plus) node [midway, above] {\tiny{$\bm{h}_1$}};
+    \draw[->,>=latex] (n0) -- (plus);
 
-  \draw[->,>=latex] (plus) -- (dmap);
+    \draw[->,>=latex] (in_bs_uej) -- (cc_uej);
+    \draw[->,>=latex] (in_bs_ue2) -- (cc_ue2);
+    \draw[->,>=latex] (in_bs_ue1) -- (cc_ue1);
 
-  \draw[->,>=latex] (dmap) -- (dscma);
+    \draw[->,>=latex] (cc_uej) -- (scma_uej);
+    \draw[->,>=latex] (cc_ue2) -- (scma_ue2);
+    \draw[->,>=latex] (cc_ue1) -- (scma_ue1);
 
-  \draw[->,>=latex] (9.6, 0.225+0.000+0.0) -- (cd_uej);
-  \draw[->,>=latex] (9.6, 0.225+0.900+0.4) -- (cd_ue2);
-  \draw[->,>=latex] (9.6, 0.225+1.350+0.6) -- (cd_ue1);
+    \draw[->,>=latex] (scma_uej) -- (xj);
+    \draw[->,>=latex] (scma_ue2) -- (x2);
+    \draw[->,>=latex] (scma_ue1) -- (x1);
 
-  \draw[->,>=latex] (cd_uej) -- (out_bs_uej);
-  \draw[->,>=latex] (cd_ue2) -- (out_bs_ue2);
-  \draw[->,>=latex] (cd_ue1) -- (out_bs_ue1);
+    \draw[->,>=latex] (xj) -- (plus) node [midway, below] {\tiny{$\bm{h}_j$}};
+    \draw[->,>=latex] (x2) -- (plus) node [midway, below] {\tiny{$\bm{h}_2$}};
+    \draw[->,>=latex] (x1) -- (plus) node [midway, above] {\tiny{$\bm{h}_1$}};
 
-  \draw[dotted] (in_bs_ue2)  -- (in_bs_uej);
-  \draw[dotted] (cc_ue2)     -- (cc_uej);
-  \draw[dotted] (scma_ue2)   -- (scma_uej);
-  \draw[dotted] (cd_ue2)     -- (cd_uej);
-  \draw[dotted] (out_bs_ue2) -- (out_bs_uej);
-\end{tikzpicture}
+    \draw[->,>=latex] (plus) -- (dmap);
+
+    \draw[->,>=latex] (dmap) -- (dscma);
+
+    \draw[->,>=latex] (9.6, 0.225+0.000+0.0) -- (cd_uej);
+    \draw[->,>=latex] (9.6, 0.225+0.900+0.4) -- (cd_ue2);
+    \draw[->,>=latex] (9.6, 0.225+1.350+0.6) -- (cd_ue1);
+
+    \draw[->,>=latex] (cd_uej) -- (out_bs_uej);
+    \draw[->,>=latex] (cd_ue2) -- (out_bs_ue2);
+    \draw[->,>=latex] (cd_ue1) -- (out_bs_ue1);
+
+    \draw[dotted] (in_bs_ue2)  -- (in_bs_uej);
+    \draw[dotted] (cc_ue2)     -- (cc_uej);
+    \draw[dotted] (scma_ue2)   -- (scma_uej);
+    \draw[dotted] (cd_ue2)     -- (cd_uej);
+    \draw[dotted] (out_bs_ue2) -- (out_bs_uej);
+  \end{tikzpicture}
+\end{document}

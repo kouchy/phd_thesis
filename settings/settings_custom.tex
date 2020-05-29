@@ -36,10 +36,6 @@
 \usepackage{geometry} % reduce margins
 \usepackage{subfig} % multi figures
 \usepackage{adjustbox} % rotate big table 90 degree
-\usepackage{tikz}
-\usepackage{environ}
-\usepackage{tkz-kiviat}
-\usepackage{pgfplots} % package pour les graphiques
 \usepackage[strict]{changepage}
 
 % Parameters ------------------------------------------------------------------
@@ -49,7 +45,6 @@
 \setminted{fontsize=\normalsize,framesep=2mm,tabsize=4} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
 \counterwithin{listing}{chapter} % package 'chngcntr'
-\usetikzlibrary{arrows} % package 'tikz'
 \SetKwComment{Comment}{$\triangleright$\ }{} % package 'algorithm2e'
 
 % add column types for big table
@@ -105,22 +100,6 @@
 %     backrefpage  = {see p.}, % for single page number
 %     backrefpages = {see pp.} % for multiple page numbers
 % }
-
-% tikz
-\usetikzlibrary{fit}
-\usetikzlibrary{patterns}
-\makeatletter
-\newsavebox{\measure@tikzpicture}
-\NewEnviron{scaletikzpicturetowidth}[1]{%
-  \def\tikz@width{#1}%
-  \def\tikzscale{1}\begin{lrbox}{\measure@tikzpicture}%
-  \BODY
-  \end{lrbox}%
-  \pgfmathparse{#1/\wd\measure@tikzpicture}%
-  \edef\tikzscale{\pgfmathresult}%
-  \BODY
-}
-\makeatother
 
 % Math operators --------------------------------------------------------------
 \DeclareMathOperator{\card}{card}

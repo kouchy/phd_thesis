@@ -1,37 +1,55 @@
-\begin{tikzpicture}
-  \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (src) at ( 0, 4) {Source};
-  \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (enc) at ( 4, 4) {Channel\\Encoder};
-  \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (mod) at ( 8, 4) {Modulator};
-  \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1            ] (chn) at (10, 2) {Channel};
-  \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (dem) at ( 8, 0) {Demodulator};
-  \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (dec) at ( 4, 0) {Channel\\Decoder};
-  \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (snk) at ( 0, 0) {Sink};
+\documentclass{standalone}
 
-  \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white, text=Paired-3] {$K$};
-  \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white, text=Paired-3] {$N$};
-  \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white               ] {};
-  \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white               ] {};
-  \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white, text=Paired-3] {$N$};
-  \draw[->,>=latex] (dec) -- (snk) node [midway, below, fill=white, text=Paired-3] {$K$};
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
 
-  \node[draw=black, rounded corners=2pt, minimum height=2cm, dashed, fit=(src) (enc) (mod) (chn) (dem) (dec) (snk)] (sim) {};
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
 
-  \node[text width=0.3cm, text centered, text=Paired-3] (C) at (-2.5, 3.875) {$C$};
-  \node[text width=0.3cm, text centered, text=Paired-3] (K) at (-2.5, 3.125) {$K$};
-  \node[text width=0.3cm, text centered, text=Paired-3] (N) at (-2.5, 2.375) {$N$};
-  \node[text width=0.3cm, text centered, text=Paired-1] (m) at (-2.5, 1.625) {$m$};
-  \node[text width=0.3cm, text centered, text=Paired-1] (M) at (-2.5, 0.875) {$M$};
-  \node[text width=0.3cm, text centered, text=Paired-1] (s) at (-2.5, 0.125) {$s$};
+\input{colors}
 
-  \draw[->,>=latex, dashed, Paired-3] (C) -- (sim);
-  \draw[->,>=latex, dashed, Paired-3] (K) -- (sim);
-  \draw[->,>=latex, dashed, Paired-3] (N) -- (sim);
-  \draw[->,>=latex, dashed, Paired-1] (m) -- (sim);
-  \draw[->,>=latex, dashed, Paired-1] (M) -- (sim);
-  \draw[->,>=latex, dashed, Paired-1] (s) -- (sim);
+\begin{document}
+  \begin{tikzpicture}
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (src) at ( 0, 4) {Source};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (enc) at ( 4, 4) {Channel\\Encoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (mod) at ( 8, 4) {Modulator};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1            ] (chn) at (10, 2) {Channel};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (dem) at ( 8, 0) {Demodulator};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (dec) at ( 4, 0) {Channel\\Decoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (snk) at ( 0, 0) {Sink};
 
-  \node[text width=4cm, text centered, text=Paired-3] (C2) at (4, 2) {$C$ = \{Polar, LDPC, Turbo, ...\}};
+    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white, text=Paired-3] {$K$};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white, text=Paired-3] {$N$};
+    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white               ] {};
+    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white               ] {};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white, text=Paired-3] {$N$};
+    \draw[->,>=latex] (dec) -- (snk) node [midway, below, fill=white, text=Paired-3] {$K$};
 
-  \draw[->, dotted, Paired-3, line width=0.7pt] (C2) -- (enc);
-  \draw[->, dotted, Paired-3, line width=0.7pt] (C2) -- (dec);
-\end{tikzpicture}
+    \node[draw=black, rounded corners=2pt, minimum height=2cm, dashed, fit=(src) (enc) (mod) (chn) (dem) (dec) (snk)] (sim) {};
+
+    \node[text width=0.3cm, text centered, text=Paired-3] (C) at (-2.5, 3.875) {$C$};
+    \node[text width=0.3cm, text centered, text=Paired-3] (K) at (-2.5, 3.125) {$K$};
+    \node[text width=0.3cm, text centered, text=Paired-3] (N) at (-2.5, 2.375) {$N$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (m) at (-2.5, 1.625) {$m$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (M) at (-2.5, 0.875) {$M$};
+    \node[text width=0.3cm, text centered, text=Paired-1] (s) at (-2.5, 0.125) {$s$};
+
+    \draw[->,>=latex, dashed, Paired-3] (C) -- (sim);
+    \draw[->,>=latex, dashed, Paired-3] (K) -- (sim);
+    \draw[->,>=latex, dashed, Paired-3] (N) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (m) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (M) -- (sim);
+    \draw[->,>=latex, dashed, Paired-1] (s) -- (sim);
+
+    \node[text width=4cm, text centered, text=Paired-3] (C2) at (4, 2) {$C$ = \{Polar, LDPC, Turbo, ...\}};
+
+    \draw[->, dotted, Paired-3, line width=0.7pt] (C2) -- (enc);
+    \draw[->, dotted, Paired-3, line width=0.7pt] (C2) -- (dec);
+  \end{tikzpicture}
+\end{document}

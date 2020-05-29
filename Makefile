@@ -53,9 +53,15 @@ fast: settings/colors.tex \
 titlepage: head/titlepage.tex
 	cd head && rubber -d titlepage.tex
 
-chapter1_fig: main/chapter1/fig/intro/com_chain.svg \
-              main/chapter1/fig/simu/com_chain.svg \
-              main/chapter1/fig/simu/in_out.svg \
+chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
+              main/chapter1/fig/intro/com_chain/com_chain.tex \
+              main/chapter1/fig/intro/com_chain/colors \
+              main/chapter1/fig/simu/com_chain/com_chain_old.svg \
+              main/chapter1/fig/simu/com_chain/com_chain.tex \
+              main/chapter1/fig/simu/com_chain/colors \
+              main/chapter1/fig/simu/in_out/in_out_old.svg \
+              main/chapter1/fig/simu/in_out/in_out.tex \
+              main/chapter1/fig/simu/in_out/colors \
               main/chapter1/fig/simu/bfer/bfer_bch_rs.tex \
               main/chapter1/fig/simu/bfer/bfer_ldpc.tex \
               main/chapter1/fig/simu/bfer/bfer_polar.tex \
@@ -77,18 +83,25 @@ chapter1_fig: main/chapter1/fig/intro/com_chain.svg \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt \
               main/chapter1/fig/other/com_chain_inter.svg
-	cd main/chapter1/fig/intro      && inkscape  com_chain.svg       --export-pdf=com_chain.pdf
-	cd main/chapter1/fig/simu       && inkscape  com_chain.svg       --export-pdf=com_chain.pdf
-	cd main/chapter1/fig/simu       && inkscape  in_out.svg          --export-pdf=in_out.pdf
-	cd main/chapter1/fig/other      && inkscape  com_chain_inter.svg --export-pdf=com_chain_inter.pdf
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_bch_rs.tex
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_ldpc.tex
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_polar.tex
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_rsc.tex
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_tpc.tex
-	cd main/chapter1/fig/simu/bfer/ && rubber -d bfer_turbo.tex
+	cd main/chapter1/fig/intro/com_chain && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
+	cd main/chapter1/fig/intro/com_chain && rubber -d com_chain.tex
+	cd main/chapter1/fig/simu/com_chain  && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
+	cd main/chapter1/fig/simu/com_chain  && rubber -d com_chain.tex
+	cd main/chapter1/fig/simu/in_out     && inkscape  in_out_old.svg      --export-pdf=in_out_old.pdf
+	cd main/chapter1/fig/simu/in_out     && rubber -d in_out.tex
+	cd main/chapter1/fig/other           && inkscape  com_chain_inter.svg --export-pdf=com_chain_inter.pdf
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_bch_rs.tex
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_ldpc.tex
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_polar.tex
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_rsc.tex
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_tpc.tex
+	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_turbo.tex
 
-chapter2_fig: main/chapter2/fig/polar/tree_pruning_example.fig \
+chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
+              main/chapter2/fig/polar/sc_decoder/colors \
+              main/chapter2/fig/polar/tree_pruning_example/tree_pruning_example_old.fig \
+              main/chapter2/fig/polar/tree_pruning_example/tree_pruning_example.tex \
+              main/chapter2/fig/polar/tree_pruning_example/colors \
               main/chapter2/fig/polar/algos_comparison/algos_comparison.tex \
               main/chapter2/fig/polar/algos_comparison/colors \
               main/chapter2/fig/polar/algos_comparison/dat/SC_8.txt \
@@ -138,6 +151,13 @@ chapter2_fig: main/chapter2/fig/polar/tree_pruning_example.fig \
               main/chapter2/fig/turbo/bfer/dat/data_6144_32b_float.txt \
               main/chapter2/fig/turbo/bfer/dat/data_6144_16b_fixed_Q6_3.txt \
               main/chapter2/fig/turbo/bfer/dat/data_6144_8b_fixed_Q6_2.txt \
+              main/chapter2/fig/ldpc/tanner_graph/tanner_graph.tex \
+              main/chapter2/fig/ldpc/tanner_graph/colors \
+              main/chapter2/fig/scma/codec/codec_chain.tex \
+              main/chapter2/fig/scma/codec/codec_dec.tex \
+              main/chapter2/fig/scma/codec/codec_enc.tex \
+              main/chapter2/fig/scma/codec/codec_graph.tex \
+              main/chapter2/fig/scma/codec/colors \
               main/chapter2/fig/scma/ber_uncoded/ber_uncoded.tex \
               main/chapter2/fig/scma/ber_uncoded/colors \
               main/chapter2/fig/scma/ber_uncoded/dat/scma_empa.txt \
@@ -168,18 +188,25 @@ chapter2_fig: main/chapter2/fig/polar/tree_pruning_example.fig \
               main/chapter2/fig/scma/fec/dat/1_3/polar_mpa.txt \
               main/chapter2/fig/scma/fec/dat/1_3/turbo_empa.txt \
               main/chapter2/fig/scma/fec/dat/1_3/turbo_mpa.txt
-	cd main/chapter2/fig/polar/algos_comparison/ && rubber -d algos_comparison.tex
-	cd main/chapter2/fig/polar/scl_l/            && rubber -d scl_l.tex
-	cd main/chapter2/fig/polar/scl_bfer/         && rubber -d scl_bfer.tex
-	cd main/chapter2/fig/polar/scl_bfer/         && rubber -d scl_bfer_crc.tex
-	cd main/chapter2/fig/polar/scl_bfer/         && rubber -d scl_bfer_rep.tex
-	cd main/chapter2/fig/polar/scl_adaptive/     && rubber -d scl_adaptive.tex
-	cd main/chapter2/fig/turbo/bfer/             && gnuplot   bfer_old.gp
-	cd main/chapter2/fig/turbo/bfer/             && rubber -d bfer.tex
-	cd main/chapter2/fig/scma/ber_uncoded/       && rubber -d ber_uncoded.tex
-	cd main/chapter2/fig/scma/ber_uncoded_iter/  && rubber -d ber_uncoded_iter.tex
-	cd main/chapter2/fig/scma/fec/               && rubber -d fec_1_2.tex
-	cd main/chapter2/fig/scma/fec/               && rubber -d fec_1_3.tex
+	cd main/chapter2/fig/polar/sc_decoder/           && rubber -d sc_decoder.tex
+	cd main/chapter2/fig/polar/tree_pruning_example/ && rubber -d tree_pruning_example.tex
+	cd main/chapter2/fig/polar/algos_comparison/     && rubber -d algos_comparison.tex
+	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
+	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer.tex
+	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer_crc.tex
+	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer_rep.tex
+	cd main/chapter2/fig/polar/scl_adaptive/         && rubber -d scl_adaptive.tex
+	cd main/chapter2/fig/turbo/bfer/                 && gnuplot   bfer_old.gp
+	cd main/chapter2/fig/turbo/bfer/                 && rubber -d bfer.tex
+	cd main/chapter2/fig/ldpc/tanner_graph/          && rubber -d tanner_graph.tex
+	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_chain.tex
+	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_dec.tex
+	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_enc.tex
+	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_graph.tex
+	cd main/chapter2/fig/scma/ber_uncoded/           && rubber -d ber_uncoded.tex
+	cd main/chapter2/fig/scma/ber_uncoded_iter/      && rubber -d ber_uncoded_iter.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_2.tex
+	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_3.tex
 
 chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/src/ldpc/bp_min_sum_simd.cpp \
@@ -195,6 +222,8 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/fig/vectorization/mandelbrot_speedup/dat/perf_mandelbrot_64bit.dat \
               main/chapter3/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit.tex \
               main/chapter3/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit.tex \
+              main/chapter3/fig/vectorization/inter_frame/inter_frame.tex \
+              main/chapter3/fig/vectorization/inter_frame/colors \
               main/chapter3/fig/polar/sc_tree_cut/sc_tree_cut_old.gp \
               main/chapter3/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti.dat \
               main/chapter3/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti.dat \
@@ -216,6 +245,13 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/fig/polar/scl_spc/dat/data_snr_diff.txt \
               main/chapter3/fig/polar/scl_spc/dat/data_spc.txt \
               main/chapter3/fig/polar/scl_spc/dat/data_spc_diff.txt \
+              main/chapter3/fig/polar/patterns/patterns.tex \
+              main/chapter3/fig/polar/patterns/colors \
+              main/chapter3/fig/polar/sc_gen_compression/sc_gen_compression.tex \
+              main/chapter3/fig/polar/sc_gen_compression/sc_gen_no_compression.tex \
+              main/chapter3/fig/polar/sc_gen_compression/sc_gen_compression_legend.tex \
+              main/chapter3/fig/polar/sc_gen_compression/colors \
+              main/chapter3/fig/polar/sc_gen_compression/styles.tex \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr.tex \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/colors \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_8.txt \
@@ -223,10 +259,17 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_32.txt \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_8.txt \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_16.txt \
-              main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt
+              main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt \
+              main/chapter3/fig/scma/simd_norm/simd_norm_aos.tex \
+              main/chapter3/fig/scma/simd_norm/simd_norm_soa.tex \
+              main/chapter3/fig/scma/simd_norm/colors \
+              main/chapter3/fig/scma/simd_exp_mul/simd_exp.tex \
+              main/chapter3/fig/scma/simd_exp_mul/simd_final_guess.tex \
+              main/chapter3/fig/scma/simd_exp_mul/colors
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && gnuplot   mandelbrot_speedup_old.gp
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_32bit.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_64bit.tex
+	cd main/chapter3/fig/vectorization/inter_frame/        && rubber -d inter_frame.tex
 	cd main/chapter3/fig/polar/sc_tree_cut/                && gnuplot   sc_tree_cut_old.gp
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber -d sc_tree_cut_inter.tex
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber -d sc_tree_cut_intra.tex
@@ -234,7 +277,15 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
 	cd main/chapter3/fig/polar/scl_spc/                    && gnuplot   scl_spc.gp
 	cd main/chapter3/fig/polar/scl_spc/                    && gnuplot   scl_spc_diff_old.gp
 	cd main/chapter3/fig/polar/scl_spc/                    && rubber -d scl_spc_diff.tex
+	cd main/chapter3/fig/polar/patterns/                   && rubber -d patterns.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber -d sc_gen_compression.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber -d sc_gen_no_compression.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber -d sc_gen_compression_legend.tex
 	cd main/chapter3/fig/polar/scl_cpy_vs_ptr/             && rubber -d scl_cpy_vs_ptr.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_aos.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_soa.tex
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber -d simd_exp.tex
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber -d simd_final_guess.tex
 
 chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module.svg \
               main/chapter4/fig/simu/speedup/speedup.tex \
@@ -314,6 +365,8 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter5/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp.tex \
               main/chapter5/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
               main/chapter5/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat \
+              main/chapter5/fig/polar/sc_colgate/sc_colgate.tex \
+              main/chapter5/fig/polar/sc_colgate/colors \
               main/chapter5/fig/turbo/thr/thr_old.gp \
               main/chapter5/fig/turbo/thr/dat/data.txt \
               main/chapter5/fig/turbo/thr/thr.tex \
@@ -358,6 +411,7 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && gnuplot   sc_gen_l1i_size_old.gp
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_w_comp.tex
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_wo_comp.tex
+	cd main/chapter5/fig/polar/sc_colgate/           && rubber -d sc_colgate.tex
 	cd main/chapter5/fig/turbo/thr/                  && gnuplot   thr_old.gp
 	cd main/chapter5/fig/turbo/thr/                  && rubber -d thr.tex
 	cd main/chapter5/fig/turbo/energy/               && gnuplot   energy_old.gp
@@ -376,12 +430,17 @@ clean4all:
 clean: clean4all
 	cd ./                                                  && rubber --clean my_thesis
 	cd head                                                && rubber --clean titlepage
+	cd main/chapter1/fig/intro/com_chain                   && rubber --clean com_chain
+	cd main/chapter1/fig/simu/com_chain                    && rubber --clean com_chain
+	cd main/chapter1/fig/simu/in_out                       && rubber --clean in_out
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_bch_rs
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_ldpc
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_polar
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_rsc
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_tpc
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_turbo
+	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean sc_decoder
+	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean tree_pruning_example
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean algos_comparison
 	cd main/chapter2/fig/polar/scl_l/                      && rubber --clean scl_l
 	cd main/chapter2/fig/polar/scl_bfer/                   && rubber --clean scl_bfer
@@ -389,17 +448,31 @@ clean: clean4all
 	cd main/chapter2/fig/polar/scl_bfer/                   && rubber --clean scl_bfer_rep
 	cd main/chapter2/fig/polar/scl_adaptive/               && rubber --clean scl_adaptive
 	cd main/chapter2/fig/turbo/bfer/                       && rubber --clean bfer
+	cd main/chapter2/fig/ldpc/tanner_graph/                && rubber --clean tanner_graph
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean codec_chain
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean codec_dec
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean codec_enc
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean codec_graph
 	cd main/chapter2/fig/scma/ber_uncoded/                 && rubber --clean ber_uncoded
 	cd main/chapter2/fig/scma/ber_uncoded_iter/            && rubber --clean ber_uncoded_iter
 	cd main/chapter2/fig/scma/fec/                         && rubber --clean fec_1_2
 	cd main/chapter2/fig/scma/fec/                         && rubber --clean fec_1_3
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean mandelbrot_speedup_32bit
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean mandelbrot_speedup_64bit
+	cd main/chapter3/fig/vectorization/inter_frame/        && rubber --clean inter_frame
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean sc_tree_cut_inter
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean sc_tree_cut_intra
 	cd main/chapter3/fig/polar/scl_tree_cut/               && rubber --clean scl_tree_cut
 	cd main/chapter3/fig/polar/scl_spc/                    && rubber --clean scl_spc_diff
+	cd main/chapter3/fig/polar/patterns/                   && rubber --clean patterns
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean sc_gen_compression
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean sc_gen_no_compression
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean sc_gen_compression_legend
 	cd main/chapter3/fig/polar/scl_cpy_vs_ptr/             && rubber --clean scl_cpy_vs_ptr
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_aos
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_soa
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean simd_exp
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean simd_final_guess
 	cd main/chapter4/fig/simu/speedup                      && rubber --clean speedup
 	cd main/chapter4/fig/simu/throughput                   && rubber --clean throughput
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_w_comp
@@ -414,6 +487,7 @@ clean: clean4all
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean sc_energy_implems_vs_mem
 	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber --clean sc_energy_rate_N2048
 	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber --clean sc_energy_rate_N32768
+	cd main/chapter5/fig/polar/sc_colgate/                 && rubber --clean sc_colgate
 	cd main/chapter5/fig/turbo/thr/                        && rubber --clean thr
 	cd main/chapter5/fig/turbo/energy/                     && rubber --clean energy
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean energy
@@ -422,9 +496,12 @@ clean: clean4all
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
 	cd head                                                && rubber --clean -d titlepage.tex
-	cd main/chapter1/fig/intro                             && rm -f             com_chain.pdf
-	cd main/chapter1/fig/simu                              && rm -f             com_chain.pdf
-	cd main/chapter1/fig/simu                              && rm -f             in_out.pdf
+	cd main/chapter1/fig/intro/com_chain                   && rubber --clean -d com_chain.tex
+	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
+	cd main/chapter1/fig/simu/com_chain                    && rubber --clean -d com_chain.tex
+	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
+	cd main/chapter1/fig/simu/in_out                       && rubber --clean -d in_out.tex
+	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_bch_rs.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_ldpc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_polar.tex
@@ -432,6 +509,8 @@ mrproper: clean4all
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_tpc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_turbo.tex
 	cd main/chapter1/fig/other                             && rm -f             com_chain_inter.pdf
+	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean -d sc_decoder.tex
+	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean -d tree_pruning_example.tex
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean -d algos_comparison.tex
 	cd main/chapter2/fig/polar/scl_l/                      && rubber --clean -d scl_l.tex
 	cd main/chapter2/fig/polar/scl_bfer/                   && rubber --clean -d scl_bfer.tex
@@ -440,6 +519,11 @@ mrproper: clean4all
 	cd main/chapter2/fig/polar/scl_adaptive/               && rubber --clean -d scl_adaptive.tex
 	cd main/chapter2/fig/turbo/bfer/                       && rm -f             bfer_old.pdf
 	cd main/chapter2/fig/turbo/bfer/                       && rubber --clean -d bfer.tex
+	cd main/chapter2/fig/ldpc/tanner_graph/                && rubber --clean -d tanner_graph.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean -d codec_chain.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean -d codec_dec.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean -d codec_enc.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber --clean -d codec_graph.tex
 	cd main/chapter2/fig/scma/ber_uncoded/                 && rubber --clean -d ber_uncoded.tex
 	cd main/chapter2/fig/scma/ber_uncoded_iter/            && rubber --clean -d ber_uncoded_iter.tex
 	cd main/chapter2/fig/scma/fec/                         && rubber --clean -d fec_1_2.tex
@@ -447,6 +531,7 @@ mrproper: clean4all
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rm -f             mandelbrot_speedup_old.pdf
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_32bit.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_64bit.tex
+	cd main/chapter3/fig/vectorization/inter_frame/        && rubber --clean -d inter_frame.tex
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rm -f             sc_tree_cut_old.pdf
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean -d sc_tree_cut_inter.tex
 	cd main/chapter3/fig/polar/sc_tree_cut/                && rubber --clean -d sc_tree_cut_intra.tex
@@ -454,7 +539,15 @@ mrproper: clean4all
 	cd main/chapter3/fig/polar/scl_spc/                    && rm -f             scl_spc.pdf
 	cd main/chapter3/fig/polar/scl_spc/                    && rm -f             scl_spc_diff_old.pdf
 	cd main/chapter3/fig/polar/scl_spc/                    && rubber --clean -d scl_spc_diff.tex
+	cd main/chapter3/fig/polar/patterns/                   && rubber --clean -d patterns.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean -d sc_gen_compression.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean -d sc_gen_no_compression.tex
+	cd main/chapter3/fig/polar/sc_gen_compression/         && rubber --clean -d sc_gen_compression_legend.tex
 	cd main/chapter3/fig/polar/scl_cpy_vs_ptr/             && rubber --clean -d scl_cpy_vs_ptr.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_aos.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_soa.tex
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean -d simd_exp.tex
+	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean -d simd_final_guess.tex
 	cd main/chapter4/fig/soft_archi/                       && rm -f             com_chain_task_module.pdf
 	cd main/chapter4/fig/simu/speedup                      && rubber --clean -d speedup.tex
 	cd main/chapter4/fig/simu/throughput                   && rubber --clean -d throughput.tex
@@ -478,6 +571,7 @@ mrproper: clean4all
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rm -f             sc_gen_l1i_size_small_old.pdf
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean -d sc_gen_l1i_size_w_comp.tex
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean -d sc_gen_l1i_size_wo_comp.tex
+	cd main/chapter5/fig/polar/sc_colgate/                 && rubber --clean -d sc_colgate.tex
 	cd main/chapter5/fig/turbo/thr/                        && rm -f             thr_old.pdf
 	cd main/chapter5/fig/turbo/thr/                        && rubber --clean -d thr.tex
 	cd main/chapter5/fig/turbo/energy/                     && rm -f             energy_old.pdf

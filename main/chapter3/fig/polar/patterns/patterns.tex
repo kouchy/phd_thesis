@@ -1,284 +1,303 @@
-\tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
-\tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
-\tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
-\tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
-\tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
-\tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
-\tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
-\tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
-\tikzset{ fake/.style={draw=white,    circle, minimum height=0.6cm                                                                                                        } }
+\documentclass[varwidth=16cm]{standalone}
 
-\begin{tikzpicture}
-  \node[any,  label={[black,align=center]above:\small{Any}}                       ] (any)  at ( 0.0, 0.0) {};
-  \node[frzn, label={[black,align=center]above:\small{Frozen bit}\\\small{(leaf)}}] (frzn) at ( 2.0, 0.0) {};
-  \node[info, label={[black,align=center]above:\small{Info. bit}\\\small{(leaf)}} ] (info) at ( 4.0, 0.0) {};
-  \node[r0,   label={[black,align=center]above:\small{\texttt{R0}}}               ] (r0)   at ( 6.0, 0.0) {};
-  \node[r1,   label={[black,align=center]above:\small{\texttt{R1}}}               ] (r1)   at ( 8.0, 0.0) {};
-  \node[rep,  label={[black,align=center]above:\small{\texttt{REP}}}              ] (rep)  at (10.0, 0.0) {};
-  \node[spc4, label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4}$}} ] (spc4) at (12.0, 0.0) {};
-  \node[spc,  label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4+}$}}] (spc)  at (14.0, 0.0) {};
-\end{tikzpicture}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
 
-\begin{tikzpicture}
-  \draw[black, dashed] (0,0.0) -- (16,0.0) node [midway, text=black] {};
-\end{tikzpicture}
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
 
-\begin{tikzpicture}%[scale=\tikzscale]
-  \node[frzn] (l1_g0) at (0.0, 0.0) {};
-  \node[frzn] (l1_g1) at (1.0, 0.0) {};
-  \node[any ] (l0_g0) at (0.5, 1.0) {};
+\input{colors}
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+\begin{document}
+  \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+  \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+  \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+  \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+  \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+  \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+  \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+  \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+  \tikzset{ fake/.style={draw=white,    circle, minimum height=0.6cm                                                                                                        } }
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+  \centering
+  \begin{tikzpicture}
+    \node[any,  label={[black,align=center]above:\small{Any}}                       ] (any)  at ( 0.0, 0.0) {};
+    \node[frzn, label={[black,align=center]above:\small{Frozen bit}\\\small{(leaf)}}] (frzn) at ( 2.0, 0.0) {};
+    \node[info, label={[black,align=center]above:\small{Info. bit}\\\small{(leaf)}} ] (info) at ( 4.0, 0.0) {};
+    \node[r0,   label={[black,align=center]above:\small{\texttt{R0}}}               ] (r0)   at ( 6.0, 0.0) {};
+    \node[r1,   label={[black,align=center]above:\small{\texttt{R1}}}               ] (r1)   at ( 8.0, 0.0) {};
+    \node[rep,  label={[black,align=center]above:\small{\texttt{REP}}}              ] (rep)  at (10.0, 0.0) {};
+    \node[spc4, label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4}$}} ] (spc4) at (12.0, 0.0) {};
+    \node[spc,  label={[black,align=center]above:\small{\texttt{SPC}$_\texttt{4+}$}}] (spc)  at (14.0, 0.0) {};
+  \end{tikzpicture}
 
-  \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
+  \begin{tikzpicture}
+    \draw[black, dashed] (0,0.0) -- (16,0.0) node [midway, text=black] {};
+  \end{tikzpicture}
 
-  \node[r0] (l0_g0_t) at (2.5, 0.5) {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[info] (l1_g0) at (0.0, 0.0) {};
-  \node[info] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[frzn] (l1_g0) at (0.0, 0.0) {};
+    \node[frzn] (l1_g1) at (1.0, 0.0) {};
+    \node[any ] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
+    \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
 
-  \node[r1] (l0_g0_t) at (2.5, 0.5) {};
+    \node[r0] (l0_g0_t) at (2.5, 0.5) {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[info] (l1_g0) at (0.0, 0.0) {};
+    \node[info] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.1cm] {\tiny{$h$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[frzn] (l1_g0) at (0.0, 0.0) {};
-  \node[info] (l1_g1) at (1.0, 0.0) {};
-  \node[any ] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+    \node[r1] (l0_g0_t) at (2.5, 0.5) {};
 
-  \node[rep] (l0_g0_t) at (2.5, 0.5) {};
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.1cm] {\tiny{$h$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[frzn] (l1_g0) at (0.0, 0.0) {};
+    \node[info] (l1_g1) at (1.0, 0.0) {};
+    \node[any ] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$rep$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[rep] (l1_g0) at (0.0, 0.0) {};
-  \node[r1 ] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+    \node[rep] (l0_g0_t) at (2.5, 0.5) {};
 
-  \node[spc4] (l0_g0_t) at (2.5, 0.5) {};
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$rep$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[rep] (l1_g0) at (0.0, 0.0) {};
+    \node[r1 ] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
-\end{tikzpicture}
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-\begin{tikzpicture}
-  \draw[black] (0,0.0) -- (16,0.0) node [midway, text=black] {};
-\end{tikzpicture}
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-\begin{tikzpicture}%[scale=\tikzscale]
-  \node[r0 ] (l1_g0) at (0.0, 0.0) {};
-  \node[r0 ] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \node[spc4] (l0_g0_t) at (2.5, 0.5) {};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
+  \end{tikzpicture}
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+  \begin{tikzpicture}
+    \draw[black] (0,0.0) -- (16,0.0) node [midway, text=black] {};
+  \end{tikzpicture}
 
-  \node[r0] (l0_g0_t) at (2.5, 0.5) {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[r1 ] (l1_g0) at (0.0, 0.0) {};
-  \node[r1 ] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[r0 ] (l1_g0) at (0.0, 0.0) {};
+    \node[r0 ] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \node[r1] (l0_g0_t) at (2.5, 0.5) {};
+    \node[r0] (l0_g0_t) at (2.5, 0.5) {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[r1 ] (l1_g0) at (0.0, 0.0) {};
+    \node[r1 ] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.1cm] {\tiny{$h$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[r0 ] (l1_g0) at (0.0, 0.0) {};
-  \node[rep] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+    \node[r1] (l0_g0_t) at (2.5, 0.5) {};
 
-  \node[rep] (l0_g0_t) at (2.5, 0.5) {};
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.1cm] {\tiny{$h$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[r0 ] (l1_g0) at (0.0, 0.0) {};
+    \node[rep] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$rep$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[spc4] (l1_g0) at (0.0, 0.0) {};
-  \node[r1  ] (l1_g1) at (1.0, 0.0) {};
-  \node[any ] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
+    \node[rep] (l0_g0_t) at (2.5, 0.5) {};
 
-  \node[spc] (l0_g0_t) at (2.5, 0.5) {};
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$rep$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[spc4] (l1_g0) at (0.0, 0.0) {};
+    \node[r1  ] (l1_g1) at (1.0, 0.0) {};
+    \node[any ] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
-\end{tikzpicture}
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-\begin{tikzpicture}
-  \draw[black] (0,0.0) -- (16,0.0) node [midway, text=black] {};
-\end{tikzpicture}
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-\begin{tikzpicture}%[scale=\tikzscale]
-  \node[r0 ] (l1_g0) at (0.0, 0.0) {};
-  \node[any] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \node[fake] (l1_g0_t_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_t_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_t_fake) at (2.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \node[spc] (l0_g0_t) at (2.5, 0.5) {};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
+  \end{tikzpicture}
 
-  \node[any] (l1_g1_t) at (3.0, 0.0) {};
-  \node[any] (l0_g0_t) at (2.5, 1.0) {};
+  \begin{tikzpicture}
+    \draw[black] (0,0.0) -- (16,0.0) node [midway, text=black] {};
+  \end{tikzpicture}
 
-  \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.15cm] {\tiny{$g_0$}};
-  \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[r1 ] (l1_g0) at (0.0, 0.0) {};
-  \node[any] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[r0 ] (l1_g0) at (0.0, 0.0) {};
+    \node[any] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \node[r1 ] (l1_g0_t) at (2.0, 0.0) {};
-  \node[any] (l1_g1_t) at (3.0, 0.0) {};
-  \node[any] (l0_g0_t) at (2.5, 1.0) {};
+    \node[any] (l1_g1_t) at (3.0, 0.0) {};
+    \node[any] (l0_g0_t) at (2.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) -- (l1_g0_t) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.150cm] {\tiny{$g_1$}};
-  \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[rep] (l1_g0) at (0.0, 0.0) {};
-  \node[any] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.15cm] {\tiny{$g_0$}};
+    \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[r1 ] (l1_g0) at (0.0, 0.0) {};
+    \node[any] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \node[rep] (l1_g0_t) at (2.0, 0.0) {};
-  \node[any] (l1_g1_t) at (3.0, 0.0) {};
-  \node[any] (l0_g0_t) at (2.5, 1.0) {};
+    \node[r1 ] (l1_g0_t) at (2.0, 0.0) {};
+    \node[any] (l1_g1_t) at (3.0, 0.0) {};
+    \node[any] (l0_g0_t) at (2.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) -- (l1_g0_t) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.150cm] {\tiny{$g_r$}};
-  \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
-\end{tikzpicture}
-\begin{tikzpicture}
-  \node[spc] (l1_g0) at (0.0, 0.0) {};
-  \node[r1 ] (l1_g1) at (1.0, 0.0) {};
-  \node[any] (l0_g0) at (0.5, 1.0) {};
+    \draw[->,>=latex] (l0_g0_t) -- (l1_g0_t) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.150cm] {\tiny{$g_1$}};
+    \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[rep] (l1_g0) at (0.0, 0.0) {};
+    \node[any] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
-  \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
-  \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
 
-  \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
 
-  \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
-  \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
-  \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
+    \node[rep] (l1_g0_t) at (2.0, 0.0) {};
+    \node[any] (l1_g1_t) at (3.0, 0.0) {};
+    \node[any] (l0_g0_t) at (2.5, 1.0) {};
 
-  \node[spc] (l0_g0_t) at (2.5, 0.5) {};
+    \draw[->,>=latex] (l0_g0_t) -- (l1_g0_t) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0_t) -- (l1_g1_t) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.150cm] {\tiny{$g_r$}};
+    \draw[->,>=latex] (l0_g0_t) to [out=180,in=120,looseness=4] (l0_g0_t) node [right, text=black, xshift=-0.9cm, yshift=0.075cm] {\tiny{$xor$}};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \draw (0,-0.3) -- (0,1.45) node [midway, text=black] {};
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \node[spc] (l1_g0) at (0.0, 0.0) {};
+    \node[r1 ] (l1_g1) at (1.0, 0.0) {};
+    \node[any] (l0_g0) at (0.5, 1.0) {};
 
-  \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
-\end{tikzpicture}
+    \draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black, yshift=-0.125cm, xshift=-0.075cm] {\tiny{$f$}};
+    \draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black, yshift=-0.125cm, xshift=+0.075cm] {\tiny{$g$}};
+    \draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=4] (l0_g0) node [right, text=black, xshift=0.225cm, yshift=0.075cm] {\tiny{$xor$}};
+
+    \draw[->,>=latex, black, line width=1.0pt] (1.2, 0.5) -> (1.8, 0.5);
+
+    \node[fake] (l1_g0_fake) at (2.0, 0.0) {};
+    \node[fake] (l1_g1_fake) at (3.0, 0.0) {};
+    \node[fake] (l0_g0_fake) at (2.5, 1.0) {};
+
+    \node[spc] (l0_g0_t) at (2.5, 0.5) {};
+
+    \draw[->,>=latex] (l0_g0_t) to [out=120,in=60,looseness=4] (l0_g0_t) node [left, text=black, yshift=0.45cm, xshift=0.2cm] {\tiny{$spc$}};
+  \end{tikzpicture}
+\end{document}

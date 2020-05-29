@@ -1,95 +1,113 @@
-\begin{tikzpicture}[baseline]
-  \tikzset{ vn/.style ={draw=black   , circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
-  \tikzset{ cn/.style ={draw=black           , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
-  \tikzset{ vns/.style={draw=black!40, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-4!40 } }
-  \tikzset{ cns/.style={draw=black!40        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-2!40 } }
+\documentclass{standalone}
 
-  \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_i) at (0.00, 0.00+0.00) {};
-  \node[vn , label={[black   ]left:\tiny{$UE2$}}] (v2_i) at (0.00, 0.25+0.40) {};
-  \node[vns, label={[black!40]left:\tiny{$UE3$}}] (v3_i) at (0.00, 0.50+0.80) {};
-  \node[vn , label={[black   ]left:\tiny{$UE4$}}] (v4_i) at (0.00, 0.75+1.20) {};
-  \node[vn , label={[black   ]left:\tiny{$UE5$}}] (v5_i) at (0.00, 1.00+1.60) {};
-  \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_i) at (0.00, 1.25+2.00) {};
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
 
-  \node[cns, label={[black!40]right:\tiny{$RES1$}}] (ca_i) at (1.00, 0.25+0.40) {};
-  \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_i) at (1.00, 0.50+0.80) {};
-  \node[cns, label={[black!40]right:\tiny{$RES3$}}] (cc_i) at (1.00, 0.75+1.20) {};
-  \node[cn , label={[black   ]right:\tiny{$RES4$}}] (cd_i) at (1.00, 1.00+1.60) {};
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
 
-  \draw[dotted, black!40                      ] (v1_i) -- (ca_i);
-  \draw[dotted, black!40                      ] (v1_i) -- (cb_i);
-  \draw[dotted, black!40                      ] (v2_i) -- (cc_i);
-  \draw[<-,>=latex, Paired-5, line width=0.7pt] (v2_i) -- (cd_i);
-  \draw[dotted, black!40                      ] (v3_i) -- (ca_i);
-  \draw[dotted, black!40                      ] (v3_i) -- (cc_i);
-  \draw[dotted, black!40                      ] (v4_i) -- (cb_i);
-  \draw[->,>=latex, Paired-3, line width=0.7pt] (v4_i) -- (cd_i);
-  \draw[dotted, black!40                      ] (v5_i) -- (ca_i);
-  \draw[->,>=latex, Paired-3, line width=0.7pt] (v5_i) -- (cd_i);
-  \draw[dotted, black!40                      ] (v6_i) -- (cb_i);
-  \draw[dotted, black!40                      ] (v6_i) -- (cc_i);
+\input{colors}
 
-  \node (i) at (1.65, 0.00+0.00) {\small{(I)}};
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ vn/.style ={draw=black   , circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ cn/.style ={draw=black           , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ vns/.style={draw=black!40, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ cns/.style={draw=black!40        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-2!40 } }
 
-  \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_i) (v6_i) (ca_i) (cd_i)] {};
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_i) at (0.00, 0.00+0.00) {};
+    \node[vn , label={[black   ]left:\tiny{$UE2$}}] (v2_i) at (0.00, 0.25+0.40) {};
+    \node[vns, label={[black!40]left:\tiny{$UE3$}}] (v3_i) at (0.00, 0.50+0.80) {};
+    \node[vn , label={[black   ]left:\tiny{$UE4$}}] (v4_i) at (0.00, 0.75+1.20) {};
+    \node[vn , label={[black   ]left:\tiny{$UE5$}}] (v5_i) at (0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_i) at (0.00, 1.25+2.00) {};
 
-  \newcommand\xshft{3.5}
+    \node[cns, label={[black!40]right:\tiny{$RES1$}}] (ca_i) at (1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_i) at (1.00, 0.50+0.80) {};
+    \node[cns, label={[black!40]right:\tiny{$RES3$}}] (cc_i) at (1.00, 0.75+1.20) {};
+    \node[cn , label={[black   ]right:\tiny{$RES4$}}] (cd_i) at (1.00, 1.00+1.60) {};
 
-  \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_ii) at (\xshft+0.00, 0.00+0.00) {};
-  \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_ii) at (\xshft+0.00, 0.25+0.40) {};
-  \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_ii) at (\xshft+0.00, 0.50+0.80) {};
-  \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_ii) at (\xshft+0.00, 0.75+1.20) {};
-  \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_ii) at (\xshft+0.00, 1.00+1.60) {};
-  \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_ii) at (\xshft+0.00, 1.25+2.00) {};
+    \draw[dotted, black!40                      ] (v1_i) -- (ca_i);
+    \draw[dotted, black!40                      ] (v1_i) -- (cb_i);
+    \draw[dotted, black!40                      ] (v2_i) -- (cc_i);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v2_i) -- (cd_i);
+    \draw[dotted, black!40                      ] (v3_i) -- (ca_i);
+    \draw[dotted, black!40                      ] (v3_i) -- (cc_i);
+    \draw[dotted, black!40                      ] (v4_i) -- (cb_i);
+    \draw[->,>=latex, Paired-3, line width=0.7pt] (v4_i) -- (cd_i);
+    \draw[dotted, black!40                      ] (v5_i) -- (ca_i);
+    \draw[->,>=latex, Paired-3, line width=0.7pt] (v5_i) -- (cd_i);
+    \draw[dotted, black!40                      ] (v6_i) -- (cb_i);
+    \draw[dotted, black!40                      ] (v6_i) -- (cc_i);
 
-  \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_ii) at (\xshft+1.00, 0.25+0.40) {};
-  \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_ii) at (\xshft+1.00, 0.50+0.80) {};
-  \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_ii) at (\xshft+1.00, 0.75+1.20) {};
-  \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_ii) at (\xshft+1.00, 1.00+1.60) {};
+    \node (i) at (1.65, 0.00+0.00) {\small{(I)}};
 
-  \draw[dotted, black!40                      ] (v1_ii) -- (ca_ii);
-  \draw[dotted, black!40                      ] (v1_ii) -- (cb_ii);
-  \draw[dotted, black!40                      ] (v2_ii) -- (cc_ii);
-  \draw[dotted, black!40                      ] (v2_ii) -- (cd_ii);
-  \draw[->,>=latex, Paired-5, line width=0.7pt] (v3_ii) -- (ca_ii);
-  \draw[<-,>=latex, Paired-3, line width=0.7pt] (v3_ii) -- (cc_ii);
-  \draw[dotted, black!40                      ] (v4_ii) -- (cb_ii);
-  \draw[dotted, black!40                      ] (v4_ii) -- (cd_ii);
-  \draw[dotted, black!40                      ] (v5_ii) -- (ca_ii);
-  \draw[dotted, black!40                      ] (v5_ii) -- (cd_ii);
-  \draw[dotted, black!40                      ] (v6_ii) -- (cb_ii);
-  \draw[dotted, black!40                      ] (v6_ii) -- (cc_ii);
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_i) (v6_i) (ca_i) (cd_i)] {};
 
-  \node (ii) at (\xshft+1.60, 0.00+0.00) {\small{(II)}};
+    \newcommand\xshft{3.5}
 
-  \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_ii) (v6_ii) (ca_ii) (cd_ii)] {};
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_ii) at (\xshft+0.00, 0.00+0.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_ii) at (\xshft+0.00, 0.25+0.40) {};
+    \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_ii) at (\xshft+0.00, 0.50+0.80) {};
+    \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_ii) at (\xshft+0.00, 0.75+1.20) {};
+    \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_ii) at (\xshft+0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_ii) at (\xshft+0.00, 1.25+2.00) {};
 
-  \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_iii) at (\xshft+\xshft+0.00, 0.00+0.00) {};
-  \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_iii) at (\xshft+\xshft+0.00, 0.25+0.40) {};
-  \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_iii) at (\xshft+\xshft+0.00, 0.50+0.80) {};
-  \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_iii) at (\xshft+\xshft+0.00, 0.75+1.20) {};
-  \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_iii) at (\xshft+\xshft+0.00, 1.00+1.60) {};
-  \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_iii) at (\xshft+\xshft+0.00, 1.25+2.00) {};
+    \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_ii) at (\xshft+1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_ii) at (\xshft+1.00, 0.50+0.80) {};
+    \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_ii) at (\xshft+1.00, 0.75+1.20) {};
+    \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_ii) at (\xshft+1.00, 1.00+1.60) {};
 
-  \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_iii) at (\xshft+\xshft+1.00, 0.25+0.40) {};
-  \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_iii) at (\xshft+\xshft+1.00, 0.50+0.80) {};
-  \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_iii) at (\xshft+\xshft+1.00, 0.75+1.20) {};
-  \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_iii) at (\xshft+\xshft+1.00, 1.00+1.60) {};
+    \draw[dotted, black!40                      ] (v1_ii) -- (ca_ii);
+    \draw[dotted, black!40                      ] (v1_ii) -- (cb_ii);
+    \draw[dotted, black!40                      ] (v2_ii) -- (cc_ii);
+    \draw[dotted, black!40                      ] (v2_ii) -- (cd_ii);
+    \draw[->,>=latex, Paired-5, line width=0.7pt] (v3_ii) -- (ca_ii);
+    \draw[<-,>=latex, Paired-3, line width=0.7pt] (v3_ii) -- (cc_ii);
+    \draw[dotted, black!40                      ] (v4_ii) -- (cb_ii);
+    \draw[dotted, black!40                      ] (v4_ii) -- (cd_ii);
+    \draw[dotted, black!40                      ] (v5_ii) -- (ca_ii);
+    \draw[dotted, black!40                      ] (v5_ii) -- (cd_ii);
+    \draw[dotted, black!40                      ] (v6_ii) -- (cb_ii);
+    \draw[dotted, black!40                      ] (v6_ii) -- (cc_ii);
 
-  \draw[dotted, black!40                      ] (v1_iii) -- (ca_iii);
-  \draw[dotted, black!40                      ] (v1_iii) -- (cb_iii);
-  \draw[dotted, black!40                      ] (v2_iii) -- (cc_iii);
-  \draw[dotted, black!40                      ] (v2_iii) -- (cd_iii);
-  \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (ca_iii);
-  \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (cc_iii);
-  \draw[dotted, black!40                      ] (v4_iii) -- (cb_iii);
-  \draw[dotted, black!40                      ] (v4_iii) -- (cd_iii);
-  \draw[dotted, black!40                      ] (v5_iii) -- (ca_iii);
-  \draw[dotted, black!40                      ] (v5_iii) -- (cd_iii);
-  \draw[dotted, black!40                      ] (v6_iii) -- (cb_iii);
-  \draw[dotted, black!40                      ] (v6_iii) -- (cc_iii);
+    \node (ii) at (\xshft+1.60, 0.00+0.00) {\small{(II)}};
 
-  \node (iii) at (\xshft+\xshft+1.55, 0.00+0.00) {\small{(III)}};
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_ii) (v6_ii) (ca_ii) (cd_ii)] {};
 
-  \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_iii) (v6_iii) (ca_iii) (cd_iii)] {};
-\end{tikzpicture}
+    \node[vns, label={[black!40]left:\tiny{$UE1$}}] (v1_iii) at (\xshft+\xshft+0.00, 0.00+0.00) {};
+    \node[vns, label={[black!40]left:\tiny{$UE2$}}] (v2_iii) at (\xshft+\xshft+0.00, 0.25+0.40) {};
+    \node[vn , label={[black   ]left:\tiny{$UE3$}}] (v3_iii) at (\xshft+\xshft+0.00, 0.50+0.80) {};
+    \node[vns, label={[black!40]left:\tiny{$UE4$}}] (v4_iii) at (\xshft+\xshft+0.00, 0.75+1.20) {};
+    \node[vns, label={[black!40]left:\tiny{$UE5$}}] (v5_iii) at (\xshft+\xshft+0.00, 1.00+1.60) {};
+    \node[vns, label={[black!40]left:\tiny{$UE6$}}] (v6_iii) at (\xshft+\xshft+0.00, 1.25+2.00) {};
+
+    \node[cn , label={[black   ]right:\tiny{$RES1$}}] (ca_iii) at (\xshft+\xshft+1.00, 0.25+0.40) {};
+    \node[cns, label={[black!40]right:\tiny{$RES2$}}] (cb_iii) at (\xshft+\xshft+1.00, 0.50+0.80) {};
+    \node[cn , label={[black   ]right:\tiny{$RES3$}}] (cc_iii) at (\xshft+\xshft+1.00, 0.75+1.20) {};
+    \node[cns, label={[black!40]right:\tiny{$RES4$}}] (cd_iii) at (\xshft+\xshft+1.00, 1.00+1.60) {};
+
+    \draw[dotted, black!40                      ] (v1_iii) -- (ca_iii);
+    \draw[dotted, black!40                      ] (v1_iii) -- (cb_iii);
+    \draw[dotted, black!40                      ] (v2_iii) -- (cc_iii);
+    \draw[dotted, black!40                      ] (v2_iii) -- (cd_iii);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (ca_iii);
+    \draw[<-,>=latex, Paired-5, line width=0.7pt] (v3_iii) -- (cc_iii);
+    \draw[dotted, black!40                      ] (v4_iii) -- (cb_iii);
+    \draw[dotted, black!40                      ] (v4_iii) -- (cd_iii);
+    \draw[dotted, black!40                      ] (v5_iii) -- (ca_iii);
+    \draw[dotted, black!40                      ] (v5_iii) -- (cd_iii);
+    \draw[dotted, black!40                      ] (v6_iii) -- (cb_iii);
+    \draw[dotted, black!40                      ] (v6_iii) -- (cc_iii);
+
+    \node (iii) at (\xshft+\xshft+1.55, 0.00+0.00) {\small{(III)}};
+
+    \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1_iii) (v6_iii) (ca_iii) (cd_iii)] {};
+  \end{tikzpicture}
+\end{document}

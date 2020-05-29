@@ -1,83 +1,102 @@
-\begin{tikzpicture}[baseline]
-  \node[any] (l0_n0)  at ( 6.5, 6.0) {};
+\documentclass{standalone}
 
-  \node[any] (l1_n0)  at ( 4.5, 5.0) {};
-  \node[any] (l1_n1)  at ( 8.5, 5.0) {};
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
 
-  \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
-  \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
 
-  \node[any] (l2_n0)  at ( 1.5, 4.0) {};
-  \node[any] (l2_n1)  at ( 4.5, 4.0) {};
-  \node[any] (l2_n2)  at ( 8.5, 4.0) {};
-  \node[any] (l2_n3)  at (11.5, 4.0) {};
+\input{colors}
+\input{styles}
 
-  \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
-  \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
-  \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
-  \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \node[any] (l0_n0)  at ( 6.5, 6.0) {};
 
-  \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
-  \node[any] (l3_n1)  at ( 1.5, 3.0) {};
-  \node[any] (l3_n2)  at ( 4.0, 3.0) {};
-  \node[any] (l3_n3)  at ( 5.0, 3.0) {};
-  \node[any] (l3_n4)  at ( 8.0, 3.0) {};
-  \node[any] (l3_n5)  at ( 9.0, 3.0) {};
-  \node[any] (l3_n6)  at (11.5, 3.0) {};
-  \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
+    \node[any] (l1_n0)  at ( 4.5, 5.0) {};
+    \node[any] (l1_n1)  at ( 8.5, 5.0) {};
 
-  \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
-  \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
-  \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
-  \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
-  \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
-  \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
-  \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
-  \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+    \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
+    \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
 
-  \node[any] (l4_n0) at ( 1.50, 2.0) {};
-  \node[r0 ] (l4_n1) at ( 2.75, 2.0) {};
-  \node[spc] (l4_n2) at ( 5.00, 2.0) {};
-  \node[any] (l4_n3) at ( 6.50, 2.0) {};
-  \node[rep] (l4_n4) at ( 8.00, 2.0) {};
-  \node[r1 ] (l4_n5) at (10.25, 2.0) {};
-  \node[any] (l4_n6) at (11.50, 2.0) {};
+    \node[any] (l2_n0)  at ( 1.5, 4.0) {};
+    \node[any] (l2_n1)  at ( 4.5, 4.0) {};
+    \node[any] (l2_n2)  at ( 8.5, 4.0) {};
+    \node[any] (l2_n3)  at (11.5, 4.0) {};
 
-  \draw[->,>=latex, dashed] (l3_n1) -- (l4_n0);
-  \draw[->,>=latex        ] (l3_n1) -- (l4_n1);
-  \draw[->,>=latex        ] (l3_n2) -- (l4_n1);
-  \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
-  \draw[->,>=latex, dashed] (l3_n3) -- (l4_n2);
-  \draw[->,>=latex        ] (l3_n3) -- (l4_n3);
-  \draw[->,>=latex, dashed] (l3_n4) -- (l4_n3);
-  \draw[->,>=latex        ] (l3_n4) -- (l4_n4);
-  \draw[->,>=latex        ] (l3_n5) -- (l4_n3);
-  \draw[->,>=latex, dashed] (l3_n5) -- (l4_n5);
-  \draw[->,>=latex, dashed] (l3_n6) -- (l4_n5);
-  \draw[->,>=latex        ] (l3_n6) -- (l4_n6);
+    \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
+    \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
+    \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
+    \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
 
-  \node[r0  ] (l5_n0)  at ( 0.50, 1.0) {};
-  \node[any ] (l5_n1)  at ( 1.50, 1.0) {};
-  \node[rep ] (l5_n2)  at ( 6.00, 1.0) {};
-  \node[spc4] (l5_n3)  at ( 7.00, 1.0) {};
-  \node[r1  ] (l5_n4)  at (12.50, 1.0) {};
+    \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
+    \node[any] (l3_n1)  at ( 1.5, 3.0) {};
+    \node[any] (l3_n2)  at ( 4.0, 3.0) {};
+    \node[any] (l3_n3)  at ( 5.0, 3.0) {};
+    \node[any] (l3_n4)  at ( 8.0, 3.0) {};
+    \node[any] (l3_n5)  at ( 9.0, 3.0) {};
+    \node[any] (l3_n6)  at (11.5, 3.0) {};
+    \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
 
-  \draw[->,>=latex        ] (l4_n0) -- (l5_n0);
-  \draw[->,>=latex, dashed] (l4_n0) -- (l5_n1);
-  \draw[->,>=latex        ] (l4_n3) -- (l5_n2);
-  \draw[->,>=latex, dashed] (l4_n3) -- (l5_n3);
-  % \draw[->,>=latex        ] (l4_n6) -- (l5_n1);
-  \draw[->,>=latex        ] (l4_n6) to[out=230,in=0] (l5_n1);
-  \draw[->,>=latex, dashed] (l4_n6) -- (l5_n4);
+    \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
+    \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
+    \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
+    \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
+    \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
+    \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
+    \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
+    \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+
+    \node[any] (l4_n0) at ( 1.50, 2.0) {};
+    \node[r0 ] (l4_n1) at ( 2.75, 2.0) {};
+    \node[spc] (l4_n2) at ( 5.00, 2.0) {};
+    \node[any] (l4_n3) at ( 6.50, 2.0) {};
+    \node[rep] (l4_n4) at ( 8.00, 2.0) {};
+    \node[r1 ] (l4_n5) at (10.25, 2.0) {};
+    \node[any] (l4_n6) at (11.50, 2.0) {};
+
+    \draw[->,>=latex, dashed] (l3_n1) -- (l4_n0);
+    \draw[->,>=latex        ] (l3_n1) -- (l4_n1);
+    \draw[->,>=latex        ] (l3_n2) -- (l4_n1);
+    \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n3) -- (l4_n2);
+    \draw[->,>=latex        ] (l3_n3) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n4) -- (l4_n3);
+    \draw[->,>=latex        ] (l3_n4) -- (l4_n4);
+    \draw[->,>=latex        ] (l3_n5) -- (l4_n3);
+    \draw[->,>=latex, dashed] (l3_n5) -- (l4_n5);
+    \draw[->,>=latex, dashed] (l3_n6) -- (l4_n5);
+    \draw[->,>=latex        ] (l3_n6) -- (l4_n6);
+
+    \node[r0  ] (l5_n0)  at ( 0.50, 1.0) {};
+    \node[any ] (l5_n1)  at ( 1.50, 1.0) {};
+    \node[rep ] (l5_n2)  at ( 6.00, 1.0) {};
+    \node[spc4] (l5_n3)  at ( 7.00, 1.0) {};
+    \node[r1  ] (l5_n4)  at (12.50, 1.0) {};
+
+    \draw[->,>=latex        ] (l4_n0) -- (l5_n0);
+    \draw[->,>=latex, dashed] (l4_n0) -- (l5_n1);
+    \draw[->,>=latex        ] (l4_n3) -- (l5_n2);
+    \draw[->,>=latex, dashed] (l4_n3) -- (l5_n3);
+    % \draw[->,>=latex        ] (l4_n6) -- (l5_n1);
+    \draw[->,>=latex        ] (l4_n6) to[out=230,in=0] (l5_n1);
+    \draw[->,>=latex, dashed] (l4_n6) -- (l5_n4);
 
 
 
-  \node[r0] (l6_n0) at ( 1.0, 0.0) {};
-  \node[r1] (l6_n1) at ( 2.0, 0.0) {};
+    \node[r0] (l6_n0) at ( 1.0, 0.0) {};
+    \node[r1] (l6_n1) at ( 2.0, 0.0) {};
 
-  \draw[->,>=latex        ] (l5_n1) -- (l6_n0);
-  \draw[->,>=latex, dashed] (l5_n1) -- (l6_n1);
+    \draw[->,>=latex        ] (l5_n1) -- (l6_n0);
+    \draw[->,>=latex, dashed] (l5_n1) -- (l6_n1);
 
-  \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
-  \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
-\end{tikzpicture}
+    \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
+  \end{tikzpicture}
+\end{document}

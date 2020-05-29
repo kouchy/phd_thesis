@@ -491,7 +491,7 @@ the control on the intrinsics taken and ensures portability.
 
 \begin{figure}[htp]
   \centering
-  \input{main/chapter3/fig/vectorization/inter_frame/inter_frame}
+  \includegraphics{vectorization/inter_frame/inter_frame}
   \caption
     [Frame reordering operation before and after an inter-frame SIMD process.]
     {Frame reordering operation before and after an inter-frame SIMD process.}
@@ -970,7 +970,7 @@ This tag is initially set to \emph{standard}.
 
 \begin{figure}[htp]
   \centering
-  \input{main/chapter3/fig/polar/patterns/patterns}
+  \includegraphics{polar/patterns/patterns}
   \caption{Polar sub-tree rewriting rules for processing specialization.}
   \label{fig:polar_patterns}
 \end{figure}
@@ -1036,19 +1036,18 @@ Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
 
 \begin{figure}[htp]
   \centering
-  \input{main/chapter3/fig/polar/sc_gen_compression/sc_gen_compression_styles}
   \subfloat[][Legend.]{
-    \input{main/chapter3/fig/polar/sc_gen_compression/sc_gen_compression_legend}
+    \includegraphics{polar/sc_gen_compression/sc_gen_compression_legend}
   }
   \\
   \subfloat[][Without compression.]{
     \label{fig:eval_polar_sc_gen_compression_wo}
-    \input{main/chapter3/fig/polar/sc_gen_compression/sc_gen_no_compression}
+    \includegraphics{polar/sc_gen_compression/sc_gen_no_compression}
   }
   \\
   \subfloat[][With compression.]{
     \label{fig:eval_polar_sc_gen_compression_w}
-    \input{main/chapter3/fig/polar/sc_gen_compression/sc_gen_compression}
+    \includegraphics{polar/sc_gen_compression/sc_gen_compression}
   }
   \caption
     [Pruned polar decoding tree representation without and with compression.]
@@ -1681,12 +1680,12 @@ final guesses at each user.
   \centering
   \subfloat[][Array of Structures (AoS).]{
     \label{fig:scma_simd_norm_aos}
-    \input{main/chapter3/fig/scma/simd_norm/simd_norm_aos}
+    \includegraphics{scma/simd_norm/simd_norm_aos}
   }
   \\
   \subfloat[][Structure of Arrays (SoA).]{
     \label{fig:scma_simd_norm_soa}
-    \input{main/chapter3/fig/scma/simd_norm/simd_norm_soa}
+    \includegraphics{scma/simd_norm/simd_norm_soa}
   }
   \caption
     [MPA complex norm AVX algorithm using AoS and SoA.]
@@ -1728,12 +1727,12 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
   \centering
   \subfloat[][Vectorized Exponentials ($N_0 = 2\sigma^2$)]{
     \label{fig:scma_simd_exp}
-    \input{main/chapter3/fig/scma/simd_exp_mul/simd_exp}
+    \includegraphics{scma/simd_exp_mul/simd_exp}
   }
   \\
   \subfloat[][Vectorized calculation of final guess at user 4.]{
     \label{fig:scma_simd_final_guess}
-    \input{main/chapter3/fig/scma/simd_exp_mul/simd_final_guess}
+    \includegraphics{scma/simd_exp_mul/simd_final_guess}
   }
   \caption
     [MPA vectorized Exponentials and computation of final guess.]

@@ -461,27 +461,11 @@ A57, and the \little A53 is itself more energy efficient than the \little A7
 
 \begin{figure}[htp]
   \centering
-  \begin{tikzpicture}
-  \tkzKiviatDiagram[rotate         = 90,
-                    scale          = 0.70,
-                    label distance = 0.5cm,
-                    label space    = 5.7cm,
-                    font           = \footnotesize,
-                    radial         = 5,
-                    gap            = 1,
-                    lattice        = 4]{Larger SNR range,
-                                        Lower memory footprint,
-                                        Lower latency,
-                                        Lower energy per bit,
-                                        Higher throughput}
-  \tkzKiviatLine[ultra thick,color=Paired-5,mark=none,fill=Paired-5!20,opacity=.3](4,2,1,3,3)
-  \tkzKiviatLine[ultra thick,color=Paired-1,fill=Paired-1!20,opacity=.3](4,4,3,1,1)
-  \tkzKiviatLine[dotted,ultra thick,color=Paired-1](2,3,4,2,2)
-  \tkzKiviatLine[dotted,ultra thick,color=Paired-5](2,1,2,4,4)
-  \end{tikzpicture}
+  \includegraphics{polar/sc_colgate/sc_colgate}
+  \label{fig:eval_polar_sc_colgate}
   \caption
     [SC ranking of intra-/inter-frame SIMD approaches along 5 metrics.]
-    {\label{fig:eval_polar_sc_colgate}Ranking of the different approaches along
+    {Ranking of the different approaches along
     5 metrics. In red, inter-frame vectorization performance and in blue,
     intra-frame performance. Solid color is for the dynamic versions, dotted is
     for the generated versions. Each version is sorted along each of the 5 axes
