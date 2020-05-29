@@ -1,0 +1,67 @@
+\begin{tikzpicture}%[scale=\tikzscale]
+  \newcommand\La{5} % number of layers in the tree
+  \newcommand\VS{1.95} % vertical space between the tree layer
+
+  \pgfmathtruncatemacro\Ll{\La -1}
+
+  \foreach \l in {\Ll,...,0} {
+
+    \pgfmathtruncatemacro\ll{2^\l-1}
+    \pgfmathtruncatemacro\rl{\La-\l}
+    \pgfmathtruncatemacro\rlmo{\rl -1}
+    \pgfmathtruncatemacro\ee{2^\rlmo}
+    \pgfmathtruncatemacro\eemo{\ee-1}
+
+    ["\ifthenelse{\l=0}{}
+    {
+      \draw[dashed] (-2.00, \rlmo*\VS+\VS/2) -- (11.75, \rlmo*\VS+\VS/2);
+    }", sloped]
+
+    \node[text width=1.5cm, text centered] at (10.7, \rlmo*\VS) {\l};
+
+    \foreach \g in {0,...,\ll} {
+
+      \ifthenelse{\l=\Ll}{}
+      {
+        \draw (0.2*\eemo/2*1.75 + \ee*\g/2*1.3 + \eemo/2*0.3, \rlmo*\VS) node{\tiny{\textbullet}};
+      }
+
+      \foreach \e in {0,...,\eemo} {
+
+        \ifthenelse{\e=0 \AND \g=0}
+        {
+          \node[draw=black, minimum height=0.8cm, minimum width=0.3cm, text=black, label={[black]left:\small{$\ee$ (LLR, $\hat{s}$)}}] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.3 + \e*0.3, \rlmo*\VS) {};
+        }
+        {
+          \node[draw=black, minimum height=0.8cm, minimum width=0.3cm, text=black] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.3 + \e*0.3, \rlmo*\VS) {};
+        }
+      }
+
+      \ifthenelse{\l=\Ll}{}
+      {
+        \pgfmathtruncatemacro\ln{\l+1}
+        \pgfmathtruncatemacro\gn{\g*2}
+        \pgfmathtruncatemacro\gnpo{\g*2+1}
+        \pgfmathtruncatemacro\eee{\eemo/2}
+        \pgfmathtruncatemacro\eeemo{\eee-1}
+        \pgfmathtruncatemacro\eemt{\eemo-1}
+        \ifthenelse{\l<2}
+        {
+          \draw[->,>=latex, line width=1.0pt, Paired-5        ] (l\l_g\g_e1.south)          -- (l\ln_g\gn_e1.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+          \draw[->,>=latex, line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemt.south)      -- (l\ln_g\gnpo_e\eeemo.north)    node [midway, text=Paired-1, fill=white] {\small{$g$}};
+          \draw[<-,>=latex, line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     -- (l\ln_g\gn_e0.north west)      node [midway, fill=white] {\small{$h$}};
+          \draw[<-,>=latex, line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) -- (l\ln_g\gnpo_e\eee.north east) node [midway, fill=white] {\small{$h$}};
+        }
+        {
+          \draw[->,>=latex, line width=1.0pt, Paired-5        ] (l\l_g\g_e0.south)          --                (l\ln_g\gn_e0.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+          \draw[->,>=latex, line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemo.south)      --                (l\ln_g\gnpo_e\eee.north)      node [midway, text=Paired-1, fill=white] {\small{$g$}};
+          \draw[<-,>=latex, line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     to[bend right=30] (l\ln_g\gn_e0.north west)      node [] {};
+          \draw[<-,>=latex, line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) to[bend left=30]  (l\ln_g\gnpo_e\eee.north east) node [] {};
+        }
+      }
+    }
+  }
+  \pgfmathtruncatemacro\H{\VS*\La}
+  \pgfmathtruncatemacro\HH{8.9}
+  \draw[->,>=latex] (11.25, \HH) -- (11.25, -0.2) node [midway, text=black, fill=white,rotate=90] {\small{Layer (tree depth)}};
+\end{tikzpicture}

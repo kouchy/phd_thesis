@@ -1,0 +1,31 @@
+\begin{tikzpicture}[baseline]
+  \tikzset{ vn/.style={draw=black, circle, minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-3!40 } }
+  \tikzset{ cn/.style={draw=black        , minimum width=0.25cm, minimum height=0.25cm, text=black, fill=Paired-1!40 } }
+
+  \node[vn, label={[black]left:\tiny{$UE1$}}] (v1) at (0.00, 0.00+0.00) {};
+  \node[vn, label={[black]left:\tiny{$UE2$}}] (v2) at (0.00, 0.25+0.40) {};
+  \node[vn, label={[black]left:\tiny{$UE3$}}] (v3) at (0.00, 0.50+0.80) {};
+  \node[vn, label={[black]left:\tiny{$UE4$}}] (v4) at (0.00, 0.75+1.20) {};
+  \node[vn, label={[black]left:\tiny{$UE5$}}] (v5) at (0.00, 1.00+1.60) {};
+  \node[vn, label={[black]left:\tiny{$UE6$}}] (v6) at (0.00, 1.25+2.00) {};
+
+  \node[cn, label={[black]right:\tiny{$RES1$}}] (ca) at (1.00, 0.25+0.40) {};
+  \node[cn, label={[black]right:\tiny{$RES2$}}] (cb) at (1.00, 0.50+0.80) {};
+  \node[cn, label={[black]right:\tiny{$RES3$}}] (cc) at (1.00, 0.75+1.20) {};
+  \node[cn, label={[black]right:\tiny{$RES4$}}] (cd) at (1.00, 1.00+1.60) {};
+
+  \draw[] (v1) -- (ca);
+  \draw[] (v1) -- (cb);
+  \draw[] (v2) -- (cc);
+  \draw[] (v2) -- (cd);
+  \draw[] (v3) -- (ca);
+  \draw[] (v3) -- (cc);
+  \draw[] (v4) -- (cb);
+  \draw[] (v4) -- (cd);
+  \draw[] (v5) -- (ca);
+  \draw[] (v5) -- (cd);
+  \draw[] (v6) -- (cb);
+  \draw[] (v6) -- (cc);
+
+  \node[draw=Paired-3, rounded corners=2pt, minimum width=2.9cm, dashed, fit=(v1) (v6) (ca) (cd)] {};
+\end{tikzpicture}

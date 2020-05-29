@@ -1,0 +1,62 @@
+\begin{tikzpicture}%[scale=\tikzscale]
+
+\tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+\tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+\tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+\tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+\tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+\tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+\tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+\tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+\node[frzn                                                        ] (l3_g0) at (0.0, 0.0) {};
+\node[frzn                                                        ] (l3_g1) at (1.0, 0.0) {};
+\node[frzn                                                        ] (l3_g2) at (2.0, 0.0) {};
+\node[info                                                        ] (l3_g3) at (3.0, 0.0) {};
+\node[frzn                                                        ] (l3_g4) at (4.0, 0.0) {};
+\node[info                                                        ] (l3_g5) at (5.0, 0.0) {};
+\node[info                                                        ] (l3_g6) at (6.0, 0.0) {};
+\node[info                                                        ] (l3_g7) at (7.0, 0.0) {};
+
+\node[r0,   label={[black]above:\small{\texttt{R0}}}              ] (l2_g0) at (0.5, 1.5) {};
+\node[rep,  label={[black]above:\small{\texttt{REP}}}             ] (l2_g1) at (2.5, 1.5) {};
+\node[rep,  label={[black]above:\small{\texttt{REP}}}             ] (l2_g2) at (4.5, 1.5) {};
+\node[r1,   label={[black]above:\small{\texttt{R1}}}              ] (l2_g3) at (6.5, 1.5) {};
+
+\node[rep,  label={[black]above:\small{\texttt{REP}}}             ] (l1_g0) at (1.5, 3.0) {};
+\node[spc4, label={[black]above:\small{\texttt{SPC$_\texttt{4}$}}}] (l1_g1) at (5.5, 3.0) {};
+
+\node[any,  label={[black]above:\small{\texttt{?}}}               ] (l0_g0) at (3.5, 4.5) {};
+
+\draw[->,>=latex] (l2_g0) -- (l3_g0) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g0) -- (l3_g1) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g1) -- (l3_g2) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g1) -- (l3_g3) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g2) -- (l3_g4) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g2) -- (l3_g5) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g3) -- (l3_g6) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l2_g3) -- (l3_g7) node [midway, text=black, sloped] {|};
+
+\draw[->,>=latex] (l1_g0) -- (l2_g0) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l1_g0) -- (l2_g1) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l1_g1) -- (l2_g2) node [midway, text=black, sloped] {|};
+\draw[->,>=latex] (l1_g1) -- (l2_g3) node [midway, text=black, sloped] {|};
+
+\draw[->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black] {$f$};
+\draw[->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black] {$g$};
+\draw[->,>=latex] (l0_g0) to [out=0,in=60,looseness=8] (l0_g0) node [right, text=black, xshift=0.6cm, yshift=0.2cm] {$xor$};
+
+\draw[->,>=latex, black, line width=1.0pt] (7.5, 2.25) -> (8.5, 2.25);
+
+\node[rep,  label={[black]above:\small{\texttt{REP}}}             ] (l1_g0_cut) at ( 9.5, 1.5) {};
+\node[spc4, label={[black]above:\small{\texttt{SPC$_\texttt{4}$}}}] (l1_g1_cut) at (13.5, 1.5) {};
+\node[any,  label={[black]above:\small{\texttt{?}}}               ] (l0_g0_cut) at (11.5, 3.0) {};
+
+\draw[->,>=latex] (l0_g0_cut) -- (l1_g0_cut) node [midway, above, text=black] {$f$};
+\draw[->,>=latex] (l0_g0_cut) -- (l1_g1_cut) node [midway, above, text=black] {$g$};
+\draw[->,>=latex] (l0_g0_cut) to [out=0,in=60,looseness=8] (l0_g0_cut) node [right, text=black, xshift=0.6cm, yshift=0.2cm] {$xor$};
+
+\draw[->,>=latex] (l1_g0_cut) to [out=-120,in=-60,looseness=8] (l1_g0_cut) node [left, text=black, xshift=0.3cm, yshift=-0.85cm] {$rep$};
+\draw[->,>=latex] (l1_g1_cut) to [out=-120,in=-60,looseness=8] (l1_g1_cut) node [left, text=black, xshift=0.3cm, yshift=-0.85cm] {$spc$};
+
+\end{tikzpicture}
