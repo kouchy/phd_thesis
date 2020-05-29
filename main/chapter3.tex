@@ -2913,7 +2913,7 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
 
     \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
     \tikzstyle{shf}=[black!20]
-    \tikzstyle{intr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
+    \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
 
     \newcommand\vs{2.0}
     \newcommand\lft{0.0}
@@ -2923,11 +2923,11 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \node[draw=black, dotted                     , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{Global memory}}   ] (ram)   at (0.1, -1.1-3) {};
     \node[draw=black,                            , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register}}   ] (simdr) at (0.1, -1.7-3) {};
     \node[draw=black,         rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD instruction}}] (simdi) at (0.1, -2.3-3) {};
-    \node[draw=black, dashed, rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD function}}   ] (simdm) at (0.1, -2.9-3) {};
+    \node[draw=black, dashed, rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD function}}   ] (simdf) at (0.1, -2.9-3) {};
 
-    \node[fill=Paired-5!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex norm $d_x$}}] (cr) at (\rth+0.7+4.10, -1.1-3) {};
-    \node[fill=gray!40    , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Noise $n_x = -N_0$}}] (ci) at (\rth+0.7+4.10, -1.7-3) {};
-    \node[fill=Paired-7!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Probability $P_x$}} ] (cn) at (\rth+0.7+4.10, -2.3-3) {};
+    \node[fill=Paired-5!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex norm $d_x$}}] (cn) at (\rth+0.7+4.10, -1.1-3) {};
+    \node[fill=gray!40    , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Noise $n_x = -N_0$}}] (n0) at (\rth+0.7+4.10, -1.7-3) {};
+    \node[fill=Paired-7!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Probability $P_x$}} ] (p)  at (\rth+0.7+4.10, -2.3-3) {};
 
     \node[ept        ] (mi_e0)  at ( 0.0, 0.00) {\tiny{...}};
     \node[ens, dotted] (mi_e1)  at ( 0.7, 0.00) {};
@@ -2961,9 +2961,9 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \node[en] (r0_e6) at (\lft+4.2, -\vs) {\tiny{$d_7$}};
     \node[en] (r0_e7) at (\lft+4.9, -\vs) {\tiny{$d_8$}};
 
-    \node[intr] (intr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_loadu\_ps}}};
-    \draw[lnk] (7.35,-0.35) |- (intr0.east);
-    \draw[lnk] (intr0.south) -- (2.45,-\vs+0.35);
+    \node[instr] (instr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_loadu\_ps}}};
+    \draw[lnk] (7.35,-0.35) |- (instr0.east);
+    \draw[lnk] (instr0.south) -- (2.45,-\vs+0.35);
 
     \node[e] (r1_e0) at (\rth+0.0, -\vs) {\tiny{$n_1$}};
     \node[e] (r1_e1) at (\rth+0.7, -\vs) {\tiny{$n_2$}};
@@ -2974,8 +2974,8 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \node[e] (r1_e6) at (\rth+4.2, -\vs) {\tiny{$n_7$}};
     \node[e] (r1_e7) at (\rth+4.9, -\vs) {\tiny{$n_8$}};
 
-    \node[intr] (intr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_set1\_ps(}$-N_0$\texttt{)}}};
-    \draw[lnk] (intr1.south) -- (\rth+2.45,-\vs+0.35);
+    \node[instr] (instr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm256\_set1\_ps(}$-N_0$\texttt{)}}};
+    \draw[lnk] (instr1.south) -- (\rth+2.45,-\vs+0.35);
 
     \node[enn] (r2_e0) at (\ctr+0.0, -\vs-\vs) {\tiny{$\hat{d_1}$}};
     \node[enn] (r2_e1) at (\ctr+0.7, -\vs-\vs) {\tiny{$\hat{d_2}$}};
@@ -3003,11 +3003,11 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \draw[shf] (r1_e6.south) -- (r2_e6.north);
     \draw[shf] (r1_e7.south) -- (r2_e7.north);
 
-    \node[intr] (intr2) at (\ctr+2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_div\_ps}}};
+    \node[instr] (instr2) at (\ctr+2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_div\_ps}}};
 
-    \draw[lnk] (r0_e4.south west) |- (intr2.west);
-    \draw[lnk] (r1_e3.south east) |- (intr2.east);
-    \draw[lnk] (intr2.south)      -- (7.35,-\vs-\vs+0.35);
+    \draw[lnk] (r0_e4.south west) |- (instr2.west);
+    \draw[lnk] (r1_e3.south east) |- (instr2.east);
+    \draw[lnk] (instr2.south)      -- (7.35,-\vs-\vs+0.35);
 
     \node[ep] (r3_e0) at (\ctr+0.0, -\vs-\vs-\vs) {\tiny{$P_1$}};
     \node[ep] (r3_e1) at (\ctr+0.7, -\vs-\vs-\vs) {\tiny{$P_2$}};
@@ -3018,10 +3018,10 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \node[ep] (r3_e6) at (\ctr+4.2, -\vs-\vs-\vs) {\tiny{$P_7$}};
     \node[ep] (r3_e7) at (\ctr+4.9, -\vs-\vs-\vs) {\tiny{$P_8$}};
 
-    \node[intr, dashed] (intr3) at (\ctr+2.45, -\vs-\vs-\vs+1) {\footnotesize{MIPP exponential (\texttt{mipp::exp})}};
+    \node[instr, dashed] (instr3) at (\ctr+2.45, -\vs-\vs-\vs+1) {\footnotesize{MIPP exponential (\texttt{mipp::exp})}};
 
-    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (intr3);
-    \draw[lnk] (intr3) -- (7.35,-\vs-\vs-\vs+0.35);
+    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (instr3);
+    \draw[lnk] (instr3) -- (7.35,-\vs-\vs-\vs+0.35);
 
     \node[ept        ] (mo_er0)  at ( 0.0, -\vs-\vs-\vs-\vs-0.00) {\tiny{...}};
     \node[eps, dotted] (mo_er1)  at ( 0.7, -\vs-\vs-\vs-\vs-0.00) {};
@@ -3046,10 +3046,10 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \node[eps, dotted] (mo_er20) at (14.0, -\vs-\vs-\vs-\vs-0.00) {};
     \node[ept        ] (mo_er21) at (14.7, -\vs-\vs-\vs-\vs-0.00) {\tiny{...}};
 
-    \node[intr] (intr4) at (\ctr+2.45, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_storeu\_ps}}};
+    \node[instr] (instr4) at (\ctr+2.45, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm256\_storeu\_ps}}};
 
-    \draw[lnk] (7.35, -\vs-\vs-\vs-0.35) -- (intr4);
-    \draw[lnk] (intr4) -- (7.35,-\vs-\vs-\vs-\vs+0.35);
+    \draw[lnk] (7.35, -\vs-\vs-\vs-0.35) -- (instr4);
+    \draw[lnk] (instr4) -- (7.35,-\vs-\vs-\vs-\vs+0.35);
 
     \node[draw=black, rounded corners=2pt, dashed, fit=(mi_e0) (mo_er21)] {};
   \end{tikzpicture}
@@ -3058,67 +3058,65 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
   \subfloat[][Vectorized calculation of final guess at user 4.]{
   \label{fig:scma_simd_final_guess}
   \begin{tikzpicture}[baseline]
-    \tikzset{ e/.style   ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=gray!40}                  } }
-    \tikzset{ es/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=gray!20}                  } }
-    \tikzset{ en/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-9!40}              } }
-    \tikzset{ enn/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40!Paired-9!40} } }
-    \tikzset{ ens/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-6!40}              } }
-    \tikzset{ ep/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40}             } }
-    \tikzset{ eps/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-8!40}              } }
-    \tikzset{ ept/.style={            minimum width=0.7cm, minimum height=0.7cm] } }
+
+    \tikzset{ erux/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=gray!20}                  } }
+    \tikzset{ er2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-9!40}              } }
+    \tikzset{ er4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40}             } }
+    \tikzset{ eu4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40!Paired-9!40} } }
+    \tikzset{ ept/.style ={            minimum width=0.7cm, minimum height=0.7cm]                                                       } }
 
     \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
     \tikzstyle{shf}=[black!20]
-    \tikzstyle{intr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
+    \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
 
     \newcommand\vs{2.0}
     \newcommand\lft{0.0}
     \newcommand\ctr{4.9}
     \newcommand\rth{9.8}
 
-    \node[fill=Paired-9!40             , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES2$ to $UE4$}}] (cr) at (\rth+0.7+4.10, -1.1-2.7) {};
-    \node[fill=Paired-11!40            , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES4$ to $UE4$}}] (ci) at (\rth+0.7+4.10, -1.7-2.7) {};
-    \node[fill=Paired-11!40!Paired-9!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Guess at $UE4$}}           ] (cn) at (\rth+0.7+4.10, -2.3-2.7) {};
+    \node[fill=Paired-9!40             , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES2$ to $UE4$ ($m_x^2$)}}] (m2) at (\rth+0.7+4.10, -1.1-2.7) {};
+    \node[fill=Paired-11!40            , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES4$ to $UE4$ ($m_x^4$)}}] (m4) at (\rth+0.7+4.10, -1.7-2.7) {};
+    \node[fill=Paired-11!40!Paired-9!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Guess at $UE4$ ($g_x^4$)}}           ] (g4) at (\rth+0.7+4.10, -2.3-2.7) {};
 
-    \node[ept        ] (mi_e0)  at ( 0.0, 0.00) {\tiny{...}};
-    \node[en , dotted] (mi_e1)  at ( 1.4, 0.00) {};
-    \node[en , dotted] (mi_e2)  at ( 2.1, 0.00) {};
-    \node[en , dotted] (mi_e3)  at ( 2.8, 0.00) {};
-    \node[en , dotted] (mi_e4)  at ( 3.5, 0.00) {};
-    \node[ept        ] (mi_e5)  at ( 4.9, 0.00) {\tiny{...}};
-    \node[es,  dotted] (mi_e6)  at ( 6.3, 0.00) {};
-    \node[es,  dotted] (mi_e7)  at ( 7.0, 0.00) {};
-    \node[es,  dotted] (mi_e8)  at ( 7.7, 0.00) {};
-    \node[es,  dotted] (mi_e9)  at ( 8.4, 0.00) {};
-    \node[ept        ] (mi_e10) at ( 9.8, 0.00) {\tiny{...}};
-    \node[ep , dotted] (mi_e11) at (11.2, 0.00) {};
-    \node[ep , dotted] (mi_e12) at (11.9, 0.00) {};
-    \node[ep , dotted] (mi_e13) at (12.6, 0.00) {};
-    \node[ep , dotted] (mi_e14) at (13.3, 0.00) {};
-    \node[ept        ] (mi_e15) at (14.7, 0.00) {\tiny{...}};
+    \node[ept         ] (mi_e0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[er2 , dotted] (mi_e1)  at ( 1.4, 0.00) {};
+    \node[er2 , dotted] (mi_e2)  at ( 2.1, 0.00) {};
+    \node[er2 , dotted] (mi_e3)  at ( 2.8, 0.00) {};
+    \node[er2 , dotted] (mi_e4)  at ( 3.5, 0.00) {};
+    \node[ept         ] (mi_e5)  at ( 4.9, 0.00) {\tiny{...}};
+    \node[erux, dotted] (mi_e6)  at ( 6.3, 0.00) {};
+    \node[erux, dotted] (mi_e7)  at ( 7.0, 0.00) {};
+    \node[erux, dotted] (mi_e8)  at ( 7.7, 0.00) {};
+    \node[erux, dotted] (mi_e9)  at ( 8.4, 0.00) {};
+    \node[ept         ] (mi_e10) at ( 9.8, 0.00) {\tiny{...}};
+    \node[er4 , dotted] (mi_e11) at (11.2, 0.00) {};
+    \node[er4 , dotted] (mi_e12) at (11.9, 0.00) {};
+    \node[er4 , dotted] (mi_e13) at (12.6, 0.00) {};
+    \node[er4 , dotted] (mi_e14) at (13.3, 0.00) {};
+    \node[ept         ] (mi_e15) at (14.7, 0.00) {\tiny{...}};
 
-    \node[en] (r0_e0) at (\lft+1.4, -\vs) {\tiny{$m_1^2$}};
-    \node[en] (r0_e1) at (\lft+2.1, -\vs) {\tiny{$m_2^2$}};
-    \node[en] (r0_e2) at (\lft+2.8, -\vs) {\tiny{$m_3^2$}};
-    \node[en] (r0_e3) at (\lft+3.5, -\vs) {\tiny{$m_4^2$}};
+    \node[er2] (r0_e0) at (\lft+1.4, -\vs) {\tiny{$m_1^2$}};
+    \node[er2] (r0_e1) at (\lft+2.1, -\vs) {\tiny{$m_2^2$}};
+    \node[er2] (r0_e2) at (\lft+2.8, -\vs) {\tiny{$m_3^2$}};
+    \node[er2] (r0_e3) at (\lft+3.5, -\vs) {\tiny{$m_4^2$}};
 
-    \node[intr] (intr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
-    \draw[lnk] (2.45,-0.35) -- (intr0.north);
-    \draw[lnk] (intr0.south) -- (2.45,-\vs+0.35);
+    \node[instr] (instr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
+    \draw[lnk] (2.45,-0.35) -- (instr0.north);
+    \draw[lnk] (instr0.south) -- (2.45,-\vs+0.35);
 
-    \node[ep] (r1_e0) at (\rth+1.4, -\vs) {\tiny{$m_1^4$}};
-    \node[ep] (r1_e1) at (\rth+2.1, -\vs) {\tiny{$m_2^4$}};
-    \node[ep] (r1_e2) at (\rth+2.8, -\vs) {\tiny{$m_3^4$}};
-    \node[ep] (r1_e3) at (\rth+3.5, -\vs) {\tiny{$m_4^4$}};
+    \node[er4] (r1_e0) at (\rth+1.4, -\vs) {\tiny{$m_1^4$}};
+    \node[er4] (r1_e1) at (\rth+2.1, -\vs) {\tiny{$m_2^4$}};
+    \node[er4] (r1_e2) at (\rth+2.8, -\vs) {\tiny{$m_3^4$}};
+    \node[er4] (r1_e3) at (\rth+3.5, -\vs) {\tiny{$m_4^4$}};
 
-    \node[intr] (intr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
-    \draw[lnk] (\rth+2.45,-0.35) -- (intr1.north);
-    \draw[lnk] (intr1.south) -- (\rth+2.45,-\vs+0.35);
+    \node[instr] (instr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
+    \draw[lnk] (\rth+2.45,-0.35) -- (instr1.north);
+    \draw[lnk] (instr1.south) -- (\rth+2.45,-\vs+0.35);
 
-    \node[enn] (r2_e0) at (\ctr+1.4, -\vs-\vs) {\tiny{$g_1^4$}};
-    \node[enn] (r2_e1) at (\ctr+2.1, -\vs-\vs) {\tiny{$g_2^4$}};
-    \node[enn] (r2_e2) at (\ctr+2.8, -\vs-\vs) {\tiny{$g_3^4$}};
-    \node[enn] (r2_e3) at (\ctr+3.5, -\vs-\vs) {\tiny{$g_4^4$}};
+    \node[eu4] (r2_e0) at (\ctr+1.4, -\vs-\vs) {\tiny{$g_1^4$}};
+    \node[eu4] (r2_e1) at (\ctr+2.1, -\vs-\vs) {\tiny{$g_2^4$}};
+    \node[eu4] (r2_e2) at (\ctr+2.8, -\vs-\vs) {\tiny{$g_3^4$}};
+    \node[eu4] (r2_e3) at (\ctr+3.5, -\vs-\vs) {\tiny{$g_4^4$}};
 
     \draw[shf] (r0_e0.south) -- (r2_e0.north);
     \draw[shf] (r0_e1.south) -- (r2_e1.north);
@@ -3129,39 +3127,39 @@ as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
     \draw[shf] (r1_e2.south) -- (r2_e2.north);
     \draw[shf] (r1_e3.south) -- (r2_e3.north);
 
-    \node[intr] (intr2) at (\ctr+2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm\_mul\_ps}}};
+    \node[instr] (instr2) at (\ctr+2.45, -\vs-\vs+1) {\footnotesize{\texttt{\_mm\_mul\_ps}}};
 
-    \draw[lnk] (r0_e2.south west) |- (intr2.west);
-    \draw[lnk] (r1_e1.south east) |- (intr2.east);
-    \draw[lnk] (intr2.south)      -- (7.35,-\vs-\vs+0.35);
+    \draw[lnk] (r0_e2.south west) |- (instr2.west);
+    \draw[lnk] (r1_e1.south east) |- (instr2.east);
+    \draw[lnk] (instr2.south)     -- (7.35,-\vs-\vs+0.35);
 
-    \node[intr] (intr3) at (\ctr+2.45, -\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm\_storeu\_ps}}};
+    \node[instr] (instr3) at (\ctr+2.45, -\vs-\vs-\vs+1) {\footnotesize{\texttt{\_mm\_storeu\_ps}}};
 
-    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (intr3);
-    \draw[lnk] (intr3) -- (7.35,-\vs-\vs-\vs+0.35);
+    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (instr3);
+    \draw[lnk] (instr3) -- (7.35,-\vs-\vs-\vs+0.35);
 
-    \node[ept        ] (mo_er0)  at ( 0.0, -\vs-\vs-\vs-0.00) {\tiny{...}};
-    \node[es , dotted] (mo_er1)  at ( 0.7, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er2)  at ( 1.4, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er3)  at ( 2.1, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er4)  at ( 2.8, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-0.00) {};
-    \node[enn, dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-0.00) {};
-    \node[enn, dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-0.00) {};
-    \node[enn, dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-0.00) {};
-    \node[enn, dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er16) at (11.2, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er17) at (11.9, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er18) at (12.6, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er19) at (13.3, -\vs-\vs-\vs-0.00) {};
-    \node[es , dotted] (mo_er20) at (14.0, -\vs-\vs-\vs-0.00) {};
-    \node[ept        ] (mo_er21) at (14.7, -\vs-\vs-\vs-0.00) {\tiny{...}};
+    \node[ept         ] (mo_er0)  at ( 0.0, -\vs-\vs-\vs-0.00) {\tiny{...}};
+    \node[erux, dotted] (mo_er1)  at ( 0.7, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er2)  at ( 1.4, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er3)  at ( 2.1, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er4)  at ( 2.8, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er16) at (11.2, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er17) at (11.9, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er18) at (12.6, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er19) at (13.3, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er20) at (14.0, -\vs-\vs-\vs-0.00) {};
+    \node[ept         ] (mo_er21) at (14.7, -\vs-\vs-\vs-0.00) {\tiny{...}};
 
     \draw[<->,>=latex,black] (-0.35, 0.75)  -- (15.05, 0.75)  node (arrow1) [midway, text=black, fill=white] {\small{Resources to users message}};
     \draw[<->,>=latex,black] (-0.35, -6.75) -- (15.05, -6.75) node (arrow2) [midway, text=black, fill=white] {\small{Final guesses}};
