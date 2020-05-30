@@ -48,7 +48,7 @@
 \begin{axis}[ybar,
              width=1.0\linewidth, height=0.7\linewidth,
              xticklabel style={black!70}, yticklabel style={black!70},
-             bar width=8pt,
+             bar width=6pt,
              legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
              legend cell align=right,
              area legend,
@@ -63,10 +63,11 @@
              xtick=data,
              ymajorgrids, grid style={dashed, gray!30},
              ymin=0,
-             ymax=6500,
+             ymax=7100,
              nodes near coords,
              nodes near coords align={vertical},
-             every node near coord/.append style={rotate=90, anchor=west},
+             % every node near coord/.style={font=\small},
+             every node near coord/.append style={rotate=90, anchor=west, font=\footnotesize},
              % tick align=outside, tickpos=left,
              %label style={font=\large},
              %tick label style={font=\large},
@@ -88,13 +89,13 @@
              coordinates {(1T1SMT,27) (NT1SMT,1716) (NT2SMT,2196) (NT3SMT,2208) (NT4SMT,2159)};
     \label{plot2}
 
-    % % Ryzen 7 2700X
-    % \addplot[black!25!Paired-9,fill=Paired-9!40,draw=Paired-9,
-    %          postaction={pattern color = black!50!Paired-9!70,
-    %                      pattern=none}
-    %         ]
-    %         coordinates {(1T1SMT,149) (NT1SMT,1072) (NT2SMT,1335)};
-    % \label{plot3}
+    % EPYC 7452
+    \addplot[black!25!Paired-9,fill=Paired-9!40,draw=Paired-9,
+             postaction={pattern color = black!50!Paired-9!70,
+                         pattern=none}
+            ]
+            coordinates {(1T1SMT,114) (NT1SMT,6192)};
+    \label{plot3}
 
     % Xeon E5-2680 v3
     \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
@@ -122,7 +123,7 @@
 
     \legend{$2 \times$ThunderX2 CN9975,
             $1 \times$Xeon Phi 7230,
-            % $1 \times$Ryzen 7 2700X,
+            $2 \times$EPYC 7452,
             $2 \times$Xeon E5-2680 v3,
             $2 \times$Xeon Gold 6140,
             $2 \times$Xeon Gold 6142,}

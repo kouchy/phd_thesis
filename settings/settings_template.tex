@@ -7,11 +7,14 @@
 %preamble
 \if@twoside%
   \setboolean{twosidedoc}{true}
+  % https://tex.stackexchange.com/questions/62572/twoside-introduces-incorrect-linespacing-at-end-of-section
+  \raggedbottom % disable auto vertical spacing when two-sided doc
 \else%
   \setboolean{twosidedoc}{false}
 \fi%
 \makeatother
 
+\usepackage[bottom]{footmisc} % footnotes at the bottom of the page
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,french]{babel}

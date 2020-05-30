@@ -83,19 +83,19 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt \
               main/chapter1/fig/other/com_chain_inter.svg
-	cd main/chapter1/fig/intro/com_chain && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
-	cd main/chapter1/fig/intro/com_chain && rubber -d com_chain.tex
-	cd main/chapter1/fig/simu/com_chain  && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
-	cd main/chapter1/fig/simu/com_chain  && rubber -d com_chain.tex
-	cd main/chapter1/fig/simu/in_out     && inkscape  in_out_old.svg      --export-pdf=in_out_old.pdf
-	cd main/chapter1/fig/simu/in_out     && rubber -d in_out.tex
-	cd main/chapter1/fig/other           && inkscape  com_chain_inter.svg --export-pdf=com_chain_inter.pdf
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_bch_rs.tex
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_ldpc.tex
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_polar.tex
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_rsc.tex
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_tpc.tex
-	cd main/chapter1/fig/simu/bfer/      && rubber -d bfer_turbo.tex
+	cd main/chapter1/fig/intro/com_chain                   && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
+	cd main/chapter1/fig/intro/com_chain                   && rubber -d com_chain.tex
+	cd main/chapter1/fig/simu/com_chain                    && inkscape  com_chain_old.svg   --export-pdf=com_chain_old.pdf
+	cd main/chapter1/fig/simu/com_chain                    && rubber -d com_chain.tex
+	cd main/chapter1/fig/simu/in_out                       && inkscape  in_out_old.svg      --export-pdf=in_out_old.pdf
+	cd main/chapter1/fig/simu/in_out                       && rubber -d in_out.tex
+	cd main/chapter1/fig/other                             && inkscape  com_chain_inter.svg --export-pdf=com_chain_inter.pdf
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_bch_rs.tex
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_ldpc.tex
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_polar.tex
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_rsc.tex
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_tpc.tex
+	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_turbo.tex
 
 chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
               main/chapter2/fig/polar/sc_decoder/colors \
@@ -188,25 +188,25 @@ chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
               main/chapter2/fig/scma/fec/dat/1_3/polar_mpa.txt \
               main/chapter2/fig/scma/fec/dat/1_3/turbo_empa.txt \
               main/chapter2/fig/scma/fec/dat/1_3/turbo_mpa.txt
-	cd main/chapter2/fig/polar/sc_decoder/           && rubber -d sc_decoder.tex
-	cd main/chapter2/fig/polar/tree_pruning_example/ && rubber -d tree_pruning_example.tex
-	cd main/chapter2/fig/polar/algos_comparison/     && rubber -d algos_comparison.tex
-	cd main/chapter2/fig/polar/scl_l/                && rubber -d scl_l.tex
-	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer.tex
-	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer_crc.tex
-	cd main/chapter2/fig/polar/scl_bfer/             && rubber -d scl_bfer_rep.tex
-	cd main/chapter2/fig/polar/scl_adaptive/         && rubber -d scl_adaptive.tex
-	cd main/chapter2/fig/turbo/bfer/                 && gnuplot   bfer_old.gp
-	cd main/chapter2/fig/turbo/bfer/                 && rubber -d bfer.tex
-	cd main/chapter2/fig/ldpc/tanner_graph/          && rubber -d tanner_graph.tex
-	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_chain.tex
-	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_dec.tex
-	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_enc.tex
-	cd main/chapter2/fig/scma/codec/                 && rubber -d codec_graph.tex
-	cd main/chapter2/fig/scma/ber_uncoded/           && rubber -d ber_uncoded.tex
-	cd main/chapter2/fig/scma/ber_uncoded_iter/      && rubber -d ber_uncoded_iter.tex
-	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_2.tex
-	cd main/chapter2/fig/scma/fec/                   && rubber -d fec_1_3.tex
+	cd main/chapter2/fig/polar/sc_decoder/                 && rubber -d sc_decoder.tex
+	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber -d tree_pruning_example.tex
+	cd main/chapter2/fig/polar/algos_comparison/           && rubber -d algos_comparison.tex
+	cd main/chapter2/fig/polar/scl_l/                      && rubber -d scl_l.tex
+	cd main/chapter2/fig/polar/scl_bfer/                   && rubber -d scl_bfer.tex
+	cd main/chapter2/fig/polar/scl_bfer/                   && rubber -d scl_bfer_crc.tex
+	cd main/chapter2/fig/polar/scl_bfer/                   && rubber -d scl_bfer_rep.tex
+	cd main/chapter2/fig/polar/scl_adaptive/               && rubber -d scl_adaptive.tex
+	cd main/chapter2/fig/turbo/bfer/                       && gnuplot   bfer_old.gp
+	cd main/chapter2/fig/turbo/bfer/                       && rubber -d bfer.tex
+	cd main/chapter2/fig/ldpc/tanner_graph/                && rubber -d tanner_graph.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber -d codec_chain.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber -d codec_dec.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber -d codec_enc.tex
+	cd main/chapter2/fig/scma/codec/                       && rubber -d codec_graph.tex
+	cd main/chapter2/fig/scma/ber_uncoded/                 && rubber -d ber_uncoded.tex
+	cd main/chapter2/fig/scma/ber_uncoded_iter/            && rubber -d ber_uncoded_iter.tex
+	cd main/chapter2/fig/scma/fec/                         && rubber -d fec_1_2.tex
+	cd main/chapter2/fig/scma/fec/                         && rubber -d fec_1_3.tex
 
 chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/src/ldpc/bp_min_sum_simd.cpp \
@@ -287,20 +287,8 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber -d simd_exp.tex
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber -d simd_final_guess.tex
 
-chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module.svg \
-              main/chapter4/fig/simu/speedup/speedup.tex \
-              main/chapter4/fig/simu/speedup/colors \
-              main/chapter4/fig/simu/speedup/dat/AMD_Ryzen_7_2700X.txt \
-              main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt \
-              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt \
-              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6140.txt \
-              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6142.txt \
-              main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt \
-              main/chapter4/fig/simu/throughput/throughput.tex \
-              main/chapter4/fig/simu/throughput/colors
-	cd main/chapter4/fig/soft_archi/     && inkscape  com_chain_task_module.svg --export-pdf=com_chain_task_module.pdf
-	cd main/chapter4/fig/simu/speedup    && rubber -d speedup.tex
-	cd main/chapter4/fig/simu/throughput && rubber -d throughput.tex
+chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module.svg
+	cd main/chapter4/fig/soft_archi/                       && inkscape  com_chain_task_module.svg --export-pdf=com_chain_task_module.pdf
 
 chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_old.gp \
               main/chapter5/fig/polar/sc_energy_implems_vs/dat/A15_1100MHz_R05_intra_inter_bis.dat \
@@ -392,32 +380,44 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter5/fig/scma/energy/energy.tex \
               main/chapter5/fig/scma/energy/colors \
               main/chapter5/fig/scma/profiling/profiling.tex \
-              main/chapter5/fig/scma/profiling/colors
-	cd main/chapter5/fig/polar/sc_energy_implems_vs/ && gnuplot   sc_energy_implems_vs_old.gp
-	cd main/chapter5/fig/polar/sc_energy_implems_vs/ && rubber -d sc_energy_implems_vs_total.tex
-	cd main/chapter5/fig/polar/sc_energy_implems_vs/ && rubber -d sc_energy_implems_vs_mem.tex
-	cd main/chapter5/fig/polar/sc_energy_freq/       && gnuplot   sc_energy_freq_old.gp
-	cd main/chapter5/fig/polar/sc_energy_freq/       && rubber -d sc_energy_freq_a7.tex
-	cd main/chapter5/fig/polar/sc_energy_freq/       && rubber -d sc_energy_freq_a15.tex
-	cd main/chapter5/fig/polar/sc_energy_rate/       && gnuplot   sc_energy_rate_old.gp
-	cd main/chapter5/fig/polar/sc_energy_rate/       && rubber -d sc_energy_rate_N2048.tex
-	cd main/chapter5/fig/polar/sc_energy_rate/       && rubber -d sc_energy_rate_N32768.tex
-	cd main/chapter5/fig/polar/sc_gen_thr_intra/     && gnuplot   sc_gen_thr_intra_old.gp
-	cd main/chapter5/fig/polar/sc_gen_thr_intra/     && rubber -d sc_gen_thr_intra_arm.tex
-	cd main/chapter5/fig/polar/sc_gen_thr_intra/     && rubber -d sc_gen_thr_intra_x86.tex
-	cd main/chapter5/fig/polar/sc_gen_thr_inter/     && gnuplot   sc_gen_thr_inter_old.gp
-	cd main/chapter5/fig/polar/sc_gen_thr_inter/     && rubber -d sc_gen_thr_inter_arm.tex
-	cd main/chapter5/fig/polar/sc_gen_thr_inter/     && rubber -d sc_gen_thr_inter_x86.tex
-	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && gnuplot   sc_gen_l1i_size_old.gp
-	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_w_comp.tex
-	cd main/chapter5/fig/polar/sc_gen_l1i_size/      && rubber -d sc_gen_l1i_size_wo_comp.tex
-	cd main/chapter5/fig/polar/sc_colgate/           && rubber -d sc_colgate.tex
-	cd main/chapter5/fig/turbo/thr/                  && gnuplot   thr_old.gp
-	cd main/chapter5/fig/turbo/thr/                  && rubber -d thr.tex
-	cd main/chapter5/fig/turbo/energy/               && gnuplot   energy_old.gp
-	cd main/chapter5/fig/turbo/energy/               && rubber -d energy.tex
-	cd main/chapter5/fig/scma/energy/                && rubber -d energy.tex
-	cd main/chapter5/fig/scma/profiling/             && rubber -d profiling.tex
+              main/chapter5/fig/scma/profiling/colors \
+              main/chapter5/fig/simu/speedup/speedup.tex \
+              main/chapter5/fig/simu/speedup/colors \
+              main/chapter5/fig/simu/speedup/dat/AMD_Ryzen_7_2700X.txt \
+              main/chapter5/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt \
+              main/chapter5/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt \
+              main/chapter5/fig/simu/speedup/dat/Intel_Xeon_Gold_6140.txt \
+              main/chapter5/fig/simu/speedup/dat/Intel_Xeon_Gold_6142.txt \
+              main/chapter5/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt \
+              main/chapter5/fig/simu/throughput/throughput.tex \
+              main/chapter5/fig/simu/throughput/colors
+	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && gnuplot   sc_energy_implems_vs_old.gp
+	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_total.tex
+	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_mem.tex
+	cd main/chapter5/fig/polar/sc_energy_freq/             && gnuplot   sc_energy_freq_old.gp
+	cd main/chapter5/fig/polar/sc_energy_freq/             && rubber -d sc_energy_freq_a7.tex
+	cd main/chapter5/fig/polar/sc_energy_freq/             && rubber -d sc_energy_freq_a15.tex
+	cd main/chapter5/fig/polar/sc_energy_rate/             && gnuplot   sc_energy_rate_old.gp
+	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber -d sc_energy_rate_N2048.tex
+	cd main/chapter5/fig/polar/sc_energy_rate/             && rubber -d sc_energy_rate_N32768.tex
+	cd main/chapter5/fig/polar/sc_gen_thr_intra/           && gnuplot   sc_gen_thr_intra_old.gp
+	cd main/chapter5/fig/polar/sc_gen_thr_intra/           && rubber -d sc_gen_thr_intra_arm.tex
+	cd main/chapter5/fig/polar/sc_gen_thr_intra/           && rubber -d sc_gen_thr_intra_x86.tex
+	cd main/chapter5/fig/polar/sc_gen_thr_inter/           && gnuplot   sc_gen_thr_inter_old.gp
+	cd main/chapter5/fig/polar/sc_gen_thr_inter/           && rubber -d sc_gen_thr_inter_arm.tex
+	cd main/chapter5/fig/polar/sc_gen_thr_inter/           && rubber -d sc_gen_thr_inter_x86.tex
+	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && gnuplot   sc_gen_l1i_size_old.gp
+	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber -d sc_gen_l1i_size_w_comp.tex
+	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber -d sc_gen_l1i_size_wo_comp.tex
+	cd main/chapter5/fig/polar/sc_colgate/                 && rubber -d sc_colgate.tex
+	cd main/chapter5/fig/turbo/thr/                        && gnuplot   thr_old.gp
+	cd main/chapter5/fig/turbo/thr/                        && rubber -d thr.tex
+	cd main/chapter5/fig/turbo/energy/                     && gnuplot   energy_old.gp
+	cd main/chapter5/fig/turbo/energy/                     && rubber -d energy.tex
+	cd main/chapter5/fig/scma/energy/                      && rubber -d energy.tex
+	cd main/chapter5/fig/scma/profiling/                   && rubber -d profiling.tex
+	cd main/chapter5/fig/simu/speedup                      && rubber -d speedup.tex
+	cd main/chapter5/fig/simu/throughput                   && rubber -d throughput.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -473,8 +473,6 @@ clean: clean4all
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_soa
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean simd_exp
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean simd_final_guess
-	cd main/chapter4/fig/simu/speedup                      && rubber --clean speedup
-	cd main/chapter4/fig/simu/throughput                   && rubber --clean throughput
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_w_comp
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_wo_comp
 	cd main/chapter5/fig/polar/sc_gen_thr_inter/           && rubber --clean sc_gen_thr_inter_arm
@@ -492,6 +490,8 @@ clean: clean4all
 	cd main/chapter5/fig/turbo/energy/                     && rubber --clean energy
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean energy
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean profiling
+	cd main/chapter5/fig/simu/speedup                      && rubber --clean speedup
+	cd main/chapter5/fig/simu/throughput                   && rubber --clean throughput
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -549,8 +549,6 @@ mrproper: clean4all
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean -d simd_exp.tex
 	cd main/chapter3/fig/scma/simd_exp_mul/                && rubber --clean -d simd_final_guess.tex
 	cd main/chapter4/fig/soft_archi/                       && rm -f             com_chain_task_module.pdf
-	cd main/chapter4/fig/simu/speedup                      && rubber --clean -d speedup.tex
-	cd main/chapter4/fig/simu/throughput                   && rubber --clean -d throughput.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rm -f             sc_energy_implems_vs_old.pdf
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_total.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_mem.tex
@@ -578,6 +576,8 @@ mrproper: clean4all
 	cd main/chapter5/fig/turbo/energy/                     && rubber --clean -d energy.tex
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean -d energy.tex
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean -d profiling.tex
+	cd main/chapter5/fig/simu/speedup                      && rubber --clean -d speedup.tex
+	cd main/chapter5/fig/simu/throughput                   && rubber --clean -d throughput.tex
 
 open:
 	xdg-open my_thesis.pdf &

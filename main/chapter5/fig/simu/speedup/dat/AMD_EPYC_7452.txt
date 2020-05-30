@@ -1,0 +1,93 @@
+# 2x AMD EPYC 7452 @ 1.50GHz - 32 cores per socket (total 64 cores) - 1-way SMT - Turbo Boost OFF
+# salloc -N1 --exclusive -C diablo -t 04:00:00
+# Script:
+# #!/bin/bash
+#
+# CMD='./bin/aff3ct-2.2.2-14-g4d14567 -p 8 --sim-type BFER -C POLAR -m 4.5 -M 4.51 -s 0.25 --enc-fb-gen-method GA -K 1755 -N 2048 --src-type AZCW --src-implem FAST --chn-type AWGN --chn-implem FAST --qnt-bits 6 --qnt-dec 1 --qnt-implem FAST --dec-type ASCL --dec-simd INTRA --crc-type 32-GZIP --crc-implem FAST --dec-polar-nodes "{R0,R0L,R1,REP_2-8,REPL,SPC_4}" -L 32'
+# CMD_EXT='--no-legend --ter-freq 0 -e 20000000 --mnt-red-lazy --sim-stop-time 600'
+# CMD_FULL=$CMD" "$CMD_EXT
+#
+# START_THREAD=1
+# MAX_THREADS=64
+# STEP=1
+# COL_THR=10
+#
+# RES=$(eval $CMD_FULL" -t 1")
+# SIM_THR=$(echo $RES | cut -d "|" -f$COL_THR)
+# echo "1 $SIM_THR"
+#
+# for (( T=START_THREAD; T<=MAX_THREADS; T+=STEP ))
+# do
+# 	RES=$(eval $CMD_FULL" -t $T")
+# 	SIM_THR=$(echo $RES | cut -d "|" -f$COL_THR)
+# 	echo "$T $SIM_THR"
+# done
+# ---------------------------------------------------
+# AVX2 - SIMD 256 bits
+# GCC 9.2.0: -O3 -DNDEBUG -funroll-loops -march=native
+# ---------------------------------------------------
+    t      Mbps
+    1   114.324 114.713
+ #  2   224.433
+ #  3   332.116
+    4   449.006
+ #  5   557.286
+ #  6   671.153
+ #  7   780.079
+    8   897.211
+ #  9  1004.988
+ # 10  1107.552
+ # 11  1219.283
+   12  1342.248
+ # 13  1453.932
+ # 14  1566.255
+ # 15  1644.501
+   16  1740.564
+ # 17  1874.737
+ # 18  1968.505
+ # 19  2073.146
+   20  2174.698
+ # 21  2301.598
+ # 22  2406.424
+ # 23  2501.671
+   24  2612.279
+ # 25  2702.649
+ # 26  2796.121
+ # 27  2921.445
+   28  3032.777
+ # 29  3136.091
+ # 30  3243.628
+ # 31  3330.613
+   32  3427.664
+ # 33  3530.299
+ # 34  3649.109
+ # 35  3734.854
+   36  3852.210
+ # 37  3981.029
+ # 38  4055.644
+ # 39  4161.048
+   40  4229.624
+ # 41  4333.783
+ # 42  4452.536
+ # 43  4559.338
+   44  4647.234
+ # 45  4746.524
+ # 46  4857.468
+ # 47  4977.427
+   48  5061.026
+ # 49  5141.208
+ # 50  5226.802
+ # 51  5271.297
+   52  5395.656
+ # 53  5467.280
+ # 54  5547.230
+ # 55  5600.791
+   56  5666.434
+ # 57  5736.789
+ # 58  5837.469
+ # 59  5879.188
+   60  5960.796
+ # 61  6007.420
+ # 62  6075.899
+ # 63  6162.812
+   64  6192.291
