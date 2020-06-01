@@ -390,7 +390,9 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter5/fig/simu/speedup/dat/Intel_Xeon_Gold_6142.txt \
               main/chapter5/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt \
               main/chapter5/fig/simu/throughput/throughput.tex \
-              main/chapter5/fig/simu/throughput/colors
+              main/chapter5/fig/simu/throughput/colors \
+              main/chapter5/fig/simu/chain/chain.tex \
+              main/chapter5/fig/simu/chain/colors
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && gnuplot   sc_energy_implems_vs_old.gp
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_total.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_mem.tex
@@ -418,6 +420,7 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 	cd main/chapter5/fig/scma/profiling/                   && rubber -d profiling.tex
 	cd main/chapter5/fig/simu/speedup                      && rubber -d speedup.tex
 	cd main/chapter5/fig/simu/throughput                   && rubber -d throughput.tex
+	cd main/chapter5/fig/simu/chain                        && rubber -d chain.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -492,6 +495,7 @@ clean: clean4all
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean profiling
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean speedup
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean throughput
+	cd main/chapter5/fig/simu/chain                        && rubber --clean chain
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -578,6 +582,7 @@ mrproper: clean4all
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean -d profiling.tex
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean -d speedup.tex
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean -d throughput.tex
+	cd main/chapter5/fig/simu/chain                        && rubber --clean -d chain.tex
 
 open:
 	xdg-open my_thesis.pdf &
