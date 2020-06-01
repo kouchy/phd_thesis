@@ -33,9 +33,9 @@
         \addplot[mark=pentagon, Paired-5,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 28.219] {./dat/Cavium_ThunderX2_CN9975.txt}; \label{plot:line1}
         \addplot[mark=triangle, Paired-3,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 26.892] {./dat/Intel_Xeon_Phi_7230.txt    }; \label{plot:line2}
         \addplot[mark=o,        Paired-1,    semithick] table [x=t, y expr=\thisrow{Mbps}/164.946] {./dat/Intel_Xeon_Gold_6140.txt   }; \label{plot:line3}
-        \addplot[mark=otimes,   Paired-1!60, semithick] table [x=t, y expr=\thisrow{Mbps}/120.704] {./dat/Intel_Xeon_Gold_6240.txt   }; \label{plot:line4}
+        \addplot[mark=otimes,   Paired-1!60, semithick] table [x=t, y expr=\thisrow{Mbps}/126.409] {./dat/Intel_Xeon_Gold_6240.txt   }; \label{plot:line4}
         \addplot[mark=square,   Paired-7,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 81.759] {./dat/Intel_Xeon_E5-2680v3.txt   }; \label{plot:line5}
-        \addplot[mark=+,        Paired-9,    semithick] table [x=t, y expr=\thisrow{Mbps}/148.994] {./dat/AMD_EPYC_7452.txt          }; \label{plot:line6}
+        \addplot[mark=+,        Paired-9,    semithick] table [x=t, y expr=\thisrow{Mbps}/113.040] {./dat/AMD_EPYC_7702.txt          }; \label{plot:line6}
         \addplot[mark=none,     black!65              ] coordinates {(0,0) (512,512)};
 
         % \legend{$2 \times$ThunderX2 CN9975,
@@ -61,10 +61,10 @@
     {
         \ref{plot:line1} & $2 \times$ThunderX2 CN9975 \\
         \ref{plot:line2} & $1 \times$Xeon Phi 7230    \\
-        \ref{plot:line6} & $2 \times$EPYC 7452        \\
         \ref{plot:line5} & $2 \times$Xeon E5-2680 v3  \\
         \ref{plot:line3} & $2 \times$Xeon Gold 6140   \\
         \ref{plot:line4} & $2 \times$Xeon Gold 6240   \\
+        \ref{plot:line6} & $2 \times$EPYC 7702        \\
     };
 
     % \matrix [draw,

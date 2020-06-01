@@ -1319,11 +1319,13 @@ still offers performance gains over MPA.
   \hline
   ARM\R   & ThunderX2\R CN9975                        & NEON          & 128-bit                    & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
   Intel\R & Xeon Phi\TM 7230                          & AVX-512F      & 512-bit                    & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
-  AMD\R   & EPYC\TM 7452                              & AVX2          & 256-bit                    & 2                                  &  32                & 1.50           & 1                             & \xmark         \\
   Intel\R & Xeon\TM E5-2680 v3                        & AVX2          & 256-bit                    & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
   Intel\R & Xeon\TM Gold 6140                         & AVX-512BW     & 512-bit                    & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
 % Intel\R & Xeon\TM Gold 6142                         & AVX-512BW     & 512-bit                    & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
   Intel\R & Xeon\TM Gold 6240                         & AVX-512BW     & 512-bit                    & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
+% AMD\R   & EPYC\TM 7452                              & AVX2          & 256-bit                    & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
+  AMD\R   & EPYC\TM 7702                              & AVX2          & 256-bit                    & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
+
   \end{tabular}
   }}
 \end{table}
@@ -1349,20 +1351,22 @@ still offers performance gains over MPA.
   \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Thr.} (Mb/s)}}
   & Xeon Phi\TM 7230   & 100.2          &  1862.1         &    -            &  49.8         &  2073.2           &   921.4       &  29.0          \\
   & ThunderX2\R CN9975 &  53.7          &   672.9         &   748.3         & 112.1         &  6338.4           &  2386.3       &  28.4          \\
-  & EPYC\TM 7452       & 217.5          & 14443.7         &  9096.3         & 357.9         & 28365.2           & 13571.1       & 115.8          \\
   & Xeon\TM E5-2680 v3 & 159.7          &  7427.1         &  4586.2         & 247.5         & 20832.6           &  8234.5       &  82.3          \\
   & Xeon\TM Gold 6140  & 421.7          & 14131.7         & 12931.5         & 376.5         & 31749.5           & 11093.0       & 171.8          \\
 % & Xeon\TM Gold 6142  &   -            &     -           &     -           &   -           &     -             &     -         &   -            \\
   & Xeon\TM Gold 6240  & 314.6          & 10518.3         &  9915.8         & 277.4         & 23118.3           &  7953.5       & 127.3          \\
+% & EPYC\TM 7452       & 217.5          & 14443.7         &  9096.3         & 357.9         & 28365.2           & 13571.1       & 115.8          \\
+  & EPYC\TM 7702       & 215.4          & 14919.5         &  9234.5         & 359.5         & 28404.0           & 13562.0       & 115.4          \\
   \hline \hline
   \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Lat.} ($\mu$s)}}
   & Xeon Phi\TM 7230   & 20.45          & 1.10            & -               & 35.23         & 0.83              & 1.87          & 59.48          \\
   & ThunderX2\R CN9975 & 38.15          & 3.04            & 2.74            & 15.65         & 0.27              & 0.72          & 60.58          \\
-  & EPYC\TM 7452       &  9.42          & 0.14            & 0.23            &  4.90         & 0.06              & 0.13          & 14.88          \\
   & Xeon\TM E5-2680 v3 & 12.82          & 0.28            & 0.45            &  7.09         & 0.08              & 0.21          & 20.93          \\
   & Xeon\TM Gold 6140  &  4.86          & 0.14            & 0.16            &  4.66         & 0.05              & 0.16          & 10.03          \\
 % & Xeon\TM Gold 6142  &  -             & -               & -               &  -            & -                 & -             &  -             \\
   & Xeon\TM Gold 6240  &  6.51          & 0.19            & 0.21            &  6.33         & 0.07              & 0.22          & 13.53          \\
+% & EPYC\TM 7452       &  9.42          & 0.14            & 0.23            &  4.90         & 0.06              & 0.13          & 14.88          \\
+  & EPYC\TM 7702       &  9.51          & 0.14            & 0.22            &  4.88         & 0.06              & 0.13          & 14.94          \\
   \end{tabular}
   % }}
   }
