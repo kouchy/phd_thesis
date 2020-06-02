@@ -1300,11 +1300,14 @@ comparison operations embedded in the $\max(.)$ function in \eqref{eq:scma_13}.
 Nevertheless, without using fast math libraries, log-MPA
 still offers performance gains over MPA.
 
-\section{Analysis of the Simulator Throughput on Modern CPUs}
+\section{Analysis of the Simulator Throughput on a Selection of CPUs}
 
 \begin{itemize}
   \item \cmark~faire un petit schéma qui montre les boîtes simulés (AWGN -> Demod -> Qnt -> Dec -> CRC extract -> Monitor)
   \item \cmark~ajouter un AMD Ryzen (voir PlaFRIM)
+  \item \xmark~AMD c'est intéressant parcequ'ils ont fait le choix de rester sur de l'AVX2 et on pourrait s'attendre à ce que ça les pénalise et en fait non pas trop
+  \item \xmark~Table~\ref{tab:simu_taks_thr_lat}, identifier quelques chiffres à retenir dans la table, avec un code couleur ou un style
+  \item \xmark~Situer le niveau de perf qu'on obtient avec une version matérielle
 \end{itemize}
 
 \begin{table}[htp]

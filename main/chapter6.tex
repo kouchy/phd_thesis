@@ -8,62 +8,147 @@
 
 \section{Introduction}
 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-
 \begin{itemize}
-  \item Algorithmes de synchronisation avant la démodulation
-  \item Tâches séquentielles (avec état)
+  \item \xmark~Algorithmes de synchronisation avant la démodulation
+  \item \xmark~Tâches séquentielles (avec état)
 \end{itemize}
+
+It is now commonplace to state that Humanity has entered the era of
+communication. The fifth generation of mobile networks (5G) is a perfect
+illustration of this: all kinds of objects will increasingly use communication
+technology to exchange information on the Internet of Things (IoT).
+
+Despite their variety, all communication systems are based on a common
+abstract model proposed by Claude Shannon. In his seminal
+paper~\cite{Shannon1948}, he proposed to model a communication system with five
+components: an information source, a transmitter, a channel, a receiver and a
+destination.
+
+Traditionally those communication systems are implemented on dedicated hardware
+(ASIC) targeting high throughputs, low latencies and energy efficiency.
+However, the implementations of such solutions have a long time to market, are
+expensive and are specific by nature~\cite{Palkovic2010,Palkovic2012}.
+
+The new standards like the 5G are coming with very large specifications and
+multiple possible configurations~\cite{ETSI2018}. Small objects that need to
+communicate very few data at low rates will live together with 4K video
+streaming for mobile phone games which will required high throughputs as well as
+low latencies~\cite{Rost2014}.
+
+To meet those various specifications the transceivers will have to be able to
+adapt quickly to new configurations. There is a growing need for flexible,
+re-configurable and programmable solutions. To match those constraints, there is
+a growing interest for the SDR which consists in processing both the Physical
+(PHY) and Medium Access Control (MAC) layers in software~\cite{Mitola1993}, as
+opposed to the traditionally hardware-based solutions. Short time to market,
+lower development costs, interoperability, readiness to adapt to future updates
+and new protocols are the mains advantages of the SDR~\cite{Akeela2018}.
+
+SDR can be implemented on various targets like Field Programmable Gate Arrays
+(FPGAs)~\cite{Coulton2004,Skey2006,Dutta2010,Shaik2013,Maheshwarappa2015,
+Nivin2016}, Digital Signal Processors (DSPs)~\cite{Kaur2008,Karlsson2013,
+Shaik2013} or General Purpose Processors (GPPs)~\cite{Yoge2012,Bang2014,
+Meshram2019,Grayver2020}. This thesis focuses on GPPs targets as they are widely
+spread, affordable and easy to program. More precisely, only the CPUs are
+considered. Many elementary blocks of digital communication systems has been
+optimized to run fast on x86 and ARM CPUs~\cite{Cassagne2015c,Cassagne2016a,
+Cassagne2016b,Cassagne2018,Leonardon2019,Ghaffari2019} and have been packaged in
+AFF3CT~\cite{Cassagne2017a,Cassagne2019a}, our dedicated open source toolbox.
+Even if there is some interesting results in term of throughput on
+GPUs~\cite{Xianjun2013,Li2014,LeGal2014a,Giard2016b,Keskin2017a}, the achieved
+latency on this architecture is still too high to meet real time constraints and
+cannot compete with existing CPU implementations~\cite{LeGal2015a,Cassagne2015c,
+Giard2016b,Cassagne2016a,LeGal2017,Leonardon2019,LeGal2019a}. This is mainly due
+to data transfers between the host (CPUs) and the device (GPUs), and to the
+intrinsic nature of the GPU architecture which is not optimized for latency
+efficiency.
 
 \section{Dataflow Model}
 
 \begin{itemize}
-  \item géneral dataflow
-  \item synchronous dataflow
-  \item cyclo static dataflow
+  \item \xmark~géneral dataflow
+  \item \xmark~synchronous dataflow
+  \item \xmark~cyclo static dataflow
 \end{itemize}
+
+The Shanon's communication model presented before can be refined in a way
+that the transmitter and the receiver are decomposed into many processing
+blocks. Those blocks are mainly connected to each other in an ordered graph.
+This perfectly matches the dataflow model~\cite{Dennis1980,Ackerman1982}: the
+blocks are the filters and the binding links between the blocks represent the
+data movements. The dataflow model allows to describe the system from a high
+level point of view and to perform optimizations independently of the system
+designer. In the case of the SDR, simpler models than the generalized dataflow
+can be used like the synchronous dataflow~\cite{Lee1987} or the cyclo-static
+dataflow~\cite{Engels1994,Bilsen1995}. This allows to perform aggressive
+simplifications like a static scheduling of the filters
+execution~\cite{Parks1995}.
 
 \section{Related Works}
 
 \subsection{Dedicated Languages}
 
+Many languages dedicated to streaming applications have been
+developed~\cite{Buck2004,Amarasinghe2005,Liao2006,Black-Schaffer2010,Glitia2010,
+Thies2010,DeOliveiraCastro2017}. Streaming applications are most of the time
+represented with the dataflow model and the dedicated languages often support
+the general or the cyclo-static dataflow model. They also very often come with
+automatic parallelism mechanisms like pipelining and forks/joins.
+
 \subsection{Ad Hoc Solutions}
 
+Some preliminary works has been made to support a part of a communication
+standard (DVB-S2 receiver) on CPUs and shows that it is possible to reach high
+throughputs (10~Gb/s) using a small cluster~\cite{Grayver2020}. Those works
+demonstrate the feasibility but lack an overall methodology. Indeed, the
+approach is ad hoc for fixed parameters of the standard and a single CPU.
+
 \subsection{GNU Radio}
+
+However, there are few solutions targeting specifically the SDR sub-domain yet.
+The most famous is GNU Radio~\cite{GNURadio} which is open source and largely
+adopted by the community. The software is bundled with a large variety of
+algorithms existing in real life systems. GNU Radio models the digital
+communication systems at the symbol level: this philosophy is very close to the
+algorithms descriptions that can be found in the signal community literature.
+Thus, it allows quick implementation of new algorithms. Still, we show this is a
+limitation to meet high throughputs and low latencies constraints on current
+GPPs architectures, this is why, in this thesis, we propose, through AFF3CT, a
+runtime Embedded Domain Specific Language (EDSL) working on sets of symbols
+(aka frames). AFF3CT is a form of the synchronous dataflow model specialized to
+the relevant characteristics of FEC communication chains enabling to perform
+more aggressive optimizations than GNU Radio, at the cost of lower generality.
 
 \section{Runtime Embedded DSL}
 
 \subsection{Serial Blocks}
 
 \begin{itemize}
-  \item tâches = les traitements (effectués sur des trames)
-  \item modules = les données internes à une ou plusieurs tâches
-  \item sockets = les données échangées entre les tâches
-  \item boucles = permet de répéter une sous-séquence
-  \item routeurs = permet d'aiguiller vers différentes sous-séquences
+  \item \xmark~tâches = les traitements (effectués sur des trames)
+  \item \xmark~modules = les données internes à une ou plusieurs tâches
+  \item \xmark~sockets = les données échangées entre les tâches
+  \item \xmark~boucles = permet de répéter une sous-séquence
+  \item \xmark~routeurs = permet d'aiguiller vers différentes sous-séquences
 \end{itemize}
 
 \subsection{Parallel Blocks}
 
 \begin{itemize}
-  \item séquence = un enchaînement de tâches dont l'ordre est défini par les
-        connections entre les sockets
-  \item pipeline
+  \item \xmark~séquence = un enchaînement de tâches dont l'ordre est défini par les
+    connections entre les sockets
+  \item \xmark~pipeline
 \end{itemize}
 
 \subsection{Rules}
 
 \begin{itemize}
-  \item une socket d'entrée ne peut être connectée qu'à une seule socket de
+  \item \xmark~une socket d'entrée ne peut être connectée qu'à une seule socket de
     sortie
-  \item toutes les sockets d'entrée d'une tâche doivent être connectées pour
+  \item \xmark~toutes les sockets d'entrée d'une tâche doivent être connectées pour
     qu'elle puisse s'exécuter
-  \item une socket de sortie peut être connectée à aucune, une ou plus d'une
+  \item \xmark~une socket de sortie peut être connectée à aucune, une ou plus d'une
     socket d'entrée
-  \item l'ordonnancement d'une séquence est implicitement défini par le binding,
+  \item \xmark~l'ordonnancement d'une séquence est implicitement défini par le binding,
     quand la dernière socket d'input d'une tâche est connectée, alors on va
     passer aux tâches suivantes
 \end{itemize}

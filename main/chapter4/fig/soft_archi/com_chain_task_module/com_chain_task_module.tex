@@ -1,0 +1,45 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (src) at ( 0, 4) {generate};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (enc) at ( 4, 4) {encode};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (mod) at ( 8, 4) {modulate};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1] (chn) at (11, 2) {add\_noise};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (dem) at ( 8, 0) {demodulate};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (dec) at ( 4, 0) {decode};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (mnt) at ( 0, 0) {check\_errrors};
+
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Source},  dashed, fit=(src)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Encoder}, dashed, fit=(enc)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]center:Modem},  dashed, fit=(mod) (dem)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Channel}, dashed, fit=(chn)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Decoder}, dashed, fit=(dec)] {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Monitor}, dashed, fit=(mnt)] {};
+
+    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white] {};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white] {};
+    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white] {};
+    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white] {};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white] {};
+    \draw[->,>=latex] (dec) -- (mnt) node [midway, below, fill=white] {};
+
+    \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}] (l1) at (-1, 1.7) {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}] (l1) at (-1, 2.3) {};
+
+  \end{tikzpicture}
+\end{document}

@@ -20,11 +20,11 @@ The source code samples use the `minted` package which is based on the `Python`
 sudo apt install python-pygments python3-pygments
 ```
 
-Some of the figures are generated with `Gnuplot`, `XFig` and `Inkscape`:
+<!-- Some of the figures are generated with `Gnuplot`, `XFig` and `Inkscape`:
 
 ```bash
 sudo apt install gnuplot xfig inkscape
-```
+``` -->
 
 `rubber` is used as the building system for the `LaTeX` documents:
 
@@ -44,11 +44,11 @@ of the available targets:
 
 ## Known Issues
 
-- There is a bug with the `titlesec` package on `Linux Ubuntu 16.04 LTS`, the
-numbering of the sections and subsections is broken. Installing the latest
-version from [https://www.ctan.org/pkg/titlesec](https://www.ctan.org/pkg/titlesec)
+- There is a bug with the `LaTeX` `titlesec` package on
+`Linux Ubuntu 16.04 LTS`, the numbering of the sections and subsections is
+broken. Installing the latest version from [https://www.ctan.org/pkg/titlesec](https://www.ctan.org/pkg/titlesec)
 solves the problem.
 
-## Plan of the Thesis
+<!-- ## Plan of the Thesis
 
-[Follow this link.](plan.md) -> outdated now :-(
+[Follow this link.](plan.md) -> outdated now :-( -->
