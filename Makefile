@@ -51,6 +51,7 @@ figs: titlepage \
       chapter3_fig \
       chapter4_fig \
       chapter5_fig \
+      chapter6_fig
 
 titlepage: head/titlepage.tex
 	cd head                                                && rubber -d titlepage.tex
@@ -290,7 +291,8 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
 #	cd main/chapter3/fig/polar/scl_spc/                    && gnuplot   scl_spc_diff_old.gp
 
 chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module_old.svg \
-              main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module.tex
+              main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module.tex \
+              main/chapter4/fig/soft_archi/com_chain_task_module/colors
 	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber -d com_chain_task_module.tex
 #	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && inkscape  com_chain_task_module_old.svg --export-pdf=com_chain_task_module_old.pdf
 
@@ -426,6 +428,10 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 #	cd main/chapter5/fig/turbo/thr/                        && gnuplot   thr_old.gp
 #	cd main/chapter5/fig/turbo/energy/                     && gnuplot   energy_old.gp
 
+chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
+              main/chapter6/fig/dsl/loop/colors
+	cd main/chapter6/fig/dsl/loop/                         && rubber -d loop.tex
+
 clean4all:
 	rm -f *.mtc*
 	rm -f *.bcf
@@ -501,6 +507,7 @@ clean: clean4all
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean speedup
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean throughput
 	cd main/chapter5/fig/simu/chain                        && rubber --clean chain
+	cd main/chapter6/fig/dsl/loop/                         && rubber --clean loop
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -569,6 +576,7 @@ mrproper: clean4all
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean -d speedup.tex
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean -d throughput.tex
 	cd main/chapter5/fig/simu/chain                        && rubber --clean -d chain.tex
+	cd main/chapter6/fig/dsl/loop/                         && rubber --clean -d loop.tex
 #	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf

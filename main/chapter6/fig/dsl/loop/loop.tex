@@ -1,0 +1,97 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1} }
+    \tikzset{ ss/.style ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+    \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+    \node[tsk, minimum height=3cm, minimum width=6cm, label={[Paired-1]below:Loop}] (loop) at ( 0, 0) {};
+
+    \node[tsk, dashed, rounded corners=2pt, minimum height=1cm, minimum width=3cm, align=center] (loopc) at (-0.75, 0.75) {Condition\\Evaluation};
+    \node[sin, dashed ] (loop_si1c) at (0-2.25,  1.0) {};
+    \node[sin, dashed ] (loop_si2c) at (0-2.25,  0.5) {};
+
+    \node[sout] (loop_so1) at (0+3,  1.0) {};
+    \node[sout] (loop_so2) at (0+3, -1.0) {};
+
+    \node[sin ] (loop_si1) at (0-3,  1.0) {};
+    \node[sin ] (loop_si2) at (0-3,  0.5) {};
+    \node[sin ] (loop_si3) at (0-3, -0.5) {};
+    \node[sin ] (loop_si4) at (0-3, -1.0) {};
+
+    \draw[->,>=latex, dashed] (loop_si1) -- (loop_si1c) node [midway, above] {};
+    \draw[->,>=latex, dashed] (loop_si2) -- (loop_si2c) node [midway, above] {};
+
+    \draw[->, dashed] (loopc.east) -- (loop_so1) node [midway, above, sloped] {false};
+    \draw[->, dashed] (loopc.east) -- (loop_so2) node [midway, above, sloped] {true};
+
+    \draw[-, dotted] (loop_si3) -- (1,0.2) -- (loop_so1) node [midway, above, sloped] {};
+    \draw[-, dotted] (loop_si4) -- (1,0.0) -- (loop_so1) node [midway, above, sloped] {};
+    \draw[-, dotted] (loop_si3)            -- (loop_so2) node [midway, above, sloped] {};
+    \draw[-, dotted] (loop_si4)            -- (loop_so2) node [midway, above, sloped] {};
+
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t1) at (-6.5, 0.00) {$t_1$};
+    \node[sin ] (t1_si) at (-6.5-0.5, 0) {};
+    \node[sout] (t1_so) at (-6.5+0.5, 0) {};
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t2) at (-4.5, 0.00) {$t_2$};
+    \node[sin ] (t2_si) at (-4.5-0.5, 0) {};
+    \node[sout] (t2_so) at (-4.5+0.5, 0) {};
+
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t3) at (4.5, 1.00) {$t_3$};
+    \node[sin ] (t3_si) at (4.5-0.5, 1) {};
+    \node[sout] (t3_so) at (4.5+0.5, 1) {};
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t4) at (6.5, 1.00) {$t_4$};
+    \node[sin ] (t4_si) at (6.5-0.5, 1) {};
+    \node[sout] (t4_so) at (6.5+0.5, 1) {};
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t5) at (8.5, 1.00) {$t_5$};
+    \node[sin ] (t5_si) at (8.5-0.5, 1) {};
+    \node[sout] (t5_so) at (8.5+0.5, 1) {};
+
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t6) at ( 4.5, -1.00) {$t_6$};
+    \node[sin ] (t6_si) at (4.5-0.5, -1) {};
+    \node[sout] (t6_so) at (4.5+0.5, -1) {};
+    \node[tsk, minimum height=0.7cm, minimum width=1cm] (t7) at ( 6.5, -1.00) {$t_7$};
+    \node[sin ] (t7_si) at (6.5-0.5, -1) {};
+    \node[sout] (t7_so) at (6.5+0.5, -1) {};
+
+
+    \draw[->,>=latex] (t1_so) -- (t2_si)       node [midway, above] {};
+
+    \draw[->,>=latex] (t1_so) to[bend left] (loop_si1)       node [midway, above] {};
+
+    \draw[->,>=latex] (t2_so) -- (loop_si3)       node [midway, above] {};
+
+    \draw[->,>=latex] (loop_so1) -- (t3_si) node [midway, above] {};
+    \draw[->,>=latex] (t3_so)    -- (t4_si) node [midway, above] {};
+    \draw[->,>=latex] (t4_so)    -- (t5_si) node [midway, above] {};
+
+    \draw[->,>=latex] (t4_so.north east) |- (7,1.60) -- (-3.4,1.60) |- (loop_si2) node [midway, above] {};
+
+    \draw[->,>=latex] (t5_so.east) -- (9.25,1) -- (9.25,1.70) -- (-3.6,1.70) |- (loop_si4) node [midway, above] {};
+
+    \draw[->,>=latex] (loop_so2) -- (t6_si) node [midway, above] {};
+    \draw[->,>=latex] (t6_so)    -- (t7_si) node [midway, above] {};
+    \draw[->,>=latex, dotted] (t7_so)  -- (8,-1) node [midway, above] {};
+    \draw[->,>=latex, dotted] (-8.0,0) -- (t1_si) node [midway, above] {};
+
+    \node[ss, label={[Paired-9]below:Sub-sequence 1},  dashed, fit=(t1_si) (t2_so)] {};
+    \node[ss, label={[Paired-9]below:Sub-sequence 2},  dashed, fit=(t3_si) (t5_so)] {};
+    \node[ss, label={[Paired-9]below:Sub-sequence 3},  dashed, fit=(t6_si) (t7_so)] {};
+  \end{tikzpicture}
+\end{document}

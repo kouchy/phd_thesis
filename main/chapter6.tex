@@ -161,6 +161,29 @@ depending on a \emph{condition}. A loop is binded to two sub-sequences of tasks,
 the first one is executed and repeated while the condition is invalid and the
 second one is taken when the condition is valid.
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.00\textwidth]{dsl/loop/loop}
+  \caption
+    [Example of a sequence of tasks with a loop.]
+    {Example of a sequence of tasks with a loop.}
+  \label{fig:dsl_loop}
+\end{figure}
+
+Fig.~\ref{fig:dsl_loop} illustrates a sequence of tasks with a loop. In this
+particular case, the loop condition is based on an input socket so the condition
+evaluation is dynamic and depends on the runtime values of this input socket.
+In a first place, the sub-sequence 1 will be executed, then the loop condition
+is evaluated, if the condition return \emph{false} the sub-sequence 2 is
+executed and the loop condition is re-evaluated until it returns \emph{true}. At
+this point the sub-sequence 3 will be executed. To be able to achieve a static
+binding, the number of input and output sockets of the loop are duplicated.
+After the execution on the sub-sequence 1, the convention in the loop in to use
+the input sockets 1 and 3. The input socket 1 is only used for the condition
+evaluation whereas the input socket 3 is simply forwarded to the output socket 1
+and 2. If the sub-sequence 2 is executed, the input sockets 2 and 4 will be used
+until the end of the loop.
+
 \subsection{Parallel Blocks}
 
 \begin{itemize}
