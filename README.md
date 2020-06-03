@@ -38,6 +38,8 @@ There is a `Makefile` to help you to compile the document. Here is a description
 of the available targets:
 
 - `all`: compiles the entire document.
+- `figs`: compiles only the figures, can be useful when working with
+  `Sublime Text` for instance.
 - `clean`: removes all generated intermediate files but keeps the PDFs.
 - `mrproper`: removes all generated intermediate files including the PDFs.
 - `open`: shows the thesis with the appropriate PDF reader.
