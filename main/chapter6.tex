@@ -133,6 +133,34 @@ more aggressive optimizations than GNU Radio, at the cost of lower generality.
   \item \xmark~routeurs = permet d'aiguiller vers différentes sous-séquences
 \end{itemize}
 
+The proposed domain specific language (DSL) comes with a set of elementary
+components. The most important one is the \emph{task}, this component is also
+known as the \emph{filter} in the standard dataflow model. A task is an
+elementary block, it can be an encoder, a decoder or a modulator processing for
+instance. Sometime a task, unlike a dataflow filter, can have an internal memory
+to store temporary data for instance. If the life time of the private data
+exceeds the task execution then the data will be contained by the \emph{module}.
+Additionally a set of tasks can share the same internal/private memory, in that
+particularly case, multiple tasks are regrouped in a single module. Be aware
+that this behavior is not recommended by the standard dataflow model, and should
+be avoided in a fully dataflow-compliant model. However, in many situations the
+writing of a task or a set of tasks can be simplified by relieving this
+constraint. Furthermore, storing private data in the module can be, in some
+cases, a way to avoid to allocate memory for each task execution which is a very
+expensive operation.
+
+A task can consume and produce public data. To this purpose, each task exposes
+input and/or output \emph{sockets}. The action of connecting the sockets of
+different tasks is called the \emph{binding}. The binding directly determines
+the tasks execution order (cf. Fig.~\ref{fig:soft_archi_com_chain_task_module}).
+
+We found that some digital communication scenarios include repeated schemes.
+To naturally map a repeated scheme, we introduced a specific task: the
+\emph{loop}. This task has the particularity to be executed one or more times
+depending on a \emph{condition}. A loop is binded to two sub-sequences of tasks,
+the first one is executed and repeated while the condition is invalid and the
+second one is taken when the condition is valid.
+
 \subsection{Parallel Blocks}
 
 \begin{itemize}
@@ -155,7 +183,7 @@ more aggressive optimizations than GNU Radio, at the cost of lower generality.
     passer aux tâches suivantes
 \end{itemize}
 
-\section{Implementation}
+\section{Implementation Details}
 
 \subsection{Clone}
 

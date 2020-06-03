@@ -16,30 +16,51 @@
 
 \begin{document}
   \begin{tikzpicture}%[scale=\tikzscale]
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (src) at ( 0, 4) {generate};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (enc) at ( 4, 4) {encode};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (mod) at ( 8, 4) {modulate};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1] (chn) at (11, 2) {add\_noise};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (dem) at ( 8, 0) {demodulate};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (dec) at ( 4, 0) {decode};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1] (mnt) at ( 0, 0) {check\_errrors};
+    \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1} }
+    \tikzset{ mdl/.style ={draw=Paired-3, rounded corners=2pt,} }
+    \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
 
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Source},  dashed, fit=(src)] {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Encoder}, dashed, fit=(enc)] {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]center:Modem},  dashed, fit=(mod) (dem)] {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]below:Channel}, dashed, fit=(chn)] {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Decoder}, dashed, fit=(dec)] {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Monitor}, dashed, fit=(mnt)] {};
+    \node[tsk ] (src) at ( 0, 4) {generate};
+    \node[sout] (src_so) at (0+1.25, 4) {};
+    \node[tsk ] (enc) at ( 4, 4) {encode};
+    \node[sin ] (enc_si) at (4-1.25, 4) {};
+    \node[sout] (enc_so) at (4+1.25, 4) {};
+    \node[tsk ] (mod) at ( 8, 4) {modulate};
+    \node[sin ] (mod_si) at (8-1.25, 4) {};
+    \node[sout] (mod_so) at (8+1.25, 4) {};
+    \node[tsk ] (chn) at (11.25, 2) {add\_noise};
+    \node[sin ] (chn_si) at (11.25, 2.5) {};
+    \node[sout] (chn_so) at (11.25, 1.5) {};
+    \node[tsk ] (dem) at ( 8, 0) {demodulate};
+    \node[sout] (dem_so) at (8-1.25, 0) {};
+    \node[sin ] (dem_si) at (8+1.25, 0) {};
+    \node[tsk ] (dec) at ( 4, 0) {decode};
+    \node[sin ] (dec_so) at (4-1.25, 0) {};
+    \node[sout] (dec_si) at (4+1.25, 0) {};
+    \node[tsk ] (mnt) at ( 0, 0) {check\_errrors};
+    \node[sin ] (mnt_si1) at (0+1.25, +0.2) {};
+    \node[sin ] (mnt_si2) at (0+1.25, -0.2) {};
 
-    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white] {};
-    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white] {};
-    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white] {};
-    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white] {};
-    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white] {};
-    \draw[->,>=latex] (dec) -- (mnt) node [midway, below, fill=white] {};
+    \node[mdl, label={[Paired-3]below:Source},  dashed, fit=(src) (src_so)] {};
+    \node[mdl, label={[Paired-3]below:Encoder}, dashed, fit=(enc) (enc_si) (enc_so)] {};
+    \node[mdl, label={[Paired-3]center:Modem},  dashed, fit=(mod) (dem) (mod_si) (mod_so) (dem_si) (dem_so)] {};
+    \node[mdl, label={[Paired-3]below:Channel}, dashed, fit=(chn) (chn_si) (chn_so)] {};
+    \node[mdl, label={[Paired-3]above:Decoder}, dashed, fit=(dec) (dec_si) (dec_so)] {};
+    \node[mdl, label={[Paired-3]above:Monitor}, dashed, fit=(mnt) (mnt_si1) (mnt_si2)] {};
 
-    \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}] (l1) at (-1, 1.7) {};
-    \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}] (l1) at (-1, 2.3) {};
+    \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {};
+    \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {};
+    \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {};
+    \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {};
+    \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {};
+    \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {};
+    \draw[->,>=latex] (src_so.east) -- (2,4) |- (mnt_si1.east) node [midway, above] {};
+
+    \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (-1+0.0, 1.7) {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (-1+0.0, 2.3) {};
+    \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (-1+3.5, 1.7) {};
+    \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (-1+3.5, 2.3) {};
 
   \end{tikzpicture}
 \end{document}
