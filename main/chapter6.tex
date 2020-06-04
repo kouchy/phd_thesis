@@ -220,6 +220,50 @@ within the body of an outer one ($L_1$).
   \item \xmark~pipeline
 \end{itemize}
 
+Many tasks that have been binded together can be regrouped in what we call a
+\emph{sequence} of tasks. The sequence notion remind us that the tasks are
+executed sequentially one by one in a pre-defined static order (like in the SDF
+model). To create a sequence the user have to give the first tasks and the
+last tasks to execute. Then the sequence will be analyzed and built. Once it is
+done, the user can execute the whole sequence directly.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Simple chain sequence.]{\includegraphics[width=0.485\textwidth]{dsl/sequence/sequence_chain}\label{fig:dsl_sequence_chain}}
+  \quad
+  \subfloat[][Sequence with multiple first and last tasks.]{\includegraphics[width=0.485\textwidth]{dsl/sequence/sequence_generic}\label{fig:dsl_sequence_generic}}
+  \caption{Example of sequences.}
+  \label{fig:dsl_sequence}
+\end{figure}
+
+Fig.~\ref{fig:dsl_sequence} show two examples of sequence.
+Fig.~\ref{fig:dsl_sequence_chain} is a simple chain of tasks, this type of
+sequence is very easy to build, the user only need to specify the first task of
+the chain ($t_1$) and the sequence will automatically follow the binding to
+reach and stop at the last task ($t_4$). Fig.~\ref{fig:dsl_sequence_generic} is
+a little bit more complicated, there are binded tasks before and after the
+wanted sequence. There is also two \emph{first} tasks ($t_1$ and $t_3$) and
+two \emph{last} tasks ($t_5$ and $t_6$). In this case the user need to
+explicitly specify that $t_1$ and $t_3$ are first tasks, if $t_1$ is given
+before $t_3$ then $t_1$ will be executed first and $t_3$ after. In fact the
+analysis will start from $t_1$ and continue to add new tasks if possible. In the
+example, $t_2$ can be executed directly after $t_1$ but $t_4$ cannot because it
+depends on $t_3$, so the analysis will stop after $t_2$ and will restart from
+$t_3$. The index $i$ of the $t_i$ task represent the execution order. The $t_5$
+and $t_6$ last tasks have to be given by the user because there are other tasks
+binded to their output sockets: the analysis can't guess the end of the sequence
+alone.
+
+The proposed DSL is targeting streaming application and more precisely signal
+processing and digital communication chains. In this type of applications, the
+processing are repeated indefinitely when the system in on. So a sequence is
+executed in loop, when the last task is executed, the next task is the first
+one. The user can control if the sequence should restart by giving a
+\emph{condition function} at the sequence execution. The prototype of the
+function is \verb|bool cond_func(void)|: if the function returns \emph{false},
+the sequence is repeated, else, if the function returns \emph{true}, the
+sequence is stopped.
+
 \subsection{Rules}
 
 \begin{itemize}
