@@ -1,0 +1,47 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \path[use as bounding box] (-0.5125, -1.5) rectangle (7.0, 3.20);
+
+    \tikzset{ ss/.style ={draw=Paired-9, circle, minimum height=1cm, dashed, text=Paired-9} }
+    \tikzset{ lp/.style ={draw=Paired-1, circle, minimum height=1cm, text=Paired-1        } }
+
+    \node[ss] (ss1) at (0.0,  0.0) {$SS_1$};
+    \node[lp] (lp1) at (1.5,  0.0) {$L_1$};
+    \node[ss] (ss2) at (3.0,  1.0) {$SS_2$};
+    \node[lp] (lp2) at (4.5,  1.0) {$L_2$};
+    \node[ss] (ss3) at (6.0,  2.0) {$SS_3$};
+    \node[ss] (ss4) at (6.0,  0.0) {$SS_4$};
+    \node[ss] (ss5) at (3.0, -1.0) {$SS_5$};
+
+    \draw[->,>=latex] (ss1) -- (lp1) node [midway, above, sloped] {};
+    \draw[->,>=latex] (lp1) -- (ss2) node [midway, above, sloped] {0};
+    \draw[->,>=latex] (lp1) -- (ss5) node [midway, above, sloped] {1};
+    \draw[->,>=latex] (ss2) -- (lp2) node [midway, above, sloped] {};
+    \draw[->,>=latex] (lp2) -- (ss3) node [midway, above, sloped] {0};
+    \draw[->,>=latex] (lp2) -- (ss4) node [midway, above, sloped] {1};
+
+    \draw[->,>=latex, dotted] (ss3) to[out=90,in=90] (lp2) node [midway, above, sloped] {};
+    % \draw[->,>=latex] (ss3.north) -- (6.00,2.75) -| (lp2.north)                node [midway, above, sloped] {};
+    % \draw[->,>=latex] (ss4) to[out=90,in=90] (lp1) node [midway, above, sloped] {};
+    \draw[->,>=latex, dotted] (ss4.east) to[bend right] (6.75,2.25) to[out=115,in=90] (lp1.north) node [midway, above, sloped] {};
+
+
+
+  \end{tikzpicture}
+\end{document}

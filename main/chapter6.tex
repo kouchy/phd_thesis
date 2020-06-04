@@ -126,10 +126,10 @@ more aggressive optimizations than GNU Radio, at the cost of lower generality.
 \subsection{Serial Blocks}
 
 \begin{itemize}
-  \item \xmark~tâches = les traitements (effectués sur des trames)
-  \item \xmark~modules = les données internes à une ou plusieurs tâches
-  \item \xmark~sockets = les données échangées entre les tâches
-  \item \xmark~boucles = permet de répéter une sous-séquence
+  \item \cmark~tâches = les traitements (effectués sur des trames)
+  \item \cmark~modules = les données internes à une ou plusieurs tâches
+  \item \cmark~sockets = les données échangées entre les tâches
+  \item \cmark~boucles = permet de répéter une sous-séquence
   \item \xmark~routeurs = permet d'aiguiller vers différentes sous-séquences
 \end{itemize}
 
@@ -183,6 +183,34 @@ the input sockets 1 and 3. The input socket 1 is only used for the condition
 evaluation whereas the input socket 3 is simply forwarded to the output socket 1
 and 2. If the sub-sequence 2 is executed, the input sockets 2 and 4 will be used
 until the end of the loop.
+
+In the example the loop uses an input socket to evaluate the condition, this is
+common in iterative demodulation/decoding schemes when the overall system can
+have an early termination criterion like a CRC detection. Of course it is also
+possible to override the loop behavior by inheriting from it, and the condition
+evaluation process can be modified by the user. An other very common loop is the
+predicate: in this case, the condition evaluation does not require any input
+socket. The predicate can simply be a counter, each time the condition is
+evaluated the counter is incremented and when the counter reaches a given values
+the condition evaluation returns \emph{true} (\emph{for-loop} behavior).
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics{dsl/nested_loops/nested_loops}
+  \caption
+    [Nested loops.]
+    {Nested loops.}
+  \label{fig:dsl_nested_loops}
+\end{figure}
+
+The overall system also supports nested loops. The idea is to regroup the tasks
+in sub-sequences: one before the loop and two after. This is managed with binary
+tree, each time a loop in encountered, two new paths are created.
+Fig.~\ref{fig:dsl_nested_loops} shows an example with two loops ($L_1$ and
+$L_2$). Five sub-sequences of tasks are created ($SS_x$), one before $L_1$
+($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$ and
+$SS_4$). In this example $L_2$ is a nested loop because it is an inner loop
+within the body of an outer one ($L_1$).
 
 \subsection{Parallel Blocks}
 

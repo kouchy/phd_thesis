@@ -429,8 +429,11 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 #	cd main/chapter5/fig/turbo/energy/                     && gnuplot   energy_old.gp
 
 chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
-              main/chapter6/fig/dsl/loop/colors
+              main/chapter6/fig/dsl/loop/colors \
+              main/chapter6/fig/dsl/nested_loops/nested_loops.tex \
+              main/chapter6/fig/dsl/nested_loops/colors
 	cd main/chapter6/fig/dsl/loop/                         && rubber -d loop.tex
+	cd main/chapter6/fig/dsl/nested_loops/                 && rubber -d nested_loops.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -508,6 +511,7 @@ clean: clean4all
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean throughput
 	cd main/chapter5/fig/simu/chain                        && rubber --clean chain
 	cd main/chapter6/fig/dsl/loop/                         && rubber --clean loop
+	cd main/chapter6/fig/dsl/nested_loops/                 && rubber --clean nested_loops
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -577,6 +581,7 @@ mrproper: clean4all
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean -d throughput.tex
 	cd main/chapter5/fig/simu/chain                        && rubber --clean -d chain.tex
 	cd main/chapter6/fig/dsl/loop/                         && rubber --clean -d loop.tex
+	cd main/chapter6/fig/dsl/nested_loops/                 && rubber --clean -d nested_loops.tex
 #	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf
