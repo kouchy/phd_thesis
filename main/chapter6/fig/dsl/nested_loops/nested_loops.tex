@@ -30,11 +30,11 @@
     \node[ss] (ss5) at (3.0, -1.0) {$SS_5$};
 
     \draw[->,>=latex] (ss1) -- (lp1) node [midway, above, sloped] {};
-    \draw[->,>=latex] (lp1) -- (ss2) node [midway, above, sloped] {0};
-    \draw[->,>=latex] (lp1) -- (ss5) node [midway, above, sloped] {1};
+    \draw[->,>=latex] (lp1) -- (ss2) node [midway, above, sloped] {{\color{Paired-1} \small{false}}};
+    \draw[->,>=latex] (lp1) -- (ss5) node [midway, above, sloped] {{\color{Paired-1} \small{true}}};
     \draw[->,>=latex] (ss2) -- (lp2) node [midway, above, sloped] {};
-    \draw[->,>=latex] (lp2) -- (ss3) node [midway, above, sloped] {0};
-    \draw[->,>=latex] (lp2) -- (ss4) node [midway, above, sloped] {1};
+    \draw[->,>=latex] (lp2) -- (ss3) node [midway, above, sloped] {{\color{Paired-1} \small{false}}};
+    \draw[->,>=latex] (lp2) -- (ss4) node [midway, above, sloped] {{\color{Paired-1} \small{true}}};
 
     \draw[->,>=latex, dotted] (ss3) to[out=90,in=90] (lp2) node [midway, above, sloped] {};
     % \draw[->,>=latex] (ss3.north) -- (6.00,2.75) -| (lp2.north)                node [midway, above, sloped] {};

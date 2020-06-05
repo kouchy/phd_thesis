@@ -303,6 +303,8 @@ the current stage thread. Be aware that the pipelining strategy comes with an
 extra synchronization cost between the stage threads. The implementation details
 will be discussed later.
 
+\section{Implementation Details}
+
 \subsection{Rules}
 
 \begin{itemize}
@@ -325,8 +327,6 @@ in the sequence parser is to add a task to the sequence when its last input
 socket is hit. After that, the output sockets of the current task are followed
 to reach new tasks. The new tasks are discovered in the order in which they were
 binded by the user.
-
-\section{Implementation Details}
 
 \subsection{Sequence Duplication and Clone}
 
@@ -368,6 +368,15 @@ for each parsed task, we try to cast (\verb|dynamic_cast|) the corresponding
 module in a specific class.
 
 \subsection{Pipeline and 0-copy}
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Description of a pipeline: tasks creation, tasks binding and sequences/stages definition (with the corresponding number of threads).]{\includegraphics[scale=1]{dsl/pipeline/pipeline_usr}\label{fig:dsl_pipeline_usr}}
+  \\
+  \subfloat[][Automatic transformation of a pipeline description: sequence duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and binding.]{\includegraphics[width=1\textwidth]{dsl/pipeline/pipeline_adp}\label{fig:dsl_pipeline_adp}}
+  \caption{Example of a pipeline description and the associate transformation with adaptors.}
+  \label{fig:dsl_pipeline}
+\end{figure}
 
 \section{Application on the DVB-S2 Standard}
 

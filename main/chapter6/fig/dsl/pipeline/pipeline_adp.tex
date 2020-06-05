@@ -1,0 +1,178 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes.geometric}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+    \tikzset{ stsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, pattern=grid, pattern color=Paired-1!15} }
+    \tikzset{ push/.style ={draw=Paired-1, align=center, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, pattern=north east lines, pattern color=Paired-1!15} }
+    \tikzset{ pull/.style ={draw=Paired-1, align=center, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, pattern=north west lines, pattern color=Paired-1!15} }
+    \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+    \tikzset{ seq/.style ={draw=Paired-11,  dashed, rounded corners=2pt} }
+    \tikzset{ mdl/.style ={draw=Paired-3,  dashed, rounded corners=2pt, minimum height=6.5cm} }
+    \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+    \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+    \tikzset{ buff/.style={draw=Dark2-6, diamond, rounded corners=0pt, text=Paired-1, minimum height=0.3cm, minimum width=0.3cm, fill=Dark2-6!20} }
+
+    \newcommand{\thread}[3]{
+      \draw[thick, xshift=#1cm, yshift=#2cm] plot [smooth,tension=0.7] coordinates {(0,0.5) (0.075,0.4375) (-0.05,0.3125) (0.1,0.125) (0,0)} node (#3){};
+    }
+
+    \node[stsk] (t1)    at ( 0.0    , 0.0) {$t_1$};
+    \node[sout] (t1_so) at ( 0.0+0.5, 0.0) {};
+
+    \node[push] (adp1n_push)    at ( 1.75    , 0.0) {\small{push}\\\small{$1$}};
+    \node[sin ] (adp1n_push_si) at ( 1.75-0.5, 0.0) {};
+
+    \newcommand\thr{+2.25}
+    \node[buff] (adp1n_b1)       at ( 2.75    , \thr) {};
+    \node[pull] (adp1n_pull1)    at ( 3.75    , \thr) {\small{pull}\\\small{$n$}};
+    \node[sout] (adp1n_pull1_so) at ( 3.75+0.5, \thr) {};
+    \node[tsk ] (t2)             at ( 5.50    , \thr) {$t_2$};
+    \node[sin ] (t2_si)          at ( 5.50-0.5, \thr) {};
+    \node[sout] (t2_so)          at ( 5.50+0.5, \thr) {};
+    \node[tsk ] (t3)             at ( 7.25    , \thr) {$t_3$};
+    \node[sin ] (t3_si)          at ( 7.25-0.5, \thr) {};
+    \node[sout] (t3_so)          at ( 7.25+0.5, \thr) {};
+    \node[tsk ] (t4)             at ( 9.00    , \thr) {$t_4$};
+    \node[sin ] (t4_si)          at ( 9.00-0.5, \thr) {};
+    \node[sout] (t4_so)          at ( 9.00+0.5, \thr) {};
+    \node[push] (adpn1_push1)    at (10.75    , \thr) {\small{push}\\\small{$n$}};
+    \node[sin ] (adpn1_push1_si) at (10.75-0.5, \thr) {};
+    \node[buff] (adpn1_b1)       at (11.75    , \thr) {};
+
+    \draw[->,>=latex] (adp1n_pull1_so) -- (t2_si) node [midway, above] {};
+    \draw[->,>=latex] (t2_so)          -- (t3_si) node [midway, above] {};
+    \draw[->,>=latex] (t3_so)          -- (t4_si) node [midway, above] {};
+    \draw[->,>=latex] (t4_so)          -- (adpn1_push1_si) node [midway, above] {};
+
+    \newcommand\tthr{+0.75}
+    \node[buff] (adp1n_b2)       at ( 2.75    , \tthr) {};
+    \node[pull] (adp1n_pull2)    at ( 3.75    , \tthr) {\small{pull}\\\small{$n'$}};
+    \node[sout] (adp1n_pull2_so) at ( 3.75+0.5, \tthr) {};
+    \node[tsk ] (tt2)            at ( 5.50    , \tthr) {$t_2'$};
+    \node[sin ] (tt2_si)         at ( 5.50-0.5, \tthr) {};
+    \node[sout] (tt2_so)         at ( 5.50+0.5, \tthr) {};
+    \node[tsk ] (tt3)            at ( 7.25    , \tthr) {$t_3'$};
+    \node[sin ] (tt3_si)         at ( 7.25-0.5, \tthr) {};
+    \node[sout] (tt3_so)         at ( 7.25+0.5, \tthr) {};
+    \node[tsk ] (tt4)            at ( 9.00    , \tthr) {$t_4'$};
+    \node[sin ] (tt4_si)         at ( 9.00-0.5, \tthr) {};
+    \node[sout] (tt4_so)         at ( 9.00+0.5, \tthr) {};
+    \node[push] (adpn1_push2)    at (10.75    , \tthr) {\small{push}\\\small{$n'$}};
+    \node[sin ] (adpn1_push2_si) at (10.75-0.5, \tthr) {};
+    \node[buff] (adpn1_b2)       at (11.75    , \tthr) {};
+
+    \draw[->,>=latex] (adp1n_pull2_so) -- (tt2_si) node [midway, above] {};
+    \draw[->,>=latex] (tt2_so)         -- (tt3_si) node [midway, above] {};
+    \draw[->,>=latex] (tt3_so)         -- (tt4_si) node [midway, above] {};
+    \draw[->,>=latex] (tt4_so)         -- (adpn1_push2_si) node [midway, above] {};
+
+    \newcommand\ttthr{-0.75}
+    \node[buff] (adp1n_b3)       at ( 2.75    , \ttthr) {};
+    \node[pull] (adp1n_pull3)    at ( 3.75    , \ttthr) {\small{pull}\\\small{$n''$}};
+    \node[sout] (adp1n_pull3_so) at ( 3.75+0.5, \ttthr) {};
+    \node[tsk ] (ttt2)           at ( 5.50    , \ttthr) {$t_2''$};
+    \node[sin ] (ttt2_si)        at ( 5.50-0.5, \ttthr) {};
+    \node[sout] (ttt2_so)        at ( 5.50+0.5, \ttthr) {};
+    \node[tsk ] (ttt3)           at ( 7.25    , \ttthr) {$t_3''$};
+    \node[sin ] (ttt3_si)        at ( 7.25-0.5, \ttthr) {};
+    \node[sout] (ttt3_so)        at ( 7.25+0.5, \ttthr) {};
+    \node[tsk ] (ttt4)           at ( 9.00    , \ttthr) {$t_4''$};
+    \node[sin ] (ttt4_si)        at ( 9.00-0.5, \ttthr) {};
+    \node[sout] (ttt4_so)        at ( 9.00+0.5, \ttthr) {};
+    \node[push] (adpn1_push3)    at (10.75    , \ttthr) {\small{push}\\\small{$n''$}};
+    \node[sin ] (adpn1_push3_si) at (10.75-0.5, \ttthr) {};
+    \node[buff] (adpn1_b3)       at (11.75    , \ttthr) {};
+
+    \draw[->,>=latex] (adp1n_pull3_so) -- (ttt2_si) node [midway, above] {};
+    \draw[->,>=latex] (ttt2_so)        -- (ttt3_si) node [midway, above] {};
+    \draw[->,>=latex] (ttt3_so)        -- (ttt4_si) node [midway, above] {};
+    \draw[->,>=latex] (ttt4_so)        -- (adpn1_push3_si) node [midway, above] {};
+
+    \newcommand\tttthr{-2.25}
+    \node[buff] (adp1n_b4)       at ( 2.75    , \tttthr) {};
+    \node[pull] (adp1n_pull4)    at ( 3.75    , \tttthr) {\small{pull}\\\small{$n'''$}};
+    \node[sout] (adp1n_pull4_so) at ( 3.75+0.5, \tttthr) {};
+    \node[tsk ] (tttt2)          at ( 5.50    , \tttthr) {$t_2'''$};
+    \node[sin ] (tttt2_si)       at ( 5.50-0.5, \tttthr) {};
+    \node[sout] (tttt2_so)       at ( 5.50+0.5, \tttthr) {};
+    \node[tsk ] (tttt3)          at ( 7.25    , \tttthr) {$t_3'''$};
+    \node[sin ] (tttt3_si)       at ( 7.25-0.5, \tttthr) {};
+    \node[sout] (tttt3_so)       at ( 7.25+0.5, \tttthr) {};
+    \node[tsk ] (tttt4)          at ( 9.00    , \tttthr) {$t_4'''$};
+    \node[sin ] (tttt4_si)       at ( 9.00-0.5, \tttthr) {};
+    \node[sout] (tttt4_so)       at ( 9.00+0.5, \tttthr) {};
+    \node[push] (adpn1_push4)    at (10.75    , \tttthr) {\small{push}\\\small{$n'''$}};
+    \node[sin ] (adpn1_push4_si) at (10.75-0.5, \tttthr) {};
+    \node[buff] (adpn1_b4)       at (11.75    , \tttthr) {};
+
+    \draw[->,>=latex] (adp1n_pull4_so) -- (tttt2_si) node [midway, above] {};
+    \draw[->,>=latex] (tttt2_so)       -- (tttt3_si) node [midway, above] {};
+    \draw[->,>=latex] (tttt3_so)       -- (tttt4_si) node [midway, above] {};
+    \draw[->,>=latex] (tttt4_so)       -- (adpn1_push4_si) node [midway, above] {};
+
+    \node[pull] (adpn1_pull)    at (12.75    , 0.0) {\small{pull}\\\small{$1$}};
+    \node[sout] (adpn1_pull_so) at (12.75+0.5, 0.0) {};
+    \node[stsk] (t5)            at (14.50    , 0.0) {$t_5$};
+    \node[sin ] (t5_si)         at (14.50-0.5, 0.0) {};
+    \node[sout] (t5_so)         at (14.50+0.5, 0.0) {};
+    \node[stsk] (t6)            at (16.25    , 0.0) {$t_6$};
+    \node[sin ] (t6_si)         at (16.25-0.5, 0.0) {};
+
+    \draw[->,>=latex] (t1_so)         -- (adp1n_push_si) node [midway, above] {};
+    \draw[->,>=latex] (adpn1_pull_so) -- (t5_si) node [midway, above] {};
+    \draw[->,>=latex] (t5_so)         -- (t6_si) node [midway, above] {};
+
+    \draw[->,>=latex,dashed] (adp1n_push) -- (adp1n_b1) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_push) -- (adp1n_b2) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_push) -- (adp1n_b3) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_push) -- (adp1n_b4) node [midway, above] {};
+
+    \draw[->,>=latex,dashed] (adpn1_pull) -- (adpn1_b1) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_pull) -- (adpn1_b2) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_pull) -- (adpn1_b3) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_pull) -- (adpn1_b4) node [midway, above] {};
+
+    \draw[->,>=latex,dashed] (adp1n_pull1) to[bend right] (adp1n_b1) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_pull2) to[bend right] (adp1n_b2) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_pull3) to[bend  left] (adp1n_b3) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adp1n_pull4) to[bend  left] (adp1n_b4) node [midway, above] {};
+
+    \draw[->,>=latex,dashed] (adpn1_push1) to[bend  left] (adpn1_b1) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_push2) to[bend  left] (adpn1_b2) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_push3) to[bend right] (adpn1_b3) node [midway, above] {};
+    \draw[->,>=latex,dashed] (adpn1_push4) to[bend right] (adpn1_b4) node [midway, above] {};
+
+    % \thread{0.00}{0.7}{th1}
+    % \thread{3.25}{0.7}{th2}
+    % \thread{3.75}{0.7}{th3}
+    % \thread{4.25}{0.7}{th4}
+    % \thread{4.75}{0.7}{th5}
+    % \thread{9.00}{0.7}{th6}
+
+    \node[seq, label={[Paired-11]below:Sequence 1}, fit=(t1) (t1_so) (adp1n_push)  ] (seq1) {};
+    \node[seq, label={[Paired-11]below:Sequence 2}, fit=(adp1n_pull1) (adpn1_push4)] (seq2) {};
+    \node[seq, label={[Paired-11]below:Sequence 3}, fit=(adpn1_pull) (t5) (t6)     ] (seq3) {};
+
+    \node[mdl, label={[Paired-3]below:$1$ to $n$ adaptor}, fit=(adp1n_push_si) (adp1n_pull1) (adp1n_pull1_so) (adp1n_pull4) (adp1n_pull4_so)] (adp1n) {};
+    \node[mdl, label={[Paired-3]below:$n$ to $1$ adaptor}, fit=(adpn1_pull_so) (adpn1_push1) (adpn1_push1_si) (adpn1_push4) (adpn1_push4_si)] (adpn1) {};
+
+    \node[pip, minimum height=2.5cm, minimum width=18.0cm, minimum height=7.5cm, label={[Dark2-8]above:Pipeline}, fit=(seq1) (seq2) (seq3) (adp1n) (adpn1)] {};
+  \end{tikzpicture}
+\end{document}

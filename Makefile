@@ -436,12 +436,17 @@ chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
               main/chapter6/fig/dsl/sequence/sequence_generic.tex \
               main/chapter6/fig/dsl/sequence/colors \
               main/chapter6/fig/dsl/sequence_dup/sequence_dup.tex \
-              main/chapter6/fig/dsl/sequence_dup/colors
+              main/chapter6/fig/dsl/sequence_dup/colors \
+              main/chapter6/fig/dsl/pipeline/pipeline_usr.tex \
+              main/chapter6/fig/dsl/pipeline/pipeline_adp.tex \
+              main/chapter6/fig/dsl/pipeline/colors
 	cd main/chapter6/fig/dsl/loop/                         && rubber -d loop.tex
 	cd main/chapter6/fig/dsl/nested_loops/                 && rubber -d nested_loops.tex
 	cd main/chapter6/fig/dsl/sequence/                     && rubber -d sequence_chain.tex
 	cd main/chapter6/fig/dsl/sequence/                     && rubber -d sequence_generic.tex
 	cd main/chapter6/fig/dsl/sequence_dup/                 && rubber -d sequence_dup.tex
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber -d pipeline_usr.tex
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber -d pipeline_adp.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -523,6 +528,8 @@ clean: clean4all
 	cd main/chapter6/fig/dsl/sequence/                     && rubber --clean sequence_chain
 	cd main/chapter6/fig/dsl/sequence/                     && rubber --clean sequence_generic
 	cd main/chapter6/fig/dsl/sequence_dup/                 && rubber --clean sequence_dup
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean pipeline_usr
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean pipeline_adp
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -596,6 +603,8 @@ mrproper: clean4all
 	cd main/chapter6/fig/dsl/sequence/                     && rubber --clean -d sequence_chain.tex
 	cd main/chapter6/fig/dsl/sequence/                     && rubber --clean -d sequence_generic.tex
 	cd main/chapter6/fig/dsl/sequence_dup/                 && rubber --clean -d sequence_dup.tex
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean -d pipeline_usr.tex
+	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean -d pipeline_adp.tex
 #	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf
