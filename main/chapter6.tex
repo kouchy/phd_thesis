@@ -378,6 +378,68 @@ module in a specific class.
   \label{fig:dsl_pipeline}
 \end{figure}
 
+Fig.~\ref{fig:dsl_pipeline} shows the difference between a pipeline description
+(cf. Fig.~\ref{fig:dsl_pipeline_usr}) and its inner implementation (cf.
+Fig.~\ref{fig:dsl_pipeline_adp}). In Fig.~\ref{fig:dsl_pipeline} we suppose
+that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated. The user knows that
+the execution time of the $t_1$ task is higher that the cumulate execution time
+of $t_5$ and $t_6$ tasks. The cumulate execution time of $t_2$, $t_3$ and $t_4$
+is approximatively four times higher than $t_1$. This knowledge motivates the
+cutting of the sequences 1, 2 and 3. There is no need to split the $t_5$ and
+$t_6$ tasks in two sequences because the overall throughput is limited by the
+slowest stage ($t_1$ here). The sequence 2 is duplicated four times to increase
+its throughput by four as we know that its latency is approximatively four
+times the sequence 1.
+
+Fig.~\ref{fig:dsl_pipeline_adp} presents the internal structure of the pipeline.
+As we can see, new tasks have been automatically added: \emph{push 1},
+\emph{pull n} shared by a \emph{1 to n adaptor} module and \emph{push n},
+\emph{pull 1} shared by a \emph{n to 1 adaptor} module. The binding as been
+modified to insert the tasks of the adaptors. For instance, in the initial
+pipeline description, $t_1$ was binded to $t_2$. In a real pipelined execution
+this not possible anymore because a least two different threads are running
+concurrently, one for $t_1$ and four for $t_2$ in the example. To this purpose,
+the adaptors implement a producer-consumer algorithm, the yellow diamonds
+represent the buffers of the producer-consumer algorithm. The \emph{push 1} and
+\emph{pull 1} tasks can only be executed by a unique thread while the \emph{pull
+n} and \emph{push n} tasks support to be executed by multiple threads
+concurrently. The \emph{push 1} task copies its input socket in one buffer
+each time it is called. There is one buffer per duplicated sequence (or thread).
+To guarantee that the order of the input frames will be conserved, a round-robin
+scheduling has been adopted (first call, a copy to the first buffer is
+performed, second call, a copy to the second buffer is performed and so on). On
+the other side, the \emph{pull 1} task is copying, with the same round-robin
+scheduling, the data from the buffers to its output socket.
+
+At the pipeline creation, it is possible to select the size of the
+synchronization buffers in the adaptors. The default buffer size is one (the
+buffers can only contain the data of one \emph{push 1} input sockets). During
+the copy of the input sockets data in one of the buffers, the corresponding
+thread cannot access the data until the copy is finished. When the \emph{push 1}
+task (producer) finish the copy, it increments a \emph{head} counter by one then
+the corresponding \emph{pull n} task (consumer) checks that the \emph{head}
+counter is higher than the \emph{tail} counter and copies the data from the
+buffer to its output socket. When this copy is over, the producer increments
+the \emph{tail} counter by one.
+
+If the buffer is full the producer (\emph{push 1 and n} tasks) has to wait, same
+for the consumer (\emph{pull 1 and n} tasks) if the buffer is empty. We
+implemented both active and passing waiting. The active waiting is a
+\emph{while-loop} over a condition (empty or full buffer). The active waiting is
+the most efficient waiting strategy but it requires to actively dedicate one
+core to the waiting. This is why, depending on the hardware resources and the
+implemented pipeline, it may be better to use the passive waiting alternative.
+The implementation of the passive waiting has been achieved with the \Cxy{11}
+condition variables. In this case, when the current thread is calling the
+\emph{wait} method over a condition variable, then the core attached to thread
+is released and can perform other tasks during the waiting. Waking up a waiting
+thread is made with the \emph{notify} method of the condition variable. Waking
+up a thread come with an extra cost because of required context switch, this is
+the main drawback of this method compared to the active waiting. This overhead
+can be mitigated by using larger synchronization buffers to overlap the thread
+context switch incompressible time.
+
+
 \section{Application on the DVB-S2 Standard}
 
 \subsection{Transmitter}
