@@ -1,0 +1,93 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+    \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+    \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt} }
+    \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+    \newcommand{\thread}[3]{
+      \draw[very thick, xshift=#1cm, yshift=#2cm] plot [smooth,tension=0.7] coordinates {(0,1) (0.15,0.875) (-0.1,0.625) (0.2,0.25) (0,0)} node (#3){};
+    }
+
+    \draw[->,>=latex,dotted,white] (-1.25,0) -- (-0.5,0.0) node [midway, above] {};
+    \draw[->,>=latex,dotted,white] (6.5,0) -- (6+1.25,0) node [midway, above] {};
+
+    \newcommand\thr{0}
+
+    \thread{-1}{\thr-0.5}{th1}
+    \node[tsk ] (t1)    at (0.0    , \thr) {$t_1^1$};
+    \node[sout] (t1_so) at (0.0+0.5, \thr) {};
+    \node[tsk ] (t2)    at (2.0    , \thr) {$t_2^1$};
+    \node[sin ] (t2_si) at (2.0-0.5, \thr) {};
+    \node[sout] (t2_so) at (2.0+0.5, \thr) {};
+    \node[tsk ] (t3)    at (4.0    , \thr) {$t_3^1$};
+    \node[sin ] (t3_si) at (4.0-0.5, \thr) {};
+    \node[sout] (t3_so) at (4.0+0.5, \thr) {};
+    \node[tsk ] (t4)    at (6.0    , \thr) {$t_4^1$};
+    \node[sin ] (t4_si) at (6.0-0.5, \thr) {};
+
+    \draw[->,>=latex] (t1_so) -- (t2_si) node [midway, above] {};
+    \draw[->,>=latex] (t2_so) -- (t3_si) node [midway, above] {};
+    \draw[->,>=latex] (t3_so) -- (t4_si) node [midway, above] {};
+
+    \newcommand\tthr{-1.5}
+
+    \thread{-1}{-2}{th2}
+    \node[tsk ] (tt1)    at (0.0    , \tthr) {$t_1^2$};
+    \node[sout] (tt1_so) at (0.0+0.5, \tthr) {};
+    \node[tsk ] (tt2)    at (2.0    , \tthr) {$t_2^2$};
+    \node[sin ] (tt2_si) at (2.0-0.5, \tthr) {};
+    \node[sout] (tt2_so) at (2.0+0.5, \tthr) {};
+    \node[tsk ] (tt3)    at (4.0    , \tthr) {$t_3^2$};
+    \node[sin ] (tt3_si) at (4.0-0.5, \tthr) {};
+    \node[sout] (tt3_so) at (4.0+0.5, \tthr) {};
+    \node[tsk ] (tt4)    at (6.0    , \tthr) {$t_4^2$};
+    \node[sin ] (tt4_si) at (6.0-0.5, \tthr) {};
+
+    \draw[->,>=latex] (tt1_so) -- (tt2_si) node [midway, above] {};
+    \draw[->,>=latex] (tt2_so) -- (tt3_si) node [midway, above] {};
+    \draw[->,>=latex] (tt3_so) -- (tt4_si) node [midway, above] {};
+
+    \newcommand\tttthr{-3.5}
+
+    \thread{-1}{-4}{tht}
+    \node[tsk ] (tttt1)    at (0.0    , \tttthr) {$t_1^t$};
+    \node[sout] (tttt1_so) at (0.0+0.5, \tttthr) {};
+    \node[tsk ] (tttt2)    at (2.0    , \tttthr) {$t_2^t$};
+    \node[sin ] (tttt2_si) at (2.0-0.5, \tttthr) {};
+    \node[sout] (tttt2_so) at (2.0+0.5, \tttthr) {};
+    \node[tsk ] (tttt3)    at (4.0    , \tttthr) {$t_3^t$};
+    \node[sin ] (tttt3_si) at (4.0-0.5, \tttthr) {};
+    \node[sout] (tttt3_so) at (4.0+0.5, \tttthr) {};
+    \node[tsk ] (tttt4)    at (6.0    , \tttthr) {$t_4^t$};
+    \node[sin ] (tttt4_si) at (6.0-0.5, \tttthr) {};
+
+    \draw[->,>=latex] (tttt1_so) -- (tttt2_si) node [midway, above] {};
+    \draw[->,>=latex] (tttt2_so) -- (tttt3_si) node [midway, above] {};
+    \draw[->,>=latex] (tttt3_so) -- (tttt4_si) node [midway, above] {};
+
+    \draw[-,>=latex,dotted] (tt1) -- (tttt1) node [midway, above] {};
+    \draw[-,>=latex,dotted] (tt2) -- (tttt2) node [midway, above] {};
+    \draw[-,>=latex,dotted] (tt3) -- (tttt3) node [midway, above] {};
+    \draw[-,>=latex,dotted] (tt4) -- (tttt4) node [midway, above] {};
+
+    \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (tttt1) (t4) (th1)] {};
+  \end{tikzpicture}
+\end{document}

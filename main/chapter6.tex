@@ -123,6 +123,10 @@ more aggressive optimizations than GNU Radio, at the cost of lower generality.
 
 \section{Runtime Embedded DSL}
 
+\begin{itemize}
+  \item \xmark~dire pourquoi c'est un runtime embedded DSL.
+\end{itemize}
+
 \subsection{Serial Blocks}
 
 \begin{itemize}
@@ -215,9 +219,9 @@ within the body of an outer one ($L_1$).
 \subsection{Parallel Blocks}
 
 \begin{itemize}
-  \item \xmark~séquence = un enchaînement de tâches dont l'ordre est défini par les
+  \item \cmark~séquence = un enchaînement de tâches dont l'ordre est défini par les
     connections entre les sockets
-  \item \xmark~pipeline
+  \item \cmark~pipeline
 \end{itemize}
 
 Many tasks that have been binded together can be regrouped in what we call a
@@ -256,35 +260,114 @@ alone.
 
 The proposed DSL is targeting streaming application and more precisely signal
 processing and digital communication chains. In this type of applications, the
-processing are repeated indefinitely when the system in on. So a sequence is
-executed in loop, when the last task is executed, the next task is the first
-one. The user can control if the sequence should restart by giving a
+processing are repeated indefinitely a batch of frames when the system in on. So
+a sequence is executed in loop, when the last task is executed, the next task is
+the first one. The user can control if the sequence should restart by giving a
 \emph{condition function} at the sequence execution. The prototype of the
 function is \verb|bool cond_func(void)|: if the function returns \emph{false},
 the sequence is repeated, else, if the function returns \emph{true}, the
 sequence is stopped.
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics{dsl/sequence_dup/sequence_dup}
+  \caption
+    [Sequence duplication for multi-threaded execution.]
+    {Sequence duplication for multi-threaded execution.}
+  \label{fig:dsl_sequence_dup}
+\end{figure}
+
+A sequence can also be duplicated when created. The $t$ number of duplications
+is a parameter of its constructor. As shown in Fig.~\ref{fig:dsl_sequence_dup},
+one thread will be affected to one duplicated chain. This way a sequence is able
+to take advantage of the multi-core architectures. For instance, the \AFFECT
+simulator, based on the Monte Carlo Method, extensively use the sequence
+duplication feature to speedup the results restitution time. The duplication
+strategy is very efficient since there is no need for synchronization between
+the threads. Each threaded sequence can be executed on one dedicated core and
+the public data transfers remain on this core which is good for the data reuse
+in the caches. However this parallelism is only possible if the tasks themselves
+can be duplicated.
+
+In some particular cases like in the signal synchronization stages, the tasks
+can have a dependency on themselves. It is then impossible to duplicate the
+sequence because of the sequential nature of these tasks. To overcome this issue
+the well-known pipelining strategy can be used to be able to increase the
+sequence throughput up to the slowest task throughput. The proposed DSL comes
+with a specific \emph{pipeline} block to this purpose. The pipeline takes
+multiple sequences as input. Each sequence of the pipeline is called a
+\emph{stage}. A pipeline stage is run on one thread. For instance, a 4-stage
+pipeline will create 4 threads, one thread per stage. A pipeline stage can be
+combined with the sequence duplication strategy: there will be nested threads in
+the current stage thread. Be aware that the pipelining strategy comes with an
+extra synchronization cost between the stage threads. The implementation details
+will be discussed later.
+
 \subsection{Rules}
 
 \begin{itemize}
-  \item \xmark~une socket d'entrée ne peut être connectée qu'à une seule socket de
+  \item \cmark~une socket d'entrée ne peut être connectée qu'à une seule socket de
     sortie
-  \item \xmark~toutes les sockets d'entrée d'une tâche doivent être connectées pour
+  \item \cmark~toutes les sockets d'entrée d'une tâche doivent être connectées pour
     qu'elle puisse s'exécuter
-  \item \xmark~une socket de sortie peut être connectée à aucune, une ou plus d'une
+  \item \cmark~une socket de sortie peut être connectée à aucune, une ou plus d'une
     socket d'entrée
-  \item \xmark~l'ordonnancement d'une séquence est implicitement défini par le binding,
+  \item \cmark~l'ordonnancement d'une séquence est implicitement défini par le binding,
     quand la dernière socket d'input d'une tâche est connectée, alors on va
     passer aux tâches suivantes
 \end{itemize}
 
+In the proposed DSL, an input socket can only be binded to one output socket.
+On the other side, an output socket can be binded to multiple input sockets.
+A task can only be executed if all its input sockets are filled. The scheduling
+of the tasks in a sequence is defined by the binding order. The general rule
+in the sequence parser is to add a task to the sequence when its last input
+socket is hit. After that, the output sockets of the current task are followed
+to reach new tasks. The new tasks are discovered in the order in which they were
+binded by the user.
+
 \section{Implementation Details}
 
-\subsection{Clone}
+\subsection{Sequence Duplication and Clone}
 
-\subsection{Processes}
+In order to be able to duplicate sequences, we implemented a \emph{clone} method
+in the modules. The \emph{clone} is an polymorphic method defined in the
+\emph{Module} abstract mother class and relies on the implicit copy constructors
+and a \emph{deep copy} protected method (overridable). The clone method
+prototype is \verb|module::Module* clone() const|. In an implementation
+(\emph{ModuleImpl}) of the abstract \emph{Module} class, a covariant return type
+is used: \verb|module::ModuleImpl* clone() const|. The \emph{clone} method
+implementation first call the implicit copy constructor of the \emph{ModuleImpl}
+class and secondly call the \emph{deep copy} protected method. It is to the
+responsibility to the \emph{ModuleImpl} developer to correctly override the
+\emph{deep copy} method.
 
-\subsection{0-Copy}
+The \emph{deep copy} method helps to deal with pointer and reference members.
+If the pointer/reference members are read-only (\verb|const|), then the implicit
+copy constructor will copy the memory addresses automatically. The problem comes
+when there is writable pointer/reference members. It is not possible to properly
+manage writable references, this could mean that the current module can't be
+duplicated (it also can be an implementation default). In the particular case of
+a writable pointer member, the developer can explicitly allocate a new pointer
+in the \emph{deep copy} method.
+
+\subsection{Sequence Processes}
+
+A sequence encapsulates a set of tasks and gives the opportunity to execute
+these tasks in a predefined order. The tasks can also be executed manually
+outside from the sequence but the user need to explicitly execute each task.
+When using a sequence, the analysis process is able to match specific patterns
+(known configurations of binded tasks) and in some case those patterns can be
+replaced by a more efficient source code. To this purpose the notion of
+\emph{process} has been introduced: in a sequence each task is necessarily
+encapsulated in what we call a \emph{process}. For the majority of the tasks,
+the \emph{process} just executes the task. But for some specific patterns, the
+task execution source code is replaced by a more efficient one. The pattern
+detection is based on a \Cxx basic introspection feature: during the analysis,
+for each parsed task, we try to cast (\verb|dynamic_cast|) the corresponding
+module in a specific class.
+
+\subsection{Pipeline and 0-copy}
 
 \section{Application on the DVB-S2 Standard}
 
