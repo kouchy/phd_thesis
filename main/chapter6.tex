@@ -431,7 +431,7 @@ detailed before, we were able to replace the copies by pointers switches. The
 idea is to dynamically re-bind the tasks just before and just after the
 \emph{push} and \emph{pull} tasks. We also need to bypass the regular execution
 in the \emph{push 1}, \emph{pull n}, \emph{push n} and \emph{pull 1} tasks. The
-processes that encapsulate these tasks dynamically replaces the source code of
+processes that encapsulate these tasks dynamically replace the source code of
 the data buffer copy by a simple pointer copy. The pointers are exchanged
 cyclically.
 
@@ -439,7 +439,25 @@ cyclically.
 
 \subsection{Transmitter}
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.0\linewidth]{dvbs2/transmitter/transmitter}
+  \caption
+    [DVB-S2 transmitter.]
+    {DVB-S2 transmitter.}
+  \label{fig:dvbs2_transmitter}
+\end{figure}
+
 \subsection{Receiver}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver}
+  \caption
+    [DVB-S2 receiver (transmission phase).]
+    {DVB-S2 receiver (transmission phase).}
+  \label{fig:dvbs2_receiver}
+\end{figure}
 
 \subsection{Evaluations}
 

@@ -61,9 +61,9 @@
     \thread{4.75}{0.7}{th5}
     \thread{9.00}{0.7}{th6}
 
-    \node[seq, label={[Paired-11]below:Sequence 1}, fit=(t1) (t1_so)                  ] (seq1) {};
-    \node[seq, label={[Paired-11]below:Sequence 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
-    \node[seq, label={[Paired-11]below:Sequence 3}, fit=(t5_si) (t5) (t6)             ] (seq3) {};
+    \node[seq, label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so)                  ] (seq1) {};
+    \node[seq, label={[Paired-11]below:Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
+    \node[seq, label={[Paired-11]below:Stage 3}, fit=(t5_si) (t5) (t6)             ] (seq3) {};
 
     \node[pip, minimum height=2.5cm, minimum width=12.0cm, label={[Dark2-8]above:Pipeline}, fit=(seq1) (seq2) (seq3)] {};
   \end{tikzpicture}

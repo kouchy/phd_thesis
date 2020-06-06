@@ -166,9 +166,9 @@
     % \thread{4.75}{0.7}{th5}
     % \thread{9.00}{0.7}{th6}
 
-    \node[seq, label={[Paired-11]below:Sequence 1}, fit=(t1) (t1_so) (adp1n_push)  ] (seq1) {};
-    \node[seq, label={[Paired-11]below:Sequence 2}, fit=(adp1n_pull1) (adpn1_push4)] (seq2) {};
-    \node[seq, label={[Paired-11]below:Sequence 3}, fit=(adpn1_pull) (t5) (t6)     ] (seq3) {};
+    \node[seq, label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so) (adp1n_push)  ] (seq1) {};
+    \node[seq, label={[Paired-11]below:Stage 2}, fit=(adp1n_pull1) (adpn1_push4)] (seq2) {};
+    \node[seq, label={[Paired-11]below:Stage 3}, fit=(adpn1_pull) (t5) (t6)     ] (seq3) {};
 
     \node[mdl, label={[Paired-3]below:$1$ to $n$ adaptor}, fit=(adp1n_push_si) (adp1n_pull1) (adp1n_pull1_so) (adp1n_pull4) (adp1n_pull4_so)] (adp1n) {};
     \node[mdl, label={[Paired-3]below:$n$ to $1$ adaptor}, fit=(adpn1_pull_so) (adpn1_push1) (adpn1_push1_si) (adpn1_push4) (adpn1_push4_si)] (adpn1) {};

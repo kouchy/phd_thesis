@@ -1,0 +1,86 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+\usepackage{circuitikz}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+    \tikzset{ stsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, pattern=grid, pattern color=Paired-1!15} }
+    \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+    \tikzset{ seq/.style ={draw=Paired-11, dashed, rounded corners=2pt} }
+    \tikzset{ mdl/.style ={draw=Paired-3,  dashed, rounded corners=2pt} }
+    \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+    \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+    \node[stsk                    ] (t1) at (0.0, 2.0) {~generate~~};
+    \node[tsk , right=2.00cm of t1] (t2)               {~scramble~~};
+    \node[tsk , right=1.25cm of t2] (t3)               {~encode~~};
+    \node[tsk , right=1.25cm of t3] (t4)               {~encode~~};
+    \node[tsk , right=1.25cm of t4] (t5)               {~interleave~~};
+    \node[tsk,  below=1.00cm of t2] (t6)               {~modulate~~};
+    \node[tsk , right=1.25cm of t6] (t7)               {~generate~~};
+    \node[tsk , right=1.25cm of t7] (t8)               {~scramble~~};
+    \node[stsk, right=4.15cm of t8] (t9)               {~filter~~};
+    \node[stsk, right=1.00cm of t9] (t10)              {~send~~};
+
+    \node[sout, at=(t1.east) ] (t1_so)  {};
+    \node[sin,  at=(t2.west) ] (t2_si)  {};
+    \node[sout, at=(t2.east) ] (t2_so)  {};
+    \node[sin,  at=(t3.west) ] (t3_si)  {};
+    \node[sout, at=(t3.east) ] (t3_so)  {};
+    \node[sin,  at=(t4.west) ] (t4_si)  {};
+    \node[sout, at=(t4.east) ] (t4_so)  {};
+    \node[sin,  at=(t5.west) ] (t5_si)  {};
+    \node[sout, at=(t5.east) ] (t5_so)  {};
+    \node[sin,  at=(t6.west) ] (t6_si)  {};
+    \node[sout, at=(t6.east) ] (t6_so)  {};
+    \node[sin,  at=(t7.west) ] (t7_si)  {};
+    \node[sout, at=(t7.east) ] (t7_so)  {};
+    \node[sin,  at=(t8.west) ] (t8_si)  {};
+    \node[sout, at=(t8.east) ] (t8_so)  {};
+    \node[sin,  at=(t9.west) ] (t9_si)  {};
+    \node[sout, at=(t9.east) ] (t9_so)  {};
+    \node[sin,  at=(t10.west)] (t10_si) {};
+
+    \node[mdl, label={[Paired-3]above:Source Binary File},  fit=(t1)           (t1_so)] (m1) {};
+    \node[mdl, label={[Paired-3]above:Scrambler BB},        fit=(t2)  (t2_si)  (t2_so)] (m2) {};
+    \node[mdl, label={[Paired-3]above:Encoder BCH},         fit=(t3)  (t3_si)  (t3_so)] (m3) {};
+    \node[mdl, label={[Paired-3]above:Encoder LDPC},        fit=(t4)  (t4_si)  (t4_so)] (m4) {};
+    \node[mdl, label={[Paired-3]above:Interleaver},         fit=(t5)  (t5_si)  (t5_so)] (m5) {};
+    \node[mdl, label={[Paired-3]above:Modem QPSK},          fit=(t6)  (t6_si)  (t6_so)] (m6) {};
+    \node[mdl, label={[Paired-3]above:Framer},              fit=(t7)  (t7_si)  (t7_so)] (m7) {};
+    \node[mdl, label={[Paired-3]above:Scrambler PL},        fit=(t8)  (t8_si)  (t8_so)] (m8) {};
+    \node[mdl, label={[Paired-3]above:Filter Shaping},      fit=(t9)  (t9_si)  (t9_so)] (m9) {};
+    \node[mdl, label={[Paired-3]above:Radio},               fit=(t10) (t10_si)        ] (m9) {};
+
+    \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
+    \draw[->,>=latex] (t2_so) -- (t3_si)  node [midway, above] {};
+    \draw[->,>=latex] (t3_so) -- (t4_si)  node [midway, above] {};
+    \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
+    \draw[->,>=latex] (t5_so) -- (13.9,2.0) -- (13.9,1.15) -- (2.25,1.15) -- (2.25,0) -- (t6_si)  node [midway, above] {};
+    \draw[->,>=latex] (t6_so) -- (t7_si)  node [midway, above] {};
+    \draw[->,>=latex] (t7_so) -- (t8_si)  node [midway, above] {};
+    \draw[->,>=latex] (t8_so) -- (t9_si)  node [midway, above] {};
+    \draw[->,>=latex] (t9_so) -- (t10_si) node [midway, above] {};
+    \draw[black, -] (t10.east)--++(0:1.0cm) node[antenna, label={[above,yshift=+2.15cm]USRP}] {};
+
+    \node[seq, minimum height=2.5cm, minimum width=3.5cm,  label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so)                                      ] (seq1) {};
+    \node[seq, minimum height=4.5cm, minimum width=12.0cm, label={[Paired-11]below:Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t5) (t6) (t7) (t8) (t8_so)] (seq2) {};
+    \node[seq, minimum height=2.5cm, minimum width=4.5cm,  label={[Paired-11]below:Stage 3}, fit=(t9_si) (t10)                                     ] (seq3) {};
+  \end{tikzpicture}
+\end{document}
