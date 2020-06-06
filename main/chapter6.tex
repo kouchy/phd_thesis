@@ -67,12 +67,6 @@ efficiency.
 
 \section{Dataflow Model}
 
-\begin{itemize}
-  \item \xmark~géneral dataflow
-  \item \xmark~synchronous dataflow
-  \item \xmark~cyclo static dataflow
-\end{itemize}
-
 The Shanon's communication model presented before can be refined in a way
 that the transmitter and the receiver are decomposed into many processing
 blocks. Those blocks are mainly connected to each other in an ordered graph.
@@ -125,16 +119,16 @@ more aggressive optimizations than GNU Radio, at the cost of lower generality.
 
 \begin{itemize}
   \item \xmark~dire pourquoi c'est un runtime embedded DSL.
+  \item \xmark~avantanges du runtime => messages d'erreurs clairs, possibilités
+    d'interfaçage avec MATLAB (testé par Romain), overhead négligeable
 \end{itemize}
 
 \subsection{Serial Blocks}
 
 \begin{itemize}
-  \item \cmark~tâches = les traitements (effectués sur des trames)
-  \item \cmark~modules = les données internes à une ou plusieurs tâches
-  \item \cmark~sockets = les données échangées entre les tâches
-  \item \cmark~boucles = permet de répéter une sous-séquence
   \item \xmark~routeurs = permet d'aiguiller vers différentes sous-séquences
+  \item \xmark~limitation : dire que les boucles ne peuvent pas être séparées
+    dans plusieurs étages du pipeline.
 \end{itemize}
 
 The proposed domain specific language (DSL) comes with a set of elementary
@@ -218,12 +212,6 @@ within the body of an outer one ($L_1$).
 
 \subsection{Parallel Blocks}
 
-\begin{itemize}
-  \item \cmark~séquence = un enchaînement de tâches dont l'ordre est défini par les
-    connections entre les sockets
-  \item \cmark~pipeline
-\end{itemize}
-
 Many tasks that have been binded together can be regrouped in what we call a
 \emph{sequence} of tasks. The sequence notion remind us that the tasks are
 executed sequentially one by one in a pre-defined static order (like in the SDF
@@ -305,19 +293,7 @@ will be discussed later.
 
 \section{Implementation Details}
 
-\subsection{Rules}
-
-\begin{itemize}
-  \item \cmark~une socket d'entrée ne peut être connectée qu'à une seule socket de
-    sortie
-  \item \cmark~toutes les sockets d'entrée d'une tâche doivent être connectées pour
-    qu'elle puisse s'exécuter
-  \item \cmark~une socket de sortie peut être connectée à aucune, une ou plus d'une
-    socket d'entrée
-  \item \cmark~l'ordonnancement d'une séquence est implicitement défini par le binding,
-    quand la dernière socket d'input d'une tâche est connectée, alors on va
-    passer aux tâches suivantes
-\end{itemize}
+\subsection{Implicit Rules}
 
 In the proposed DSL, an input socket can only be binded to one output socket.
 On the other side, an output socket can be binded to multiple input sockets.
@@ -328,7 +304,7 @@ socket is hit. After that, the output sockets of the current task are followed
 to reach new tasks. The new tasks are discovered in the order in which they were
 binded by the user.
 
-\subsection{Sequence Duplication and Clone}
+\subsection{Sequence Duplication}
 
 In order to be able to duplicate sequences, we implemented a \emph{clone} method
 in the modules. The \emph{clone} is an polymorphic method defined in the
@@ -351,7 +327,7 @@ duplicated (it also can be an implementation default). In the particular case of
 a writable pointer member, the developer can explicitly allocate a new pointer
 in the \emph{deep copy} method.
 
-\subsection{Sequence Processes}
+\subsection{Processes}
 
 A sequence encapsulates a set of tasks and gives the opportunity to execute
 these tasks in a predefined order. The tasks can also be executed manually
@@ -367,7 +343,17 @@ detection is based on a \Cxx basic introspection feature: during the analysis,
 for each parsed task, we try to cast (\verb|dynamic_cast|) the corresponding
 module in a specific class.
 
-\subsection{Pipeline and 0-copy}
+\subsection{Pipeline}
+
+\begin{itemize}
+  \item \xmark~parler du cas où un binding saute un voire plusieurs étages du
+    pipeline
+  \item \xmark~expliquer la flexibilité des adaptors qui peuvent synchroniser
+    autant de sockets que nécessaire en même temps
+  \item \xmark~expliquer les cas particuliers et tricky du mode 0-copy (quand il
+    y a plusieurs sockets et tâches connectées à un adaptor)
+  \item \xmark~donner un algo du pipeline ?
+\end{itemize}
 
 \begin{figure}[htp]
   \centering
@@ -439,6 +425,15 @@ the main drawback of this method compared to the active waiting. This overhead
 can be mitigated by using larger synchronization buffers to overlap the thread
 context switch incompressible time.
 
+In the previously described implementation the copies from and to the buffers
+can take a non-negligible amount of time. Thanks to the processes encapsulation
+detailed before, we were able to replace the copies by pointers switches. The
+idea is to dynamically re-bind the tasks just before and just after the
+\emph{push} and \emph{pull} tasks. We also need to bypass the regular execution
+in the \emph{push 1}, \emph{pull n}, \emph{push n} and \emph{pull 1} tasks. The
+processes that encapsulate these tasks dynamically replaces the source code of
+the data buffer copy by a simple pointer copy. The pointers are exchanged
+cyclically.
 
 \section{Application on the DVB-S2 Standard}
 
