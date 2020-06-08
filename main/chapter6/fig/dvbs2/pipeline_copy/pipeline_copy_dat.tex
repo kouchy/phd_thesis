@@ -1,0 +1,40 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning, patterns}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                 width=1.0\linewidth, height=0.70\linewidth,
+                 xticklabel style={black!70}, yticklabel style={black!70},
+                 ybar stacked, bar width=14pt,
+                 % tick align=outside, tickpos=left,
+                 legend style={at={(0.5,0.245)}, anchor=north}, legend columns=-1,
+                 ylabel={Percentage of time}, xlabel={Pipeline stage}, %symbolic x coords={tool1, tool2, tool3, tool4, tool5, tool6, tool7},
+                 ymajorgrids, grid style={gray!30}, grid style={dashed, gray!50},
+                 % ymin=0,
+                 % ymax=5200.0,
+                 %ytick={0,1,2,3,4,5,6,7},
+                 yticklabels={0, 0\%, 20\%, 40\%, 60\%, 80\%, 100\%},
+                 xtick=data,
+                 xticklabels={1, 2, 3, 4, 5, 6, 7, 8}]
+      \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=X, y expr=\thisrowno{1}/5718] {dat/dvbs2_copy_dat.txt};
+      \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=X, y expr=\thisrowno{2}/5718] {dat/dvbs2_copy_dat.txt};
+      \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=X, y expr=\thisrowno{4}/5718] {dat/dvbs2_copy_dat.txt};
+      \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=X, y expr=\thisrowno{3}/5718] {dat/dvbs2_copy_dat.txt};
+      \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=X, y expr=\thisrowno{5}/5718] {dat/dvbs2_copy_dat.txt};
+      \legend{Std. tasks\text{ }, Push wait\text{ }, Push copy\text{ }, Pull wait\text{ }, Pull copy\text{ }}
+    \end{axis}
+  \end{tikzpicture}
+\end{document}
