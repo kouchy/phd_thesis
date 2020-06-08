@@ -442,7 +442,8 @@ chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
               main/chapter6/fig/dsl/pipeline/colors \
               main/chapter6/fig/dvbs2/transmitter/transmitter.tex \
               main/chapter6/fig/dvbs2/transmitter/colors \
-              main/chapter6/fig/dvbs2/receiver/receiver.tex \
+              main/chapter6/fig/dvbs2/receiver/receiver_transmission.tex \
+              main/chapter6/fig/dvbs2/receiver/receiver_learning.tex \
               main/chapter6/fig/dvbs2/receiver/colors
 	cd main/chapter6/fig/dsl/loop/                         && rubber -d loop.tex
 	cd main/chapter6/fig/dsl/nested_loops/                 && rubber -d nested_loops.tex
@@ -452,7 +453,8 @@ chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber -d pipeline_usr.tex
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber -d pipeline_adp.tex
 	cd main/chapter6/fig/dvbs2/transmitter/                && rubber -d transmitter.tex
-	cd main/chapter6/fig/dvbs2/receiver/                   && rubber -d receiver.tex
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber -d receiver_transmission.tex
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber -d receiver_learning.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -537,7 +539,9 @@ clean: clean4all
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean pipeline_usr
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean pipeline_adp
 	cd main/chapter6/fig/dvbs2/transmitter/                && rubber --clean transmitter
-	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean receiver
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean receiver_transmission
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean receiver_learning
+
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
@@ -614,7 +618,8 @@ mrproper: clean4all
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean -d pipeline_usr.tex
 	cd main/chapter6/fig/dsl/pipeline/                     && rubber --clean -d pipeline_adp.tex
 	cd main/chapter6/fig/dvbs2/transmitter/                && rubber --clean -d transmitter.tex
-	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean -d receiver.tex
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean -d receiver_transmission.tex
+	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean -d receiver_learning.tex
 #	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf

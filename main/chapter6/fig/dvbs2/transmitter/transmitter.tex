@@ -27,16 +27,16 @@
     \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
     \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
 
-    \node[stsk                    ] (t1) at (0.0, 2.0) {~generate~~};
-    \node[tsk , right=2.00cm of t1] (t2)               {~scramble~~};
-    \node[tsk , right=1.25cm of t2] (t3)               {~encode~~};
-    \node[tsk , right=1.25cm of t3] (t4)               {~encode~~};
-    \node[tsk , right=1.25cm of t4] (t5)               {~interleave~~};
-    \node[tsk,  below=1.00cm of t2] (t6)               {~modulate~~};
-    \node[tsk , right=1.25cm of t6] (t7)               {~generate~~};
-    \node[tsk , right=1.25cm of t7] (t8)               {~scramble~~};
-    \node[stsk, right=4.15cm of t8] (t9)               {~filter~~};
-    \node[stsk, right=1.00cm of t9] (t10)              {~send~~};
+    \node[stsk                    , align=center] (t1) at (0.0, 2.0) {~generate~~\\($t^{\text{Tx}}_1$)};
+    \node[tsk , right=2.00cm of t1, align=center] (t2)               {~scramble~~\\($t^{\text{Tx}}_2$)};
+    \node[tsk , right=1.25cm of t2, align=center] (t3)               {~encode~~\\($t^{\text{Tx}}_3$)};
+    \node[tsk , right=1.25cm of t3, align=center] (t4)               {~encode~~\\($t^{\text{Tx}}_4$)};
+    \node[tsk , right=1.25cm of t4, align=center] (t5)               {~interleave~~\\($t^{\text{Tx}}_5$)};
+    \node[tsk,  below=1.00cm of t2, align=center] (t6)               {~modulate~~\\($t^{\text{Tx}}_6$)};
+    \node[tsk , right=1.25cm of t6, align=center] (t7)               {~insert~~\\($t^{\text{Tx}}_7$)};
+    \node[tsk , right=1.25cm of t7, align=center] (t8)               {~scramble~~\\($t^{\text{Tx}}_8$)};
+    \node[stsk, right=4.60cm of t8, align=center] (t9)               {~filter~~\\($t^{\text{Tx}}_9$)};
+    \node[stsk, right=1.00cm of t9, align=center] (t10)              {~send~~\\($t^{\text{Tx}}_{10}$)};
 
     \node[sout, at=(t1.east) ] (t1_so)  {};
     \node[sin,  at=(t2.west) ] (t2_si)  {};
@@ -58,13 +58,13 @@
     \node[sin,  at=(t10.west)] (t10_si) {};
 
     \node[mdl, label={[Paired-3]above:Source Binary File},  fit=(t1)           (t1_so)] (m1) {};
-    \node[mdl, label={[Paired-3]above:Scrambler BB},        fit=(t2)  (t2_si)  (t2_so)] (m2) {};
+    \node[mdl, label={[Paired-3]above:Scrambler Binary},    fit=(t2)  (t2_si)  (t2_so)] (m2) {};
     \node[mdl, label={[Paired-3]above:Encoder BCH},         fit=(t3)  (t3_si)  (t3_so)] (m3) {};
     \node[mdl, label={[Paired-3]above:Encoder LDPC},        fit=(t4)  (t4_si)  (t4_so)] (m4) {};
     \node[mdl, label={[Paired-3]above:Interleaver},         fit=(t5)  (t5_si)  (t5_so)] (m5) {};
-    \node[mdl, label={[Paired-3]above:Modem QPSK},          fit=(t6)  (t6_si)  (t6_so)] (m6) {};
-    \node[mdl, label={[Paired-3]above:Framer},              fit=(t7)  (t7_si)  (t7_so)] (m7) {};
-    \node[mdl, label={[Paired-3]above:Scrambler PL},        fit=(t8)  (t8_si)  (t8_so)] (m8) {};
+    \node[mdl, label={[Paired-3]above:Modem},               fit=(t6)  (t6_si)  (t6_so)] (m6) {};
+    \node[mdl, label={[Paired-3]above:Framer PLH},          fit=(t7)  (t7_si)  (t7_so)] (m7) {};
+    \node[mdl, label={[Paired-3]above:Scrambler Symbol},    fit=(t8)  (t8_si)  (t8_so)] (m8) {};
     \node[mdl, label={[Paired-3]above:Filter Shaping},      fit=(t9)  (t9_si)  (t9_so)] (m9) {};
     \node[mdl, label={[Paired-3]above:Radio},               fit=(t10) (t10_si)        ] (m9) {};
 

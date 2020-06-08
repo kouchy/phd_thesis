@@ -1,0 +1,79 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+\usepackage{circuitikz}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ tsk/.style  ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+    \tikzset{ stsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, pattern=grid, pattern color=Paired-1!15} }
+    \tikzset{ sutsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, preaction={fill=white}, dashed} }
+    \tikzset{ ss/.style   ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+    \tikzset{ seq/.style  ={draw=Paired-11, dashed, rounded corners=2pt} }
+    \tikzset{ mdl/.style  ={draw=Paired-3,  dashed, rounded corners=2pt} }
+    \tikzset{ pip/.style  ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+    \tikzset{ sin/.style  ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+    \tikzset{ sout/.style ={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+    \node[stsk                     , align=center                                                                                                 ] (t1) at ( 0.0, 2.0) {~receive~~\\($t^{\text{Rxl}}_1$)};
+    \node[tsk ,  right=1.00cm of t1, align=center                                                                                                 ] (t2)                {~imultiply~~\\($t^{\text{Rxl}}_2$)};
+    \node[stsk,  right=1.00cm of t2, minimum width=8cm, minimum height=5cm, label={[Paired-1,yshift=0.75cm]below:synchronize ($t^{\text{Rxl}}_3$)}] (t3)                {};
+    \node[sutsk, at=(t3.center)                                                                                                                   ] (t3_2)              {filter};
+    \node[sutsk, left =0.80cm of t3_2                                                                                                             ] (t3_1)              {synchronize};
+    \node[sutsk, right=0.80cm of t3_2                                                                                                             ] (t3_3)              {synchronize};
+    \node[stsk,  right=1.00cm of t3 , align=center                                                                                                ] (t4)                {~extract~~\\($t^{\text{Rxl}}_4$)};
+    \node[tsk ,  right=1.00cm of t4 , align=center                                                                                                ] (t5)                {~imultiply~~\\($t^{\text{Rxl}}_5$)};
+    \node[stsk,  right=1.00cm of t5 , align=center                                                                                                ] (t6)                {~synchronize~~\\($t^{\text{Rxl}}_6$)};
+
+    \node[sout, at=(t1.east)                ] (t1_so)  {};
+    \node[sin,  at=(t2.west)                ] (t2_si)  {};
+    \node[sout, at=(t2.east)                ] (t2_so)  {};
+    \node[sin,  at=(t3.west), yshift=+1.85cm] (t3_si1) {};
+    \node[sin,  at=(t3.west), yshift=-1.85cm] (t3_si2) {};
+    \node[sout, at=(t3.east), yshift=+1.85cm] (t3_so1) {};
+    \node[sout, at=(t3.east), yshift=-1.85cm] (t3_so2) {};
+    \node[sin,  at=(t4.west), yshift=+0.25cm] (t4_si1) {};
+    \node[sin,  at=(t4.west), yshift=-0.25cm] (t4_si2) {};
+    \node[sout, at=(t4.east)                ] (t4_so)  {};
+    \node[sin,  at=(t5.west)                ] (t5_si)  {};
+    \node[sout, at=(t5.east)                ] (t5_so)  {};
+    \node[sin,  at=(t6.west)                ] (t6_si)  {};
+    \node[sout, at=(t6.east), yshift=+0.25cm] (t6_so1) {};
+    \node[sout, at=(t6.east), yshift=-0.25cm] (t6_so2) {};
+
+    \draw[black, -] (t1.west)--++(0:-1.0cm) node[antenna, label={[above,yshift=+2.15cm]USRP}] {};
+    \draw[->,>=latex        ] (t1_so)      --               (t2_si)       node [midway, above] {};
+    \draw[->,>=latex        ] (t2_so)      --               (t3_si1)      node [midway, above] {};
+    \draw[->,>=latex, dashed] (t3_1)       --               (t3_2)        node [midway, above] {};
+    \draw[->,>=latex, dashed] (t3_2)       --               (t3_3)        node [midway, above] {};
+    \draw[->,>=latex, dashed] (t3_3.south) to[bend left=40] (t3_1.south)  node [midway, above] {};
+    \draw[->,>=latex        ] (t3_so1)     --               (t4_si1)      node [midway, above] {};
+    \draw[->,>=latex        ] (t3_so2)     --               (t4_si2)      node [midway, above] {};
+    \draw[->,>=latex        ] (t4_so)      --               (t5_si)       node [midway, above] {};
+    \draw[->,>=latex        ] (t5_so)      --               (t6_si)       node [midway, above] {};
+
+    \draw[->,>=latex] (t6_so2) -| (21.75,-1.0) -- (4.0,-1.0) |- (t3_si2)  node [midway, above] {};
+
+    \node[mdl, label={[Paired-3, align=center]above:Radio},                          fit=(t1)           (t1_so)           ] (m1)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Multiplier AGC},                 fit=(t2)  (t2_si)  (t2_so)           ] (m2)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Step MF},          fit=(t3)  (t3_si1) (t3_si2)  (t3_so1)] (m3)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Freq. Coarse},     fit=(t3_1)                           ] (m4)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Filter\\Matched},                fit=(t3_2)                           ] (m5)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Synchronizer Timing\\(Gardner)}, fit=(t3_3) (t4) (t4_so)              ] (m6)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Multiplier AGC},                 fit=(t5)  (t5_si)  (t5_so)           ] (m7)  {};
+    \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Frame},            fit=(t6)  (t6_si)  (t6_so1) (t6_so2) ] (m8)  {};
+  \end{tikzpicture}
+\end{document}

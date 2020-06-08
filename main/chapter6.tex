@@ -437,6 +437,18 @@ cyclically.
 
 \section{Application on the DVB-S2 Standard}
 
+\subsection{Synchronization Tasks}
+
+In a real life communication systems, the internal clocks of the radios can
+differ slightly and specific processing has to be added in order to be
+resilient: this is achieved by the the \emph{Synchronizer Timing tasks}.
+Similarly, the radio transmitter frequency is not exactly the same as the
+receiver frequency, the \emph{Synchronizer Frequency} tasks recalibrate the
+signal to recover the emitted symbols. Finally the LDPC is a block coding scheme
+and requires to know precisely the start and last bits of the codeword. The
+\emph{Synchronizer Frame} uses the \emph{Pay Load Headers} (PLH) inserted by the
+\emph{Framer PLH} in the transmitter to find the start and end symbols.
+
 \subsection{Transmitter}
 
 \begin{figure}[htp]
@@ -452,10 +464,12 @@ cyclically.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver}
+  \subfloat[][Learning phase 1 \& 2.]{\includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_learning}}
+  \\
+  \subfloat[][Learning phase 3 \& transmission phase.]{\includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_transmission}}
   \caption
-    [DVB-S2 receiver (transmission phase).]
-    {DVB-S2 receiver (transmission phase).}
+    [DVB-S2 receiver.]
+    {DVB-S2 receiver.}
   \label{fig:dvbs2_receiver}
 \end{figure}
 
