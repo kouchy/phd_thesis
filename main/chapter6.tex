@@ -475,4 +475,58 @@ and requires to know precisely the start and last bits of the codeword. The
 
 \subsection{Evaluations}
 
+
+\begin{table}[htp]
+  \centering
+  \caption
+    [Tasks sequential throughputs and latencies of the DVB-S2 receiver.]
+    {Tasks sequential throughputs and latencies of the DVB-S2 receiver (transmission phase, 16288 frames, inter-frame level = 16, QPSK, $R = 8/9$).}
+  \label{tab:dvbs2_tasks_thr_lat}
+  {\resizebox{\linewidth}{!}{
+  \begin{tabular}{r | r | r r r | r r r | r}
+    \multicolumn{1}{r |}{\textbf{Module}} & \multicolumn{1}{r |}{\textbf{Task}} & \multicolumn{3}{c |}{\textbf{Throughput} (MS/s)} & \multicolumn{3}{c |}{\textbf{Latency} ($\mu$s)} & \textbf{Time}           \\
+                                  &                                    &    \textbf{Avg.} &     \textbf{Min.} &     \textbf{Max.} &     \textbf{Avg.} &     \textbf{Min.} &     \textbf{Max.} & (\%)           \\ \hline \hline
+                            Radio &      receive ($t^\text{Rxt}_{1}$)  &         1015.86  &           234.20  &          1093.98  &           527.32  &           489.66  &          2287.24  &          0.94  \\ \hline
+                 \textbf{Stage 1} &                         \textbf{-} & \textbf{1015.86} &   \textbf{234.20} &  \textbf{1093.98} &   \textbf{527.32} &   \textbf{489.66} &  \textbf{2287.24} &  \textbf{0.94} \\ % T = 16*33480/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                   Multiplier AGC &    imultiply ($t^\text{Rxt}_{2}$)  &          864.41  &           420.05  &           935.71  &           619.71  &           572.49  &          1275.28  &          1.11  \\
+              Synch. Freq. Coarse &  synchronize ($t^\text{Rxt}_{3}$)  &         1979.17  &           665.98  &          2237.38  &           270.66  &           239.42  &           804.35  &          0.48  \\
+                   Filter Matched &       filter ($t^\text{Rxt}_{4}$)  &          273.85  &           121.60  &           275.25  &          1956.08  &          1946.13  &          4405.09  &          3.49  \\ \hline
+                 \textbf{Stage 2} &                         \textbf{-} &  \textbf{188.19} &    \textbf{82.61} &   \textbf{194.22} &  \textbf{2846.45} &  \textbf{2758.04} &  \textbf{6484.72} & \textbf{5.08}  \\ % T = 16*33480/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                   Synch. Timing  &  synchronize ($t^\text{Rxt}_{5}$)  &          130.38  &            58.97  &           131.31  &          4108.52  &          4079.39  &          9084.64  &          7.34  \\ \hline
+                 \textbf{Stage 3} &                         \textbf{-} &  \textbf{130.38} &    \textbf{58.97} &   \textbf{131.31} &  \textbf{4108.52} &  \textbf{4079.39} &  \textbf{9084.64} &  \textbf{7.34} \\ % T = 16*33480/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                    Synch. Timing &      extract ($t^\text{Rxt}_{6}$)  &          331.50  &           151.54  &           354.62  &           807.97  &           755.28  &          1767.48  &          1.44  \\
+                   Multiplier AGC &    imultiply ($t^\text{Rxt}_{7}$)  &          806.31  &           442.69  &           877.19  &           332.18  &           305.34  &           605.02  &          0.59  \\
+                     Synch. Frame &  synchronize ($t^\text{Rxt}_{8}$)  &          187.50  &           120.17  &           193.25  &          1428.51  &          1386.01  &          2228.76  &          2.55  \\ \hline
+                 \textbf{Stage 4} &                         \textbf{-} &  \textbf{104.27} &    \textbf{58.21} &   \textbf{109.47} &  \textbf{2568.66} &  \textbf{2446.63} &  \textbf{4601.26} &  \textbf{4.58} \\ % T = 16*16740/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                 Scrambler Symbol &   descramble ($t^\text{Rxt}_{9}$)  &         1979.41  &           668.85  &          2649.55  &           135.31  &           101.09  &           400.45  &          0.24  \\
+           Synch. Freq. Fine L\&R &  synchronize ($t^\text{Rxt}_{10}$) &         1466.55  &           596.19  &          1741.72  &           182.63  &           153.78  &           449.25  &          0.33  \\
+            Synch. Freq. Fine P/F &  synchronize ($t^\text{Rxt}_{11}$) &          132.40  &            62.59  &           140.88  &          2022.98  &          1901.24  &          4279.30  &          3.61  \\ \hline
+                 \textbf{Stage 5} &                         \textbf{-} &  \textbf{114.42} &    \textbf{52.22} &   \textbf{124.22} &  \textbf{2340.92} &  \textbf{2156.11} &  \textbf{5129.00} &  \textbf{4.18} \\ % T = 16*16740/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                       Framer PLH &       remove ($t^\text{Rxt}_{12}$) &         1148.07  &           427.71  &          1180.59  &           225.77  &           219.55  &           606.02  &          0.40  \\
+                  Noise Estimator &     estimate ($t^\text{Rxt}_{13}$) &          626.12  &           151.24  &           656.09  &           413.98  &           395.07  &          1713.87  &          0.74  \\ \hline
+                 \textbf{Stage 6} &                         \textbf{-} &  \textbf{405.16} &   \textbf{111.73} &   \textbf{421.72} &   \textbf{639.75} &   \textbf{614.62} &  \textbf{2319.89} &  \textbf{1.14} \\ % T = 16*16200/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                            Modem &   demodulate ($t^\text{Rxt}_{14}$) &           46.07  &            42.12  &            46.28  &          5626.34  &          5600.83  &          6153.50  &         10.05  \\
+                      Interleaver & deinterleave ($t^\text{Rxt}_{15}$) &         1533.54  &           518.95  &          1582.97  &           169.02  &           163.74  &           499.47  &          0.30  \\
+                     Decoder LDPC &  decode SIHO ($t^\text{Rxt}_{16}$) &          166.15  &            69.12  &           171.59  &          1386.74  &          1342.74  &          3333.34  &          2.48  \\
+                      Decoder BCH &  decode HIHO ($t^\text{Rxt}_{17}$) &            6.92  &             6.15  &             6.96  &         32905.37  &         32705.15  &         36998.15  &         58.79  \\
+                 Scrambler Binary &   descramble ($t^\text{Rxt}_{18}$) &           91.11  &            47.74  &            91.73  &          2499.41  &          2482.41  &          4770.24  &          4.47  \\ \hline
+                 \textbf{Stage 7} &                         \textbf{-} &    \textbf{5.35} &     \textbf{4.40} &     \textbf{5.38} & \textbf{42586.88} & \textbf{42294.87} & \textbf{51754.70} & \textbf{76.09} \\ % T = 16*14232/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                 Sink Binary File &         send ($t^\text{Rxt}_{19}$) &         1838.31  &            25.30  &          2100.47  &           123.87  &           108.41  &          9001.34  &          0.22  \\ \hline
+                 \textbf{Stage 8} &                         \textbf{-} & \textbf{1838.31} &    \textbf{25.30} &  \textbf{2100.47} &   \textbf{123.87} &   \textbf{108.41} &  \textbf{9001.34} &  \textbf{0.22} \\ % T = 16*14232/L
+                                  &                                    &                  &                   &                   &                   &                   &                   &                \\
+                 \hline
+                 \hline
+                 \textbf{Total}   &                         \textbf{-} &    \textbf{4.09} &     \textbf{2.51} &     \textbf{4.14} & \textbf{55742.37} & \textbf{54947.73} & \textbf{90662.79} & \textbf{99.57} \\ % T = 16*14232/L
+
+  \end{tabular}
+  }
+\end{table}
+
 \subsection{Discussion}
