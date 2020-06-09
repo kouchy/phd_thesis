@@ -447,7 +447,18 @@ chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
               main/chapter6/fig/dvbs2/receiver/colors \
               main/chapter6/fig/dvbs2/pipeline_copy/pipeline_copy_dat.tex \
               main/chapter6/fig/dvbs2/pipeline_copy/pipeline_copy_ptr.tex \
-              main/chapter6/fig/dvbs2/pipeline_copy/colors
+              main/chapter6/fig/dvbs2/pipeline_copy/colors \
+              main/chapter6/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_sim.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_BB.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_sim.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_rad.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_sim.txt \
+              main/chapter6/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt \
+              main/chapter6/fig/dvbs2/bfer/bfer.tex \
+              main/chapter6/fig/dvbs2/bfer/colors
 	cd main/chapter6/fig/dsl/loop/                         && rubber -d loop.tex
 	cd main/chapter6/fig/dsl/nested_loops/                 && rubber -d nested_loops.tex
 	cd main/chapter6/fig/dsl/sequence/                     && rubber -d sequence_chain.tex
@@ -460,6 +471,7 @@ chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
 	cd main/chapter6/fig/dvbs2/receiver/                   && rubber -d receiver_learning.tex
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber -d pipeline_copy_dat.tex
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber -d pipeline_copy_ptr.tex
+	cd main/chapter6/fig/dvbs2/bfer/                       && rubber -d bfer.tex
 
 clean4all:
 	rm -f *.mtc*
@@ -548,6 +560,7 @@ clean: clean4all
 	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean receiver_learning
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber --clean pipeline_copy_dat
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber --clean pipeline_copy_ptr
+	cd main/chapter6/fig/dvbs2/bfer/                       && rubber --clean bfer
 
 
 mrproper: clean4all
@@ -629,6 +642,7 @@ mrproper: clean4all
 	cd main/chapter6/fig/dvbs2/receiver/                   && rubber --clean -d receiver_learning.tex
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber --clean -d pipeline_copy_dat.tex
 	cd main/chapter6/fig/dvbs2/pipeline_copy/              && rubber --clean -d pipeline_copy_ptr.tex
+	cd main/chapter6/fig/dvbs2/bfer/                       && rubber --clean -d bfer.tex
 #	cd main/chapter1/fig/intro/com_chain                   && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/com_chain                    && rm -f             com_chain_old.pdf
 #	cd main/chapter1/fig/simu/in_out                       && rm -f             in_out_old.pdf

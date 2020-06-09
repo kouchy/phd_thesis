@@ -1,0 +1,69 @@
+# [metadata]
+# title=TX/RX QPSK 8/9
+# command=./bin/dvbs2_tx_rx -m 3 -M 4.2 -s 0.1 --chn-max-freq-shift 0.1 --chn-max-delay 4 --dec-implem NMS --dec-ite 10 --src-fra 16 --dec-simd INTER --mod-cod QPSK-S_8/9
+# [trace]
+# * DVB-S2 ----------------------------------------
+#    ** Modulation and coding   = QPSK-S_8/9
+#    ** Min  Eb/N0              = 3.000000
+#    ** Max  Eb/N0              = 4.200000
+#    ** Step Eb/N0              = 0.100000
+#    ** Max frame errors        = 100
+#    ** Type of channel         = AWGN
+#    ** Maximum Doppler shift   = 0.100000
+#    ** Maximum Channel Delay   = 4.000000
+#    ** LDPC implem             = NMS
+#    ** LDPC n iterations       = 10
+#    ** LDPC simd               = INTER
+#    ** Path to sink file       = sink.out
+#    ** Type of source          = RAND
+#    ** Path to source file     = ../conf/src/K_14232.src
+#    ** Perfect synchronization = NO
+#    ** Estimator type          = DVBS2
+# * Shaping_filter --------------------------------
+#    ** N. complex samples      = 16740
+#    ** N. complex symbols      = 8370
+#    ** Oversampling Factor     = 2
+#    ** Rolloff Factor          = 0.200000
+#    ** Group Delay             = 20
+# * Synchronizer_freq_coarse ----------------------
+#    ** N. samples              = 16740
+#    ** Type                    = NORMAL
+#    ** Damping Factor          = 0.707107
+#    ** Normalized Bandwidth    = 0.000100
+# * Synchronizer_timing ---------------------------
+#    ** N. complex samples      = 16740
+#    ** Type                    = FAST
+#    ** Damping Factor          = 0.707107
+#    ** Normalized Bandwidth    = 0.000050
+# * Synchronizer_frame ----------------------------
+#    ** N. complex samples      = 8370
+#    ** Type                    = FAST
+#    ** Alpha                   = 0.900000
+#    ** Trigger                 = 30.000000
+# * Synchronizer_freq_fine ------------------------
+#    ** N. samples              = 8370
+#    ** Type                    = NORMAL
+#    ** L&R Alpha               = 0.999000
+# ---------------------||------------------------------------------------------||---------------------
+#  Signal Noise Ratio  ||   Bit Error Rate (BER) and Frame Error Rate (FER)    ||  Global throughput
+#         (SNR)        ||                                                      ||  and elapsed time
+# ---------------------||------------------------------------------------------||---------------------
+# ----------|----------||----------|----------|----------|----------|----------||----------|----------
+      Es/N0 |    Eb/N0 ||      FRA |       BE |       FE |      BER |      FER ||  SIM_THR |    ET/RT
+#      (dB) |     (dB) ||          |          |          |          |          ||   (Mb/s) | (hhmmss)
+# ----------|----------||----------|----------|----------|----------|----------||----------|----------
+       5.45 |     3.00 ||      112 |    50497 |      112 | 3.17e-02 | 1.00e+00 ||    0.726 | 00h00'02
+       5.55 |     3.10 ||      112 |    46076 |      112 | 2.89e-02 | 1.00e+00 ||    0.772 | 00h00'02
+       5.65 |     3.20 ||      112 |    44191 |      112 | 2.77e-02 | 1.00e+00 ||    0.805 | 00h00'01
+       5.75 |     3.30 ||      112 |    38337 |      112 | 2.41e-02 | 1.00e+00 ||    0.806 | 00h00'01
+       5.85 |     3.40 ||      112 |    33310 |      112 | 2.09e-02 | 1.00e+00 ||    0.756 | 00h00'02
+       5.95 |     3.50 ||      112 |    29945 |      112 | 1.88e-02 | 1.00e+00 ||    0.807 | 00h00'01
+       6.05 |     3.60 ||      112 |    22761 |      111 | 1.43e-02 | 9.91e-01 ||    0.808 | 00h00'01
+       6.15 |     3.70 ||      128 |    17838 |      111 | 9.79e-03 | 8.67e-01 ||    0.872 | 00h00'02
+       6.25 |     3.80 ||      176 |    12506 |      102 | 4.99e-03 | 5.80e-01 ||    1.130 | 00h00'02
+       6.35 |     3.90 ||      416 |     8912 |      100 | 1.51e-03 | 2.40e-01 ||    1.881 | 00h00'03
+       6.45 |     4.00 ||     1680 |     6733 |      101 | 2.82e-04 | 6.01e-02 ||    2.946 | 00h00'08
+       6.55 |     4.10 ||    10752 |     6109 |      100 | 3.99e-05 | 9.30e-03 ||    3.568 | 00h00'42
+       6.65 |     4.20 ||   102352 |     5354 |      100 | 3.68e-06 | 9.77e-04 ||    3.608 | 00h06'43
+#
+# End of the simulation

@@ -1,0 +1,63 @@
+# [metadata]
+# title=TX/RX QPSK 3/5
+# command=./bin/dvbs2_tx_rx -m 2 -M 3.5 -s 0.1 --chn-max-freq-shift 0.1 --chn-max-delay 4 --dec-implem NMS --dec-ite 10 --src-fra 4 --dec-simd INTER --mod-cod QPSK-S_3/5
+# [trace]
+# * DVB-S2 ----------------------------------------
+#    ** Modulation and coding   = QPSK-S_3/5
+#    ** Min  Eb/N0              = 2.000000
+#    ** Max  Eb/N0              = 3.500000
+#    ** Step Eb/N0              = 0.100000
+#    ** Max frame errors        = 100
+#    ** Type of channel         = AWGN
+#    ** Maximum Doppler shift   = 0.100000
+#    ** Maximum Channel Delay   = 4.000000
+#    ** LDPC implem             = NMS
+#    ** LDPC n iterations       = 10
+#    ** LDPC simd               = INTER
+#    ** Path to sink file       = sink.out
+#    ** Type of source          = RAND
+#    ** Path to source file     = ../conf/src/K_9552.src
+#    ** Perfect synchronization = NO
+#    ** Estimator type          = DVBS2
+# * Shaping_filter --------------------------------
+#    ** N. complex samples      = 16740
+#    ** N. complex symbols      = 8370
+#    ** Oversampling Factor     = 2
+#    ** Rolloff Factor          = 0.200000
+#    ** Group Delay             = 20
+# * Synchronizer_freq_coarse ----------------------
+#    ** N. samples              = 16740
+#    ** Type                    = NORMAL
+#    ** Damping Factor          = 0.707107
+#    ** Normalized Bandwidth    = 0.000100
+# * Synchronizer_timing ---------------------------
+#    ** N. complex samples      = 16740
+#    ** Type                    = FAST
+#    ** Damping Factor          = 0.707107
+#    ** Normalized Bandwidth    = 0.000050
+# * Synchronizer_frame ----------------------------
+#    ** N. complex samples      = 8370
+#    ** Type                    = FAST
+#    ** Alpha                   = 0.900000
+#    ** Trigger                 = 30.000000
+# * Synchronizer_freq_fine ------------------------
+#    ** N. samples              = 8370
+#    ** Type                    = NORMAL
+#    ** L&R Alpha               = 0.999000
+#---------------------||------------------------------------------------------||---------------------
+#  Signal Noise Ratio ||   Bit Error Rate (BER) and Frame Error Rate (FER)    ||    Throughput
+#        (SNR)        ||                                                      || and elapsed time
+#---------------------||------------------------------------------------------||---------------------
+#----------|----------||----------|----------|----------|----------|----------||----------|----------
+     Es/N0 |    Eb/N0 ||      FRA |       BE |       FE |      BER |      FER ||   THR    |    ET/RT
+#     (dB) |     (dB) ||          |          |          |          |          ||   (Mb/s) | (hhmmss)
+#----------|----------||----------|----------|----------|----------|----------||----------|----------
+      2.72 |     2.00 ||      104 |   121773 |      102 | 1.23e-01 | 9.81e-01 ||    1.402 | 00h00'00
+      2.82 |     2.10 ||      108 |   118271 |      103 | 1.15e-01 | 9.54e-01 ||    1.323 | 00h00'00
+      2.92 |     2.20 ||      132 |   105110 |      101 | 8.34e-02 | 7.65e-01 ||    1.350 | 00h00'00
+      3.02 |     2.30 ||      204 |   107688 |      101 | 5.53e-02 | 4.95e-01 ||    1.394 | 00h00'00
+      3.12 |     2.40 ||      512 |    99216 |      100 | 2.03e-02 | 1.95e-01 ||    1.398 | 00h00'00
+      3.22 |     2.50 ||     2672 |   102917 |      101 | 4.03e-03 | 3.78e-02 ||    1.367 | 00h00'00
+      3.32 |     2.60 ||    12916 |   103475 |      100 | 8.39e-04 | 7.74e-03 ||    1.484 | 00h00'00
+      3.42 |     2.70 ||    85208 |   103372 |      100 | 1.27e-04 | 1.17e-03 ||    1.332 | 00h00'00
+# Killed by user interruption!
