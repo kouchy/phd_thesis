@@ -28,15 +28,15 @@
     \tikzset{ sin/.style  ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
     \tikzset{ sout/.style ={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
 
-    \node[stsk                     , align=center                                                                                                 ] (t1) at ( 0.0, 2.0) {~receive~~\\($t^{\text{Rxl}}_1$)};
-    \node[tsk ,  right=1.00cm of t1, align=center                                                                                                 ] (t2)                {~imultiply~~\\($t^{\text{Rxl}}_2$)};
-    \node[stsk,  right=1.00cm of t2, minimum width=8cm, minimum height=5cm, label={[Paired-1,yshift=0.75cm]below:synchronize ($t^{\text{Rxl}}_3$)}] (t3)                {};
-    \node[sutsk, at=(t3.center)                                                                                                                   ] (t3_2)              {filter};
-    \node[sutsk, left =0.80cm of t3_2                                                                                                             ] (t3_1)              {synchronize};
-    \node[sutsk, right=0.80cm of t3_2                                                                                                             ] (t3_3)              {synchronize};
-    \node[stsk,  right=1.00cm of t3 , align=center                                                                                                ] (t4)                {~extract~~\\($t^{\text{Rxl}}_4$)};
-    \node[tsk ,  right=1.00cm of t4 , align=center                                                                                                ] (t5)                {~imultiply~~\\($t^{\text{Rxl}}_5$)};
-    \node[stsk,  right=1.00cm of t5 , align=center                                                                                                ] (t6)                {~synchronize~~\\($t^{\text{Rxl}}_6$)};
+    \node[stsk                     , align=center                                                                                                      ] (t1) at ( 0.0, 2.0) {~receive~~\\($t^{\text{Rx}}_1$)};
+    \node[tsk ,  right=1.00cm of t1, align=center                                                                                                      ] (t2)                {~imultiply~~\\($t^{\text{Rx}}_2$)};
+    \node[stsk,  right=1.00cm of t2, minimum width=8cm, minimum height=5cm, label={[Paired-1,yshift=0.75cm]below:synchronize ($t^{\text{Rx}}_{3,4,5}$)}] (t3)                {};
+    \node[sutsk, at=(t3.center)                                                                                                                        ] (t3_2)              {filter};
+    \node[sutsk, left =0.80cm of t3_2                                                                                                                  ] (t3_1)              {synchronize};
+    \node[sutsk, right=0.80cm of t3_2                                                                                                                  ] (t3_3)              {synchronize};
+    \node[stsk,  right=1.00cm of t3 , align=center                                                                                                     ] (t4)                {~extract~~\\($t^{\text{Rx}}_6$)};
+    \node[tsk ,  right=1.00cm of t4 , align=center                                                                                                     ] (t5)                {~imultiply~~\\($t^{\text{Rx}}_7$)};
+    \node[stsk,  right=1.00cm of t5 , align=center                                                                                                     ] (t6)                {~synchronize~~\\($t^{\text{Rx}}_8$)};
 
     \node[sout, at=(t1.east)                ] (t1_so)  {};
     \node[sin,  at=(t2.west)                ] (t2_si)  {};
