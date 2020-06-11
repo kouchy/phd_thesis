@@ -553,7 +553,26 @@ Finally the LDPC is a block coding scheme and requires to know precisely the
 start and end bits of the codeword. The \emph{Synchronizer Frame} task
 ($t^\text{Rxt}_8$) uses the \emph{Pay Load Headers} (PLH) and pilots bits
 inserted by the \emph{Framer PLH} task in the transmitter to recover the start
-and end symbols.
+and end symbols. One can notice that the \emph{Synchronizer Timing} module is
+composed by two separated tasks (\emph{synchronize} or $t^\text{Rx}_5$ and
+\emph{extract} or $t^\text{Rx}_6$). This behavior is different from the other
+\emph{Synchronizer} modules. The \emph{synchronize} task ($t^\text{Rx}_5$ or
+$t^\text{Rx}_{3,4,5}$) has two output sockets, one for the regular data and
+an other for a mask. The regular data and the mask are then used by the
+\emph{extract} task ($t^\text{Rx}_5$) to filter which data will be selected or
+not for the next task. This specific implementation has been retained for two
+reasons: 1) the \emph{Synchronizer Timing} tasks ($t^\text{Rx}_5$ and
+$t^\text{Rx}_6$) have a high latency compared to the others tasks and splitting
+the treatment in two tasks is a way to increase the pipeline reachable
+throughput (this will be discussed more precisely after) and 2) the
+\emph{extract} task ($t^\text{Rx}_6$) introduces a new possible behavior: in
+some case the task does not have enough samples to produce a frame. In this
+particular case the \emph{extract} task raises an exception called
+\verb|tools::processing_aborted|. The exception is caught and the sequence
+restarts from the first task ($t^\text{Rx}_1$). This imply to manage a buffer of
+samples in the \emph{extract} task ($t^\text{Rx}_6$), if the buffer contains
+more than one frame then the next task ($t^\text{Rx}_7$ ) can be executed, else
+the sequence needs to restart.
 
 During the waiting and learning phases 1 and 2, the \emph{Synchronizer Freq.
 Coarse}, the \emph{Filter Matched} and a part of the \emph{Synchronizer Timing}
@@ -570,23 +589,52 @@ second output socket is left unbound.
   \includegraphics[width=1.0\linewidth]{dvbs2/bfer/bfer}
   \caption
     [DVB-S2 BER and FER decoding performance.]
-    {DVB-S2 BER and FER decoding performance.}
+    {DVB-S2 BER/FER decoding performance (LDPC BP h-layered, min-sum, 10 ite.).}
   \label{fig:dvbs2_bfer}
 \end{figure}
 
 Fig.~\ref{fig:dvbs2_bfer} shows the BER and FER decoding performance of the
 3 selected MODCODs. The forms represent the channel conditions: the squares
 stand for a standard simulated AWGN channel, the triangles are also a simulated
-AWGN channel in which frequency and phase shift phenomenas have been taken into
-account and the circles are the real conditions measured performances with the
-USRPs. We noticed a 0.2 dB inaccuracy in the noise estimated by the
+AWGN channel in which frequency shift, phase shift and symbol delay have been
+taken into account and the circles are the real conditions measured performances
+with the USRPs. We noticed a 0.2 dB inaccuracy in the noise estimated by the
 $t^\text{Rx}_{13}$ task, this is symbolized by the extra horizontal bars over
 the circles. The {\color{Paired-1} MODCOD 1} is represented by dashed lines; the
 {\color{Paired-3} MODCOD 2} is represented by dotted lines; the
-{\color{Paired-5} MODCOD 3} is represented by solid lines. One can notice that
-each DVB-S2 configuration has a well-separated SNR predilection zone.
+{\color{Paired-5} MODCOD 3} is represented by solid lines. For each MODCOD, the
+LDPC decoder is the belief propagation algorithm with horizontal layered
+scheduling (10 iterations) and with the min-sum update rules. One can notice
+that each DVB-S2 configuration has a well-separated SNR predilection zone.
 
 \subsection{Evaluations}
+
+This section discusses about the receiver part of the system. We did not bench
+the transmitter part as it is not the most compute intensive part and high
+throughputs are much more easier to reach. All the presented results have been
+obtained by running the code on a high-end machine composed by two Intel\R
+Xeon\TM Platinum 8168 CPUs and 128 GB of RAM. The frequency of the CPUs is 2.70
+GHz and the \emph{Turbo Boost} mode has been disable for the reproducibility of
+the results. Each CPU is composed by 24 cores that support the SMT technology
+but we disabled it in our tests to get the lowest possible tasks latency per
+core. To resume, 48 cores (or hardware threads) are available for the DVB-S2
+receiver. All the input and output data are represented by 32-bit floating-point
+or integer numbers. Knowing that the Platinum 8168 CPU supports the AVX-512 ISA,
+sixteen 32-bit elements can be processed in one SIMD instruction. Most of the
+receiver tasks have been accelerated with \MIPP SIMD functions. On this
+occasion, \MIPP has even been enriched with new functions to improve the complex
+numbers support.
+
+Knowing that the LDPC decoding is one of the most compute intensive task of the
+receiver, we decided to use the efficient inter-frame SIMD implementation
+presented before in the document (the early termination criteria has been
+switched on). This choice has the effect of computing sixteen frames instead of
+one in each task of the receiver. As discussed before, it negatively affect the
+overall latency of the system (by a factor of sixteen) but it is not important
+in the video streaming targeted application. The \emph{Decoder LDPC} task
+($t^\text{Rx}_{16}$) is the only one in the receiver to take advantage of the
+inter-frame SIMD technique, the other tasks simply process sixteen frames
+sequentially.
 
 \begin{table}[htp]
   \centering
@@ -597,10 +645,7 @@ each DVB-S2 configuration has a well-separated SNR predilection zone.
     error-free SNR zone).
     The sequential tasks are represented by \colorbox{Paired-7!15}{orange} rows,
     the slowest \emph{sequential} stage is in \colorbox{Paired-5!15}{red} and
-    the slowest of all stages is in \colorbox{Paired-1!15}{blue}.
-    $\mathcal{N}_\text{Avg}$ is the normalized average throughput
-    considering the information bits ($K_\text{BCH} = 14232$) independently of
-    the tasks.}
+    the slowest of all stages is in \colorbox{Paired-1!15}{blue}.}
   \label{tab:dvbs2_tasks_thr_lat}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r r r r  | r r r | r}
@@ -654,22 +699,119 @@ each DVB-S2 configuration has a well-separated SNR predilection zone.
   }}
 \end{table}
 
+Table~\ref{tab:dvbs2_tasks_thr_lat} presents the measured tasks throughputs and
+latencies for a sequential execution of the MODCOD 2 in the transmission phase.
+The tasks have been regrouped per stage in order to introduce the future
+decomposition when the parallelism will be implemented. The throughput is given
+in mega samples per second (MS/s), this is because some of the tasks are not
+working on bits but on samples and a bit is the smallest possible sample. The
+average (Avg), minimum (Min.) and maximum (Max.) throughputs are calculated with
+the number of output samples. Depending on the task, the number of output
+samples can drastically vary and this is not possible to directly compare the
+throughputs with each others. This is why we introduced the normalized average
+throughput ($\mathcal{N}_\text{Avg}$) which is the average throughput
+considering the $K$ information bits independently of the task output socket
+size. In a first observation one may notice that the latencies of the tasks are
+very high compared to the ones presented in the simulator evaluation (cf.
+Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
+$N = 16740$ and to the inter-frame level, each task processes approximatively
+$16740 \times 16$ samples when in the simulator evaluation each task processes
+approximatively $2048$ bits (there is a factor of $\approx 130$). The
+applicative context is very different and it is directly observable from the
+resulting latencies.
+
+The stage 7 takes 76\% of the time with especially the \emph{Decoder BCH} task
+($t^\text{Rx}_{17}$) that take 59\% of the time. $t^\text{Rx}_{17}$ should not
+take so many time compared to the other tasks but we chose to do not spend to
+many time in optimizing the BCH decoding process as the stage 7 throughput can
+easily be increased with the sequence duplication technique. Theoretically, with
+an infinite number of cores and memory bandwidth, the throughput of the stage 7
+could be infinite too.
+The second slower stage in the stage 3, this stage is the main hotspot of the
+presented receiver. The stage 3 contains only one synchronization task
+($t^\text{Rx}_{5}$) and in the current implementation this task cannot be
+duplicated (or parallelized) because there is an internal data dependency with
+the previous frame. The stage 3 will be the real limiting factor of the receiver
+and considering a machine with an infinite number of cores, the maximum
+reachable information throughput will be 55.42 Mb/s.
+
+We did not try to parallelize the waiting and the learning phases. We measured
+that the whole learning phase (1, 2 and 3) takes about one second. During the
+learning phase, the receiver is not fast enough to process the received samples
+in real time. To fix this problem, the samples are buffered in the \emph{Radio -
+receive} task ($t^\text{Rx}_{1}$). Once the learning phase is done, the
+transmission phase is parallelized and the receiver became fast enough to absorb
+the radio buffer and samples in real time. During the transmission phase the
+receiver has been split in 8 stages presented in
+Fig.~\ref{fig:dvbs2_receiver_transmission}. This decomposition have been
+motivated by the nature of the tasks (sequential or parallel) and by the
+sequential measured throughput. The number of stages has been minimized in order
+to limit the pipeline overhead, consequently, sequential and parallel tasks
+has been regrouped in common stages. The slowest sequential task
+($t^\text{Rx}_{5}$) has been isolated in the dedicated stage 3, the other
+sequential stages have been formed to always have a higher normalized throughput
+than the stage 3. The sequential throughput of the stage 7 (5.35 Mb/s) is lower
+than the throughput of the stage 3 (55.42 Mb/s) this is why the sequence
+duplication has been used. The stage 7 has been parallelize over 28 threads.
+This looks like overkill but the machine was dedicated to the DVB-S2 receiver
+and the throughput of the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) varies
+depending on the SNR because the early termination criterion was enabled.
+When the signal quality is very good, the \emph{Decoder LDPC} task runs fast
+and the threads can spend a lot of time in waiting. With the passive waiting
+version of the adaptor \emph{push} and \emph{pull} tasks, the CPU dynamically
+adapt the cores charge and energy can be saved. In the
+Table~\ref{tab:dvbs2_tasks_thr_lat} the presented \emph{Decoder LDPC} task
+throughputs and latencies are optimistic because we are in a SNR error-free
+zone. All the threads are pinned to a single core with the \emph{hwloc} library.
+The 28 threads of the stage 7 are pinned in round-robin between the CPU sockets.
+This way the memory bandwidth is maximized thanks to the two NUMA memory banks.
+The strategy of the stage 7 parallelism is to maximize the throughput. During
+the duplication process (modules clones) the threads pinning is known and the
+memory is copied into the right memory bank (first touch policy). All the other
+pipeline stages (1, 2, 3, 4, 5, 6 and 8) are run on a single thread. Because of
+the synchronizations between the pipeline stages (adaptor pushes and pulls), the
+threads have been pinned on the same socket. The idea is to minimize the
+pipeline stages latencies in maximizing the CPU caches performance. It avoids
+the extra-cost of moving the cache data between the sockets.
+
 \begin{figure}[htp]
   \centering
-  \subfloat[fig:dvbs2_pipeline_dat_copy][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_dat}}
+  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_dat}\label{plot:dvbs2_pipeline_copy_dat}}
   \quad
-  \subfloat[fig:dvbs2_pipeline_ptr_copy][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_ptr}}
+  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:dvbs2_pipeline_copy_ptr}}
   \caption
     [Comparison of the different pipeline implementations in the DVB-S2 receiver.]
     {Comparison of the different pipeline implementations in the DVB-S2 receiver (MODCOD 2).}
-  \label{fig:dvbs2_pipeline}
+  \label{plot:dvbs2_pipeline}
 \end{figure}
+
+Fig.~\ref{plot:dvbs2_pipeline} presents the repartition of the time in the
+pipeline stages (MODCOD 2). The receiver is running over 35 threads.
+Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows the pipeline implementation with
+data copies and Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} shows the pipeline
+implementation with pointer copies. \emph{Push wait} and \emph{Pull wait} are
+the percentage of time spent in passive or active waiting. \emph{Push copy} and
+\emph{Pull copy} are the percentage of time spent in copying the data to and
+from the adaptors buffers. \emph{Standard tasks} is the cumulative percentage of
+time spent by the tasks presented in Fig.~\ref{fig:dvbs2_receiver_transmission}.
+In both implementations the pipeline stages throughput adapt to the slowest one.
+In Fig.~\ref{plot:dvbs2_pipeline_copy_dat} the measured throughput per stage is
+40 Mb/s whereas in Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} the the measured
+throughput is 55 Mb/s. The pointer copy implementation throughput is $\approx$
+27\% higher than the data copy implementation.
+Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows that the copy overhead is
+non-negligible and the 27\% slowdown is directly due to these copies in the
+stage 3. It largely justifies the pointer copy implementation. In
+Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time is
+taken by the $t^\text{Rx}_{5}$ task. This is also confirmed by the measured
+throughput (55 Mb/s) which is very close the the sequential throughput (55.42
+Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
 
 \begin{table}[htp]
   \centering
   \caption
-    [Throughput performances depending of selected DVB-S2 configurations.]
-    {Throughput performances depending of selected DVB-S2 configurations (error-free SNR zone).}
+    [Throughput performances depending of the selected DVB-S2 configurations.]
+    {Throughput performances depending of the selected DVB-S2 configurations.}
   \label{tab:dvbs2_thr_modcod}
   % {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c c | c c}
@@ -683,5 +825,44 @@ each DVB-S2 configuration has a well-separated SNR predilection zone.
   \end{tabular}
   % }}
 \end{table}
+
+Table~\ref{tab:dvbs2_thr_modcod} summarized the obtained throughputs for the 3
+MODCODs presented in Table~\ref{tab:dvbs2_modcod}. Each time, sequential and
+parallel throughput are given. To measure to maximum achievable throughput, the
+real radio has been removed and replaced by the read of samples pre-registered
+in a binary file. This is because the pipeline stages are naturally adapting to
+the slowest one and in real communication the throughput of the radio is always
+configured to be just a little bit slower than the slowest stage: this is
+necessary for real time communication otherwise the radio task has to
+indefinitely bufferize the samples while the amount of available memory in the
+machine is clearly not infinite. The information ($K$) throughput (info.) is the
+final useful throughput for the user while the coded ($N$) throughput is here
+for observations. Between the MODCOD 1 and 2, only the LDPC code rate varies
+($R=3/5$ and $R=8/9$ resp.). In the parallel implementation, it has a direct
+impact on the information throughput while the coded throughput is unchanged. It
+fact this is because the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) is
+parallelized in the stage 7. This stage is capable to adapt to the charge
+automatically. In the sequential implementation, the coded throughput is
+negatively impacted when $R=8/9$. Between the MODCOD 2 and 3, the modulation
+varies (QPSK and 8-PSK resp.) and the frames have to be deinterleaved
+(column/row interleaver). High order modulation reduces the amount of samples
+treated in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$): this results
+in higher throughput (80 Mb/s for the 8-PSK) in the slowest stage 3. In the
+parallel implementation, the pipeline stages throughput are adapting to the
+slowest stage 3 and it results in an important speedup. In the sequential
+implementation it results in a little slowdown, this is because the additional
+time spent in the de-interleaving task ($t^\text{Rx}_{15}$) is higher than the
+time saved in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$).
+
+This results demonstrate the benefit of the parallelized implementation of the
+receiver. The throughput speedup rangs from 10 to 20 compared to the sequential
+implementation. It is also important to note that the selected configurations
+are efficient in different SNR zones (as shown in Fig.~\ref{fig:dvbs2_bfer}).
+Depending on the signal quality, different MODCOD can be selected and it will
+have a direct impact on the system throughput. For instance, the MODCOD 1 is
+adapted for noisy environment (3 dB) but the information throughput is limited
+to 37 Mb/s while the MODCOD 3 is more adapted to clearer signal conditions
+(7.5 dB) and the information throughput reaches 80 Mb/s. The MODCOD 2 is
+in-between.
 
 \subsection{Discussion}
