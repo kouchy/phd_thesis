@@ -865,4 +865,34 @@ to 37 Mb/s while the MODCOD 3 is more adapted to clearer signal conditions
 (7.5 dB) and the information throughput reaches 80 Mb/s. The MODCOD 2 is
 in-between.
 
-\subsection{Discussion}
+\subsection{Related Works}
+
+Some other works are focusing on the SDR implementation of a DVB-S2 transceiver.
+Here is a list of the projects we found:
+\begin{itemize}
+  \item \textbf{gr-dvbs2rx}\footnote{\textbf{gr-dvbs2rx}: \url{https://github.com/drmpeg/gr-dvbs2rx}.}
+    is an open source extension to GNU Radio. The project sounds promising but
+    lacks for efficiency, his main maintainer affirms that the receiver is not
+    able to meet the satellite real time constraints (30 to 50 Mb/s) on a
+    Xeon\TM Gold/Platinum series processor\footnote{\url{https://lists.gnu.org/archive/html/discuss-gnuradio/2019-01/msg00196.html}.}.
+    He advises to use a dedicated GPU or FPGA for the LDPC decoding.
+  \item \textbf{leansdr}\footnote{\textbf{leansdr}: \url{https://github.com/pabr/leansdr}.}
+    is a standalone open source project. The project creation was motivated to
+    reach higher receiver throughput than GNU Radio even if it results in
+    decoding performance degradations. For instance, a low complexity LDPC
+    bit-flipping decoder is used. At the time of the writing, the project does
+    not support multi-threading and SIMD instructions.
+  \item \textbf{Grayver and Utter}~\cite{Grayver2020} published a paper in which
+    they succeed to build a 10 Gb/s DVB-S2 receiver on a cluster of server-class
+    CPUs. On a comparable CPU, their work is able to double or even triple the
+    throughput of our implementation. This is mainly due to new algorithmic
+    improvements in the synchronization tasks. For instance, they were able to
+    express more parallelism than us in the \emph{Synchronizer Timing} task
+    ($t^\text{Rx}_{5}$), this is very promising. However, we also tried some
+    aggressive optimizations in the \emph{Synchronizer Timing} task but we never
+    succeeded to keep the same level of BER/FER decoding performance. It could
+    be interesting to check if the Grayver and Utter work comes with no
+    penalties in term of decoding performance.
+\end{itemize}
+
+\section{Discussion}
