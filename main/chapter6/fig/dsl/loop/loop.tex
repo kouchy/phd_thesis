@@ -27,13 +27,13 @@
     \node[sin, dashed ] (loop_si1c) at (0-2.25,  1.0) {};
     \node[sin, dashed ] (loop_si2c) at (0-2.25,  0.5) {};
 
-    \node[sout] (loop_so1) at (0+3,  1.0) {};
-    \node[sout] (loop_so2) at (0+3, -1.0) {};
+    \node[sout] (loop_so1) at (0+3,  1.0) {\small{1}};
+    \node[sout] (loop_so2) at (0+3, -1.0) {\small{2}};
 
-    \node[sin ] (loop_si1) at (0-3,  1.0) {};
-    \node[sin ] (loop_si2) at (0-3,  0.5) {};
-    \node[sin ] (loop_si3) at (0-3, -0.5) {};
-    \node[sin ] (loop_si4) at (0-3, -1.0) {};
+    \node[sin ] (loop_si1) at (0-3,  1.0) {\small{1}};
+    \node[sin ] (loop_si2) at (0-3,  0.5) {\small{2}};
+    \node[sin ] (loop_si3) at (0-3, -0.5) {\small{3}};
+    \node[sin ] (loop_si4) at (0-3, -1.0) {\small{4}};
 
     \draw[->,>=latex, dashed] (loop_si1) -- (loop_si1c) node [midway, above] {};
     \draw[->,>=latex, dashed] (loop_si2) -- (loop_si2c) node [midway, above] {};
@@ -81,7 +81,7 @@
     \draw[->,>=latex] (t3_so)    -- (t4_si) node [midway, above] {};
     \draw[->,>=latex] (t4_so)    -- (t5_si) node [midway, above] {};
 
-    \draw[->,>=latex] (t4_so.north east) |- (7,1.60) -- (-3.4,1.60) |- (loop_si2) node [midway, above] {};
+    \draw[->,>=latex] (t4_so.north east) |- (7,1.60) -- (-3.5,1.60) |- (loop_si2) node [midway, above] {};
 
     \draw[->,>=latex] (t5_so.east) -- (9.25,1) -- (9.25,1.70) -- (-3.6,1.70) |- (loop_si4) node [midway, above] {};
 

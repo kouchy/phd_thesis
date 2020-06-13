@@ -41,5 +41,12 @@
     \draw[->,>=latex] (t3_so) -- (t4_si) node [midway, above] {};
 
     \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (t4)] {};
+
+    \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (+0.0, 1.3) {};
+    \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (+0.0, 1.9) {};
+    \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (+4.0, 1.3) {};
+    \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (+4.0, 1.9) {};
+
+
   \end{tikzpicture}
 \end{document}
