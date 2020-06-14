@@ -5,19 +5,22 @@
 \chapter{Embedded Domain Specific Language for the Software Defined Radio}
 
 This chapter presents a new embedded Domain Specific Language (eDSL) dedicated
-to the Software Defined Radio (SDR). The first sections discuss of the existing
-models and solutions and motivate the need of a new dedicated language for the
+to the Software Defined Radio (SDR). The first section discusses of the existing
+models and solutions and motivates the need of a new dedicated language for the
 SDR.
 
-In a second part a description of the developed language is given and
-separated in two types of blocks: 1) the serial blocks and 2) the parallel
-blocks. Follows some implementations details about the realization of these
-blocks.
+In a second part a description of the proposed eDSL is given and separated in
+two sub-sections: the elementary components are presented first and then the
+parallel components are described.
 
-The third part is a concrete use case of the proposed eDSL with the
-realization of a complete digital communication system in software. The DVB-S2
-standard is presented from an applicative point of view (transmitter and
-receiver) and evaluated on a specific CPU target.
+The third part is focusing on the actual implementations of the previously
+presented components. Among others, the sequence duplication technique and the
+pipeline implementation are discussed.
+
+Finally, the last part shows a concrete use case of the proposed eDSL on the
+well-spread DVB-S2 standard. A full digital transceiver has been realized in
+software. The DVB-S2 standard is presented from an applicative point of view
+(transmitter and receiver) and then it is evaluated on a specific CPU target.
 
 \vspace*{\fill}
 \minitoccustom
@@ -99,15 +102,15 @@ the community. The software is bundled with a large variety of algorithms used
 in real life systems. GNU Radio models the digital communication systems at the
 symbol level: this philosophy is very close to the algorithms descriptions that
 can be found in the signal community literature. Thus, it allows quick
-implementation of new algorithms. Still, we show this is a limitation to meet
-high throughputs and low latencies constraints on current GPPs architectures.
+implementation of new algorithms. Still, this is a limitation to meet high
+throughputs and low latencies constraints on current GPPs architectures.
 
 \section{Description of the Proposed Embedded Domain Specific Language}
 
 This section details, through \AFFECT, an embedded domain specific language
 (eDSL) working on sets of symbols (aka frames). \AFFECT implement a form of the
-synchronous dataflow model specialized to the relevant characteristics of FEC
-communication chains enabling to perform more aggressive optimizations than
+synchronous dataflow (SDF) model specialized to the relevant characteristics of
+FEC communication chains enabling to perform more aggressive optimizations than
 GNU Radio, at the cost of lower generality.
 
 Many \Cxx eDSLs are based on the template meta-programming technique. This
@@ -142,18 +145,18 @@ from the \AFFECT library (cf Section~\ref{sec:soft_archi}).
 In the eDSL the \emph{task} is the central component, it is also known as the
 \emph{filter} in the standard dataflow model. A task is an elementary component,
 it can be an encoder, a decoder or a modulator processing for instance. A task,
-unlike a dataflow filter, can have an internal memory to store temporary data
-for instance. If the life time of the private data exceeds the task execution
-then the data will be contained by the \emph{module}. Additionally a set of
-tasks can share the same internal/private memory, in that particularly case,
-multiple tasks are regrouped in a single module. This behavior is not
-recommended by the standard dataflow model, and should be avoided in a fully
-dataflow-compliant model. The main problem with internal memory is that the
-tasks cannot be executed safely by many threads in parallel because of data
-races. However, in many situations the writing of a task or a set of tasks can
-be simplified by relieving this constraint. Furthermore, storing private data in
-the module can be, in some cases, a way to avoid to allocate memory for each
-task execution which is a very expensive operation.
+unlike a dataflow filter, can have an internal state and a private memory to
+store temporary data for instance. If the life time of the private data exceeds
+the task execution then the data will be contained by the \emph{module}.
+Additionally a set of tasks can share the same internal/private memory, in that
+particularly case, multiple tasks are regrouped in a single module. This
+behavior is not recommended by the standard dataflow model, and should be
+avoided in a fully dataflow-compliant model. The main problem with internal
+memory is that the tasks cannot be executed safely by many threads in parallel
+because of data races. However, in many situations the writing of a task or a
+set of tasks can be simplified by relieving this constraint. Furthermore,
+storing private data in the module can be, in some cases, a way to avoid to
+allocate memory for each task execution which is a very expensive operation.
 
 A task can consume and produce public data. To this purpose, each task exposes
 input and/or output \emph{sockets}. The action of connecting the sockets of
@@ -171,7 +174,7 @@ order in which the tasks have been traversed is memorized in the sequence.
 When the user call the \verb|exec| method on a sequence, the tasks constituting
 it are executed one by one in the memorized order (static scheduling).
 
-The proposed eDSL is targeting streaming application and more precisely signal
+The proposed eDSL is targeting streaming applications and more precisely signal
 processing and digital communication chains. In this type of applications, the
 processing are repeated indefinitely on a batch of frames when the system in on.
 So, a sequence is executed in loop, when the last task is executed, the next
@@ -192,20 +195,20 @@ returns \emph{true}, the sequence is stopped.
 
 Fig.~\ref{fig:dsl_sequence} shows two examples of sequence.
 Fig.~\ref{fig:dsl_sequence_chain} is a simple chain of tasks, the user only
-needs to specify the first task of the chain ($t_1$) and the sequence will
-automatically follow the binding until the last task ($t_4$).
+needs to specify the first task of the chain ($t_1$) and the sequence analysis
+will automatically follow the binding until the last task ($t_4$).
 Fig.~\ref{fig:dsl_sequence_generic} is more complicated, there are bound tasks
 before and after the wanted sequence. There is also two \emph{first} tasks
-($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and $t_6$). In this case the
+($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and $t_6$). In this case, the
 user needs to explicitly specify that $t_1$ and $t_3$ are first tasks, if $t_1$
 is given before $t_3$ then $t_1$ will be executed first and $t_3$ after. In fact
 the analysis will start from $t_1$ and continue to traverse new tasks if
 possible. In  the example, $t_2$ can be executed directly after $t_1$ but $t_4$
 cannot because it depends on $t_3$, so the analysis will stop after $t_2$ and
-will restart from $t_3$. The index $i$ of the $t_i$ task represent the execution
-order. The $t_5$ and $t_6$ last tasks have to be given by the user because there
-are other tasks bound to their output sockets: the analysis cannot guess the
-end of the sequence alone.
+will restart from $t_3$. The index $i$ of the $t_i$ task represents the
+execution order. The $t_5$ and $t_6$ last tasks have to be given by the user
+because there are other tasks bound to their output sockets: the analysis cannot
+guess the end of the sequence alone.
 
 Some digital communication scenarios include repeated schemes. To map a repeated
 scheme, we introduced a specific type of task: the \emph{loop}. This task is
@@ -256,7 +259,7 @@ the condition evaluation returns \emph{true} (\emph{for-loop} behavior).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{dsl/nested_loops/nested_loops}
+  \includegraphics[scale=0.85]{dsl/nested_loops/nested_loops}
   \caption
     [Nested loops.]
     {Nested loops.}
@@ -298,26 +301,26 @@ themselves can be duplicated.
 In some particular cases like in the signal synchronization processing, the
 tasks can have a dependency on themselves. It is then impossible to duplicate
 the sequence because of the sequential nature of these tasks. To overcome this
-issue the well-known pipelining strategy can be used to be able to increase the
-sequence throughput up to the slowest task throughput. The proposed eDSL comes
-with a specific \emph{pipeline} component to this purpose. The pipeline takes
-multiple sequences as input. Each sequence of the pipeline is called a
-\emph{stage}. A pipeline stage is run on one thread. For instance, a 4-stage
-pipeline will create 4 threads, one thread per stage. A pipeline stage can be
-combined with the sequence duplication strategy: there will be nested threads in
-the current stage thread. Be aware that the pipelining strategy comes with an
-extra synchronization cost between the stage threads. The implementation details
-will be discussed in the next section. It worth mentioning that is is not
-possible to split the sub-sequence 2 of a loop in separate pipeline stages.
+issue the well-known pipelining strategy can be used to increase the sequence
+throughput up to the slowest task throughput. The proposed eDSL comes with a
+specific \emph{pipeline} component to this purpose. The pipeline takes multiple
+sequences as input. Each sequence of the pipeline is called a \emph{stage}. A
+pipeline stage is run on one thread. For instance, a 4-stage pipeline will
+create 4 threads, one thread per stage. A pipeline stage can be combined with
+the sequence duplication strategy: there will be nested threads in the current
+stage thread. Be aware that the pipelining strategy comes with an extra
+synchronization cost between the stage threads. The implementation details will
+be discussed in the next section. It worth mentioning that is is not possible to
+split a loop in separated pipeline stages.
 
 \section{Implementation Details}
 
 \subsection{Implicit Rules}
 
-In the proposed DSL, an input socket can only be bound to one output socket
+In the proposed eDSL, an input socket can only be bound to one output socket
 while an output socket can be bound to multiple input sockets. A task can only
-be executed if all its input sockets are bound. The scheduling of the tasks in a
-sequence is defined by the binding order. The general rule in the sequence
+be executed if all its input sockets are bound. In a sequence, the scheduling of
+the tasks is defined by the binding order. The general rule in the sequence
 analysis is to add a task to the array of function pointers when its last input
 socket is discovered in the deep traversal of the tasks graph. After that, the
 output sockets of the current task are followed to reach new tasks. The new
@@ -346,14 +349,19 @@ that the module can't be cloned. The tasks of the module will be sequential. In
 the particular case of a writable pointer member, the developer can explicitly
 allocate a new pointer in the \emph{deep copy} method.
 
+In a fully dataflow-compliant model, there is no need to duplicate the sequence
+because a filter (or task) is always thread-safe. In the proposed eDSL, we had
+to introduce the \emph{clone} method because a task can have an internal state
+and use private memory (stored in the module) and so a task is not thread-safe.
+
 \subsection{Processes}
 
 A sequence encapsulates a set of tasks and gives the opportunity to execute
-these tasks in a predefined order. The user cans also execute tasks explicitly,
-outside sequences. When using a sequence, the analysis process is able to match
-specific patterns (known configurations of bound tasks) and replace them by a
-more efficient source code. To this purpose the notion of \emph{process} has
-been introduced: in a sequence each task is encapsulated a \emph{process} (this
+these tasks in a predefined order. The user can also execute tasks explicitly,
+outside sequences. When using a sequence, the analysis is able to match specific
+patterns (known configurations of bound tasks) and replace them by a more
+efficient source code. To this purpose the notion of \emph{process} has been
+introduced: in a sequence each task is encapsulated in a \emph{process} (this
 has nothing to do with OS processes). For the majority of the tasks, the
 \emph{process} just executes the task. But for some specific patterns, the task
 execution source code is replaced by a more efficient one. The pattern detection
@@ -365,25 +373,34 @@ specific class.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Description of a pipeline: tasks creation, tasks binding and sequences/stages definition (with the corresponding number of threads).]{\includegraphics[scale=1]{dsl/pipeline/pipeline_usr}\label{fig:dsl_pipeline_usr}}
+  \subfloat[][Description of a pipeline: tasks creation, tasks binding and
+              sequences/stages definition (with the corresponding number of
+              threads).]{
+    \includegraphics[scale=1]{dsl/pipeline/pipeline_usr}
+    \label{fig:dsl_pipeline_usr}}
   \\
-  \subfloat[][Automatic parallelization of a pipeline description: sequence duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and binding.]{\includegraphics[width=1\textwidth]{dsl/pipeline/pipeline_adp}\label{fig:dsl_pipeline_adp}}
-  \caption{Example of a pipeline description and the associate transformation with adaptors.}
+  \subfloat[][Automatic parallelization of a pipeline description: sequence
+              duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and
+              binding.]{
+    \includegraphics[width=1\textwidth]{dsl/pipeline/pipeline_adp}
+    \label{fig:dsl_pipeline_adp}}
+  \caption{Example of a pipeline description and the associate transformation
+    with adaptors.}
   \label{fig:dsl_pipeline}
 \end{figure}
 
 Fig.~\ref{fig:dsl_pipeline} shows the difference between a pipeline description
 (cf. Fig.~\ref{fig:dsl_pipeline_usr}) and its actual instantiation (cf.
 Fig.~\ref{fig:dsl_pipeline_adp}). In Fig.~\ref{fig:dsl_pipeline} we suppose
-that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated. The user knows that
-the execution time of the $t_1$ task is higher that the cumulate execution time
-of $t_5$ and $t_6$ tasks. We assume that the cumulate execution time of $t_2$,
-$t_3$ and $t_4$ is approximatively four times higher than $t_1$. This knowledge
-motivates the cutting of the sequences 1, 2 and 3. There is no need to split the
-$t_5$ and $t_6$ tasks in two sequences because the overall throughput is limited
-by the slowest stage ($t_1$ here). The sequence 2 is duplicated four times to
-increase its throughput by four as we know that its latency is approximatively
-four times the sequence 1.
+that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated (filled in blue). The
+user knows that the execution time of the $t_1$ task is higher than the cumulate
+execution time of $t_5$ and $t_6$ tasks. We assume that the cumulate execution
+time of $t_2$, $t_3$ and $t_4$ is approximatively four times higher than $t_1$.
+This knowledge motivates the cutting of the stages 1, 2 and 3. There is no
+need to split the $t_5$ and $t_6$ tasks in two stages because the overall
+throughput is limited by the slowest stage ($t_1$ here). The stage 2 is
+duplicated four times to increase its throughput by four as we know that its
+latency is approximatively four times the sequence 1.
 
 Fig.~\ref{fig:dsl_pipeline_adp} presents the internal structure of the pipeline.
 As we can see, new tasks have been automatically added: \emph{push 1},
@@ -391,7 +408,7 @@ As we can see, new tasks have been automatically added: \emph{push 1},
 \emph{pull 1} shared by a \emph{n to 1 adaptor} module. The binding as been
 modified to insert the tasks of the adaptors. For instance, in the initial
 pipeline description, $t_1$ was bound to $t_2$. In a parallel pipelined
-execution this not possible anymore because a many threads are running
+execution this not possible anymore because many threads are running
 concurrently, one for $t_1$, four for $t_2$ and one for $t_3$ in the example. To
 this purpose, the adaptors implement a producer-consumer algorithm, the yellow
 diamonds represent the buffers of the producer-consumer algorithm. The
@@ -415,9 +432,9 @@ finishes the copy, it increments a \emph{head} counter by one then the
 corresponding \emph{pull n} task (consumer) checks that the \emph{head}
 counter is higher than the \emph{tail} counter and copies the data from the
 buffer to its output socket. When this copy is over, the producer increments the
-\emph{tail} counter by one. If the buffer is full the producer (\emph{push 1 and
-n} tasks) has to wait, same for the consumer (\emph{pull 1 and n} tasks) if the
-buffer is empty. We implemented both active and passing waiting.
+\emph{tail} counter by one. If the buffer is full, the producer (\emph{push 1
+and n} tasks) has to wait, same for the consumer (\emph{pull 1 and n} tasks) if
+the buffer is empty. We implemented both active and passing waiting.
 
 % The active waiting is a \emph{while-loop} over a condition (empty or full
 % buffer). The active waiting is the most efficient waiting strategy but it
@@ -454,14 +471,14 @@ cyclically.
 %   \item \xmark~donner un algo du pipeline ?
 % \end{itemize}
 
-Fig.~\ref{fig:dsl_pipeline_adp} is an example of a simple chain of tasks. More
+Fig.~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
 complicated task graphs can have more than two tasks to synchronize between two
 pipeline stages. The adaptors implementation can manage multiple sockets
-synchronization, the key idea is to deal with a 2 dimensional array of buffers.
-An other pathologic case is when a task $t_1$ is in stage 1 and its output
-socket is bound to an other task $t_{x}$ which is in the stage 4. To work, the
-pipeline adaptors between the stage 1 and 2 and 2 and 3 automatically
-synchronize the data of the $t_1$ output socket.
+synchronization, the key idea is to deal with a 2-dimensional array of buffers.
+An other pathologic case is when a task $t_1$ is in stage 1 and possesses an
+output socket bound to an other task $t_{x}$ which is located in the stage 4.
+To work, the pipeline adaptors between the stage 1 and 2 and 2 and 3
+automatically synchronize the data of the $t_1$ output socket.
 
 \section{Application on the DVB-S2 Standard}
 
@@ -490,7 +507,7 @@ describe the main encountered problems and the adopted solutions.
 \end{figure}
 
 Fig.~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
-tasks. The tasks filled with a grid are intrinsically sequential and cannot be
+tasks. The tasks filled in blue are intrinsically sequential and cannot be
 duplicated. The initial information bits are read from a binary file
 ($t^\text{Tx}_1$). Then the DVB-S2 coding scheme rests upon the serial
 concatenation of a BCH ($t^\text{Tx}_3$) and a LDPC code ($t^\text{Tx}_4$). The
@@ -535,10 +552,10 @@ containing $N_\text{LDPC}$ bits plus the PLH and pilots bits.
 
 The DVB-S2 transmitter has been split in 3 pipeline stages, the stages 1 and 3
 are sequential and the stage 2 is parallel. The transmitter is not the most
-resources consuming part so a standard Intel\R Core\TM i7 with 4 cores (SMT on)
-has been used. One core has been reserved for the radio thread binding (stage
-3), one hardware thread for the \emph{source} (stage 2) and the five remaining
-hardwares threads have been dedicated to the stage 2. The \emph{hwloc}
+resources consuming part. A standard Intel\R Core\TM i7 CPU with 4 cores (SMT
+on) has been used. One core has been reserved for the radio thread (stage 3),
+one hardware thread for the \emph{source} (stage 2) and the five
+remaining hardwares threads have been dedicated to the stage 2. The \emph{hwloc}
 library~\cite{Broquedis2010} has been used and integrated in \AFFECT to pin the
 software threads to processing units (PUs or hardware threads).
 
@@ -546,9 +563,13 @@ software threads to processing units (PUs or hardware threads).
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Waiting phase and learning phase 1 \& 2.]{\includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_learning}\label{fig:dvbs2_receiver_learning}}
+  \subfloat[][Waiting phase and learning phase 1 \& 2.]{
+    \includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_learning}
+    \label{fig:dvbs2_receiver_learning}}
   \\
-  \subfloat[][Learning phase 3 \& transmission phase.]{\includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_transmission}\label{fig:dvbs2_receiver_transmission}}
+  \subfloat[][Learning phase 3 \& transmission phase.]{
+    \includegraphics[width=1.0\linewidth]{dvbs2/receiver/receiver_transmission}
+    \label{fig:dvbs2_receiver_transmission}}
   \caption
     [DVB-S2 receiver.]
     {DVB-S2 receiver.}
@@ -563,8 +584,8 @@ Frame} task ($t^\text{Rx}_8$) possesses a frame detection criterion. When a
 signal is detected, the \emph{learning phase 1} (cf.
 Fig.~\ref{fig:dvbs2_receiver_learning}) is run during 150 frames, after that the
 \emph{learning phase 2} (cf. Fig.~\ref{fig:dvbs2_receiver_learning}) is also run
-during 150 frames. After these 300 frames for the \emph{learning phase 1 and 2}
-the tasks have to be re-bound for the \emph{learning phase 3}
+during 150 frames. After the \emph{learning phase 1 and 2} the tasks have to be
+re-bound for the \emph{learning phase 3}
 (cf. Fig.~\ref{fig:dvbs2_receiver_transmission}). This last learning phase is
 made over 200 frames. After 500 frames for all the learning phases, the final
 \emph{transmission phase} is established (cf.
@@ -580,12 +601,12 @@ $t^\text{Rx}_{11}$) recalibrate the signal to recover the emitted symbols.
 Finally the LDPC is a block coding scheme and requires to know precisely the
 first and last bits of the codeword. The \emph{Synchronizer Frame} task
 ($t^\text{Rxt}_8$) uses the \emph{Pay Load Headers} (PLH) and pilots bits
-inserted by the \emph{Framer PLH} task in the transmitter to recover the first
-and last symbols. One can notice that the \emph{Synchronizer Timing} module is
-composed by two separated tasks (\emph{synchronize} or $t^\text{Rx}_5$ and
-\emph{extract} or $t^\text{Rx}_6$). This behavior is different from the other
-\emph{Synchronizer} modules. The \emph{synchronize} task ($t^\text{Rx}_5$ or
-$t^\text{Rx}_{3,4,5}$) has two output sockets, one for the regular data and
+inserted by the transmitter \emph{Framer PLH} task ($t^\text{Tx}_8$) to recover
+the first and last symbols. One can notice that the \emph{Synchronizer Timing}
+module is composed by two separated tasks (\emph{synchronize} or $t^\text{Rx}_5$
+and \emph{extract} or $t^\text{Rx}_6$). This behavior is different from the
+other \emph{Synchronizer} modules. The \emph{synchronize} task ($t^\text{Rx}_5$
+or $t^\text{Rx}_{3,4,5}$) has two output sockets, one for the regular data and
 an other for a mask. The regular data and the mask are then used by the
 \emph{extract} task ($t^\text{Rx}_5$) to filter which data will be selected or
 not for the next task. This specific implementation has been retained for two
@@ -632,8 +653,9 @@ the circles. The {\color{Paired-1} MODCOD 1} is represented by dashed lines; the
 {\color{Paired-3} MODCOD 2} is represented by dotted lines; the
 {\color{Paired-5} MODCOD 3} is represented by solid lines. For each MODCOD, the
 LDPC decoder is the belief propagation algorithm with horizontal layered
-scheduling (10 iterations) and with the min-sum update rules. One can notice
-that each DVB-S2 configuration has a well-separated SNR predilection zone.
+scheduling (10 iterations) and with the min-sum node update rules. One can
+notice that each DVB-S2 configuration has a well-separated SNR predilection
+zone.
 
 \subsection{Evaluations}
 
@@ -642,7 +664,7 @@ the transmitter part as it is not the most compute intensive part and high
 throughputs are much more easier to reach. All the presented results have been
 obtained by running the code on a high-end machine composed by two Intel\R
 Xeon\TM Platinum 8168 CPUs and 128 GB of RAM. The frequency of the CPUs is 2.70
-GHz and the \emph{Turbo Boost} mode has been disable for the reproducibility of
+GHz and the \emph{Turbo Boost} mode has been disabled for the reproducibility of
 the results. Each CPU is composed by 24 cores that support the SMT technology
 but we disabled it in our tests to get the lowest possible tasks latency per
 core. To resume, 48 cores (or hardware threads) are available for the DVB-S2
@@ -736,10 +758,10 @@ working on bits but on samples and a bit is the smallest possible sample. The
 average (Avg), minimum (Min.) and maximum (Max.) throughputs are calculated with
 the number of output samples. Depending on the task, the number of output
 samples can drastically vary and this is not possible to directly compare the
-throughputs with each others. This is why we introduced the normalized average
-throughput ($\mathcal{N}_\text{Avg}$) which is the average throughput
+tasks throughputs with each others. This is why we introduced the normalized
+average throughput ($\mathcal{N}_\text{Avg}$) which is the average throughput
 considering the $K$ information bits independently of the task output socket
-size. In a first observation one may notice that the latencies of the tasks are
+size. In a first observation, one may notice that the latencies of the tasks are
 very high compared to the ones presented in the simulator evaluation (cf.
 Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
 $N = 16740$ and to the inter-frame level, each task processes approximatively
@@ -749,7 +771,7 @@ applicative context is very different and it is directly observable from the
 resulting latencies.
 
 The stage 7 takes 76\% of the time with especially the \emph{Decoder BCH} task
-($t^\text{Rx}_{17}$) that take 59\% of the time. $t^\text{Rx}_{17}$ should not
+($t^\text{Rx}_{17}$) that takes 59\% of the time. $t^\text{Rx}_{17}$ should not
 take so many time compared to the other tasks but we chose to do not spend to
 many time in optimizing the BCH decoding process as the stage 7 throughput can
 easily be increased with the sequence duplication technique. Theoretically, with
@@ -787,7 +809,7 @@ depending on the SNR because the early termination criterion was enabled.
 When the signal quality is very good, the \emph{Decoder LDPC} task runs fast
 and the threads can spend a lot of time in waiting. With the passive waiting
 version of the adaptor \emph{push} and \emph{pull} tasks, the CPU dynamically
-adapt the cores charge and energy can be saved. In the
+adapt the cores charge and energy can be saved. In
 Table~\ref{tab:dvbs2_tasks_thr_lat} the presented \emph{Decoder LDPC} task
 throughputs and latencies are optimistic because we are in a SNR error-free
 zone. All the threads are pinned to a single core with the \emph{hwloc} library.
@@ -803,12 +825,11 @@ pipeline stages latencies in maximizing the CPU caches performance. It avoids
 the extra-cost of moving the cache data between the sockets.
 
 The receiver program uses around 1.3 GB of the global memory when running in
-sequential while it uses around 30 GB in parallel (28 threads), this is linear
-with the number of threads. The memory usage increases because of the sequence
-duplications in the stage 7. The duplication operation takes about 20 seconds
-and is made at the very beginning of the program. It is worth mentioning, that
-the amount of memory was not a critical resource so we did not try to reduce it
-overall occupancy.
+sequential while it uses around 30 GB in parallel. The memory usage increases
+because of the sequence duplications in the stage 7. The duplication operation
+takes about 20 seconds and is made at the very beginning of the program. It is
+worth mentioning, that the amount of memory was not a critical resource so we
+did not try to reduce it overall occupancy.
 
 \begin{figure}[htp]
   \centering
@@ -816,8 +837,10 @@ overall occupancy.
   \quad
   \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:dvbs2_pipeline_copy_ptr}}
   \caption
-    [Comparison of the different pipeline implementations in the DVB-S2 receiver.]
-    {Comparison of the different pipeline implementations in the DVB-S2 receiver (MODCOD 2).}
+    [Comparison of the different pipeline implementations in the DVB-S2
+     receiver.]
+    {Comparison of the different pipeline implementations in the DVB-S2 receiver
+     (MODCOD 2).}
   \label{plot:dvbs2_pipeline}
 \end{figure}
 
@@ -887,8 +910,8 @@ in higher throughput (80 Mb/s for the 8-PSK) in the slowest stage 3. In the
 parallel implementation, the pipeline stages throughput are adapting to the
 slowest stage 3 and it results in an important speedup. In the sequential
 implementation it results in a little slowdown, this is because the additional
-time spent in the de-interleaving task ($t^\text{Rx}_{15}$) is higher than the
-time saved in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$).
+time spent in the  \emph{deinterleave} task ($t^\text{Rx}_{15}$) is higher than
+the time saved in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$).
 
 This results demonstrate the benefit of the parallelized implementation of the
 receiver. The throughput speedup rangs from 10 to 20 compared to the sequential
@@ -903,9 +926,9 @@ in-between.
 
 \subsection{Related Works}
 
-\begin{itemize}
-  \item \xmark~donner un point de comparaison avec un récepteur DVB-S2 matériel.
-\end{itemize}
+% \begin{itemize}
+%   \item \xmark~donner un point de comparaison avec un récepteur DVB-S2 matériel.
+% \end{itemize}
 
 Some other works are focusing on the SDR implementation of a DVB-S2 transceiver.
 Here is a list of the projects we found:
@@ -938,6 +961,34 @@ Here is a list of the projects we found:
 
 \section{Discussion}
 
-\begin{itemize}
-  \item \cmark~possibilités d'interfaçage avec MATLAB (testé par Romain)
-\end{itemize}
+% \begin{itemize}
+%   \item \cmark~possibilités d'interfaçage avec MATLAB (testé par Romain)
+% \end{itemize}
+
+In this chapter a new eDSL dedicated to the SDR has been presented. Main
+components has been designed to satisfy the SDR needs in term of 1)
+expressiveness with sequences, tasks and loops; 2) performance with the sequence
+duplication technique and the pipelining strategy. After that, the proposed eDSL
+is evaluated in an applicative context: the implementation of the DVB-S2
+standard. The results demonstrate the efficiency of the \AFFECT eDSL: the
+proposed solution matches satellite real time constraints (30 $\thicksim$ 50
+Mb/s). This is the consequence of two main factors: 1) the tasks level
+optimizations, for instance the fast LDPC decoder has been used (cf.
+Chapter~\ref{chap:opt}); 2) the quasi zero overhead eDSL, with among others, an
+efficient implementation of the pipeline.
+
+In future works, it could be very interesting to combine the parallel features
+of the \AFFECT eDSL with high level languages like Python or MATLAB. The signal
+specialists, which are often not familiar with the \Cxx language, could use the
+existing high-speed \Cxx tasks and develop their own in the high level
+language. Linking with the \AFFECT library, it would be very valuable if the
+tasks written in the high level language could be inserted in the \AFFECT
+sequences. This way the whole system would automatically be parallelized.
+Happily, this is technically possible in our model. As the static scheduling is
+evaluated at the runtime, it is possible to encapsulate a function from a high
+level language in a \AFFECT task (with a callback) and to start the sequence
+analysis (= perform the static scheduling resolution) after that. In comparison,
+it would be more complicated to make the languages interfacing with GNU Radio as
+the static scheduling is resolved at the compilation time and flatten in the
+Python language. When the generated Python code is executed, it performs calls
+to the tasks written and compiled in a \Cxx library.

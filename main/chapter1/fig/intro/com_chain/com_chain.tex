@@ -27,11 +27,11 @@
     \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=2cm, dashed, fit=(src) (enc) (mod)] {};
     \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=2cm, dashed, fit=(dem) (dec) (snk)] {};
 
-    \draw[->,>=latex] (src) -- (enc) node [midway, above, fill=white] {$\bm{m}$};
-    \draw[->,>=latex] (enc) -- (mod) node [midway, above, fill=white] {$\bm{c}$};
-    \draw[->,>=latex] (mod) -| (chn) node [midway, above, fill=white] {$\bm{x}$};
-    \draw[->,>=latex] (chn) |- (dem) node [midway, below, fill=white] {$\bm{y}$};
-    \draw[->,>=latex] (dem) -- (dec) node [midway, below, fill=white] {$\bm{t}$};
-    \draw[->,>=latex] (dec) -- (snk) node [midway, below, fill=white] {$\bm{\hat{m}}$};
+    \draw[->,>=latex] (src) -- (enc) node [midway, above] {$\bm{m}$};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above] {$\bm{c}$};
+    \draw[->,>=latex] (mod) -| (chn) node [midway, above] {$\bm{x}$};
+    \draw[->,>=latex] (chn) |- (dem) node [midway, below] {$\bm{y}$};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below] {$\bm{t}$};
+    \draw[->,>=latex] (dec) -- (snk) node [midway, below] {$\bm{\hat{m}}$};
   \end{tikzpicture}
 \end{document}
