@@ -995,6 +995,7 @@ Here is a list of the projects we found:
 
 % \begin{itemize}
 %   \item \cmark~possibilités d'interfaçage avec MATLAB (testé par Romain)
+%   \item \cmark~outil graphique pour générer le code C++
 % \end{itemize}
 
 In this chapter a new eDSL dedicated to the SDR has been presented. Main
@@ -1023,4 +1024,9 @@ analysis (= perform the static scheduling resolution) after that. In comparison,
 it would be more complicated to make the languages interfacing with GNU Radio as
 the static scheduling is resolved at the compilation time and flatten in the
 Python language. When the generated Python code is executed, it performs calls
-to the tasks written and compiled in a \Cxx library.
+to the tasks written and compiled in a \Cxx library. Moreover, it could be very
+useful to develop a graphical user interface like \emph{GNU Radio Companion} to
+facilitate the tasks creation and binding as well as the parallelism definition
+(sequence duplication, pipeline stages). The graphical user interface would then
+generate a ready to compile \Cxx code similar to the one presented in
+Listing~\ref{lst:dsl_pipeline}.
