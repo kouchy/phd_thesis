@@ -12,6 +12,7 @@
 \usetikzlibrary{patterns}
 \usetikzlibrary{arrows}
 \usetikzlibrary{shapes.geometric}
+\usetikzlibrary{positioning}
 
 \input{colors}
 
@@ -159,20 +160,44 @@
     \draw[->,>=latex,dashed] (adpn1_push3) to[bend right] (adpn1_b3) node [midway, above] {};
     \draw[->,>=latex,dashed] (adpn1_push4) to[bend right] (adpn1_b4) node [midway, above] {};
 
-    % \thread{0.00}{0.7}{th1}
-    % \thread{3.25}{0.7}{th2}
-    % \thread{3.75}{0.7}{th3}
-    % \thread{4.25}{0.7}{th4}
-    % \thread{4.75}{0.7}{th5}
-    % \thread{9.00}{0.7}{th6}
-
-    \node[seq, label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so) (adp1n_push)  ] (seq1) {};
-    \node[seq, label={[Paired-11]below:Stage 2}, fit=(adp1n_pull1) (adpn1_push4)] (seq2) {};
-    \node[seq, label={[Paired-11]below:Stage 3}, fit=(adpn1_pull) (t5) (t6)     ] (seq3) {};
+    \node[seq, label={[Paired-11]above:Stage 1}, fit=(t1) (t1_so) (adp1n_push)  ] (seq1) {};
+    \node[seq, label={[Paired-11]above:Stage 2}, fit=(adp1n_pull1) (adpn1_push4)] (seq2) {};
+    \node[seq, label={[Paired-11]above:Stage 3}, fit=(adpn1_pull) (t5) (t6)     ] (seq3) {};
 
     \node[mdl, label={[Paired-3]below:$1$ to $n$ adaptor}, fit=(adp1n_push_si) (adp1n_pull1) (adp1n_pull1_so) (adp1n_pull4) (adp1n_pull4_so)] (adp1n) {};
     \node[mdl, label={[Paired-3]below:$n$ to $1$ adaptor}, fit=(adpn1_pull_so) (adpn1_push1) (adpn1_push1_si) (adpn1_push4) (adpn1_push4_si)] (adpn1) {};
 
     \node[pip, minimum height=2.5cm, minimum width=18.0cm, minimum height=7.5cm, label={[Dark2-8]above:Pipeline}, fit=(seq1) (seq2) (seq3) (adp1n) (adpn1)] {};
+
+    \tikzset{ core/.style ={ draw=Paired-3, fill=Paired-3!10, minimum width=1.5cm, minimum height=1.5cm, text=Paired-3, rounded corners=4pt } }
+    \tikzset{ cpu/.style ={ draw=Paired-3, rounded corners=2pt } }
+
+    \node[core                    ] (c1) at (1.0, -7.0) {Core 1};
+    \node[core, right=0.50cm of c1] (c2)                {Core 2};
+    \node[core, right=0.50cm of c2] (c3)                {Core 3};
+    \node[core, right=0.50cm of c3] (c4)                {Core 4};
+    \node[core, right=0.50cm of c4] (c5)                {Core 5};
+    \node[core, right=0.50cm of c5] (c6)                {Core 6};
+    \node[core, right=0.50cm of c6] (c7)                {Core 7};
+    \node[core, right=0.50cm of c7] (c8)                {Core 8};
+
+    \node[seq, label={[Paired-11]below:Stage 1}, fit=(c1)     ] (sta1) {};
+    \node[seq, label={[Paired-11]below:Stage 2}, fit=(c3) (c6)] (sta2) {};
+    \node[seq, label={[Paired-11]below:Stage 3}, fit=(c8)     ] (sta3) {};
+
+    \node[cpu, minimum height=3.0cm, minimum width=17.0cm, label={[black]above:Pipeline threads pinning on a multi-core CPU}, fit=(c1) (c8)] {};
+
+    \thread{ 1.000}{-6.8}{th1}
+    \thread{ 5.050}{-6.8}{th2}
+    \thread{ 7.075}{-6.8}{th3}
+    \thread{ 9.090}{-6.8}{th4}
+    \thread{11.100}{-6.8}{th5}
+    \thread{15.100}{-6.8}{th6}
+
+    \draw[->,>=latex,dashed, draw=Paired-11] (seq1) to[bend  right] (sta1) node [midway, above] {};
+    \draw[->,>=latex,dashed, draw=Paired-11] (seq2) --              (sta2) node [midway, sloped] {};
+    \draw[->,>=latex,dashed, draw=Paired-11] (seq3) to[bend  left]  (sta3) node [midway, above] {};
+
+
   \end{tikzpicture}
 \end{document}
