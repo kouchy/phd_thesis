@@ -45,48 +45,48 @@ paper~\cite{Shannon1948}, he proposed to model a communication system with five
 components: an information source, a transmitter, a channel, a receiver and a
 destination. This model was later refined as shown in
 Figure~\ref{fig:intro_com_chain}. The source produces a digital message $\bm{u}$
-to be transmitted (sequence of bits). The channel encoder transforms it
-($\bm{c}$) to make it less prone to errors. In order to make possible the
+to be transmitted (sequence of bits). The channel encoder transforms it in a
+codeword $\bm{c}$ to make it less prone to errors. In order to make possible the
 information transmission through the channel, it is necessary to shape the data
 stream. For instance, in the case of wireless communication, this stream must be
 represented by a high-frequency signal in order to be transmitted by a
-reasonably sized antenna. This is the role of the digital modulator. The channel
-alters the signal with some noise and distortions ($\bm{y}$). On the receiver
-side, the components perform the inverse operations to retrieve the message
-$\bm{\hat{u}}$ produced by the source.
+reasonably sized antenna. This is the role of the digital modulator which
+produces a vector of symbols $\bm{x}$. The channel alters the signal with some
+noise and distortions ($\bm{y}$). On the receiver side, the components perform
+the inverse operations to retrieve the message $\bm{\hat{u}}$ produced by the
+source.
 
 In channel coding, $K$ information bits are encoded in the transmitter. It
-results, in what we call, a codeword of $N$ bits. $P = N - K$ is the number of
-parity bits added as redundant information and $R = K/N$ is the code rate.
-Higher the code rate $R$ is, lower the number of parity bits $P$ is.
-The performance of this chain is measured by estimating the residual error rate
-at the sink. More precisely, it is possible to observe two different rates: 1)
-the Bit Error Rate (BER); 2) the Frame Error Rate (FER). The BER is calculated
-considering the $K$ information bits independently, for instance a $10^{-3}$
-BER means that there is an average of one binary error per thousand bits
-transmitted. The FER is computed considering the entire frame, if there is one,
-two or more wrong bits in the current frame, it will be counted as one error
-frame. A $10^{-2}$ FER means that there is an average of one frame error per
-hundred frame transmitted. These rates are directly driven by the choice of the
-channel encoder and decoder. Lower the rates are, higher the correction power
-of the system is.
+results in a codeword $\bm{c}$ of $N$ bits. $P = N - K$ is the number of parity
+bits added as redundant information and $R = K/N$ is the code rate. Higher the
+code rate $R$ is, lower the number of parity bits $P$ is. The performance of
+this chain is measured by estimating the residual error rate at the sink. More
+precisely, it is possible to observe two different rates: 1) the Bit Error Rate
+(BER); 2) the Frame Error Rate (FER). The BER is calculated considering the $K$
+information bits independently, for instance a $10^{-3}$ BER means that there is
+an average of one binary error per thousand bits transmitted. The FER is
+computed considering the entire frame, if there is one, two or more wrong bits
+in the current frame, it will be counted as one error frame. A $10^{-2}$ FER
+means that there is an average of one frame error per hundred frame transmitted.
+These rates are directly driven by the choice of the channel encoder and
+decoder. Lower the rates are, higher the correction power of the system is.
 
 \section{Channel Model}
 
 In this thesis, only causal transmission channels without memory effect and
 stationary are considered. In other words, the output of the channel at time $t$
 only depends on its input at time $t$. In order to describe the disturbance to
-the message ($\bm{x}$) passing through the transmission channel, different
+the message $\bm{x}$ passing through the transmission channel, different
 models can be used. However, in the literature, the selected model is very
 often the Additive White Gaussian Noise (AWGN) channel. In particular, this
 channel models very well the thermal noise which is one of the sources of
 noise always present on the receiver side.
 
 In the AWGN channel, the law binding the $y_i$ output to its $x_i$ input is of
-the form $y_i = x_i + n_i$ with $N$ an independent and identically distributed
-variable according to a normal (or Gaussian) law centered in zero and of
-variance $\sigma^2 = N_0 / 2$. So, we have $N \simeq \mathcal{N}(0, \sigma^2)$
-and:
+the form $y_i = x_i + n_i$ with $N_{chn}$ an independent and identically
+distributed variable according to a normal (or Gaussian) law centered in zero
+and of variance $\sigma^2 = N_0 / 2$. So, we have $N_{chn} \simeq \mathcal{N}(0,
+\sigma^2)$ and:
 \begin{equation}
 P(y_i|x_i) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Big(-\frac{(y_i-x_i)^2}{2\sigma^2}\Big)}.
 \end{equation}
@@ -94,15 +94,15 @@ P(y_i|x_i) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Big(-\frac{(y_i-x_i)^2}{2\sigma^
 To estimate the correction power of a system it is very common to vary the
 Signal-to-Noise Ratio (SNR). On the AWGN channel the SNR is generally given by
 $E_b/N_0$ (in dB). $E_b$ corresponds to the average energy per information bit.
-It can also be given in $E_s/N_0$ (in dB) where $E_s$ corresponds to the average
+It can also be given by $E_s/N_0$ (in dB) where $E_s$ corresponds to the average
 energy per transmitted symbol. $E_s/N_0$ can be deduced from $E_b/N_0$:
 \begin{equation}
 \frac{E_s}{N_0} = \frac{E_b}{N_0} + 10.\log{(R.b_S)},
 \end{equation}
 where $R$ is the code rate and $b_S$ is the number of bits per transmitted
-symbol. $b_S$ depends on the modulation order, if a simple binary modulation
-is used, then $b_S = 1$. Then, the variance $\sigma$ of the AWGN channel normal
-law comes:
+symbol $x_n$. $b_S$ depends on the modulation order, if a simple binary modulation
+is used, then $b_S = 1$. Then, the Gaussian variance $\sigma$ of AWGN channel
+comes:
 \begin{equation}
 % sigma = std::sqrt((R)upsample_factor / ((R)2 * std::pow((R)10, (esn0 / (R)10)))).
 \sigma = \sqrt{\frac{1}{2 \times 10^{\frac{E_s}{N_0} / 10}}}.
@@ -123,7 +123,7 @@ $-1.59$ dB.
 
 After Shannon, researchers have designed new coding/decoding schemes to approach
 Shannon's theoretical limit even closer. Indeed, recent progresses managed to
-design practical codings performing very close to that limit, and already
+design practical codings performing very close to that limit, and are already
 integrated in everyday communication systems. These code are habitually
 classified in two distinct families: block codes and convolutional codes. By
 definition the convolutional codes compute the redundancy in continue on the
@@ -131,9 +131,36 @@ data stream while the block codes generate the redundancy by chunks of data.
 The purpose of this section is to detail a little bit the construction of the
 most famous ones, namely LDPC, turbo and polar codes.
 
+In all the presented coding schemes, only binary codes are considered. In this
+case, a bit can be represented by a Galois field of two elements $\{0, 1\}$
+denoted as $GF_2$. A block code is an application $g$ of $GF_2^K$ in $GF_2^N$
+with $K < N$. There is $2^K$ codewords $\bm{c}$. The two operators used to generate
+a codeword are the addition and the multiplication. In $GF_2$, the addition is
+equivalent to the \emph{logical exclusive or} (XOR or $\oplus$) and the
+multiplication is equivalent to the \emph{logical and} (cf.
+Table~\ref{tab:ctx_gf2_operations}).
+
+\begin{table}[htp]
+  \centering
+  \caption{Elementary operations in $GF_2$ (logical \emph{exclusive or} and
+    {and}).}
+  \label{tab:ctx_gf2_operations}
+  % {\small
+   \begin{tabular}{c c c c}
+   $a$ & $b$ & $a \oplus b$ & $ab$ \\
+    \hline
+    \hline
+    0 & 0 & 0 & 0 \\
+    0 & 1 & 1 & 0 \\
+    1 & 0 & 1 & 0 \\
+    1 & 1 & 0 & 1 \\
+  \end{tabular}
+  % }
+\end{table}
+
 \subsection{LDPC Codes}
 
-The Low-Density Parity-Check (LDPC) codes are block codes, they have been
+The Low-Density Parity-Check (LDPC) codes are linear block codes, they have been
 discovered very early by Robert G. Gallager in 1962~\cite{Gallager1962}.
 Unfortunately, at the time of their discovery, the computational power available
 in the transceivers was not sufficient to use them. But, in 1995, the LDPC codes
@@ -145,7 +172,7 @@ A parity-check constraint is an equation that links a set of bits: when all the
 bits of a parity-check constraint are added together the result has to be
 zero. For instance, if we consider a message $\bm{u} = [u_0, u_1, u_2, u_3]$
 ($K = 4$). It is possible to encode the information message $\bm{u}$ in a
-codeword $\bm{c}$ of size $N = K + 1$: $\bm{c} = [u_0,u_1,u_2,u_3,p_0]$.
+codeword $\bm{c}$ of size $N = K + 1 = 5$: $\bm{c} = [u_0,u_1,u_2,u_3,p_0]$.
 The parity-check constraint $\mathcal{C}_0$ is then: $u_0 \oplus u_1 \oplus u_2
 \oplus u_3 \oplus p_0 = 0~(\mathcal{C}_0)$ with $p_0$ the parity bit ($P = N -
 K = 1)$. To encode the message $\bm{u}$ and produce the codeword $\bm{c}$, a
@@ -165,10 +192,10 @@ $\bm{u} \times \bm{\mathcal{G}} = [u_0,u_1,u_2,u_3,u_0 \oplus u_1 \oplus u_2
 \oplus u_3] = \bm{c}$, so $p_0 = u_0 \oplus u_1 \oplus u_2 \oplus u_3$ as
 defined by the parity-check constraint $\mathcal{C}_0$. The proposed
 $\bm{\mathcal{G}}$ generator matrix is composed by the identity matrix on the
-five five first columns and by the parity-check constraint in the last column.
-The consequence of the identity matrix is that the generated codeword contains
-the initial information bits $u_0$, $u_1$, $u_2$, and $u_3$. In this case, the
-encoding process is called \emph{systematic}.
+four first columns and by the parity-check constraint in the last column.
+The consequence of the presence of the identity matrix is that the generated
+codeword contains the initial information bits $u_0$, $u_1$, $u_2$, and $u_3$.
+In this case, the encoding process is called \emph{systematic}.
 
 \begin{figure}[htp]
   \centering
@@ -182,7 +209,7 @@ Tanner graph (or a bipartite graph) as shown in
 Fig.~\ref{fig:ctx_codes_parity_check}. It is also possible to define a matrix of
 parity-check constraints namely $\bm{\mathcal{H}}$. In the present case, there
 is only one constraint ($\mathcal{C}_0$), so $\bm{\mathcal{H}}$ is a
-one-dimension matrix (or a vector):
+one-dimension matrix (or a vector) of size $N$:
 $
 \bm{\mathcal{H}} =
 \begin{bmatrix}
@@ -217,10 +244,10 @@ graph is:
 \end{equation*}
 
 The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
-matrix (contains less that 3\% of 1). The example shown in
+matrix (less that 3\% of 1). The example shown in
 Fig.~\ref{fig:ctx_codes_ldpc} is here to help to the comprehension and is not a
-real LDPC code (there is more than 3\% of 1 in the corresponding
-$\bm{\mathcal{H}}$ matrix).
+real LDPC code: there is much more than 3\% of 1 in the corresponding
+$\bm{\mathcal{H}}$ matrix.
 
 \subsection{Turbo Codes}
 
@@ -295,7 +322,7 @@ trellis representation corresponding to the convolutional encoder presented in
 Fig.~\ref{fig:ctx_codes_rsc_encoder}. Considering the encoder initial state
 $S_0$, from $t = 0$ the two next possible states are $S_0$ and $S_1$. At
 $t = 1$, the encoder can be in state $S_0$ or $S_1$, so the next possible states
-are $S_0$, $S_1$, $S_1$ or $S_3$. One can note that starting from $\nu +1$ time
+are $S_0$, $S_1$, $S_2$ or $S_3$. One can note that starting from $\nu +1$ time
 units, the trellis pattern is repeated.
 
 \begin{figure}[htp]
@@ -316,9 +343,9 @@ $R = 1/2$ (like the one shown in Fig.~\ref{fig:ctx_codes_rsc_encoder}). The two
 parity bits $p_0$ and $p_1$ are obtained from the $c_2$ outputs of the
 convolutional sub-encoders while the systematic $c_1$ outputs are ignored. The
 first sub-encoder encodes the input $u$ bit while the second one encode the $u'$
-bit. The $u'$ bit is determined from $u$ after an interleaving process ($\Pi$).
+bit. The $u'$ bit is determined from $u$ after the $\Pi$ interleaving process.
 For each $u_k$ bit there is one and only one $u_k'$ associated bit in the $K$
-input information bits. The interleaving process is a key of the decoding
+input information bits. The interleaving process is a key point of the decoding
 performance in the turbo coding scheme, its main purpose is to fight against
 chunks of errors. During the interleaving process the sequence of information
 bits is in the what we call the \emph{natural order}, then these bits are
@@ -336,10 +363,9 @@ these codes is that they are the only ones for which it has been mathematically
 demonstrated that they reach the Shannon's limit (considering an infinite
 codeword length).
 
-A polar code $(N,K)$ is a linear block code of size $N = 2^n$, with $n$ the
-first natural number containing $K$ information bits. The $\bm{\mathcal{G}}$
-generator matrix of a polar code can recursively be defined by the $n$th
-Kronecker power of
+A polar code $(N,K)$ is a linear block code of size $N = 2^n$, with $N$ the
+first natural number higher than $K$. The $\bm{\mathcal{G}}$ generator matrix of
+a polar code can recursively be defined by the $n$th Kronecker power of
 $\bm{\mathcal{K}} =
 \begin{bmatrix}
 1 & 0 \\
@@ -354,21 +380,20 @@ $
 \end{bmatrix},
 $
 composed by $N$ lines and $N$ columns. Unlike for the LDPC codes, the $\bm{u}$
-input message of $K$ bits can't be directly multiplied by $\bm{\mathcal{G}}$
-because $\bm{\mathcal{G}}$ is a squared matrix of size $N$. So, the polar
-coding scheme defines a $\mathcal{F}$ function that add zeros in $\bm{u}$ until
-it size reaches $N$ bits ($\bm{v} = \mathcal{F}(\bm{u})$). If we suppose a
-$N = 8$ and $K = 4$ polar code, $\bm{u} = [u_0, u_1, u_2, u_3]$ is composed by
-4 information bits. Lets apply the $\mathcal{F}$ function on $\bm{u}$:
-$\mathcal{F}(\bm{u}) = [0, 0, 0, u_0, 0, u_1, u_2, u_3] = \bm{v}$. There is $N$
-output bits in $\bm{v}$. The extra zeros are called the \emph{frozen bits},
-their positions in $\bm{v}$ are selected to be on the less reliable indexes. In
-other terms, the information bits occupy the most reliable positions in
-$\bm{v}$. The frozen bits represent the $P$ parity bits. In this thesis, the
-Gaussian Approximation (GA) method is used to determine the position of the
-frozen bits~\cite{Trifonov2012}. To resume, the polar encoding process can be
-defined as follow: $\bm{c} = \mathcal{F}(\bm{u}) \times \bm{\mathcal{G}} =
-\bm{v} \times \bm{\mathcal{G}}$.
+input message cannot be directly multiplied by $\bm{\mathcal{G}}$ because
+$\bm{\mathcal{G}}$ is a squared matrix of dimension $N$. So, the polar coding
+scheme defines a $\mathcal{F}$ function that add zeros in $\bm{u}$ until it size
+reaches $N$ bits ($\bm{v} = \mathcal{F}(\bm{u})$). If we suppose a $(8,4)$ polar
+code, $\bm{u} = [u_0, u_1, u_2, u_3]$ is composed by 4 information bits. Lets
+apply the $\mathcal{F}$ function on $\bm{u}$: $\mathcal{F}(\bm{u}) =
+[0, 0, 0, u_0, 0, u_1, u_2, u_3] = \bm{v}$. There is $N$ output bits in
+$\bm{v}$. The extra zeros are called the \emph{frozen bits}, their positions in
+$\bm{v}$ are selected to be on the less reliable indexes. In other terms, the
+information bits occupy the most reliable positions in $\bm{v}$. The frozen bits
+represent the $P$ parity bits. In this thesis, the Gaussian Approximation (GA)
+method is used to determine the position of the frozen bits~\cite{Trifonov2012}.
+To resume, the polar encoding process can be defined as follow: $\bm{c} =
+\mathcal{F}(\bm{u}) \times \bm{\mathcal{G}} = \bm{v} \times \bm{\mathcal{G}}$.
 
 \begin{figure}[htp]
   \centering
@@ -384,7 +409,8 @@ dashed rectangles in the factor graphs. For instance, when $N = 8$, the encoder
 is composed by two $N = 4$ sub-encoders and each $N = 4$ sub-encoder is itself
 composed by two $N = 2$ sub-encoders. Unlike the previously presented LDPC and
 turbo codes, the polar code are not necessarily systematic. In fact, the
-encoding process is only systematic for $N = 2$.
+encoding process is only systematic when there is a unique information bit
+($K =1$).
 
 \begin{figure}[htp]
   \centering
@@ -417,7 +443,7 @@ and Fig.~\ref{fig:ctx_codes_polar_encoder_sys} are not directed.
 
 It is also possible to represent the polar encoding process with a binary tree
 structure. Fig.~\ref{fig:ctx_codes_polar_tree} shows the binary tree
-representation of a $N = 8$ polar encoder. The leaf nodes represent the initial
+representation of a $(8,4)$ polar encoder. The leaf nodes represent the initial
 bits from the $\bm{v}$ vector. The bits in black are the information bits
 $\bm{u}$ and the white bits are the frozen bits. Two by two the initial bits are
 bound to a father node $n_x^2$ where $x$ is the index of the node in the layer
@@ -428,6 +454,8 @@ solid {\color{Paired-1} blue} rectangles (one XOR per node). The
 {\color{Paired-3} green} rectangles (two XORs per node). The {\color{Paired-5}
 red} node computes the sub-graph delimited by the solid {\color{Paired-5} red}
 rectangle (four XORs per node).
+
+\subsection{Other Codes}
 
 \section{Simulation}
 
