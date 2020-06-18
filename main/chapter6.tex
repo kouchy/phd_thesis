@@ -26,11 +26,6 @@ software. The DVB-S2 standard is presented from an applicative point of view
 \minitoccustom
 \vspace*{\fill}
 
-% \begin{itemize}
-%   \item \xmark~Algorithmes de synchronisation avant la démodulation
-%   \item \xmark~Tâches séquentielles (avec état)
-% \end{itemize}
-
 \section{Related Works}
 
 Traditionally the communication systems are implemented on dedicated hardware
@@ -131,12 +126,6 @@ template-based solution.
 
 \subsection{Elementary Components}
 
-% \begin{itemize}
-%   \item \xmark~routeurs = permet d'aiguiller vers différentes sous-séquences
-%   \item \cmark~limitation : dire que les boucles ne peuvent pas être séparées
-%     dans plusieurs étages du pipeline.
-% \end{itemize}
-
 The proposed eDSL comes with a set of elementary components: the
 \emph{sequence}, \emph{module}, \emph{task} and \emph{socket}. The
 \emph{module}, \emph{task} and \emph{socket} have been reused and enriched
@@ -223,13 +212,6 @@ executed one or more times depending on a \emph{condition}. A loop is bound to
 two sub-sequences of tasks, the first one is executed and repeated while the
 condition is \emph{false} and the second one is taken when the condition is
 \emph{true}.
-% During the sequence analysis, the type of the tasks are tested
-% (\verb|dynamic_cast|), if a loop is detected, then the sequence is split in 3
-% sub-sequences of tasks. When the \verb|exec| method is called then the first
-% sub-sequence is executed then the loop task is evaluated in a ``real'' \Cxx
-% \emph{for-loop}, if the loop task returns \emph{false} the sub-sequence 2 is
-% executed until the loop task returns \emph{true} and then the sub-sequence 3 is
-% executed.
 
 \begin{figure}[htp]
   \centering
@@ -492,16 +474,6 @@ the CPU cores can only execute one hardware thread (SMT off) and so an
 \emph{hwloc} PU is equal to a CPU core. The threads pinning is given by the user
 an can help to improve the multi-threading performance when dealing with NUMA
 architectures.
-
-% \begin{itemize}
-%   \item \xmark~parler du cas où un binding saute un voire plusieurs étages du
-%     pipeline
-%   \item \xmark~expliquer la flexibilité des adaptors qui peuvent synchroniser
-%     autant de sockets que nécessaire en même temps
-%   \item \xmark~expliquer les cas particuliers et tricky du mode 0-copy (quand il
-%     y a plusieurs sockets et tâches connectées à un adaptor)
-%   \item \xmark~donner un algo du pipeline ?
-% \end{itemize}
 
 Fig.~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
 complicated task graphs can have more than two tasks to synchronize between two
@@ -902,7 +874,6 @@ Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
     [Throughput performances depending of the selected DVB-S2 configurations.]
     {Throughput performances depending of the selected DVB-S2 configurations.}
   \label{tab:dvbs2_thr_modcod}
-  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c c | c c}
     \multirow{3}{*}{\textbf{Config.}} & \multicolumn{4}{c }{\textbf{Throughput} (Mb/s)} \\
                                       & \multicolumn{2}{c |}{\textbf{Sequential}} & \multicolumn{2}{c }{\textbf{Parallel}} \\
@@ -912,7 +883,6 @@ Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
     MODCOD 2 &  4.1 & 4.6 & 55 & 62 \\
     MODCOD 3 &  4.0 & 4.5 & 80 & 90 \\
   \end{tabular}
-  % }}
 \end{table}
 
 Table~\ref{tab:dvbs2_thr_modcod} summarized the obtained throughputs for the 3
@@ -992,11 +962,6 @@ Here is a list of the projects we found:
 \end{itemize}
 
 \section{Discussion}
-
-% \begin{itemize}
-%   \item \cmark~possibilités d'interfaçage avec MATLAB (testé par Romain)
-%   \item \cmark~outil graphique pour générer le code C++
-% \end{itemize}
 
 In this chapter a new eDSL dedicated to the SDR has been presented. Main
 components has been designed to satisfy the SDR needs in term of 1)

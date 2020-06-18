@@ -250,7 +250,7 @@ instruction cache size capacity.
     \multirow{1}{*}{\textbf{Process}} &                      28nm &  unspecified (32/28 nm) &                22nm \\
 
     \hline
-    \multirow{4}{*}{\textbf{\big}}    &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore &  4 cores (with SMT) \\
+    \multirow{4}{*}{\textbf{\bigARM}} &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore &  4 cores (with SMT) \\
                                       &        freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] &  freq. [2.3-3.5GHz] \\
                                       &        L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB &  L1I 32KB, L1D 32KB \\
                                       &                    L2 2MB &                  L2 2MB &    L2 256KB, L3 6MB \\
@@ -268,7 +268,7 @@ The experiments are conducted on two ARM~\bl platforms, an \odrx board using a
 Platform from ARM running a Linux operating system, detailed in
 Table~\ref{tab:eval_polar_energy_arm_specs}.
 
-The \big and the \little clusters of cores on the \odr board are on/off in a
+The \bigARM and the \little clusters of cores on the \odr board are on/off in a
 mutually exclusive way. The active cluster is selected through the Linux
 \verb|cpufreq| mechanism. Both clusters can be activated together or separately
 on the \juno board. Both platforms report details on supply voltage, current
@@ -324,8 +324,8 @@ average. The sequential version is mentioned for reference only, as the
 throughput $T_i$ is much higher on vectorized versions. Generally the
 inter-frame SIMD strategy delivers better performance at the cost of a higher
 latency $l$. Table~\ref{tab:eval_polar_energy_results} also compares the energy
-consumption of \little and \big clusters. The A53 consumes less energy than the
-A7 and the A57 consumes less energy than the A15, respectively. This can be
+consumption of \little and \bigARM clusters. The A53 consumes less energy than
+the A7 and the A57 consumes less energy than the A15, respectively. This can be
 explained by architectural improvements brought by the more recent ARM64
 platform. Despite the fact that the ARM64 is a development board, the ARM64
 outperforms the ARM32 architecture. Finally we observe that the power
@@ -430,13 +430,13 @@ Indeed, at low frequency, the long execution time due to the low throughput
 causes a high dynamic RAM refreshing bill. It is therefore more interesting to
 use frequencies higher than 250MHz. For this problem size and configuration, and
 from an energy-only point of view, the best choice is to run the decoder at
-350MHz. On the A15 \big cluster, the energy cost is mainly driven by the CPU
+350MHz. On the A15 \bigARM cluster, the energy cost is mainly driven by the CPU
 frequency, while the RAM energy bill is limited compared to the CPU.
 
 Thus, the bottom line about energy vs frequency relationship is: On the \little
 cluster it is more interesting to clock the CPU at high frequency (higher
 throughput and smaller latency for a small additional energy cost); On the
-\big cluster, where the RAM consumption is less significant, it is better to
+\bigARM cluster, where the RAM consumption is less significant, it is better to
 clock the CPU at a low frequency.
 
 \begin{figure}[htp]
@@ -457,7 +457,7 @@ energy efficient. With high rates, the SC decoding tree can be pruned more
 effectively, making the decoding process even more energy efficient.
 Figure~\ref{plot:eval_polar_sc_energy_rate} also compares the ARM\R A7, A53 and
 A57 clusters for the same 450MHz frequency (note: this frequency is not
-available on the A15). The \little A7 is more energy efficient than the \big
+available on the A15). The \little A7 is more energy efficient than the \bigARM
 A57, and the \little A53 is itself more energy efficient than the \little A7
 ($E_{b_{A53}} < E_{b_{A7}} < E_{b_{A57}}$).
 

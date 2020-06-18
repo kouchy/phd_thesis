@@ -1,0 +1,105 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{automata}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+  % \node[state, accepting] (s0) at (+0.0, +0.0) {$S_0$};
+  % \node[state           ] (s1) at (-2.0, -1.5) {$S_1$};
+  % \node[state           ] (s2) at (+2.0, -1.5) {$S_2$};
+  % \node[state           ] (s3) at (-0.0, -3.0) {$S_3$};
+
+  % \tikzset{b0/.style={->,>=latex, draw=Paired-1, shorten >=3pt, shorten <= 3pt, dashed} }
+  % \tikzset{b1/.style={->,>=latex, draw=Paired-5, shorten >=3pt, shorten <= 3pt        } }
+
+  % \draw[b1] (s0) to[bend right=30]                (s1) node [midway, above, xshift=-1.5cm, yshift=-0.40cm] {1/11};
+  % \draw[b1] (s1) to[bend right=20]                (s2) node [midway, above, xshift=-0.0cm, yshift=-2.50cm] {1/10};
+  % \draw[b0] (s1) to[bend right=30]                (s3) node [midway, above, xshift=-1.5cm, yshift=-3.25cm] {0/01};
+  % \draw[b0] (s3) to[bend right=30]                (s2) node [midway, above, xshift=+1.5cm, yshift=-3.25cm] {0/01};
+  % \draw[b0] (s2) to[bend right=20]                (s1) node [midway, above, xshift=-0.0cm, yshift=-1.10cm] {0/00};
+  % \draw[b1] (s2) to[bend right=30]                (s0) node [midway, above, xshift=+1.5cm, yshift=-0.40cm] {1/11};
+  % \draw[b1] (s3) to[out=-120,in= -60,looseness=6] (s3) node [midway, above, xshift=+0.0cm, yshift=-4.60cm] {1/10};
+  % \draw[b0] (s0) to[out= +60,in=+120,looseness=6] (s0) node [midway, above, xshift=+0.0cm, yshift=+1.00cm] {0/00};
+
+
+  \newcommand\vsep{2.5}
+  \newcommand\hsep{1.25}
+
+  \node (t0_s0) at (0.0,-0.0)               [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_0$}]{};
+  \node (t0_s1) at (0.0,-\hsep)             [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_1$}]{};
+  \node (t0_s2) at (0.0,-\hsep-\hsep)       [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_2$}]{};
+  \node (t0_s3) at (0.0,-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_3$}]{};
+
+  \node (t1_s0) at (\vsep,-0.0)               [circle,fill,inner sep=1.5pt]{};
+  \node (t1_s1) at (\vsep,-\hsep)             [circle,fill,inner sep=1.5pt]{};
+  \node (t1_s2) at (\vsep,-\hsep-\hsep)       [circle,fill,inner sep=1.5pt]{};
+  \node (t1_s3) at (\vsep,-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt]{};
+
+  \node (t2_s0) at (\vsep+\vsep,-0.0)               [circle,fill,inner sep=1.5pt]{};
+  \node (t2_s1) at (\vsep+\vsep,-\hsep)             [circle,fill,inner sep=1.5pt]{};
+  \node (t2_s2) at (\vsep+\vsep,-\hsep-\hsep)       [circle,fill,inner sep=1.5pt]{};
+  \node (t2_s3) at (\vsep+\vsep,-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt]{};
+
+  \node (t3_s0) at (\vsep+\vsep+\vsep,-0.0)               [circle,fill,inner sep=1.5pt]{};
+  \node (t3_s1) at (\vsep+\vsep+\vsep,-\hsep)             [circle,fill,inner sep=1.5pt]{};
+  \node (t3_s2) at (\vsep+\vsep+\vsep,-\hsep-\hsep)       [circle,fill,inner sep=1.5pt]{};
+  \node (t3_s3) at (\vsep+\vsep+\vsep,-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt]{};
+
+  \node (t4_s0) at (\vsep+\vsep+\vsep+\vsep,-0.0)               [circle,fill,inner sep=1.5pt]{};
+  \node (t4_s1) at (\vsep+\vsep+\vsep+\vsep,-\hsep)             [circle,fill,inner sep=1.5pt]{};
+  \node (t4_s2) at (\vsep+\vsep+\vsep+\vsep,-\hsep-\hsep)       [circle,fill,inner sep=1.5pt]{};
+  \node (t4_s3) at (\vsep+\vsep+\vsep+\vsep,-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt]{};
+
+  \draw[->,>=latex] (-0.75,-\hsep-\hsep-\hsep-0.75) -- (\vsep+\vsep+\vsep+\vsep+0.75,-\hsep-\hsep-\hsep-0.75);
+
+  \draw[- ,>=latex] (0.0,                    -\hsep-\hsep-\hsep-0.6) -- (0.0,                    -\hsep-\hsep-\hsep-0.9) node [below, xshift=+0.0cm, yshift=+0.00cm] {$t = 0$};
+  \draw[- ,>=latex] (\vsep,                  -\hsep-\hsep-\hsep-0.6) -- (\vsep,                  -\hsep-\hsep-\hsep-0.9) node [below, xshift=+0.0cm, yshift=+0.00cm] {$t = 1$};
+  \draw[- ,>=latex] (\vsep+\vsep,            -\hsep-\hsep-\hsep-0.6) -- (\vsep+\vsep,            -\hsep-\hsep-\hsep-0.9) node [below, xshift=+0.0cm, yshift=+0.00cm] {$t = 2$};
+  \draw[- ,>=latex] (\vsep+\vsep+\vsep,      -\hsep-\hsep-\hsep-0.6) -- (\vsep+\vsep+\vsep,      -\hsep-\hsep-\hsep-0.9) node [below, xshift=+0.0cm, yshift=+0.00cm] {$t = 3$};
+  \draw[- ,>=latex] (\vsep+\vsep+\vsep+\vsep,-\hsep-\hsep-\hsep-0.6) -- (\vsep+\vsep+\vsep+\vsep,-\hsep-\hsep-\hsep-0.9) node [below, xshift=+0.0cm, yshift=+0.00cm] {$t = 4$};
+
+  \tikzset{b0/.style={->,>=latex, draw=Paired-1, fill=Paired-1, shorten >=2pt, shorten <= 2pt, dashed} }
+  \tikzset{b1/.style={->,>=latex, draw=Paired-5, fill=Paired-5, shorten >=2pt, shorten <= 2pt        } }
+
+  \draw[b0] (t0_s0) -- (t1_s0); % node [midway, above, sloped, text=Paired-1] {0/00};
+  \draw[b1] (t0_s0) -- (t1_s1); % node [midway, above, sloped, text=Paired-5] {1/11};
+
+  \draw[b0] (t1_s0) -- (t2_s0); % node [midway, above, sloped, text=Paired-1] {0/00};
+  \draw[b1] (t1_s0) -- (t2_s1); % node [midway, above, sloped, text=Paired-5] {1/11};
+  \draw[b0] (t1_s1) -- (t2_s3); % node [midway, above, sloped, text=Paired-1] {0/01};
+  \draw[b1] (t1_s1) -- (t2_s2); % node [midway, above, sloped, text=Paired-5] {1/10};
+
+
+  \draw[b0] (t2_s0) -- (t3_s0) node [midway, below, text=Paired-1, sloped, xshift=-1mm,] {0/00};
+  \draw[b1] (t2_s0) -- (t3_s1); % node [midway, above, text=Paired-5] {};
+  \draw[b0] (t2_s1) -- (t3_s3) node [midway, above, text=Paired-1, sloped, xshift=+2mm] {0/01};
+  \draw[b1] (t2_s1) -- (t3_s2); % node [midway, above, text=Paired-5] {};
+  \draw[b0] (t2_s2) -- (t3_s1) node [midway, above, text=Paired-1, sloped, xshift=+4mm] {0/00};
+  \draw[b1] (t2_s2) -- (t3_s0); % node [midway, above, text=Paired-5] {};
+  \draw[b0] (t2_s3) -- (t3_s2) node [midway, below, text=Paired-1, sloped, xshift=+0mm] {0/01};
+  \draw[b1] (t2_s3) -- (t3_s3); % node [midway, above, text=Paired-5] {};
+
+  \draw[b0] (t3_s0) -- (t4_s0); % node [midway, above, text=Paired-1] {};
+  \draw[b1] (t3_s0) -- (t4_s1) node [midway, above, text=Paired-5, sloped, xshift=-0mm] {1/11};
+  \draw[b0] (t3_s1) -- (t4_s3); % node [midway, above, text=Paired-1] {};
+  \draw[b1] (t3_s1) -- (t4_s2) node [midway, above, text=Paired-5, sloped, xshift=+7mm] {1/10};
+  \draw[b0] (t3_s2) -- (t4_s1); % node [midway, above, text=Paired-1] {};
+  \draw[b1] (t3_s2) -- (t4_s0) node [midway, above, text=Paired-5, sloped, xshift=-1mm] {1/11};
+  \draw[b0] (t3_s3) -- (t4_s2); % node [midway, above, text=Paired-1] {};
+  \draw[b1] (t3_s3) -- (t4_s3) node [midway, above, text=Paired-5, sloped, xshift=+1mm] {1/10};
+
+  \end{tikzpicture}
+\end{document}

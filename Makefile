@@ -58,6 +58,24 @@ titlepage: head/titlepage.tex
 
 chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
               main/chapter1/fig/intro/com_chain/colors \
+              main/chapter1/fig/codes/ldpc/ldpc.tex \
+              main/chapter1/fig/codes/ldpc/colors \
+              main/chapter1/fig/codes/parity_check/parity_check.tex \
+              main/chapter1/fig/codes/parity_check/colors \
+              main/chapter1/fig/codes/polar_encoder/polar_encoder.tex \
+              main/chapter1/fig/codes/polar_encoder/colors \
+              main/chapter1/fig/codes/polar_encoder_sys/polar_encoder_sys.tex \
+              main/chapter1/fig/codes/polar_encoder_sys/colors \
+              main/chapter1/fig/codes/polar_tree/polar_tree.tex \
+              main/chapter1/fig/codes/polar_tree/colors \
+              main/chapter1/fig/codes/rsc_encoder/rsc_encoder.tex \
+              main/chapter1/fig/codes/rsc_encoder/colors \
+              main/chapter1/fig/codes/rsc_mealy/rsc_mealy.tex \
+              main/chapter1/fig/codes/rsc_mealy/colors \
+              main/chapter1/fig/codes/rsc_trellis/rsc_trellis.tex \
+              main/chapter1/fig/codes/rsc_trellis/colors \
+              main/chapter1/fig/codes/turbo_encoder/turbo_encoder.tex \
+              main/chapter1/fig/codes/turbo_encoder/colors \
               main/chapter1/fig/simu/com_chain/com_chain.tex \
               main/chapter1/fig/simu/com_chain/colors \
               main/chapter1/fig/simu/in_out/in_out.tex \
@@ -83,6 +101,15 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt
 	cd main/chapter1/fig/intro/com_chain                   && rubber -d com_chain.tex
+	cd main/chapter1/fig/codes/ldpc                        && rubber -d ldpc.tex
+	cd main/chapter1/fig/codes/parity_check                && rubber -d parity_check.tex
+	cd main/chapter1/fig/codes/polar_encoder               && rubber -d polar_encoder.tex
+	cd main/chapter1/fig/codes/polar_encoder_sys           && rubber -d polar_encoder_sys.tex
+	cd main/chapter1/fig/codes/polar_tree                  && rubber -d polar_tree.tex
+	cd main/chapter1/fig/codes/rsc_encoder                 && rubber -d rsc_encoder.tex
+	cd main/chapter1/fig/codes/rsc_mealy                   && rubber -d rsc_mealy.tex
+	cd main/chapter1/fig/codes/rsc_trellis                 && rubber -d rsc_trellis.tex
+	cd main/chapter1/fig/codes/turbo_encoder               && rubber -d turbo_encoder.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber -d com_chain.tex
 	cd main/chapter1/fig/simu/in_out                       && rubber -d in_out.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_bch_rs.tex
@@ -496,6 +523,15 @@ clean: clean4all
 	cd ./                                                  && rubber --clean my_thesis
 	cd head                                                && rubber --clean titlepage
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean com_chain
+	cd main/chapter1/fig/codes/ldpc                        && rubber --clean ldpc
+	cd main/chapter1/fig/codes/parity_check                && rubber --clean parity_check
+	cd main/chapter1/fig/codes/polar_encoder               && rubber --clean polar_encoder
+	cd main/chapter1/fig/codes/polar_encoder_sys           && rubber --clean polar_encoder_sys
+	cd main/chapter1/fig/codes/polar_tree                  && rubber --clean polar_tree
+	cd main/chapter1/fig/codes/rsc_encoder                 && rubber --clean rsc_encoder
+	cd main/chapter1/fig/codes/rsc_mealy                   && rubber --clean rsc_mealy
+	cd main/chapter1/fig/codes/rsc_trellis                 && rubber --clean rsc_trellis
+	cd main/chapter1/fig/codes/turbo_encoder               && rubber --clean turbo_encoder
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean com_chain
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean in_out
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_bch_rs
@@ -577,6 +613,15 @@ mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
 	cd head                                                && rubber --clean -d titlepage.tex
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean -d com_chain.tex
+	cd main/chapter1/fig/codes/ldpc                        && rubber --clean -d ldpc.tex
+	cd main/chapter1/fig/codes/parity_check                && rubber --clean -d parity_check.tex
+	cd main/chapter1/fig/codes/polar_encoder               && rubber --clean -d polar_encoder.tex
+	cd main/chapter1/fig/codes/polar_encoder_sys           && rubber --clean -d polar_encoder_sys.tex
+	cd main/chapter1/fig/codes/polar_tree                  && rubber --clean -d polar_tree.tex
+	cd main/chapter1/fig/codes/rsc_encoder                 && rubber --clean -d rsc_encoder.tex
+	cd main/chapter1/fig/codes/rsc_mealy                   && rubber --clean -d rsc_mealy.tex
+	cd main/chapter1/fig/codes/rsc_trellis                 && rubber --clean -d rsc_trellis.tex
+	cd main/chapter1/fig/codes/turbo_encoder               && rubber --clean -d turbo_encoder.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean -d com_chain.tex
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean -d in_out.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_bch_rs.tex
