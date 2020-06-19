@@ -16,13 +16,13 @@
 
 \begin{document}
   \begin{tikzpicture}
-    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (src) at ( 0, 4) {Source};
-    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (enc) at ( 4, 4) {Channel\\Encoder};
-    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (mod) at ( 8, 4) {Modulator};
-    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1            ] (chn) at (10, 2) {Channel};
-    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (dem) at ( 8, 0) {Demodulator};
-    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=left] (dec) at ( 4, 0) {Channel\\Decoder};
-    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black               ] (snk) at ( 0, 0) {Sink};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black                 ] (src) at ( 0, 4) {Source};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (enc) at ( 4, 4) {Channel\\Encoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black   , align=center] (mod) at ( 8, 4) {Digital\\Modulator};
+    \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.0cm, text=Paired-1              ] (chn) at (10, 2) {Channel};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black   , align=center] (dem) at ( 8, 0) {Digital\\Demodulator};
+    \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dec) at ( 4, 0) {Channel\\Decoder};
+    \node[draw=black,    rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=black                 ] (snk) at ( 0, 0) {Monitor};
 
     \draw[->,>=latex] (src) -- (enc) node [midway, above, text=Paired-3] {$K$};
     \draw[->,>=latex] (enc) -- (mod) node [midway, above, text=Paired-3] {$N$};
@@ -30,6 +30,8 @@
     \draw[->,>=latex] (chn) |- (dem) node [midway, below,              ] {};
     \draw[->,>=latex] (dem) -- (dec) node [midway, below, text=Paired-3] {$N$};
     \draw[->,>=latex] (dec) -- (snk) node [midway, below, text=Paired-3] {$K$};
+    \draw[->,>=latex] (src.east) -- (2,4) |- (1.25, +0.25) node [midway, above] {};
+
 
     \node[draw=black, rounded corners=2pt, minimum height=2cm, dashed, fit=(src) (enc) (mod) (chn) (dem) (dec) (snk)] (sim) {};
 

@@ -1536,46 +1536,10 @@ memory.
   \item \xmark~on pourrait parler de la technique utilisée pour avoir des
     décodeurs BP génériques (avec des illustrations de code, ça repose sur du
     C++17), décodeurs séquentiels ou vectorisation inter-frame
-  \item \xmark~peut être mettre quelques petits résultats en terme de débit et
-    latence ici plutôt que dans la section évaluation puisqu'il n'y a pas de
-    publications
+  \item \xmark~décodeurs génériques avec "separation of concerns":
+    1) "scheduling" (BP-flooding/HL/VL), 2) "update nodes" (SPA, log-SPA, MS,
+    ...)
 \end{itemize}
-
-% LDPC codes is a family of channel codes that is well spread in current digital
-% communication systems. They have been chosen in many communication standards
-% (Wifi, WiMAX, DVB-S2, 10Gbps Ethernet, etc.). They were also selected for the
-% future 5G standard data transport.
-
-% In this section the Min-Sum decoder for LDPC codes is presented. As shown in
-% Figure~\ref{fig:ldpc}, an LDPC code can be represented in the form of a Tanner
-% graph. The circles, denoted as variable nodes, represent the LLRs (the noisy
-% estimation of the bits in the received frames). The squares, denoted as parity
-% check nodes, represent the parity constraints that the variable nodes have to
-% verify. For instance, the check node $a$ ($CN_a$) is connected to the variable
-% nodes $1$, $4$, $5$, $7$ and $8$ ($VN_1, VN_4, VN_5, VN_7, VN_8$). It means that
-% the corresponding bits $U_1, U_4, U_5, U_7, U_8$ have to respect a parity
-% constraint: $U_1 \oplus U_4 \oplus U_5 \oplus U_7 \oplus U_8 = 0$. A codeword is
-% valid only if it respects all the parity constraints defined by the check nodes.
-% The LDPC code can be also represented by a \textit{parity check matrix}:
-% { \begin{equation*}
-% H =
-% \begin{bmatrix}
-%   1&0&0&1&1&0&1&1\\
-%   0&1&1&0&0&1&1&0\\
-%   1&0&1&0&0&1&0&1\\
-%   0&1&0&1&1&0&1&0
-% \end{bmatrix}.
-% \end{equation*}
-% }
-% The Min-Sum decoder is an iterative message passing algorithm based on the
-% Tanner graph representation. Probabilistic messages ($M$) are exchanged between
-% the variable nodes and check nodes iteratively. Variable nodes and check nodes
-% apply an \textit{update rule} to compute the outgoing messages from the incoming
-% messages. In this section, the Min-Sum update rule is considered as well as an
-% horizontal layered scheduling. The original version of the Min-Sum algorithm
-% works on floating-point values, but it has been shown that fixed-point
-% simplifications have very similar decoding performance. Moreover, a fixed-point
-% representation enables to pack more elements into SIMD registers.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/ldpc/bp_min_sum_simd.cpp}

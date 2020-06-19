@@ -3,17 +3,110 @@
 \graphicspath{{main/chapter2/fig/}}
 
 \chapter{Algorithms and Efficient Methods of Digital Communication Receiver}
+\label{chap:alg}
 
-% \vspace*{\fill}
+\vspace*{\fill}
 \minitoccustom
-% \vspace*{\fill}
+\vspace*{\fill}
 
 \section{Polar Decoders}
 \label{sec:alg_polar_decoders}
 
-\subsection{\Arikan's Kernel}
+\subsection{Polar Coding Scheme}
 
-\subsubsection{Successive Cancellation Algorithm}
+A polar code $(N,K)$ is a linear block code of size $N = 2^n$, with $N$ the
+first natural number higher than $K$. The $\bm{\mathcal{G}}$ generator matrix of
+a polar code can recursively be defined by the $n$th Kronecker power of
+$\bm{\mathcal{K}} =
+\begin{bmatrix}
+1 & 0 \\
+1 & 1
+\end{bmatrix},$
+denoted as
+$
+\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes n} =
+\begin{bmatrix}
+\bm{\mathcal{K}}^{\otimes n-1} & 0_{n -1} \\
+\bm{\mathcal{K}}^{\otimes n-1} & \bm{\mathcal{K}}^{\otimes n-1}
+\end{bmatrix},
+$
+composed by $N$ lines and $N$ columns. Unlike for the LDPC codes, the $\bm{u}$
+input message cannot be directly multiplied by $\bm{\mathcal{G}}$ because
+$\bm{\mathcal{G}}$ is a squared matrix of dimension $N$. So, the polar coding
+scheme defines a $\mathcal{F}$ function that add zeros in $\bm{u}$ until it size
+reaches $N$ bits ($\bm{v} = \mathcal{F}(\bm{u})$). If we suppose a $(8,4)$ polar
+code, $\bm{u} = [u_0, u_1, u_2, u_3]$ is composed by 4 information bits. Lets
+apply the $\mathcal{F}$ function on $\bm{u}$: $\mathcal{F}(\bm{u}) =
+[0, 0, 0, u_0, 0, u_1, u_2, u_3] = \bm{v}$. There is $N$ output bits in
+$\bm{v}$. The extra zeros are called the \emph{frozen bits}, their positions in
+$\bm{v}$ are selected to be on the less reliable indexes. In other terms, the
+information bits occupy the most reliable positions in $\bm{v}$. The frozen bits
+represent the $P$ parity bits. In this thesis, the Gaussian Approximation (GA)
+method is used to determine the position of the frozen bits~\cite{Trifonov2012}.
+To resume, the polar encoding process can be defined as follow: $\bm{c} =
+\mathcal{F}(\bm{u}) \times \bm{\mathcal{G}} = \bm{v} \times \bm{\mathcal{G}}$.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.0\linewidth]{polar/encoder/encoder}
+  \caption{Polar encoders for $N = \{2, 4, 8\}$ and $R = 1/2$.}
+  \label{fig:alg_polar_encoder}
+\end{figure}
+
+Fig.~\ref{fig:alg_polar_encoder} presents the $\bm{\mathcal{G}}$ generator
+matrices depending on $N$ and their associate encoding schemes described with
+factor graphs. The recursive structure of the polar codes is represented by the
+dashed rectangles in the factor graphs. For instance, when $N = 8$, the encoder
+is composed by two $N = 4$ sub-encoders and each $N = 4$ sub-encoder is itself
+composed by two $N = 2$ sub-encoders. Unlike the previously presented LDPC and
+turbo codes, the polar code are not necessarily systematic. In fact, the
+encoding process is only systematic when there is a unique information bit
+($K =1$).
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=1.0]{polar/encoder_sys/encoder_sys}
+  \caption{Systematic polar encoder for $N = 8$ and $R = 1/2$.}
+  \label{fig:alg_polar_encoder_sys}
+\end{figure}
+
+In 2011, \Arikan proposed a systematic coding scheme for the polar
+codes~\cite{Arikan2011}. The idea is to encode $\bm{u}$ two times instead of
+one. Fig.~\ref{fig:alg_polar_encoder_sys} shows the systematic polar
+encoder for $N = 8$. The systematic encoding scheme can be expressed as:
+$\bm{c} = \mathcal{F'}\big(\mathcal{F}(u) \times \bm{\mathcal{G}}\big) \times
+\bm{\mathcal{G}}$, with $\mathcal{F'}$ the function that reinitializes the
+frozen bits to zero after the first encoding. The systematic encoding is
+possible because of the characteristics of the $\bm{\mathcal{G}}$ generator
+polar matrices: $\bm{\mathcal{G}} \times \bm{\mathcal{G}} = \bm{I}$. In other
+terms, $\bm{\mathcal{G}}$ is invertible and its inverse is itself. A direct
+consequence of this property is that one can encode from the left to the right
+or from the right to the left: the generated codeword $\bm{c}$ will be the same.
+This is why the factor graphs proposed in Fig.~\ref{fig:alg_polar_encoder} and
+Fig.~\ref{fig:alg_polar_encoder_sys} are not directed.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=1.0]{polar/tree/tree}
+  \caption{Tree representation of a polar encoder for $N = 8$ and $R = 1/2$.}
+  \label{fig:alg_polar_tree}
+\end{figure}
+
+It is also possible to represent the polar encoding process with a binary tree
+structure. Fig.~\ref{fig:alg_polar_tree} shows the binary tree representation of
+a $(8,4)$ polar encoder. The leaf nodes represent the initial bits from the
+$\bm{v}$ vector. The bits in black are the information bits $\bm{u}$ and the
+white bits are the frozen bits. Two by two the initial bits are bound to a
+father node $n_x^2$ where $x$ is the index of the node in the layer 2. In
+general, a node is denoted by $n_x^l$ where $l$ is the layer in the binary tree.
+The {\color{Paired-1} blue} nodes compute the sub-graphs delimited by the solid
+{\color{Paired-1} blue} rectangles (one XOR per node). The {\color{Paired-3}
+green} nodes compute the sub-graphs delimited by the solid {\color{Paired-3}
+green} rectangles (two XORs per node). The {\color{Paired-5} red} node computes
+the sub-graph delimited by the solid {\color{Paired-5} red} rectangle (four XORs
+per node).
+
+\subsection{Successive Cancellation Algorithm}
 
 \begin{figure}[htp]
   \centering
@@ -64,7 +157,7 @@ directions, the decoder eventually updates partial sums in the root node and the
 decoding process is terminated. At this point, the decoding result is stored in
 the root node in the form of a $N$-bit partial sum vectors.
 
-\subsubsection{Successive Cancellation List Algorithm}
+\subsection{Successive Cancellation List Algorithm}
 
 \begin{itemize}
   \item \xmark~Prendre le schéma de Mathieu pour mieux décrire l'algo SCL
@@ -139,7 +232,7 @@ grows as $O(LN\log_2N)$. This linear increase in complexity with L leads to
 significant improvements in BER/FER performances, especially for small code
 lengths.
 
-\subsubsection{CRC concatenation scheme}
+\subsection{CRC concatenation scheme}
 
 The authors in~\cite{Tal2011} observed that when a decoding error occurs, the
 right codeword is often in the final list, but not with the best path metric.
@@ -150,7 +243,7 @@ this algorithm CA-SCL and its simplified version CA-SSCL. In terms of
 computational complexity, the overhead consists in the computation of $L$ CRC at
 the end of each decoding.
 
-\subsubsection{Simplified Decoders}
+\subsection{Simplified Decoders}
 \label{sec:alg_polar_simplified_decoders}
 
 \begin{figure}[htp]
@@ -183,7 +276,7 @@ drastically reduce the amount of computation in the decoding process. The
 Fig.~\ref{fig:tree_pruning_example} shows that more than half of the tree nodes
 can be removed for $N = 8$.
 
-\subsubsection{Adaptive SCL decoding algorithm}
+\subsection{Adaptive SCL decoding algorithm}
 
 The presence of the CRC can be further used to reduce the decoding time by
 gradually increasing $L$. This variation of SCL is called Adaptive SCL
@@ -205,7 +298,7 @@ of SSCL can achieve higher throughputs. Indeed, a large proportion of frames can
 be decoded with a single SC decoding. This is especially true when the SNR is
 high. This will be further discussed in Section~\ref{sec:polar_genericity}.
 
-\subsubsection{Algorithmic Comparison}
+\subsection{Algorithmic Comparison}
 
 \begin{table}[htp]
   \centering
@@ -286,7 +379,7 @@ and flexible decoder, that supports all variants of the decoding algorithms.
 Thus, it is possible to switch from one to another as shown in the following
 section.
 
-\subsubsection{Generic and Flexible Polar Decoders}
+\subsection{Generic and Flexible Polar Decoders}
 \label{sec:polar_genericity}
 
 \begin{itemize}{}
@@ -318,7 +411,7 @@ These customizations are not enforced by a standard. The flexibility gives some
 degrees of freedom to the decoder in order to find the best tradeoff between
 decoding performance, throughput or latency for a given polar code.
 
-\paragraph{Genericity}
+\subsubsection{Genericity}
 \label{sec:alg_polar_genericity}
 
 In the context of wireless communications, the standards enforce several
@@ -363,7 +456,7 @@ decoding algorithms, described in the following, along with improvements
 presented in Section~\ref{sec:polar_implem}, is necessary to deal with this
 challenge.
 
-\paragraph{Flexibility}
+\subsubsection{Flexibility}
 
 On one hand, the reason for the decoder genericity is the compliance to the
 telecommunication standards. On the other hand, the flexibility of the decoder
@@ -378,7 +471,7 @@ adjustments can be applied to access to different tradeoffs between throughput,
 latency, and error rate performance. As a consequence, one can easily fine-tune
 the configuration of the software decoder for any given polar code.
 
-\subparagraph{List size}
+\subsubsection{List size}
 
 \begin{figure}[htp]
   \centering
@@ -401,7 +494,7 @@ much faster. Indeed, there is no overhead due to the management of different
 candidate paths during the decoding. For $L\geq4$ and $E_b/N_0=2$, the FER is
 also approximately halved when the list size $L$ is doubled.
 
-\subparagraph{Tree pruning strategy}
+\paragraph{Tree pruning strategy}
 
 A second degree of flexibility is the customization of the SCL tree pruning. The
 authors in~\cite{Alamdar-Yazdi2011,Sarkis2016} defined dedicated nodes to prune
@@ -410,7 +503,7 @@ proposed decoder, each dedicated node can be activated separately. The ability
 to activate dedicated nodes at will is useful in order to explore the
 contribution of each node type on the throughput.
 
-\subparagraph{LLR Quantization}
+\paragraph{LLR Quantization}
 
 \begin{figure}[htp]
   \centering
@@ -443,7 +536,7 @@ can happen when the size of the repetition nodes is not limited
 ($\texttt{REP}_\texttt{2+}$). However, the size limitation of the repetition
 nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue.
 
-\subparagraph{Supporting different variants of the decoding algorithms}
+\paragraph{Supporting different variants of the decoding algorithms}
 
 Besides the $L$ values, the tree pruning and quantization aspects, the proposed
 software polar decoder supports different variants of the SCL algorithm:
@@ -501,20 +594,105 @@ proposed decoder, while maintaining competitive throughput and latency. The
 following section introduces algorithmic and implementation improvements applied
 in the proposed decoders to keep a low decoding time.
 
-\subsection{Generic Kernels and Multi-Kernel}
-
-\subsubsection{Related Works}
-
-\subsubsection{Others}
-
-\begin{itemize}
-  \item \xmark~factorisation automatique de kernels et génération du code source
-    associé
-  \item \xmark~décodeurs multi-kernels génériques SC, SCL, CA-SCL et ASCL (non
-    systématique et systématique)
-\end{itemize}
-
 \section{Turbo Decoders}
+
+\subsection{Turbo Coding Scheme}
+
+In this sub-section, the convolutional sub-encoder is presented first and then
+the turbo encoding process is detailed. The first convolutional codes have been
+introduced by Peter Elias in 1955~\cite{Elias1955}. The objective was to propose
+an alternative to the block codes in term of codeword length flexibility:
+theoretically the length of a convolutional code is infinite. The coding scheme
+is made in a way that the output depends on the current input and on the inputs
+before. The current $c_k$ output bit can be expressed as a linear combination of
+the $\nu$ previous bits of the message:
+$c_k = \sum\limits_{j=0}^\nu g_ju_{k-j}$. The sequence of elements $g_j$ is
+called the code-generating sequence and it is often given in octal. $\nu$
+represents the number of elements memorized inside the encoder.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Encoding graph.]
+  {
+    \includegraphics[scale=1.0]{turbo/sub_encoder/sub_encoder}
+    \label{fig:alg_turbo_sub_encoder_graph}
+  }
+  \quad
+  \subfloat[][Mealy's machine.]
+  {
+    \includegraphics[scale=0.75]{turbo/mealy/mealy}
+    \label{fig:alg_turbo_sub_encoder_mealy}
+  }
+  \\
+  \subfloat[][Trellis representation.]
+  {
+    \includegraphics[scale=0.9]{turbo/trellis/trellis}
+    \label{fig:alg_turbo_sub_encoder_trellis}
+  }
+  \caption{Example of a recursive and systematic convolutional encoder ($R =
+    1/2$).}
+  \label{fig:alg_turbo_sub_encoder}
+\end{figure}
+
+Fig.~\ref{fig:alg_turbo_sub_encoder_graph} presents a convolutional encoder of
+rate $R = 1/2$ with a memory $\nu = 2$ ($D_0$ and $D_1$ are shift registers).
+Its two code-generating sequences $G_1 = (??)_8$ and $G_2 = (??)_8$ defines the
+$c_1$ and $c_2$ outputs respectively. In the example, the encoder has the
+particularity to be systematic because $c_1 = u$ and recursive because of the
+feedback loop before the first shift register $D_0$. In the literature, this
+type of coding scheme is called Recursive Systematic Convolutional (RSC). In
+Fig.~\ref{fig:alg_turbo_sub_encoder}, the number of $D$ memory $\nu = 2$ and
+so, the encoder have $2^\nu$ different states. Thus, a convolutional encoder can
+be seen as a Mealy's machine (or a finite-state machine) as shown in
+Fig.~\ref{fig:alg_turbo_sub_encoder_mealy}. The initial state $S_0$ corresponds
+to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$ and
+$D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and, finally,
+the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on the
+edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if the
+input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
+$c_2 = 0$ and will go in the state~$S_2$: this is denoted by \emph{1/10} below
+the oriented edge between $S_1$ and $S_2$.
+
+Fig.~\ref{fig:alg_turbo_sub_encoder_trellis} introduces a new representation of
+convolutional encoders: the trellis. This representation has been used the first
+time by Dave Forney in 1973~\cite{Forney1973}. It is especially useful to
+facilitate the understanding of the the decoding process as it allows to see the
+internal state of the encoder, its transitions, and the temporal evolution.
+However, the purpose of this chapter is not to detail the decoding process, it
+will be made in the next chapter. Considering the encoder initial state $S_0$,
+from $t = 0$ the two next possible states are $S_0$ and $S_1$. At $t = 1$, the
+encoder can be in state $S_0$ or $S_1$, so the next possible states are $S_0$,
+$S_1$, $S_2$ or $S_3$. One can note that starting from $\nu +1$ time units, the
+trellis pattern is repeated.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics{turbo/encoder/encoder}
+  \caption{Turbo encoder ($R = 1/3$) with two convolutional sub-encoders and a
+    $\Pi$ interleaver.}
+  \label{fig:alg_turbo_encoder}
+\end{figure}
+
+As mentioned before, a turbo encoder is built from two convolutional
+sub-encoders. The sub-encoders could be different but it is very rare and it is
+common to have the two same sub-encoders. The Fig.~\ref{fig:alg_turbo_encoder}
+shows a generic view of the turbo encoding process. In the example, the code
+rate of the turbo encoder is $R = 1/3$. This rate is obtained from two
+convolutional sub-encoders of rate $R = 1/2$ (like the one shown in
+Fig.~\ref{fig:alg_turbo_sub_encoder}). The two parity bits $p_0$ and $p_1$ are
+obtained from the $c_2$ outputs of the convolutional sub-encoders while the
+systematic $c_1$ outputs are ignored. The first sub-encoder encodes the input
+$u$ bit while the second one encode the $u'$ bit. The $u'$ bit is determined
+from $u$ after the $\Pi$ interleaving process. For each $u_k$ bit there is one
+and only one $u_k'$ associated bit in the $K$ input information bits. The
+interleaving process is a key point of the decoding performance in the turbo
+coding scheme, its main purpose is to fight against chunks of errors. During the
+interleaving process the sequence of information bits is in the what we call the
+\emph{natural order}, then these bits are permuted and the interleaver outputs a
+sequence of information bits in the \emph{interleaved order}. The permutation
+function defines the interleaver type. The $K$ information bits in the natural
+order are given to the sub-encoder 1 while the $K$ information bits in the
+interleaved order are given to the sub-encoder 2.
 
 \subsection{Overview of the Turbo decoding process}
 \label{sec:turbo_overview}
@@ -739,45 +917,124 @@ inside the decoder are responsible for this small performance loss.
 
 \section{LDPC Decoders}
 
+\subsection{LDPC Coding Scheme}
+
+A parity-check constraint is an equation that links a set of bits: when all the
+bits of a parity-check constraint are added together the result has to be
+zero. For instance, if we consider a message $\bm{u} = [u_0, u_1, u_2, u_3]$
+($K = 4$). It is possible to encode the information message $\bm{u}$ in a
+codeword $\bm{c}$ of size $N = K + 1 = 5$: $\bm{c} = [u_0,u_1,u_2,u_3,p_0]$.
+The parity-check constraint $\mathcal{C}_0$ is then: $u_0 \oplus u_1 \oplus u_2
+\oplus u_3 \oplus p_0 = 0~(\mathcal{C}_0)$ with $p_0$ the parity bit ($P = N -
+K = 1)$. To encode the message $\bm{u}$ and produce the codeword $\bm{c}$, a
+generator matrix $\bm{\mathcal{G}}$ (or a linear application) can be defined
+like this: $\bm{c} = \bm{u} \times \bm{\mathcal{G}}$ with
+\begin{equation*}
+\bm{\mathcal{G}} =
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 1\\
+0 & 1 & 0 & 0 & 1\\
+0 & 0 & 1 & 0 & 1\\
+0 & 0 & 0 & 1 & 1\\
+\end{bmatrix}
+.
+\end{equation*}
+$\bm{u} \times \bm{\mathcal{G}} = [u_0,u_1,u_2,u_3,u_0 \oplus u_1 \oplus u_2
+\oplus u_3] = \bm{c}$, so $p_0 = u_0 \oplus u_1 \oplus u_2 \oplus u_3$ as
+defined by the parity-check constraint $\mathcal{C}_0$. The proposed
+$\bm{\mathcal{G}}$ generator matrix is composed by the identity matrix on the
+four first columns and by the parity-check constraint in the last column.
+The consequence of the presence of the identity matrix is that the generated
+codeword contains the initial information bits $u_0$, $u_1$, $u_2$, and $u_3$.
+In this case, the encoding process is called \emph{systematic}.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics{ldpc/parity_check/parity_check}
+  \caption{Representation of the $\mathcal{C}_0$ parity-check constraint on a
+    Tanner graph.}
+  \label{fig:alg_ldcp_parity_check}
+\end{figure}
+
+One can note that a parity-check constraint can also be represented with a
+Tanner graph (or a bipartite graph) as shown in
+Fig.~\ref{fig:alg_ldcp_parity_check}. It is also possible to define a matrix of
+parity-check constraints namely $\bm{\mathcal{H}}$. In the present case, there
+is only one constraint ($\mathcal{C}_0$), so $\bm{\mathcal{H}}$ is a
+one-dimension matrix (or a vector) of size $N$:
+$
+\bm{\mathcal{H}} =
+\begin{bmatrix}
+1 & 1 & 1 & 1 & 1
+\end{bmatrix}.
+$
+An important property of the $\bm{\mathcal{H}}$ matrix is that it must satisfy:
+$\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics{ldpc/parity_checks/parity_checks}
+  \caption{Parity-check constraints of an LDPC code on a Tanner graph.}
+  \label{fig:ctx_codes_parity_checks}
+\end{figure}
+
+The construction of an LDPC code is based on the combination of many
+parity-check nodes. Fig.~\ref{fig:ctx_codes_parity_checks} is an example of LDPC
+code with four parity-check constraints denoted as $a$, $b$, $c$ and $d$. The
+parity-check constraints are also known as the \emph{check nodes} ($C_N$).
+And the \emph{variable nodes} ($V_N$) are the bits of the LDPC codeword. The
+parity-check matrix corresponding to the Fig.~\ref{fig:ctx_codes_parity_checks}
+Tanner graph is:
+\begin{equation*}
+\bm{\mathcal{H}} =
+\begin{bmatrix}
+  1 & 0 & 0 & 1 & 1 & 0 & 1 & 1\\
+  0 & 1 & 1 & 0 & 0 & 1 & 1 & 0\\
+  1 & 0 & 1 & 0 & 0 & 1 & 0 & 1\\
+  0 & 1 & 0 & 1 & 1 & 0 & 1 & 0
+\end{bmatrix}.
+\end{equation*}
+
+The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
+matrix (less that 3\% of 1). The example shown in
+Fig.~\ref{fig:ctx_codes_parity_checks} is here to help to the comprehension and
+is not a real LDPC code: there is much more than 3\% of 1 in the corresponding
+$\bm{\mathcal{H}}$ matrix.
+
+\subsection{BP Algorithms}
+
 \begin{itemize}
   \item \xmark~tout est à faire pour présenter les décodeurs LDPC BP
 \end{itemize}
 
-\subsection{BP Algorithms}
+% \begin{figure}[htp]
+%   \centering
+%   \includegraphics{ldpc/tanner_graph/tanner_graph}
+%   \caption{Tanner graph of a simple LDPC parity check $H$ matrix.}
+%   \label{fig:ldpc}
+% \end{figure}
 
-LDPC codes is a family of channel codes that is well spread in current digital
-communication systems. They have been chosen in many communication standards
-(Wifi, WiMAX, DVB-S2, 10Gbps Ethernet, etc.). They were also selected for the
-future 5G standard data transport.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics{ldpc/tanner_graph/tanner_graph}
-  \caption{Tanner graph of a simple LDPC parity check $H$ matrix.}
-  \label{fig:ldpc}
-\end{figure}
-
-In this section the Min-Sum decoder for LDPC codes is presented. As shown in
-Figure~\ref{fig:ldpc}, an LDPC code can be represented in the form of a Tanner
-graph. The circles, denoted as variable nodes, represent the LLRs (the noisy
-estimation of the bits in the received frames). The squares, denoted as parity
-check nodes, represent the parity constraints that the variable nodes have to
-verify. For instance, the check node $a$ ($CN_a$) is connected to the variable
-nodes $1$, $4$, $5$, $7$ and $8$ ($VN_1, VN_4, VN_5, VN_7, VN_8$). It means that
-the corresponding bits $U_1, U_4, U_5, U_7, U_8$ have to respect a parity
-constraint: $U_1 \oplus U_4 \oplus U_5 \oplus U_7 \oplus U_8 = 0$. A codeword is
-valid only if it respects all the parity constraints defined by the check nodes.
-The LDPC code can be also represented by a \textit{parity check matrix}:
-{ \begin{equation*}
-H =
-\begin{bmatrix}
-  1&0&0&1&1&0&1&1\\
-  0&1&1&0&0&1&1&0\\
-  1&0&1&0&0&1&0&1\\
-  0&1&0&1&1&0&1&0
-\end{bmatrix}.
-\end{equation*}
-}
+% In this section the Min-Sum decoder for LDPC codes is presented. As shown in
+% Figure~\ref{fig:ldpc}, an LDPC code can be represented in the form of a Tanner
+% graph. The circles, denoted as variable nodes, represent the LLRs (the noisy
+% estimation of the bits in the received frames). The squares, denoted as parity
+% check nodes, represent the parity constraints that the variable nodes have to
+% verify. For instance, the check node $a$ ($CN_a$) is connected to the variable
+% nodes $1$, $4$, $5$, $7$ and $8$ ($VN_1, VN_4, VN_5, VN_7, VN_8$). It means that
+% the corresponding bits $U_1, U_4, U_5, U_7, U_8$ have to respect a parity
+% constraint: $U_1 \oplus U_4 \oplus U_5 \oplus U_7 \oplus U_8 = 0$. A codeword is
+% valid only if it respects all the parity constraints defined by the check nodes.
+% The LDPC code can be also represented by a \textit{parity check matrix}:
+% { \begin{equation*}
+% H =
+% \begin{bmatrix}
+%   1&0&0&1&1&0&1&1\\
+%   0&1&1&0&0&1&1&0\\
+%   1&0&1&0&0&1&0&1\\
+%   0&1&0&1&1&0&1&0
+% \end{bmatrix}.
+% \end{equation*}
+% }
 The Min-Sum decoder is an iterative message passing algorithm based on the
 Tanner graph representation. Probabilistic messages ($M$) are exchanged between
 the variable nodes and check nodes iteratively. Variable nodes and check nodes
@@ -787,14 +1044,6 @@ horizontal layered scheduling. The original version of the Min-Sum algorithm
 works on floating-point values, but it has been shown that fixed-point
 simplifications have very similar decoding performance. Moreover, a fixed-point
 representation enables to pack more elements into SIMD registers.
-
-\subsection{Generic Implementation}
-
-\begin{itemize}
-  \item \xmark~décodeurs génériques avec "separation of concerns":
-    1) "scheduling" (BP-flooding/HL/VL), 2) "update nodes" (SPA, log-SPA, MS,
-    ...)
-\end{itemize}
 
 \section{SCMA Demodulators}
 
