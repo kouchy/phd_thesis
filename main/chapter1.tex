@@ -83,7 +83,9 @@ the message $\bm{x}$ passing through the transmission channel, different
 models can be used. However, in the literature, the selected model is very
 often the Additive White Gaussian Noise (AWGN) channel. In particular, this
 channel models very well the thermal noise which is one of the sources of
-noise always present on the receiver side.
+noise always present on the receiver side. This section presents the AWGN
+channel concepts and introduces the Binary Phase-Shift Keying
+modulation/demodulation that will be used all along the manuscript.
 
 In the AWGN channel, the law binding the $y_i$ output to its $x_i$ input is of
 the form $y_i = x_i + n_i$ with $N_{chn}$ an independent and identically
@@ -142,35 +144,29 @@ integrated in everyday communication systems. These code are habitually
 classified in two distinct families: block codes and convolutional codes. By
 definition the convolutional codes compute the redundancy in continue on the
 data stream while the block codes generate the redundancy by chunks of data.
-The purpose of this section is to detail a little bit the construction of the
-most famous ones, namely LDPC, turbo and polar codes.
+The purpose of this section is to introduce to most famous channel code
+families.
 
-\begin{table}[htp]
-  \centering
-  \caption{Elementary operations in $GF_2$ (logical \emph{exclusive or} and
-    {and}).}
-  \label{tab:ctx_gf2_operations}
-   \begin{tabular}{c c c c}
-   $a$ & $b$ & $a \oplus b$ & $ab$ \\
-    \hline
-    \hline
-    0 & 0 & 0 & 0 \\
-    0 & 1 & 1 & 0 \\
-    1 & 0 & 1 & 0 \\
-    1 & 1 & 0 & 1 \\
-  \end{tabular}
-\end{table}
+The Turbo Product Codes (TPC) are block codes, they have been invented by Peter
+Elias in 1954~\cite{Elias1954}. They are the product of two block codes, it
+results in a matrix where one code can be read from the columns and the other
+one from the lines. The TPC are notably used in the WiMAX standard.
 
-In all the presented coding schemes, only binary codes are considered. In this
-case, a bit can be represented by a Galois field of two elements $\{0, 1\}$
-denoted as $GF_2$. A block code is an application $g$ of $GF_2^K$ in $GF_2^N$
-with $K < N$. There is $2^K$ codewords $\bm{c}$. The two operators used to
-generate a codeword are the addition and the multiplication. In $GF_2$, the
-addition is equivalent to the \emph{logical exclusive or} (XOR or $\oplus$) and
-the multiplication is equivalent to the \emph{logical and} (cf.
-Table~\ref{tab:ctx_gf2_operations}).
+The Raj \textbf{B}ose, D. K. Ray-\textbf{C}haudhuri and Alexis,
+\textbf{H}ocquenghem (BCH) codes are block codes discovered in the late
+1950s~\cite{Hocquenghem1959,Bose1960}. They are algebraic codes built from a
+polynomial. They are able to correct $T$ errors in a block of $N$ bits. This
+codes are used in the CDs, DVDs and SSDs. In modern coding schemes, they are
+often concatenated to other codes in order to improve the their correction power
+especially when there is erroneous frames with a small number of erroneous bits
+(this is made in the DVB-S2 standard for instance).
 
-\subsection{LDPC Codes}
+The Irving S. \textbf{R}eed and Gustave \textbf{S}olomon (RS) codes have been
+discovered in 1960~\cite{Reed1960}. Like the BCH codes they are built from a
+polynomial but unlike the BCH codes, the RS codes are based on symbols instead
+of bits (non-binary codes). The RS codes are used in many standards (CD, DVD,
+Blu-ray, ADSL, DVB-T, etc.). If the number of bits per symbols is one, then the
+RS codes are equivalent to the BCH codes.
 
 The Low-Density Parity-Check (LDPC) codes are linear block codes, they have been
 discovered very early by Robert G. Gallager in 1962~\cite{Gallager1962}.
@@ -178,38 +174,27 @@ Unfortunately, at the time of their discovery, the computational power available
 in the transceivers was not sufficient to use them. But, in 1995, the LDPC codes
 have been re-discover by David MacKay~\cite{MacKay1995} and used in many digital
 communication standards since (Wi-Fi, WiMAX, WRAN, 10Gbps Ethernet, DVB-S2,
-CCSDS, 5G, etc.).
-
-% LDPC codes is a family of channel codes that is well spread in current digital
-% communication systems. They have been chosen in many communication standards
-% (Wifi, WiMAX, DVB-S2, 10Gbps Ethernet, etc.). They were also selected for the
-% future 5G standard data transport.
-
-\subsection{Turbo Codes}
+CCSDS, 5G data transport, etc.).
 
 The turbo codes have been discovered by Claude Berrou in 1993~\cite{Berrou1993}
-and have been used in many digital communication standards since (3G, 4G,
-DVB-RCS2, CCSDS, etc.). Unlike the LDPC codes, the turbo codes are convolutional
-codes. The particularity of the turbo codes is to be composed by two sub-codes.
-In other terms, the turbo codes are a parallel concatenation of two
-convolutional codes.
-
-\subsection{Polar Codes}
+and have been used in many digital wireless communication standards since (3G,
+4G, DVB-RCS2, CCSDS, etc.). Unlike the LDPC codes, the turbo codes are
+convolutional codes. The particularity of the turbo codes is to be composed by
+two sub-codes. In other terms, the turbo codes are a parallel concatenation of
+two convolutional codes.
 
 The polar codes are linear block codes like the LDPC, they have been discovered
 relatively recently by \Arikan in 2009~\cite{Arikan2009} and are used in the
-5G standard. The particularity of these codes is that they are the only ones for
-which it has been mathematically demonstrated that they reach the Shannon's
-limit (considering an infinite codeword length).
+5G standard (control channels). The particularity of these codes is that they
+are the only ones for which it has been mathematically demonstrated that they
+reach the Shannon's limit (considering an infinite codeword length).
 
-\subsection{Other Codes}
-
-\begin{itemize}
-  \item \xmark~parler rapidement des codes BCH, RS, TPC...
-  \item \xmark~codes non binaires et polar multi-kernel ?
-  \item \xmark~dire que la liste n'est pas exhausive et qu'il y a pleins
-    d'autres codes dont on ne parle pas ici
-\end{itemize}
+Of course it exists many other codes like the simple convolutional
+codes~\cite{Elias1955}, the Reed-Muller codes~\cite{Muller1954,Reed1954}, the
+raptor codes~\cite{Shokrollahi2004}, etc. The purpose of this section is not to
+be exhaustive but to give a representative overview of the domain. Later, this
+thesis will focus on a subset of these codes, namely the LDPC, the turbo and the
+polar codes.
 
 \section{Simulation}
 
@@ -263,6 +248,18 @@ the simulation. The $m$, $M$ and $s$ parameters allow to control the AWGN
 channel noise. $m$ is the minimum SNR value to simulate in the channel, while
 $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
 
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Polar codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \quad{}
+  \subfloat[][LDPC codes.]         {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
+  \subfloat[][Turbo codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \\
+  \subfloat[][Turbo product codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \quad{}
+  \subfloat[][BCH \& RS codes.]    {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
+  \subfloat[][Convolutional codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
+  \caption{Simulation outputs of various code families.}
+  \label{fig:intro_bfer}
+\end{figure}
+
 Fig.~\ref{fig:intro_bfer} presents BER and FER decoding performances estimated
 with Monte Carlo simulations on a large variety of code families and decoding
 parameters. On each graphic, the BER is plotted with solid lines while the FER
@@ -275,18 +272,6 @@ other terms, lower is better. The purpose of Fig.~\ref{fig:intro_bfer} is not
 to compare the codes with each others but to introduce the typical BER/FER plots
 that will be used in the next chapters and to show that there is a large set of
 possible combinations of codes and parameters.
-
-\begin{figure}[htp]
-  \centering
-  \subfloat[][Polar codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \quad{}
-  \subfloat[][LDPC codes.]         {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
-  \subfloat[][Turbo codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \\
-  \subfloat[][Turbo product codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \quad{}
-  \subfloat[][BCH \& RS codes.]    {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
-  \subfloat[][Convolutional codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
-  \caption{Simulation outputs of various code families.}
-  \label{fig:intro_bfer}
-\end{figure}
 
 % \section{Base Station and Cloud-RAN}
 
