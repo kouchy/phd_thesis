@@ -126,7 +126,7 @@ $-1.59$ dB.
 In the next chapters of the manuscript, the AWGN channel will mainly be
 associated with a Binary Phase-Shift Keying (BPSK) modulation ($b_S = 1$). With
 this modulation, each binary value $c_i \in \{0,1\}$ is associated to a real
-value $x_i \in \{-1,1\}.$ The $\bm{l}$ outputs estimated by the digital
+value $x_i \in \{1,-1\}.$ The $\bm{l}$ outputs estimated by the digital
 demodulator are given in the form of a Log Likelihood Ratio (LLR). Their sign
 determines for each channel output data $y_i \in \bm{y}$ the most probable
 binary input $c_i \in \bm{c}$. The absolute value corresponds to the degree of
@@ -250,13 +250,16 @@ $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Polar codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \quad{}
-  \subfloat[][LDPC codes.]         {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
-  \subfloat[][Turbo codes.]        {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \\
-  \subfloat[][Turbo product codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \quad{}
-  \subfloat[][BCH \& RS codes.]    {\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
-  \subfloat[][Convolutional codes.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
-  \caption{Simulation outputs of various code families.}
+  \subfloat[][LDPC code ($R = 5/6$).                ]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
+  \subfloat[][Turbo code ($R \approx 1/3$).         ]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \quad{}
+  \subfloat[][Polar code ($R \approx 0.84$).        ]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \\
+  \subfloat[][Turbo product code ($R \approx 0.78$).]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \quad{}
+  \subfloat[][Algebraic codes ($R \approx 0.93$).   ]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
+  \subfloat[][Convolutional codes ($R \approx 1/2)$.]{\includegraphics[width=0.30\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
+  \caption
+    [BER and FER simulation results on various code families.]
+    {BER and FER simulation results on various code families and decoder
+    configurations. Lower is better. The codes are given in the $(N,K)$ form.}
   \label{fig:intro_bfer}
 \end{figure}
 
@@ -265,29 +268,90 @@ with Monte Carlo simulations on a large variety of code families and decoding
 parameters. On each graphic, the BER is plotted with solid lines while the FER
 is plotted with dashed lines. Both the BER and the FER depend on the SNR
 ($E_b/N_0$). Higher the SNR is, less there is noise and therefore fewer errors.
-For instance, in Fig.~\ref{fig:intro_bfer_polar}, considering a noise of 4.5 dB,
-the FA-SCL with $L = 32$ decodes better than the FA-SCL with $L = 8$ because
-the {\color{Paired-1} blue} curve is below the {\color{Paired-5} red} curve. In
-other terms, lower is better. The purpose of Fig.~\ref{fig:intro_bfer} is not
-to compare the codes with each others but to introduce the typical BER/FER plots
-that will be used in the next chapters and to show that there is a large set of
-possible combinations of codes and parameters.
-
-% \section{Base Station and Cloud-RAN}
-
-% \begin{itemize}
-%   \item besoin d'implémentations software pour gagner en flexibilité et réduire
-%     les coûts par rapport au hardware dans les stations de base par ex. (SDR)
-% \end{itemize}
+For instance, in Fig.~\ref{fig:intro_bfer_ldpc}, on the same LDPC code
+($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the configuration 2 of
+the decoder achieves better performance than the configuration 1 because the
+{\color{Paired-3} green} curve is below the {\color{Paired-7} orange} curve. In
+other terms, lower is better. Each time there is two decoder configurations, the
+second one gives better BER/FER decoding performance, this is achieves at the
+cost of a higher computational effort compared to the first configuration.
+The purpose of Fig.~\ref{fig:intro_bfer} is not to compare the codes with each
+others but to introduce the typical BER/FER curves that will be used in the next
+chapters and to show that there is a large set of possible combinations of codes
+and parameters.
 
 \section{Software Defined Radio}
 
-\begin{itemize}
-  \item \xmark~expliquer les stations de base
-  \item \xmark~expliquer le principe du Cloud-RAN
-  \item \xmark~introduire la SDR (faire attention à ne pas redire l'intro du
-    chap. 6)
-\end{itemize}
+% \begin{itemize}
+%   \item \xmark~expliquer les stations de base
+%   \item \xmark~expliquer le principe du Cloud-RAN
+%   \item \xmark~introduire la SDR (faire attention à ne pas redire l'intro du
+%     chap. 6)
+% \end{itemize}
+
+A cellular network or mobile network is a communication network where the last
+link is wireless. The principle of mobile networks is to divide the territory
+into zones called ``cells''. Each cell is associated to a base station and a
+number of frequency channels to communicate with mobile terminals. Each base
+station is connected to the networks handling voice calls, text messages and
+Internet. As standards evolve, the structure of mobile networks changes in order
+to increase throughput and latency performance and to increase the number of,
+connected terminals. The objective is to cope with the exponential growth of
+terminals.
+
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Traditional base band station.]{\includegraphics[scale=0.715]{sdr/base_station/base_station_1G_2G}  \label{fig:ctx_sdr_base_station_1G_2G}}
+  \quad{}
+  \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
+  \quad{}
+  \subfloat[][Cloud-RAN]{\includegraphics[scale=0.715]{sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
+  \caption
+    [Base stations evolution in mobile networks.]
+    {Base stations evolution in mobile networks.}
+  \label{fig:ctx_sdr_base_station}
+\end{figure}
+
+
+The virtualization of the mobile network is considered by industrial
+actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
+Rost2014,Checko2015a} as a promising evolution. The virtualization is especially
+proposed for a part of the processing traditionally made in the base stations.
+In the two first generations of mobile network (1G and 2G), all the signal
+processing was treated in the base station near the antenna (cf.
+Fig~\ref{fig:ctx_sdr_base_station_1G_2G}). Since the third generation of mobile
+networks (3G) two types of processing have been separated: 1) the radio
+frequency (RF) processing on one side and 2) the base band (BB) processing on
+the other side. The RF processing is attached to the antenna while the BB
+processing is regrouped for multiple antennas (cf.
+Fig~\ref{fig:ctx_sdr_base_station_3G_4G}). The range of this type of station is
+approximately 40 kilometers. The connexions between the antennas and the BB
+station are made through wired links. The RF processing mainly converts the
+analog signal into a digital one (or the other way around) while the BB station
+performs all the digital processing including the encoding/decoding and the
+digital modulation/demodulation. The purpose to the separation of the RF and BB
+processing is to be able to put the BB stations near the urban centers and so to
+facilitate their maintenance and to reduce the costs.
+
+In a \emph{Cloud Radio Access Network} (Cloud-RAN) network structure, the
+computational hardware resources of the BB processing are shared between
+multiple antennas (cf. Fig~\ref{fig:ctx_sdr_base_station_5G_future}). It
+enables new optimizations: 1) better adaptation to non-uniform traffic; 2)
+energy savings; 3) throughput increases and latency reductions; 4) increased
+scalability and maintainability~\cite{Checko2015a}. To this purpose, the
+computational BB units has to be virtualized: there should no longer be
+dedicated hardware to specific antenna. On the contrary, the BB computational
+effort has to be distributed at the cloud level. From the first to the forth
+generation of mobile networks, the BB processing was systematically made on
+Application-Specific Integrated Circuits (ASICs or dedicated hardware) but with
+the emergence of the Cloud-RAN more flexible solutions like the software ones
+are seriously considered. On the receiver side, the algorithms can be compute
+intensive (especially the digital demodulation and the channel decoding).
+Knowing that, the challenge is to be able to propose high throughput and low
+latency software implementations as well as flexible ones~\cite{Nikaein2015,
+Rodriguez2017}. This is also known as the \emph{Software Defined Radio} (SDR).
+
 
 \section{Objectives}
 
@@ -341,26 +405,38 @@ to three main problems:
     state-of-the-art results.
 \end{enumerate}
 
-% The long simulation times make it desirable to have \textbf{high throughput
-% implementations}. The algorithmic heterogeneity requires \textbf{flexible,
-% modular software}. The reproducibility issue pushes towards a \textbf{portable}
-% and \textbf{open-source software}. These are the purposes of \AFFECT.
+Moreover, new paradigms like the Cloud-RAN and the Software Defined Radio (SDR)
+are now considered in real communication systems. To match the real time
+constraints, here are the main challenges:
+
+\begin{enumerate}
+  \item \textbf{High throughput:} New applications, like the video streaming,
+    can be very data-intensive, as a consequence, the compute intensive blocks
+    of the transceiver have to be well optimized to reach levels of performance
+    comparable with the hardware solutions.
+  \item \textbf{Low latency:} Reaching high throughput is not always the major
+    constraint, for instance, in videoconferencing application it is
+    uncomfortable to perceive a delay when people are speaking.
+  \item \textbf{Flexibility:} The software implementations have to be able to
+    adapt to various configurations, for instance, when the SNR is changing
+    the code rate of the decoder can be switched on the fly.
+\end{enumerate}
 
 In this thesis we propose to study the most time consuming algorithms of digital
 communication systems, to adapt and optimize them on General Purpose Processors
-(GPPs) like the CPUs. The long simulation times make it desirable to have
-\textbf{high throughput implementations}. The algorithmic heterogeneity requires
-\textbf{flexible, modular software}. The reproducibility issue pushes towards a
-\textbf{portable} and \textbf{open-source software}. The Chapter~\ref{chap:alg}
-focuses on the presentation of efficient decoding and demodulation algorithms as
-they are the most time consuming blocks in the transceivers. Then, the
-Chapter~\ref{chap:opt} explains the optimizations we made to meet the high
-throughputs and low latencies constraints. The Chapter~\ref{chap:aff3ct}
-describes \AFFECT, the open-source toolbox in which the efficient decoding
-algorithms has been packaged. The Chapter~\ref{chap:eval} proposes a detailed
-evaluation of the proposed optimizations and methods with complete comparisons
-with the state-of-the-art. The Chapter~\ref{chap:sdr} explores a new use case
-of \AFFECT by introducing an domain specific language for the software defined
-radio. The high performance blocks from \AFFECT are enriched with new tools
-dedicated to the support of real time digital communication systems on parallel
-CPU architectures.
+(GPPs) like the CPUs. The long simulation times and the real world application
+requirements make it desirable to have \textbf{high throughput and low latency
+implementations}. The algorithmic heterogeneity requires \textbf{flexible,
+modular software}. The reproducibility issue pushes towards a \textbf{portable}
+and \textbf{open-source software}. The manuscript is organized as follow: I) the
+Chapter~\ref{chap:alg} focuses on the presentation of efficient decoding and
+demodulation algorithms; II) the Chapter~\ref{chap:opt} explains the
+optimizations made to meet the high throughputs and low latencies constraints;
+III) the Chapter~\ref{chap:aff3ct} describes \AFFECT, the open-source toolbox in
+which the efficient software implementations have been packaged; IV) the
+Chapter~\ref{chap:eval} gives a detailed evaluation of the proposed
+implementations with complete comparisons with the state-of-the-art and V) the
+Chapter~\ref{chap:sdr} explores a new use case of \AFFECT by introducing an
+domain specific language for the SDR. The high performance blocks from \AFFECT
+are enriched with new tools dedicated to the support of real time digital
+communication systems on parallel CPU architectures.

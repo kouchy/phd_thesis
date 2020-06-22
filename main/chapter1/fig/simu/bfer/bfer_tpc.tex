@@ -30,16 +30,26 @@
         \addplot[mark=o,      Dark2-2!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Turbo_prod_BCH_128_113_p4_i6.txt}; \label{plot:line2}
         \addplot[mark=square, Dark2-5,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/Turbo_prod_BCH_128_113_p4_i8.txt}; \label{plot:line3}
         \addplot[mark=square, Dark2-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Turbo_prod_BCH_128_113_p4_i8.txt}; \label{plot:line4}
-        \coordinate (legend) at (axis description cs:0.755,0.03);
+        % \coordinate (legend) at (axis description cs:0.765,0.03);
+        \coordinate (legend) at (axis description cs:0.815,0.03);
     \end{axis}
+
+    % \matrix[draw,
+    %         matrix of nodes,
+    %         anchor=south east,
+    %         fill=white] at (legend) {
+    %         \small{(128,113,2)}    & \small{BER}      & \small{FER}      \\
+    %         \small{CP $i=6, p=4$}  & \ref{plot:line1} & \ref{plot:line2} \\
+    %         \small{CP $i=8, p=4$}  & \ref{plot:line3} & \ref{plot:line4} \\
+    %     };
 
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{(128,113,2)}    & \small{BER}      & \small{FER}      \\
-            \small{CP $i=6, p=4$}  & \ref{plot:line1} & \ref{plot:line2} \\
-            \small{CP $i=8, p=4$}  & \ref{plot:line3} & \ref{plot:line4} \\
+            \small{TPC $(16384,12769)$} & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}      & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{Dec. config. 2}      & \ref{plot:line3} & \ref{plot:line4} \\
         };
   \end{tikzpicture}
 \end{document}

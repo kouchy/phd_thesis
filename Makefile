@@ -81,7 +81,10 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
               main/chapter1/fig/simu/bfer/dat/Turbo_N18432_K6144_BCJR_i6_p32_LTE.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i6.txt \
               main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p4_i8.txt \
-              main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt
+              main/chapter1/fig/simu/bfer/dat/Turbo_prod_BCH_128_113_p5_i8.txt \
+              main/chapter1/fig/sdr/base_station/base_station_1G_2G.tex \
+              main/chapter1/fig/sdr/base_station/base_station_3G_4G.tex \
+              main/chapter1/fig/sdr/base_station/base_station_5G_future.tex
 	cd main/chapter1/fig/intro/com_chain                   && rubber -d com_chain.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber -d com_chain.tex
 	cd main/chapter1/fig/simu/in_out                       && rubber -d in_out.tex
@@ -91,6 +94,9 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
 	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_rsc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_tpc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber -d bfer_turbo.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber -d base_station_1G_2G.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber -d base_station_3G_4G.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber -d base_station_5G_future.tex
 
 chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
               main/chapter2/fig/polar/sc_decoder/colors \
@@ -531,6 +537,9 @@ clean: clean4all
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_rsc
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_tpc
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean bfer_turbo
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_1G_2G
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_3G_4G
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_5G_future
 	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean sc_decoder
 	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean tree_pruning_example
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean algos_comparison
@@ -621,6 +630,9 @@ mrproper: clean4all
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_rsc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_tpc.tex
 	cd main/chapter1/fig/simu/bfer/                        && rubber --clean -d bfer_turbo.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_1G_2G.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_3G_4G.tex
+	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_5G_future.tex
 	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean -d sc_decoder.tex
 	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean -d tree_pruning_example.tex
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean -d algos_comparison.tex

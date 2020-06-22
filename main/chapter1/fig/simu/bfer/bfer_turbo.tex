@@ -29,16 +29,26 @@
         \addplot[mark=o,      Paired-11!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Turbo_N18432_K6144_BCJR_i5_p32_LTE.txt}; \label{plot:line2}
         \addplot[mark=square, Paired-9,     semithick                              ] table [x=Eb/N0, y=BER] {./dat/Turbo_N18432_K6144_BCJR_i6_p32_LTE.txt}; \label{plot:line3}
         \addplot[mark=square, Paired-9!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/Turbo_N18432_K6144_BCJR_i6_p32_LTE.txt}; \label{plot:line4}
-        \coordinate (legend) at (axis description cs:0.755,0.03);
+        % \coordinate (legend) at (axis description cs:0.755,0.03);
+        \coordinate (legend) at (axis description cs:0.795,0.03);
     \end{axis}
+
+    % \matrix[draw,
+    %         matrix of nodes,
+    %         anchor=south east,
+    %         fill=white] at (legend) {
+    %         \small{LTE (18432,6144)} & \small{BER}      & \small{FER}      \\
+    %         \small{BCJR $i=5$}       & \ref{plot:line1} & \ref{plot:line2} \\
+    %         \small{BCJR $i=6$}       & \ref{plot:line3} & \ref{plot:line4} \\
+    %     };
 
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{LTE (18432,6144)} & \small{BER}      & \small{FER}      \\
-            \small{BCJR $i=5$}       & \ref{plot:line1} & \ref{plot:line2} \\
-            \small{BCJR $i=6$}       & \ref{plot:line3} & \ref{plot:line4} \\
+            \small{Turbo $(18444,6144)$} & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}       & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{Dec. config. 2}       & \ref{plot:line3} & \ref{plot:line4} \\
         };
   \end{tikzpicture}
 \end{document}

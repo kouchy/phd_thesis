@@ -32,13 +32,22 @@
         \coordinate (legend) at (axis description cs:0.755,0.03);
     \end{axis}
 
+    % \matrix[draw,
+    %         matrix of nodes,
+    %         anchor=south east,
+    %         fill=white] at (legend) {
+    %         \small{Wi-Fi (648,540)} & \small{BER}      & \small{FER}      \\
+    %         BP-HL $i=05$            & \ref{plot:line1} & \ref{plot:line2} \\
+    %         BP-HL $i=40$            & \ref{plot:line3} & \ref{plot:line4} \\
+    %     };
+
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{Wi-Fi (648,540)} & \small{BER}      & \small{FER}      \\
-            BP-HL $i=05$            & \ref{plot:line1} & \ref{plot:line2} \\
-            BP-HL $i=40$            & \ref{plot:line3} & \ref{plot:line4} \\
+            \small{LDPC $(648,540)$} & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}   & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{Dec. config. 2}   & \ref{plot:line3} & \ref{plot:line4} \\
         };
   \end{tikzpicture}
 \end{document}

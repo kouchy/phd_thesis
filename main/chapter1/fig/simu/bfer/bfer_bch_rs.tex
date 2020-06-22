@@ -25,22 +25,34 @@
                  ymode = log,
                  %tick align=outside, tickpos=left,
                  legend pos=south west, legend columns=1]
-        \addplot[mark=o,      Dark2-4,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/BCH_N255_K231_algebraic_T3.txt}; \label{plot:line1}
-        \addplot[mark=o,      Dark2-4!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/BCH_N255_K231_algebraic_T3.txt}; \label{plot:line2}
-        \addplot[mark=square, Dark2-1,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RS_N31_K29_algebraic_T1.txt};    \label{plot:line3}
-        \addplot[mark=square, Dark2-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RS_N31_K29_algebraic_T1.txt};    \label{plot:line4}
-        \coordinate (legend) at (axis description cs:0.735,0.03);
+        \addplot[mark=o,      Dark2-4,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/BCH_N511_K475_algebraic_T4.txt}; \label{plot:line1}
+        \addplot[mark=o,      Dark2-4!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/BCH_N511_K475_algebraic_T4.txt}; \label{plot:line2}
+        \addplot[mark=square, Dark2-1,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RS_N255_K237_algebraic_T9.txt};  \label{plot:line3}
+        \addplot[mark=square, Dark2-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RS_N255_K237_algebraic_T9.txt};  \label{plot:line4}
+        % \coordinate (legend) at (axis description cs:0.735,0.03);
+        \coordinate (legend) at (axis description cs:0.755,0.03);
     \end{axis}
+
+    % \matrix[draw,
+    %         matrix of nodes,
+    %         anchor=south east,
+    %         fill=white] at (legend) {
+    %         \small{BCH (255,231)} & \small{BER}      & \small{FER}      \\
+    %         Algebraic $T=3$       & \ref{plot:line1} & \ref{plot:line2} \\
+    %         \hline
+    %         \small{RS (31,29)}    & \small{BER}      & \small{FER}      \\
+    %         Algebraic $T=1$       & \ref{plot:line3} & \ref{plot:line4} \\
+    %     };
 
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{BCH (255,231)} & \small{BER}      & \small{FER}      \\
-            Algebraic $T=3$       & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{BCH $(511,475)$}  & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}   & \ref{plot:line1} & \ref{plot:line2} \\
             \hline
-            \small{RS (31,29)}    & \small{BER}      & \small{FER}      \\
-            Algebraic $T=1$       & \ref{plot:line3} & \ref{plot:line4} \\
+            \small{RS $(2040,1896)$} & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}   & \ref{plot:line3} & \ref{plot:line4} \\
         };
   \end{tikzpicture}
 \end{document}

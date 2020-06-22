@@ -30,18 +30,30 @@
         \addplot[mark=o,      Dark2-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line2}
         \addplot[mark=square, Dark2-8,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line3}
         \addplot[mark=square, Dark2-8!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line4}
-        \coordinate (legend) at (axis description cs:0.655,0.03);
+        % \coordinate (legend) at (axis description cs:0.655,0.03);
+        \coordinate (legend) at (axis description cs:0.755,0.03);
     \end{axis}
+
+    % \matrix[draw,
+    %         matrix of nodes,
+    %         anchor=south east,
+    %         fill=white] at (legend) {
+    %         \small{(262,128)}   & \small{BER}      & \small{FER}      \\
+    %         BCJR                & \ref{plot:line1} & \ref{plot:line2} \\
+    %         \hline
+    %         \small{(2054,1024)} & \small{BER}      & \small{FER}      \\
+    %         BCJR                & \ref{plot:line3} & \ref{plot:line4} \\
+    %     };
 
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{(262,128)}   & \small{BER}      & \small{FER}      \\
-            BCJR                & \ref{plot:line1} & \ref{plot:line2} \\
+            \small{RSC (262,128)}   & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}  & \ref{plot:line1} & \ref{plot:line2} \\
             \hline
-            \small{(2054,1024)} & \small{BER}      & \small{FER}      \\
-            BCJR                & \ref{plot:line3} & \ref{plot:line4} \\
+            \small{RSC (2054,1024)} & \small{BER}      & \small{FER}      \\
+            \small{Dec. config. 1}  & \ref{plot:line3} & \ref{plot:line4} \\
         };
   \end{tikzpicture}
 \end{document}
