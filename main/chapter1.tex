@@ -5,30 +5,29 @@
 \chapter{Context and Objectives}
 \label{chap:ctx}
 
+This first chapter presents the context of the digital communication systems
+with a transmitter, a channel and a receiver. The most common metrics used
+in digital communications are also introduced.
+
+In the second section, the channel model and the modulation used in all along
+the manuscript are detailed. A characterization of the signal-to-noise ratio is
+given as well as the notion of probability at the output of the channel and the
+demodulator. The third section introduces the most famous channel codes.
+
+In the forth and fifth sections, two use cases are presented: the simulation and
+the software defined radio. The simulation enables the development and the
+validation of a coding scheme while the software-defined radio is a radio
+communication system where components that have been traditionally implemented
+in hardware are instead implemented by means of software.
+
+The last section gives the main objectives of the thesis.
+
 \vspace*{\fill}
 \minitoccustom
 \vspace*{\fill}
 
 \section{Digital Communication Systems}
-
-% \begin{itemize}
-%   \item Shannon~\cite{Shannon1948}: système de communication (source -> émetteur
-%     -> canal -> récepteur -> destination)
-%   \item utilisé partout dans notre monde (télé, téléphone, internet, satellites,
-%     etc.)
-%   \item zoom sur l'émetteur (source -> codage canal -> modulation)
-%   \item zoom sur le récepteur (démodulation -> décodage canal -> destination)
-%   \item introduction au codage canal, nécessaire pour mieux résister aux
-%     perturbations dues à la traversée du signal dans un environnement physique
-%     (le canal)
-%   \item modulation: représentation d'une information numérique en analogique
-%     adaptée au canal
-%   \item évoquer la synchro avant la démodulation
-%   \item couche physique (PHY 1) du modèle OSI
-%   \item couche physique traditionnellement implémentée en hardware (ASIC)
-%   \item récepteur gourmand en calcul (plus particulière l'algorithme de décodage
-%     et un peu la démodulation)
-% \end{itemize}
+\label{sec:ctx_digital_communication_systems}
 
 \begin{figure}[htp]
   \centering
@@ -280,14 +279,7 @@ others but to introduce the typical BER/FER curves that will be used in the next
 chapters and to show that there is a large set of possible combinations of codes
 and parameters.
 
-\section{Software Defined Radio}
-
-% \begin{itemize}
-%   \item \xmark~expliquer les stations de base
-%   \item \xmark~expliquer le principe du Cloud-RAN
-%   \item \xmark~introduire la SDR (faire attention à ne pas redire l'intro du
-%     chap. 6)
-% \end{itemize}
+\section{Software-Defined Radio}
 
 A cellular network or mobile network is a communication network where the last
 link is wireless. The principle of mobile networks is to divide the territory
@@ -302,7 +294,7 @@ terminals.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Traditional base station.]{\includegraphics[scale=0.715]{sdr/base_station/base_station_1G_2G}  \label{fig:ctx_sdr_base_station_1G_2G}}
+  \subfloat[][Traditional base station.]{\includegraphics[scale=0.715]{sdr/base_station/base_station_1G_2G} \label{fig:ctx_sdr_base_station_1G_2G}}
   \quad{}
   \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
   \quad{}
@@ -312,7 +304,6 @@ terminals.
     {Base stations evolution in mobile networks.}
   \label{fig:ctx_sdr_base_station}
 \end{figure}
-
 
 The virtualization of the mobile network is considered by industrial
 actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
@@ -350,17 +341,9 @@ are seriously considered. On the receiver side, the algorithms can be compute
 intensive (especially the digital demodulation and the channel decoding).
 Knowing that, the challenge is to be able to propose high throughput and low
 latency software implementations as well as flexible ones~\cite{Nikaein2015,
-Rodriguez2017}. This is also known as the \emph{Software Defined Radio} (SDR).
-
+Rodriguez2017}. This is also known as the \emph{Software-Defined Radio} (SDR).
 
 \section{Objectives}
-
-% \begin{itemize}
-%   \item High Performance
-%   \item Portability
-%   \item Algorithmic Heterogeneity
-%   \item Code re-use, pour éviter de tout jeter à chaque nouvel algo
-% \end{itemize}
 
 On the eve of the 5G mobile communication generation, the challenge is now to
 design communication systems able to transmit huge amounts of data in a short
@@ -405,7 +388,7 @@ to three main problems:
     state-of-the-art results.
 \end{enumerate}
 
-Moreover, new paradigms like the Cloud-RAN and the Software Defined Radio (SDR)
+Moreover, new paradigms like the Cloud-RAN and the Software-Defined Radio (SDR)
 are now considered in real communication systems. To match the real time
 constraints, here are the main challenges:
 
