@@ -15,6 +15,13 @@
 \input{colors}
 
 \begin{document}
+
+    \newcommand{\thread}[3]{
+      \begin{scope}[shift={#1},scale=#2]
+        \draw[thick] plot [smooth,tension=0.7] coordinates {(0,1) (0.15,0.875) (-0.1,0.625) (0.2,0.25) (0,0)} node (#3){};
+      \end{scope}
+    }
+
   \begin{tikzpicture}%[scale=\tikzscale]
     \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
     \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
@@ -22,16 +29,12 @@
     \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
     \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
 
-    \newcommand{\thread}[3]{
-      \draw[thick, xshift=#1cm, yshift=#2cm] plot [smooth,tension=0.7] coordinates {(0,1) (0.15,0.875) (-0.1,0.625) (0.2,0.25) (0,0)} node (#3){};
-    }
-
     \draw[->,>=latex,dotted,white] (-1.25,0) -- (-0.5,0.0) node [midway, above] {};
     \draw[->,>=latex,dotted,white] (6.5,0) -- (6+1.25,0) node [midway, above] {};
 
     \newcommand\thr{0}
 
-    \thread{-1}{\thr-0.5}{th1}
+    \thread{(-1,\thr-0.5)}{1}{th1};
     \node[tsk ] (t1)    at (0.0    , \thr) {$t_1^1$};
     \node[sout] (t1_so) at (0.0+0.5, \thr) {};
     \node[tsk ] (t2)    at (2.0    , \thr) {$t_2^1$};
@@ -49,7 +52,7 @@
 
     \newcommand\tthr{-1.5}
 
-    \thread{-1}{-2}{th2}
+    \thread{(-1,-2)}{1}{th2};
     \node[tsk ] (tt1)    at (0.0    , \tthr) {$t_1^2$};
     \node[sout] (tt1_so) at (0.0+0.5, \tthr) {};
     \node[tsk ] (tt2)    at (2.0    , \tthr) {$t_2^2$};
@@ -67,7 +70,7 @@
 
     \newcommand\tttthr{-3.5}
 
-    \thread{-1}{-4}{tht}
+    \thread{(-1,-4)}{1}{tht};
     \node[tsk ] (tttt1)    at (0.0    , \tttthr) {$t_1^t$};
     \node[sout] (tttt1_so) at (0.0+0.5, \tttthr) {};
     \node[tsk ] (tttt2)    at (2.0    , \tttthr) {$t_2^t$};
@@ -89,5 +92,9 @@
     \draw[-,>=latex,dotted] (tt4) -- (tttt4) node [midway, above] {};
 
     \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (tttt1) (t4) (th1)] {};
+
+    \thread{(2.4,+1.5)}{0.5}{thl};
+    \node at (3.2,+1.75) {thread};
+
   \end{tikzpicture}
 \end{document}

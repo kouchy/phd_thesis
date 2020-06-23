@@ -365,7 +365,6 @@ task, we try to cast (\verb|dynamic_cast|) the corresponding module in a
 specific class. In the next section, the processes are used to improve the
 efficiency of the pipeline.
 
-\newpage
 \subsection{Pipeline}
 
 \begin{figure}[htp]
@@ -698,6 +697,27 @@ in the video streaming targeted application. The \emph{Decoder LDPC} task
 inter-frame SIMD technique, the other tasks simply process sixteen frames
 sequentially.
 
+Table~\ref{tab:dvbs2_tasks_thr_lat} presents the tasks throughputs and latencies
+measured for a sequential execution of the MODCOD 2 in the transmission phase.
+The tasks have been regrouped per stage in order to introduce the future
+decomposition when the parallelism will be implemented. The throughput is given
+in mega samples per second (MS/s), this is because some of the tasks are not
+working on bits but on samples and a bit is the smallest possible sample. The
+average (Avg), minimum (Min.) and maximum (Max.) throughputs are calculated with
+the number of output samples. Depending on the task, the number of output
+samples can drastically vary and this is not possible to directly compare the
+tasks throughputs with each others. This is why we introduced the normalized
+average throughput ($\mathcal{N}_\text{Avg}$) which is the average throughput
+considering the $K$ information bits independently of the task output socket
+size. In a first observation, one may notice that the latencies of the tasks are
+very high compared to the ones presented in the simulator evaluation (cf.
+Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
+$N = 16740$ and to the inter-frame level, each task processes approximatively
+$16740 \times 16$ samples when in the simulator evaluation each task processes
+approximatively $2048$ bits (there is a factor of $\approx 130$). The
+applicative context is very different and it is directly observable from the
+resulting latencies.
+
 \begin{table}[htp]
   \centering
   \caption
@@ -760,27 +780,6 @@ sequentially.
   \end{tabular}
   }}
 \end{table}
-
-Table~\ref{tab:dvbs2_tasks_thr_lat} presents the tasks throughputs and latencies
-measured for a sequential execution of the MODCOD 2 in the transmission phase.
-The tasks have been regrouped per stage in order to introduce the future
-decomposition when the parallelism will be implemented. The throughput is given
-in mega samples per second (MS/s), this is because some of the tasks are not
-working on bits but on samples and a bit is the smallest possible sample. The
-average (Avg), minimum (Min.) and maximum (Max.) throughputs are calculated with
-the number of output samples. Depending on the task, the number of output
-samples can drastically vary and this is not possible to directly compare the
-tasks throughputs with each others. This is why we introduced the normalized
-average throughput ($\mathcal{N}_\text{Avg}$) which is the average throughput
-considering the $K$ information bits independently of the task output socket
-size. In a first observation, one may notice that the latencies of the tasks are
-very high compared to the ones presented in the simulator evaluation (cf.
-Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
-$N = 16740$ and to the inter-frame level, each task processes approximatively
-$16740 \times 16$ samples when in the simulator evaluation each task processes
-approximatively $2048$ bits (there is a factor of $\approx 130$). The
-applicative context is very different and it is directly observable from the
-resulting latencies.
 
 The stage 7 takes 76\% of the time with especially the \emph{Decoder BCH} task
 ($t^\text{Rx}_{17}$) that takes 59\% of the time. $t^\text{Rx}_{17}$ should not
@@ -849,10 +848,8 @@ did not try to reduce its overall occupancy.
   \quad
   \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:dvbs2_pipeline_copy_ptr}}
   \caption
-    [Comparison of the two pipeline implementations in the DVB-S2
-     receiver.]
-    {Comparison of the two pipeline implementations in the DVB-S2 receiver
-     (MODCOD 2).}
+    [Comparison of the two pipeline implementations in the receiver.]
+    {Comparison of the two pipeline implementations in the receiver (MODCOD 2).}
   \label{plot:dvbs2_pipeline}
 \end{figure}
 
