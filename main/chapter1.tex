@@ -9,16 +9,17 @@ This first chapter presents the context of the digital communication systems
 with a transmitter, a channel and a receiver. The most common metrics used
 in digital communications are also introduced.
 
-In the second section, the channel model and the modulation used in all along
+In the second section, the channel model and the modulation used all along
 the manuscript are detailed. A characterization of the signal-to-noise ratio is
 given as well as the notion of probability at the output of the channel and the
 demodulator. The third section introduces the most famous channel codes.
 
 In the forth and fifth sections, two use cases are presented: the simulation and
-the software defined radio. The simulation enables the development and the
-validation of a coding scheme while the software-defined radio is a radio
-communication system where components that have been traditionally implemented
-in hardware are instead implemented by means of software.
+the software-defined radio. The simulation enables the development, the
+validation and the comparison of a coding scheme while the software-defined
+radio is a radio communication system where components that have been
+traditionally implemented in hardware are instead implemented by means of
+software.
 
 The last section gives the main objectives of the thesis.
 
@@ -47,44 +48,45 @@ components: an information source, a transmitter, a channel, a receiver and a
 destination. This model was later refined as shown in
 Figure~\ref{fig:intro_com_chain}. The source produces a digital message $\bm{u}$
 to be transmitted (sequence of bits). The channel encoder transforms it in a
-codeword $\bm{c}$ to make it less prone to errors. In order to make possible the
-information transmission through the channel, it is necessary to shape the data
-stream. For instance, in the case of wireless communication, this stream must be
-represented by a high-frequency signal in order to be transmitted by a
+codeword $\bm{c}$ to make it more robust to errors. In order to make possible
+the information transmission through the channel, it is necessary to shape the
+data stream. For instance, in the case of wireless communication, this stream
+must be represented by a high-frequency signal in order to be transmitted by a
 reasonably sized antenna. This is the role of the digital modulator which
 produces a vector of symbols $\bm{x}$. The channel alters the signal with some
 noise and distortions ($\bm{y}$). On the receiver side, the components perform
 the inverse operations to retrieve the message $\bm{\hat{u}}$ produced by the
 source.
 
-In channel coding, also known as \emph{forward error correction}, $K$
+In channel coding, also known as \emph{forward error correction} (FEC), $K$
 information bits  are encoded in the transmitter. It results in a codeword
 $\bm{c}$ of $N$ bits. $P = N - K$ is the number of parity bits added as
-redundant information and $R = K/N$ is the code rate. Higher the code rate $R$
-is, lower the number of parity bits $P$ is. The performance of this chain is
-measured by estimating the residual error rate at the sink. More precisely, it
-is possible to observe two different rates: 1) the Bit Error Rate (BER); 2) the
+redundant information and $R = K/N$ is the code rate. The higher the code rate
+$R$ is, the lower the number of parity bits $P$ is. The performance of this
+chain is measured by estimating the residual error rate at the sink. It is
+possible to observe two different rates: 1) the Bit Error Rate (BER); 2) the
 Frame Error Rate (FER). The BER is calculated considering the $K$ information
 bits independently, for instance a $10^{-3}$ BER means that there is an average
-of one binary error per thousand bits transmitted. The FER is computed
+of one binary error per thousand message bits transmitted. The FER is computed
 considering the entire frame, if there is one, two or more wrong bits in the
 current frame, it will be counted as one error frame. A $10^{-2}$ FER means that
 there is an average of one frame error per hundred frame transmitted. These
-rates are directly driven by the choice of the channel encoder and decoder.
-Lower the rates are, higher the correction power of the system is.
+rates depend on many factors: the noise of the channel, the modulation
+type, the code type, the code rate $R$, etc. The lower the bit and frame error
+rates are, the higher the correction power of the system is.
 
 \section{Channel Model}
 
 In this thesis, only causal transmission channels without memory effect and
 stationary are considered. In other words, the output of the channel at time $t$
-only depends on its input at time $t$. In order to describe the disturbance to
-the message $\bm{x}$ passing through the transmission channel, different
-models can be used. However, in the literature, the selected model is very
+only depends on its input at time $t$. In order to describe the disturbance
+applied to the message $\bm{x}$ passing through the transmission channel,
+different models can be used. However, in the literature, the selected model is
 often the Additive White Gaussian Noise (AWGN) channel. In particular, this
-channel models very well the thermal noise which is one of the sources of
-noise always present on the receiver side. This section presents the AWGN
-channel concepts and introduces the Binary Phase-Shift Keying
-modulation/demodulation that will be used all along the manuscript.
+channel well models the thermal noise which is one of the sources of noise
+always present on the receiver side. This section presents the AWGN channel
+concepts and introduces the Binary Phase-Shift Keying modulation/demodulation
+that will be used all along the manuscript.
 
 In the AWGN channel, the law binding the $y_i$ output to its $x_i$ input is of
 the form $y_i = x_i + n_i$ with $N_{chn}$ an independent and identically
@@ -99,14 +101,14 @@ To estimate the correction power of a system it is very common to vary the
 Signal-to-Noise Ratio (SNR). On the AWGN channel the SNR is generally given by
 $E_b/N_0$ (in dB). $E_b$ corresponds to the average energy per information bit.
 It can also be given by $E_s/N_0$ (in dB) where $E_s$ corresponds to the average
-energy per transmitted symbol. $E_s/N_0$ can be deduced from $E_b/N_0$:
+energy per transmitted symbol. A symbol is a waveform, it can be represented by
+one or more bits. $E_s/N_0$ can be deduced from $E_b/N_0$:
 \begin{equation}
 \frac{E_s}{N_0} = \frac{E_b}{N_0} + 10.\log{(R.b_S)},
 \end{equation}
 where $R$ is the code rate and $b_S$ is the number of bits per transmitted
-symbol $x_n$. $b_S$ depends on the modulation order, if a simple binary modulation
-is used, then $b_S = 1$. Then, the Gaussian variance $\sigma$ of AWGN channel
-comes:
+symbol $x_n$. $b_S$ depends on the modulation order, if a binary modulation is
+used, then $b_S = 1$. The channel variance is:
 \begin{equation}
 \sigma = \sqrt{\frac{1}{2 \times 10^{\frac{E_s}{N_0} / 10}}}.
 \end{equation}
@@ -115,20 +117,19 @@ An important characteristic of a channel is its capacity~\cite{Ryan2009}. The
 capacity represents the maximal quantity of information that the canal can
 transport. In other terms, it is impossible to find a coding scheme that
 transports more information than the channel capacity.
-From this capacity it is possible to deduce the Shannon's
-limit~\cite{Shannon1948}. This limit is the asymptotic SNR in $E_b/N_0$ (dB)
-which cannot be beaten with any channel code. When $R$ tends towards zero it can
-be shown that the Shannon's limit is $-1.59$ dB. This means that, for an AWGN
-channel, no system can reliably transmit information at a SNR of less than
-$-1.59$ dB.
+From this capacity it is possible to deduce Shannon's limit~\cite{Shannon1948}.
+This limit is the asymptotic SNR in $E_b/N_0$ (dB) which cannot be improved with
+any channel code. When $R$ tends towards zero it can be shown that Shannon's
+limit is $-1.59$ dB. This means that, for an AWGN channel, no system can
+reliably transmit information at a SNR of less than $-1.59$ dB.
 
 In the next chapters of the manuscript, the AWGN channel will mainly be
 associated with a Binary Phase-Shift Keying (BPSK) modulation ($b_S = 1$). With
 this modulation, each binary value $c_i \in \{0,1\}$ is associated to a real
 value $x_i \in \{1,-1\}.$ The $\bm{l}$ outputs estimated by the digital
 demodulator are given in the form of a Log Likelihood Ratio (LLR). Their sign
-determines for each channel output data $y_i \in \bm{y}$ the most probable
-binary input $c_i \in \bm{c}$. The absolute value corresponds to the degree of
+determines for each channel output data $y_i \in \bm{y}$ the most likely binary
+input $c_i \in \bm{c}$. The absolute value corresponds to the degree of
 reliability of the information. The mathematical expression for $l_i$ is:
 \begin{equation*}
 l_i = \log{\Big(\frac{P_r(y_i|c_i = 0)}{P_r(y_i|c_i = 1)}\Big)}.
@@ -137,31 +138,30 @@ l_i = \log{\Big(\frac{P_r(y_i|c_i = 0)}{P_r(y_i|c_i = 1)}\Big)}.
 \section{Capacity-approaching Channel Codes}
 
 After Shannon, researchers have designed new coding/decoding schemes to approach
-Shannon's theoretical limit even closer. Indeed, recent progresses managed to
-design practical codings performing very close to that limit, and are already
-integrated in everyday communication systems. These code are habitually
-classified in two distinct families: block codes and convolutional codes. By
-definition the convolutional codes compute the redundancy in continue on the
-data stream while the block codes generate the redundancy by chunks of data.
-The purpose of this section is to introduce to most famous channel code
-families.
+Shannon's theoretical limit increasingly closer. Indeed, recent progresses
+managed to design practical codings performing very close to that limit, and are
+already integrated in everyday communication systems. These code are usually
+classified in two families: block codes and convolutional codes. The block codes
+generate the redundancy by chunks of data while the convolutional codes compute
+the redundancy in continue on the data stream. The purpose of this section is to
+introduce to most famous channel code families.
 
 The Turbo Product Codes (TPC) are block codes, they have been invented by Peter
-Elias in 1954~\cite{Elias1954}. They are the product of two block codes, it
+Elias in 1954~\cite{Elias1954}. A TPC is the product of two block codes, it
 results in a matrix where one code can be read from the columns and the other
 one from the lines. The TPC are notably used in the WiMAX standard.
 
 The Raj \textbf{B}ose, D. K. Ray-\textbf{C}haudhuri and Alexis,
 \textbf{H}ocquenghem (BCH) codes are block codes discovered in the late
 1950s~\cite{Hocquenghem1959,Bose1960}. They are algebraic codes built from a
-polynomial. They are able to correct $T$ errors in a block of $N$ bits. This
+polynomial. They are able to correct $T$ errors in a block of $N$ bits. These
 codes are used in the CDs, DVDs and SSDs. In modern coding schemes, they are
 often concatenated to other codes in order to improve the their correction power
 especially when there is erroneous frames with a small number of erroneous bits
-(this is made in the DVB-S2 standard for instance).
+(this is the case in the DVB-S2 standard for instance).
 
 The Irving S. \textbf{R}eed and Gustave \textbf{S}olomon (RS) codes have been
-discovered in 1960~\cite{Reed1960}. Like the BCH codes they are built from a
+proposed in 1960~\cite{Reed1960}. Like the BCH codes they are built from a
 polynomial but unlike the BCH codes, the RS codes are based on symbols instead
 of bits (non-binary codes). The RS codes are used in many standards (CD, DVD,
 Blu-ray, ADSL, DVB-T, etc.). If the number of bits per symbols is one, then the
@@ -171,9 +171,9 @@ The Low-Density Parity-Check (LDPC) codes are linear block codes, they have been
 discovered very early by Robert G. Gallager in 1962~\cite{Gallager1962}.
 Unfortunately, at the time of their discovery, the computational power available
 in the transceivers was not sufficient to use them. But, in 1995, the LDPC codes
-have been re-discover by David MacKay~\cite{MacKay1995} and used in many digital
-communication standards since (Wi-Fi, WiMAX, WRAN, 10Gbps Ethernet, DVB-S2,
-CCSDS, 5G data transport, etc.).
+have been re-discovered by David MacKay~\cite{MacKay1995} and used in many
+digital communication standards since (Wi-Fi, WiMAX, WRAN, 10Gbps Ethernet,
+DVB-S2, CCSDS, 5G data transport, etc.).
 
 The turbo codes have been discovered by Claude Berrou in 1993~\cite{Berrou1993}
 and have been used in many digital wireless communication standards since (3G,
@@ -188,34 +188,34 @@ relatively recently by \Arikan in 2009~\cite{Arikan2009} and are used in the
 are the only ones for which it has been mathematically demonstrated that they
 reach the Shannon's limit (considering an infinite codeword length).
 
-Of course it exists many other codes like the simple convolutional
+Of course many other codes exist like the simple convolutional
 codes~\cite{Elias1955}, the Reed-Muller codes~\cite{Muller1954,Reed1954}, the
 raptor codes~\cite{Shokrollahi2004}, etc. The purpose of this section is not to
-be exhaustive but to give a representative overview of the domain. Later, this
-thesis will focus on a subset of these codes, namely the LDPC, the turbo and the
+be exhaustive but to give a representative overview of the domain. This thesis
+will focuses on a subset of these codes, namely the LDPC, the turbo and the
 polar codes.
 
 \section{Simulation}
 
 There are many possible coding schemes with different characteristics. The
-previous section presented different codes used in most of the today standards.
-Before they were standardized, these codes have been compared an evaluated.
-The codes can be constructed in a infinity of different way and for each coding
+previous section presented different codes used in most of today standards.
+Before they were standardized, these codes have been evaluated and compared.
+The codes can be constructed in a infinity of different ways and for each coding
 scheme, many different decoding algorithms can be implemented. It is then
 mandatory to be able to evaluate and compare the BER/FER decoding performance of
 the selected codes with each others before to implement them in real systems. To
-this purpose, the channel coding specialists massively use the simulation.
-Depending on the channel model it is possible to predict with varying degrees of
-ease (in term of computational effort) the BER/FER decoding performance of a
-communication system. For simple channel models it is possible to evaluate
-analytically the performance but when the channel model complexity increases it
-becomes impossible to use direct methods. This is especially the case with the
-AWGN channel presented before. The solution is then to resort to a compute
-intensive Monte Carlo simulation of the communication system. The idea is to
-evaluate the performance of the system by generating many random frames and
-applying random noise samples on these frames, then the noisy frames are decoded
-and the output sequence of bit $\bm{\hat{u}}$ is compared with the initial
-information bits $\bm{u}$.
+this purpose, the channel coding specialists use simulation. Depending on the
+channel model it is possible to predict with varying degrees of ease (in term of
+computational effort) the BER/FER decoding performance of a communication
+system. For simple channel models it is possible to evaluate analytically the
+performance but when the channel model complexity increases it becomes
+impossible to use direct methods. This is especially the case with the AWGN
+channel presented before. The solution is then to resort to a compute intensive
+Monte Carlo simulation of the communication system. The idea is to evaluate the
+performance of the system by generating many random frames and applying random
+noise samples on these frames, then the noisy frames are decoded and the output
+sequence of bit $\bm{\hat{u}}$ is compared with the initial information bits
+$\bm{u}$.
 
 \begin{figure}[htp]
   \centering
@@ -262,22 +262,23 @@ $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
   \label{fig:intro_bfer}
 \end{figure}
 
-Fig.~\ref{fig:intro_bfer} presents BER and FER decoding performances estimated
-with Monte Carlo simulations on a large variety of code families and decoding
-parameters. On each graphic, the BER is plotted with solid lines while the FER
-is plotted with dashed lines. Both the BER and the FER depend on the SNR
-($E_b/N_0$). Higher the SNR is, less there is noise and therefore fewer errors.
-For instance, in Fig.~\ref{fig:intro_bfer_ldpc}, on the same LDPC code
-($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the configuration 2 of
-the decoder achieves better performance than the configuration 1 because the
-{\color{Paired-3} green} curve is below the {\color{Paired-7} orange} curve. In
-other terms, lower is better. Each time there is two decoder configurations, the
-second one gives better BER/FER decoding performance, this is achieves at the
-cost of a higher computational effort compared to the first configuration.
-The purpose of Fig.~\ref{fig:intro_bfer} is not to compare the codes with each
-others but to introduce the typical BER/FER curves that will be used in the next
-chapters and to show that there is a large set of possible combinations of codes
-and parameters.
+As an illustration, Fig.~\ref{fig:intro_bfer} presents BER and FER decoding
+performances estimated with Monte Carlo simulations on a large variety of code
+families and decoding parameters. On each graphic, the BER is plotted with solid
+lines while the FER is plotted with dashed lines. Both the BER and the FER
+depend on the SNR ($E_b/N_0$). The higher the SNR is, the less there is noise
+and therefore fewer errors. For instance, in Fig.~\ref{fig:intro_bfer_ldpc}, on
+the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the
+configuration 2 of the decoder achieves better decoding performance than the
+configuration 1 because the {\color{Paired-3} green} curve is below the
+{\color{Paired-7} orange} curve. In other terms, lower is better. Each time
+there is two decoder configurations, the second one gives better BER/FER
+decoding performance, this is achieved at the cost of a higher computational
+effort compared to the first configuration. The purpose of
+Fig.~\ref{fig:intro_bfer} is not to compare the codes with each others but to
+introduce the typical BER/FER curves that will be used in the next chapters and
+to show that there is a large set of possible combinations of codes and
+parameters.
 
 \section{Software-Defined Radio}
 
@@ -305,43 +306,44 @@ terminals.
   \label{fig:ctx_sdr_base_station}
 \end{figure}
 
-The virtualization of the mobile network is considered by industrial
-actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
-Rost2014,Checko2015a} as a promising evolution. The virtualization is especially
-proposed for a part of the processing traditionally made in the base stations.
 In the two first generations of mobile network (1G and 2G), all the signal
 processing was treated in the base station near the antenna (cf.
 Fig~\ref{fig:ctx_sdr_base_station_1G_2G}). Since the third generation of mobile
 networks (3G) two types of processing have been separated: 1) the radio
-frequency (RF) processing on one side and 2) the base band (BB) processing on
-the other side. The RF processing is attached to the antenna while the BB
+frequency (RF) processing on the one side and 2) the base band (BB) processing
+on the other side. The RF processing is attached to the antenna while the BB
 processing is regrouped for multiple antennas (cf.
 Fig~\ref{fig:ctx_sdr_base_station_3G_4G}). The range of this type of station is
 approximately 40 kilometers. The connexions between the antennas and the BB
 station are made through wired links. The RF processing mainly converts the
 analog signal into a digital one (or the other way around) while the BB station
 performs all the digital processing including the encoding/decoding and the
-digital modulation/demodulation. The purpose to the separation of the RF and BB
+digital modulation/demodulation. The purpose of separation of the RF and BB
 processing is to be able to put the BB stations near the urban centers and so to
 facilitate their maintenance and to reduce the costs.
 
-In a \emph{Cloud Radio Access Network} (Cloud-RAN) network structure, the
-computational hardware resources of the BB processing are shared between
-multiple antennas (cf. Fig~\ref{fig:ctx_sdr_base_station_5G_future}). It
-enables new optimizations: 1) better adaptation to non-uniform traffic; 2)
-energy savings; 3) throughput increases and latency reductions; 4) increased
-scalability and maintainability~\cite{Checko2015a}. To this purpose, the
-computational BB units has to be virtualized: there should no longer be
-dedicated hardware to specific antenna. On the contrary, the BB computational
-effort has to be distributed at the cloud level. From the first to the forth
-generation of mobile networks, the BB processing was systematically made on
-Application-Specific Integrated Circuits (ASICs or dedicated hardware) but with
-the emergence of the Cloud-RAN more flexible solutions like the software ones
-are seriously considered. On the receiver side, the algorithms can be compute
-intensive (especially the digital demodulation and the channel decoding).
-Knowing that, the challenge is to be able to propose high throughput and low
-latency software implementations as well as flexible ones~\cite{Nikaein2015,
-Rodriguez2017}. This is also known as the \emph{Software-Defined Radio} (SDR).
+The virtualization of the mobile network is considered by industrial
+actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
+Rost2014,Checko2015a} as a promising evolution. This is also known as the
+\emph{Cloud Radio Access Network} (Cloud-RAN). The Cloud-RAN is especially
+proposed for a part of the processing traditionally made in the base stations.
+In this network structure, the computational hardware resources of the BB
+processing are shared between multiple antennas (cf.
+Fig~\ref{fig:ctx_sdr_base_station_5G_future}). This enables new optimizations:
+1) better adaptation to non-uniform traffic; 2) energy saving; 3) throughput
+increase and latency reduction; 4) increased scalability and
+maintainability~\cite{Checko2015a}. To this purpose, the computational BB units
+have to be virtualized: there should no longer be dedicated hardware to specific
+antenna. On the contrary, the BB computational effort has to be distributed at
+the cloud level. From the first to the forth generation of mobile networks, the
+BB processing was systematically made on Application-Specific Integrated
+Circuits (ASICs or dedicated hardware) but with the emergence of the Cloud-RAN
+more flexible solutions like the software ones are seriously considered. On the
+receiver side, the algorithms can be compute intensive (especially the digital
+demodulation and the channel decoding). Knowing that, the challenge is to be
+able to propose high throughput and low latency software implementations as well
+as flexible ones~\cite{Nikaein2015,Rodriguez2017}. This is also known as the
+\emph{Software-Defined Radio} (SDR).
 
 \section{Objectives}
 
@@ -388,9 +390,9 @@ to three main problems:
     state-of-the-art results.
 \end{enumerate}
 
-Moreover, new paradigms like the Cloud-RAN and the Software-Defined Radio (SDR)
-are now considered in real communication systems. To match the real time
-constraints, here are the main challenges:
+Moreover, new paradigms like the Cloud Radio Access Network (Cloud-RAN) and the
+Software-Defined Radio (SDR) are now considered in real communication systems.
+To match the real time constraints, here are the main challenges:
 
 \begin{enumerate}
   \item \textbf{High throughput:} New applications, like the video streaming,
@@ -398,11 +400,11 @@ constraints, here are the main challenges:
     of the transceiver have to be well optimized to reach levels of performance
     comparable with the hardware solutions.
   \item \textbf{Low latency:} Reaching high throughput is not always the major
-    constraint, for instance, in videoconferencing application it is
+    constraint, for instance, in audio-conferencing applications it is
     uncomfortable to perceive a delay when people are speaking.
   \item \textbf{Flexibility:} The software implementations have to be able to
-    adapt to various configurations, for instance, when the SNR is changing
-    the code rate of the decoder can be switched on the fly.
+    adapt to various configurations, for instance, when the SNR is changing,
+    the code rate $R$ of the decoder can be switched on the fly.
 \end{enumerate}
 
 In this thesis we propose to study the most time consuming algorithms of digital
@@ -411,15 +413,18 @@ communication systems, to adapt and optimize them on General Purpose Processors
 requirements make it desirable to have \textbf{high throughput and low latency
 implementations}. The algorithmic heterogeneity requires \textbf{flexible,
 modular software}. The reproducibility issue pushes towards a \textbf{portable}
-and \textbf{open-source software}. The manuscript is organized as follow: I) the
-Chapter~\ref{chap:alg} focuses on the presentation of efficient decoding and
-demodulation algorithms; II) the Chapter~\ref{chap:opt} explains the
-optimizations made to meet the high throughputs and low latencies constraints;
-III) the Chapter~\ref{chap:aff3ct} describes \AFFECT, the open-source toolbox in
-which the efficient software implementations have been packaged; IV) the
-Chapter~\ref{chap:eval} gives a detailed evaluation of the proposed
-implementations with complete comparisons with the state-of-the-art and V) the
-Chapter~\ref{chap:sdr} explores a new use case of \AFFECT by introducing an
-domain specific language for the SDR. The high performance blocks from \AFFECT
-are enriched with new tools dedicated to the support of real time digital
-communication systems on parallel CPU architectures.
+and \textbf{open-source software}.
+
+The manuscript is organized as follow: Chapter~\ref{chap:alg} focuses on the
+presentation of efficient decoding and demodulation algorithms;
+Chapter~\ref{chap:opt} explains the optimizations made to meet the high
+throughputs and low latencies constraints on CPU; in Chapter~\ref{chap:aff3ct}
+we propose \AFFECT, our open-source toolbox in which the efficient software
+implementations have been packaged, the project is detailed from different
+angles: philosophy, code organization and reuse, testing, accessibility and
+portability, use cases and impact; Chapter~\ref{chap:eval} gives a detailed
+evaluation of the proposed implementations with complete comparisons with the
+state-of-the-art and Chapter~\ref{chap:sdr} explores a new use case of \AFFECT
+by introducing an domain specific language for the SDR. The high performance
+blocks from \AFFECT are enriched with new tools dedicated to the support of real
+time digital communication systems on parallel CPU architectures.
