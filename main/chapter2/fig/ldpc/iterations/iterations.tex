@@ -1,0 +1,46 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                 width=1.0\linewidth, height=0.70\linewidth,
+                 xticklabel style={black!70}, yticklabel style={black!70},
+                 xlabel=$E_b/N_0$ (dB), grid=both, grid style={gray!30},
+                 ylabel=Frame Error Rate,
+                 %ylabel=BER,
+                 %xmin=0, xmax=14,
+                 ymode = log,
+                 %tick align=outside, tickpos=left,
+                 legend pos=south west, legend columns=1]
+        \addplot[mark=pentagon*, Paired-3!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt}; \label{plot:line1}
+        \addplot[mark=*,         Paired-5!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt}; \label{plot:line2}
+        \addplot[mark=triangle*, Paired-1!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_20_ite.txt}; \label{plot:line3}
+        \addplot[mark=square*,   Paired-7!90,  semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_40_ite.txt}; \label{plot:line4}
+        \coordinate (legend) at (axis description cs:0.25,0.06);
+    \end{axis}
+
+    \matrix[draw,
+            matrix of nodes,
+            anchor=south east,
+            fill=white] at (legend) {
+            \small{\# ite.} & \small{FER}      \\
+            \small{5}       & \ref{plot:line1} \\
+            \small{10}      & \ref{plot:line2} \\
+            \small{20}      & \ref{plot:line3} \\
+            \small{40}      & \ref{plot:line4} \\
+        };
+  \end{tikzpicture}
+\end{document}

@@ -9,12 +9,13 @@
 \minitoccustom
 \vspace*{\fill}
 
+\newpage
 \section{Prerequisites}
 
 \begin{table}[htp]
   \centering
   \caption{Elementary operations in $GF_2$ (logical \emph{exclusive or} and
-    {and}).}
+    \emph{and}).}
   \label{tab:ctx_gf2_operations}
    \begin{tabular}{c c c c}
    $a$ & $b$ & $a \oplus b$ & $ab$ \\
@@ -32,9 +33,23 @@ case, a bit can be represented by a Galois field of two elements $\{0, 1\}$
 denoted as $GF_2$. A block code is an application $g$ of $GF_2^K$ in $GF_2^N$
 with $K < N$. There is $2^K$ codewords $\bm{c}$. The two operators used to
 generate a codeword are the addition and the multiplication. In $GF_2$, the
-addition is equivalent to the \emph{logical exclusive or} (XOR or $\oplus$) and
+addition is equivalent to the logical \emph{exclusive or} (XOR or $\oplus$) and
 the multiplication is equivalent to the \emph{logical and} (cf.
 Table~\ref{tab:ctx_gf2_operations}).
+
+In this section, all the presented decoders are working on \emph{soft}
+information. This mean that the decoders input is a vector of $N$ likelihoods in
+the form of LLRs. Each LLR can be represented by a real value and depending on
+the implementation it can be a floating-point or a fixed-point number. It
+results in more complex operations than for the encoding process. On the decoder
+side and in the logarithmic domain, the $\oplus$ operator becomes the $\boxplus$
+operator, it is defined as follow:
+\begin{equation}
+  l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)},
+\end{equation}
+and the multiplication becomes a simple addition. This is the main reason why,
+in channel coding, the decoders are systematically more compute intensive than
+the encoders.
 
 \section{Low-Density Parity-Check Codes}
 
@@ -74,12 +89,12 @@ In this case, the encoding process is called \emph{systematic}.
   \includegraphics{ldpc/parity_check/parity_check}
   \caption{Representation of the $\mathcal{C}_0$ parity-check constraint on a
     Tanner graph.}
-  \label{fig:alg_ldcp_parity_check}
+  \label{fig:alg_ldpc_parity_check}
 \end{figure}
 
 One can note that a parity-check constraint can also be represented with a
 Tanner graph (or a bipartite graph) as shown in
-Fig.~\ref{fig:alg_ldcp_parity_check}. It is also possible to define a matrix of
+Fig.~\ref{fig:alg_ldpc_parity_check}. It is also possible to define a matrix of
 parity-check constraints namely $\bm{\mathcal{H}}$. In the present case, there
 is only one constraint ($\mathcal{C}_0$), so $\bm{\mathcal{H}}$ is a
 one-dimension matrix (or a vector) of size $N$:
@@ -96,15 +111,15 @@ $\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
   \centering
   \includegraphics{ldpc/parity_checks/parity_checks}
   \caption{Parity-check constraints of an LDPC code on a Tanner graph.}
-  \label{fig:ctx_codes_parity_checks}
+  \label{fig:ctx_ldpc_parity_checks}
 \end{figure}
 
 The construction of an LDPC code is based on the combination of many
-parity-check nodes. Fig.~\ref{fig:ctx_codes_parity_checks} is an example of LDPC
+parity-check nodes. Fig.~\ref{fig:ctx_ldpc_parity_checks} is an example of LDPC
 code with four parity-check constraints denoted as $a$, $b$, $c$ and $d$. The
 parity-check constraints are also known as the \emph{check nodes} ($C_N$).
 And the \emph{variable nodes} ($V_N$) are the bits of the LDPC codeword. The
-parity-check matrix corresponding to the Fig.~\ref{fig:ctx_codes_parity_checks}
+parity-check matrix corresponding to the Fig.~\ref{fig:ctx_ldpc_parity_checks}
 Tanner graph is:
 \begin{equation*}
 \bm{\mathcal{H}} =
@@ -118,53 +133,167 @@ Tanner graph is:
 
 The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
 matrix (less that 3\% of 1). The example shown in
-Fig.~\ref{fig:ctx_codes_parity_checks} is here to help to the comprehension and
+Fig.~\ref{fig:ctx_ldpc_parity_checks} is here to help to the comprehension and
 is not a real LDPC code: there is much more than 3\% of 1 in the corresponding
 $\bm{\mathcal{H}}$ matrix.
 
-\subsection{Decoders}
+\subsection{Belief Propagation Decoding Algorithm}
 
-\begin{itemize}
-  \item \xmark~tout est à faire pour présenter les décodeurs LDPC BP
-\end{itemize}
+The bit $\hat{u}_n$ corresponding to the input LLR $l_n$ of a parity-check code
+can be decoded as follow: $\hat{u}_n = \hardDec\big(l_n +
+\sum\limits_{j \neq n}{l_j}\big)$, with $\hardDec$ the hard decision function
+that returns 0 if the LLR is positive and 1 else. For instance, considering the
+parity-check code in Fig.~\ref{fig:alg_ldpc_parity_check}, $\hat{u}_0 =
+\hardDec\big(l_0 + (l_1 \boxplus l_2 \boxplus l_3 \boxplus l_4)\big)$,
+$\hat{u}_1 = \hardDec\big(l_1 + (l_0 \boxplus l_2 \boxplus l_3 \boxplus
+l_4)\big)$, etc.
 
-% \begin{figure}[htp]
-%   \centering
-%   \includegraphics{ldpc/tanner_graph/tanner_graph}
-%   \caption{Tanner graph of a simple LDPC parity check $H$ matrix.}
-%   \label{fig:ldpc}
-% \end{figure}
+In LDPC codes, there is more than one parity-check node, it is then possible to
+compute all the check nodes connected to a variable node and to store the result
+in vector $\bm{v}$. Each LLR $v_n \in \bm{v}$ corresponds to a variable node.
+For instance, considering Fig.~\ref{fig:ctx_ldpc_parity_checks}, $V_0$ is
+connected to $C_a$ and $C_c$ so its LLR value can be computed as follow: $v_0
+= e_0 + e_1 = (l_3 \boxplus l_4 \boxplus l_6 \boxplus l_7) + (l_2 \boxplus l_5
+\boxplus l_7)$, where $e_0$ and $e_1$ are the extrinsic information computed
+respectively from $C_a$ and $C_c$. The decoded bits can be decided from the
+channel and the variable node LLR values: $\hat{u}_n = \hardDec{(l_n + v_n)}$.
 
-% In this section the Min-Sum decoder for LDPC codes is presented. As shown in
-% Figure~\ref{fig:ldpc}, an LDPC code can be represented in the form of a Tanner
-% graph. The circles, denoted as variable nodes, represent the LLRs (the noisy
-% estimation of the bits in the received frames). The squares, denoted as parity
-% check nodes, represent the parity constraints that the variable nodes have to
-% verify. For instance, the check node $a$ ($CN_a$) is connected to the variable
-% nodes $1$, $4$, $5$, $7$ and $8$ ($VN_1, VN_4, VN_5, VN_7, VN_8$). It means that
-% the corresponding bits $U_1, U_4, U_5, U_7, U_8$ have to respect a parity
-% constraint: $U_1 \oplus U_4 \oplus U_5 \oplus U_7 \oplus U_8 = 0$. A codeword is
-% valid only if it respects all the parity constraints defined by the check nodes.
-% The LDPC code can be also represented by a \textit{parity check matrix}:
-% { \begin{equation*}
-% H =
-% \begin{bmatrix}
-%   1&0&0&1&1&0&1&1\\
-%   0&1&1&0&0&1&1&0\\
-%   1&0&1&0&0&1&0&1\\
-%   0&1&0&1&1&0&1&0
-% \end{bmatrix}.
-% \end{equation*}
-% }
-The Min-Sum decoder is an iterative message passing algorithm based on the
-Tanner graph representation. Probabilistic messages ($M$) are exchanged between
-the variable nodes and check nodes iteratively. Variable nodes and check nodes
-apply an \textit{update rule} to compute the outgoing messages from the incoming
-messages. In this section, the Min-Sum update rule is considered as well as an
-horizontal layered scheduling. The original version of the Min-Sum algorithm
-works on floating-point values, but it has been shown that fixed-point
-simplifications have very similar decoding performance. Moreover, a fixed-point
-representation enables to pack more elements into SIMD registers.
+In the Belief Propagation (BP) decoding algorithm, before to decide the decoded
+bits $\bm{\hat{u}}$, there are many iterations (5 to 100) between the variable
+nodes and the check nodes. In the first iteration, the messages $\bm{m}$ sent to
+the check nodes are directly the channel values $\bm{l}$. But, in the next
+iterations, the messages $\bm{m}$ are updated with the variable nodes values
+$\bm{v}$. To avoid direct auto-confirmation issues, the up-coming extrinsic LLR
+is systematically subtracted to the propagated message.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Check nodes update.]
+  {
+    \includegraphics[scale=0.9]{ldpc/bp_cn_update/bp_cn_update}
+    \label{fig:alg_ldpc_bp_cn_update}
+  }
+  \quad
+  \subfloat[][Variable nodes update.]
+  {
+    \includegraphics[scale=0.9]{ldpc/bp_vn_update/bp_vn_update}
+    \label{fig:alg_ldpc_bp_vn_update}
+  }
+  \caption{Illustration of the belief propagation algorithm on a Tanner graph.}
+  \label{fig:alg_ldpc_bp}
+\end{figure}
+
+Fig.~\ref{fig:alg_ldpc_bp} illustrates a single BP iteration. First, the check
+nodes are computed from the messages $m_j^i$ where $i$ is the index of the
+variable nodes and $j$ is the index of the check nodes. In the example, the
+$C_a$ check node computes $m^0_a \boxplus m^3_a \boxplus m^4_a \boxplus m^6_a
+\boxplus m^7_a$, where $m^0_a = l_0 + v_0 - e^{a}_0$, $m^3_a = l_3 + v_3 -
+e^{a}_3$, etc. In the first iteration $\bm{v}$ and $\bm{e}$ are initialized to
+0. Then, when all the check nodes have been computed it is possible to
+determine the new values of the $v_n$ variable nodes from the sum of the
+incoming extrinsic messages $e_j^n$. In the example, $v_0 = e^0_a + e^0_c$,
+where $e^0_a = m^3_a \boxplus m^4_a \boxplus m^6_a \boxplus m^7_a$ and $e^0_c =
+m^2_c \boxplus m^5_c \boxplus m^7_c$. When all the variable nodes have been
+updated, it is then possible to update the check nodes and so on.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{ldpc/iterations/iterations}
+  \caption
+    [Decoding performance of the BP algorithm depending on the iterations.]
+    {Decoding performance of the belief propagation algorithm depending on the
+     number of iterations. IEEE 802.16e (WiMAX) $\mathcal{H}$ parity matrix
+     ($N=2304$, $R=1/2$).}
+  \label{fig:alg_ldpc_iterations}
+\end{figure}
+
+Fig.~\ref{fig:alg_ldpc_iterations} shows the decoding performance of the BP
+algorithm depending on the number of iterations. Each time the number of
+iterations is doubled (from 5 to 40). A $\mathcal{H}$ parity matrix from the
+WiMAX standard (IEEE 802.16e) is used. One can notice that the SNR gain is not
+proportional with the number of iteration. Even so, there is a huge difference
+between 5 and 40 iterations. The computational effort required by the BP decoder
+increases with the number of iterations. Thus, depending on the constraint
+(latency, throughput, correction power, etc.) the system designer can choose an
+appropriate number of iterations. The BP decoder can reduce its computational
+effort by implementing a early termination criterion. At the end of an iteration
+it is possible to decide the $\bm{\hat{u}}$ bits and to check is this bits
+verify the parity check constraints of the $\bm{\mathcal{H}}$ matrix. If yes,
+the decoder can stop before performing all the iterations. This is also called
+the syndrome verification.
+
+There are many variants of the BP algorithm, in the previous explanation, in an
+iteration, all the check nodes are computed first and then all the variable
+nodes are updated. This is what we call a \emph{flooding} (F) scheduling of the
+computations~\cite{MacKay1995}. However it is possible to schedule the
+computations differently. In the \emph{horizontal layered} (HL)
+scheduling~\cite{Yeo2001}, when a check node is evaluated, all the connected
+variable nodes are updated without waiting the computation of all the check
+nodes. In the \emph{vertical layered} (VL) scheduling~\cite{Zhang2002}, the
+check nodes corresponding to a variable node are evaluated and the current
+variable node is updated. The vertical layered scheduling travels the variable
+nodes first while the horizontal layered scheduling travels the check nodes
+first. In general, the layered scheduling (vertical and horizontal) allows to
+converge faster (in less iterations than the flooding) to a valid codeword.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{ldpc/scheduling/scheduling}
+  \caption
+    [Decoding performance of the BP algorithm depending on the scheduling.]
+    {Decoding performance of the belief propagation algorithm depending on the
+     scheduling. Flooding (F), horizontal layered (HL) and vertical layered (VL)
+     scheduling are considered. IEEE 802.16e (WiMAX) $\mathcal{H}$ parity matrix
+     ($N=2304$, $R=1/2$).}
+  \label{fig:alg_ldpc_scheduling}
+\end{figure}
+
+Fig.~\ref{fig:alg_ldpc_scheduling} shows the decoding performance depending on
+the scheduling. The horizontal and vertical layered scheduling have
+approximatively the same level of performance. The decoding performance of the
+layered scheduling is more interesting than the flooding scheduling. Thus, one
+decoding iteration with the layered scheduling is approximatively equal to two
+flooding iterations.
+
+In the previous example, the rules to update the variable nodes are based on the
+$\boxplus$ operator. In the literature, this type of update rules is called the
+\emph{Sum-Product Algorithm} (SPA) and was firstly introduced by
+Gallager in 1962~\cite{Gallager1962}. The SPA results in very good BER/FER
+decoding performance. However, this comes at the cost of a high computational
+complexity. To reduce the complexity on the $\boxplus$ operator it is possible
+to approximate it as follow:
+\begin{equation}
+l_a \boxplus l_b = (2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \sign(l_a).\sign(l_b).\min(|l_a|, |l_b|).
+\end{equation}
+This variant is called the \emph{Min-Sum} (MS)~\cite{Fossorier1999}.
+The expensive $\tanh$ functions are replaced by efficient $\sign$ and $\min$
+operators. However, MS computations negatively affect the correction
+performance. To solve this issue, the optimized \emph{Offset Min-Sum} (OMS) and
+\emph{Normalized Min-Sum} (NMS) approximations has been proposed
+in~\cite{Chen2002}:
+\begin{equation}
+l_a \boxplus l_b = (2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \alpha \times \big( \sign(l_a).\sign(l_b).\min(|l_a|, |l_b|) + \lambda \big),
+\end{equation}
+where $\alpha$ is the normalization factor of the NMS update rules and $\lambda$
+is the offset of the OMS update rules.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{ldpc/update_rules/update_rules}
+  \caption
+    [Decoding performance of the BP algorithm depending on the update rules.]
+    {Decoding performance of the belief propagation algorithm depending on the
+     update rules (horizontal layered scheduling). IEEE 802.16e (WiMAX)
+     $\mathcal{H}$ parity matrix ($N=2304$, $R=1/2$).}
+  \label{fig:alg_ldpc_update_rules}
+\end{figure}
+
+Fig.~\ref{fig:alg_ldpc_update_rules} shows the decoding performance of the
+belief propagation algorithm depending on the update rules presented before.
+As expected, there is a significant performance degradation with the MS
+approximation. The OMS and NMS update rules are very close to the SPA. These
+results demonstrate the efficiency of the OMS and NMS approximations. In real
+systems they are very often preferred to the original SPA.
 
 \section{Turbo Codes}
 

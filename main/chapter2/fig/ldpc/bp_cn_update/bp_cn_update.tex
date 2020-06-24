@@ -1,0 +1,89 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+  \tikzset{ lc/.style ={draw=Paired-3, minimum height=0.6cm, text=black} }
+  \tikzset{ lch/.style={draw=Paired-3!15, minimum height=0.6cm, text=black!15} }
+  \tikzset{ vn/.style ={draw=Paired-5, circle, minimum height=0.7cm, text=black } }
+  \tikzset{ vnh/.style={draw=Paired-5!15, circle, minimum height=0.7cm, text=black!15 } }
+  \tikzset{ cn/.style ={draw=Paired-7, minimum width=0.7cm, minimum height=0.7cm, text=black } }
+  \tikzset{ cnh/.style={draw=Paired-7!15, minimum width=0.7cm, minimum height=0.7cm, text=black!15 } }
+
+  \tikzset{ msg/.style ={draw=Paired-1 } }
+  \tikzset{ msgh/.style ={draw=black!15, dashed } }
+
+  \tikzset{ h/.style ={draw=black!15} }
+
+  \node[lc ] (l0) at (0.0, 4.0) {\small{$l_0$}};
+  \node[lch] (l1) at (1.0, 4.0) {\small{$l_1$}};
+  \node[lch] (l2) at (2.0, 4.0) {\small{$l_2$}};
+  \node[lc ] (l3) at (3.0, 4.0) {\small{$l_3$}};
+  \node[lc ] (l4) at (4.0, 4.0) {\small{$l_4$}};
+  \node[lch] (l5) at (5.0, 4.0) {\small{$l_5$}};
+  \node[lc ] (l6) at (6.0, 4.0) {\small{$l_6$}};
+  \node[lc ] (l7) at (7.0, 4.0) {\small{$l_7$}};
+
+  \node[vn ] (v0) at (0.0, 2.0) {\small{$v_0$}};
+  \node[vnh] (v1) at (1.0, 2.0) {\small{$v_1$}};
+  \node[vnh] (v2) at (2.0, 2.0) {\small{$v_2$}};
+  \node[vn ] (v3) at (3.0, 2.0) {\small{$v_3$}};
+  \node[vn ] (v4) at (4.0, 2.0) {\small{$v_4$}};
+  \node[vnh] (v5) at (5.0, 2.0) {\small{$v_5$}};
+  \node[vn ] (v6) at (6.0, 2.0) {\small{$v_6$}};
+  \node[vn ] (v7) at (7.0, 2.0) {\small{$v_7$}};
+
+  \draw[ ] (l0) -- (v0) node [midway, text=black] {};
+  \draw[h] (l1) -- (v1) node [midway, text=black] {};
+  \draw[h] (l2) -- (v2) node [midway, text=black] {};
+  \draw[ ] (l3) -- (v3) node [midway, text=black] {};
+  \draw[ ] (l4) -- (v4) node [midway, text=black] {};
+  \draw[h] (l5) -- (v5) node [midway, text=black] {};
+  \draw[ ] (l6) -- (v6) node [midway, text=black] {};
+  \draw[ ] (l7) -- (v7) node [midway, text=black] {};
+
+  \node[draw=black, rounded corners=2pt, minimum height=1cm, label={[black]above:\small{Input LLRs}}, dashed, fit=(l0) (l1) (l2) (l3) (l4) (l5) (l6) (l7)] (vn) {};
+
+  \node[draw=black, rounded corners=2pt, minimum height=1cm, label={[black,fill=white,yshift=+0.075cm]above:\small{Variable nodes}}, dashed, fit=(v0) (v1) (v2) (v3) (v4) (v5) (v6) (v7)] (vn) {};
+
+  \node[cn ] (ca) at (2.0, 0.0) {\small{$C_a$}};
+  \node[cnh] (cb) at (3.0, 0.0) {\small{$C_b$}};
+  \node[cnh] (cc) at (4.0, 0.0) {\small{$C_c$}};
+  \node[cnh] (cd) at (5.0, 0.0) {\small{$C_d$}};
+
+  \node[draw=black, rounded corners=2pt, minimum height=1cm, label={[black]below:\small{Check nodes}}, dashed, fit=(ca) (cb) (cc) (cd)] (cn) {};
+
+  \draw[->,>=latex,msgh] (v0.south) -- (cc.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v1.south) -- (cb.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v1.south) -- (cd.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v2.south) -- (cb.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v2.south) -- (cc.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v3.south) -- (cd.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v4.south) -- (cd.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v5.south) -- (cb.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v5.south) -- (cc.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v6.south) -- (cb.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v6.south) -- (cd.north) node [midway, text=black] {};
+  \draw[->,>=latex,msgh] (v7.south) -- (cc.north) node [midway, text=black] {};
+
+  \draw[->,>=latex,msg] (v0.south) -- (ca.north) node [midway, text=black, yshift=-0.20cm, xshift=-0.30cm] {\small{${\color{Paired-1}m_a^0}$}};
+  \draw[->,>=latex,msg] (v3.south) -- (ca.north) node [midway, text=black, yshift=+0.20cm, xshift=-0.20cm] {\small{${\color{Paired-1}m_a^3}$}};
+  \draw[->,>=latex,msg] (v4.south) -- (ca.north) node [midway, text=black, yshift=+0.10cm, xshift=+0.50cm] {\small{${\color{Paired-1}m_a^4}$}};
+  \draw[->,>=latex,msg] (v6.south) -- (ca.north) node [midway, text=black, yshift=+0.30cm, xshift=+0.15cm] {\small{${\color{Paired-1}m_a^6}$}};
+  \draw[->,>=latex,msg] (v7.south) -- (ca.north) node [midway, text=black, yshift=-0.10cm, xshift=+0.30cm] {\small{${\color{Paired-1}m_a^7}$}};
+
+  \end{tikzpicture}
+\end{document}

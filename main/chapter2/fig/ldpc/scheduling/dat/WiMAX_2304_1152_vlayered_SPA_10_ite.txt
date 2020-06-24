@@ -1,0 +1,90 @@
+#./bin/aff3ct --sim-type BFER -C LDPC --src-type AZCW -m 0.00 -M 10.51 -s 0.25 -e 100 --dec-h-path ../conf/dec/LDPC/WIMAX_2304_1152.alist --dec-type BP_VERTICAL_LAYERED --dec-implem SPA -i 10 --dec-simd INTER
+# ----------------------------------------------------
+# ---- A FAST FORWARD ERROR CORRECTION TOOLBOX >> ----
+# ----------------------------------------------------
+# Parameters:
+# * Simulation ------------------------------------
+#    ** Type                      = BFER
+#    ** Type of bits              = int32
+#    ** Type of reals             = float32
+#    ** Date (UTC)                = 2020-06-24 19:57:39
+#    ** Git version               = v2.3.5-386-g0faf620
+#    ** Code type (C)             = LDPC
+#    ** Noise range               = 0 -> 10.5 dB
+#    ** Noise type (E)            = EBN0
+#    ** Seed                      = 0
+#    ** Statistics                = off
+#    ** Debug mode                = off
+#    ** Multi-threading (t)       = 48 thread(s)
+#    ** Coset approach (c)        = no
+#    ** Coded monitoring          = no
+#    ** Bad frames tracking       = off
+#    ** Bad frames replay         = off
+#    ** Clone allocations         = off
+#    ** Sequence multithreading   = off
+#    ** Bit rate                  = 0.5 (1/2)
+#    ** Inter frame level         = 16
+# * Source ----------------------------------------
+#    ** Type                      = AZCW
+#    ** Implementation            = STD
+#    ** Info. bits (K_info)       = 1152
+# * Codec -----------------------------------------
+#    ** Type                      = LDPC
+#    ** Info. bits (K)            = 1152
+#    ** Codeword size (N_cw)      = 2304
+#    ** Frame size (N)            = 2304
+#    ** Code rate                 = 0.5 (1/2)
+# * Encoder ---------------------------------------
+#    ** Type                      = AZCW
+#    ** Systematic                = yes
+# * Decoder ---------------------------------------
+#    ** Type (D)                  = BP_VERTICAL_LAYERED
+#    ** Implementation            = SPA
+#    ** Systematic                = yes
+#    ** H matrix path             = ../conf/dec/LDPC/WIMAX_2304_1152.alist
+#    ** H matrix reordering       = NONE
+#    ** SIMD strategy             = INTER
+#    ** Num. of iterations (i)    = 10
+#    ** Stop criterion (syndrome) = on
+#    ** Stop criterion depth      = 1
+# * Modem -----------------------------------------
+#    ** Type                      = BPSK
+#    ** Implementation            = STD
+#    ** Bits per symbol           = 1
+#    ** Sigma square              = on
+# * Channel ---------------------------------------
+#    ** Type                      = AWGN
+#    ** Implementation            = STD
+#    ** Complex                   = off
+#    ** Add users                 = off
+# * Monitor ---------------------------------------
+#    ** Lazy reduction            = off
+#    ** Frame error count (e)     = 100
+#    ** Compute mutual info       = no
+# * Terminal --------------------------------------
+#    ** Show Sigma                = off
+#    ** Enabled                   = yes
+#    ** Frequency (ms)            = 500
+#
+# The simulation is running...
+# ---------------------||------------------------------------------------------||---------------------
+#  Signal Noise Ratio  ||   Bit Error Rate (BER) and Frame Error Rate (FER)    ||  Global throughput
+#         (SNR)        ||                                                      ||  and elapsed time
+# ---------------------||------------------------------------------------------||---------------------
+# ----------|----------||----------|----------|----------|----------|----------||----------|----------
+      Es/N0 |    Eb/N0 ||      FRA |       BE |       FE |      BER |      FER ||  SIM_THR |    ET/RT
+#      (dB) |     (dB) ||          |          |          |          |          ||   (Mb/s) | (hhmmss)
+# ----------|----------||----------|----------|----------|----------|----------||----------|----------
+      -3.01 |     0.00 ||     1360 |   192452 |     1360 | 1.23e-01 | 1.00e+00 ||    0.423 | 00h00'03
+      -2.76 |     0.25 ||     1072 |   133438 |     1072 | 1.08e-01 | 1.00e+00 ||   36.655 | 00h00'00
+      -2.51 |     0.50 ||      896 |    90836 |      896 | 8.80e-02 | 1.00e+00 ||   21.021 | 00h00'00
+      -2.26 |     0.75 ||     1568 |   115470 |     1519 | 6.39e-02 | 9.69e-01 ||   34.101 | 00h00'00
+      -2.01 |     1.00 ||     1136 |    43168 |      856 | 3.30e-02 | 7.54e-01 ||   34.987 | 00h00'00
+      -1.76 |     1.25 ||     1008 |    11469 |      389 | 9.88e-03 | 3.86e-01 ||   20.895 | 00h00'00
+      -1.51 |     1.50 ||     1760 |     3805 |      169 | 1.88e-03 | 9.60e-02 ||   35.791 | 00h00'00
+      -1.26 |     1.75 ||     7776 |     1246 |      116 | 1.39e-04 | 1.49e-02 ||   54.427 | 00h00'00
+      -1.01 |     2.00 ||    98592 |      779 |      104 | 6.86e-06 | 1.05e-03 ||   73.012 | 00h00'01
+      -0.76 |     2.25 ||  1092512 |      416 |      100 | 3.31e-07 | 9.15e-05 ||   86.513 | 00h00'14
+      -0.51 |     2.50 ||  6609088 |      389 |      100 | 5.11e-08 | 1.51e-05 ||   98.510 | 00h01'17
+      -0.26 |     2.75 || 24580000 |      348 |      100 | 1.23e-08 | 4.07e-06 ||  110.149 | 00h04'17
+# End of the simulation.

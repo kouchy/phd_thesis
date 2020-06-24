@@ -98,7 +98,41 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
 	cd main/chapter1/fig/sdr/base_station/                 && rubber -d base_station_3G_4G.tex
 	cd main/chapter1/fig/sdr/base_station/                 && rubber -d base_station_5G_future.tex
 
-chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
+chapter2_fig: main/chapter2/fig/ldpc/bp_cn_update/bp_cn_update.tex \
+              main/chapter2/fig/ldpc/bp_cn_update/colors \
+              main/chapter2/fig/ldpc/bp_vn_update/bp_vn_update.tex \
+              main/chapter2/fig/ldpc/bp_vn_update/colors \
+              main/chapter2/fig/ldpc/iterations/iterations.tex \
+              main/chapter2/fig/ldpc/iterations/colors \
+              main/chapter2/fig/ldpc/iterations/dat/WiMAX_2304_1152_flooding_SPA_01_ite.txt \
+              main/chapter2/fig/ldpc/iterations/dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt \
+              main/chapter2/fig/ldpc/iterations/dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt \
+              main/chapter2/fig/ldpc/iterations/dat/WiMAX_2304_1152_flooding_SPA_20_ite.txt \
+              main/chapter2/fig/ldpc/iterations/dat/WiMAX_2304_1152_flooding_SPA_40_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/scheduling.tex \
+              main/chapter2/fig/ldpc/scheduling/colors \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_01_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_20_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_40_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_hlayered_SPA_01_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_hlayered_SPA_05_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_hlayered_SPA_10_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_hlayered_SPA_20_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_hlayered_SPA_40_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_01_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_05_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_10_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_20_ite.txt \
+              main/chapter2/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_40_ite.txt \
+              main/chapter2/fig/ldpc/update_rules/update_rules.tex \
+              main/chapter2/fig/ldpc/update_rules/colors \
+              main/chapter2/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_MS_40_ite.txt \
+              main/chapter2/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_NMS_40_ite.txt \
+              main/chapter2/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_OMS_40_ite.txt \
+              main/chapter2/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_SPA_40_ite.txt \
+	            main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
               main/chapter2/fig/polar/sc_decoder/colors \
               main/chapter2/fig/polar/tree_pruning_example/tree_pruning_example_old.fig \
               main/chapter2/fig/polar/tree_pruning_example/tree_pruning_example.tex \
@@ -206,6 +240,11 @@ chapter2_fig: main/chapter2/fig/polar/sc_decoder/sc_decoder.tex \
               main/chapter2/fig/turbo/trellis/colors \
               main/chapter2/fig/turbo/encoder/encoder.tex \
               main/chapter2/fig/turbo/encoder/colors
+	cd main/chapter2/fig/ldpc/bp_cn_update/                && rubber -d bp_cn_update.tex
+	cd main/chapter2/fig/ldpc/bp_vn_update/                && rubber -d bp_vn_update.tex
+	cd main/chapter2/fig/ldpc/iterations/                  && rubber -d iterations.tex
+	cd main/chapter2/fig/ldpc/scheduling/                  && rubber -d scheduling.tex
+	cd main/chapter2/fig/ldpc/update_rules/                && rubber -d update_rules.tex
 	cd main/chapter2/fig/polar/sc_decoder/                 && rubber -d sc_decoder.tex
 	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber -d tree_pruning_example.tex
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber -d algos_comparison.tex
@@ -540,6 +579,11 @@ clean: clean4all
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_1G_2G
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_3G_4G
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean base_station_5G_future
+	cd main/chapter2/fig/ldpc/bp_cn_update/                && rubber --clean bp_cn_update
+	cd main/chapter2/fig/ldpc/bp_vn_update/                && rubber --clean bp_vn_update
+	cd main/chapter2/fig/ldpc/iterations/                  && rubber --clean iterations
+	cd main/chapter2/fig/ldpc/scheduling/                  && rubber --clean scheduling
+	cd main/chapter2/fig/ldpc/update_rules/                && rubber --clean update_rules
 	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean sc_decoder
 	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean tree_pruning_example
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean algos_comparison
@@ -633,6 +677,11 @@ mrproper: clean4all
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_1G_2G.tex
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_3G_4G.tex
 	cd main/chapter1/fig/sdr/base_station/                 && rubber --clean -d base_station_5G_future.tex
+	cd main/chapter2/fig/ldpc/bp_cn_update/                && rubber --clean -d bp_cn_update.tex
+	cd main/chapter2/fig/ldpc/bp_vn_update/                && rubber --clean -d bp_vn_update.tex
+	cd main/chapter2/fig/ldpc/iterations/                  && rubber --clean -d iterations.tex
+	cd main/chapter2/fig/ldpc/scheduling/                  && rubber --clean -d scheduling.tex
+	cd main/chapter2/fig/ldpc/update_rules/                && rubber --clean -d update_rules.tex
 	cd main/chapter2/fig/polar/sc_decoder/                 && rubber --clean -d sc_decoder.tex
 	cd main/chapter2/fig/polar/tree_pruning_example/       && rubber --clean -d tree_pruning_example.tex
 	cd main/chapter2/fig/polar/algos_comparison/           && rubber --clean -d algos_comparison.tex
