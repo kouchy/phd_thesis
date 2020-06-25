@@ -40,13 +40,15 @@
 \usepackage[strict]{changepage}
 
 % Parameters ------------------------------------------------------------------
-\setcounter{secnumdepth}{4} % package 'minitoc'
+\setcounter{secnumdepth}{3} % package 'minitoc'
 \setcounter{tocdepth}{2} % package 'minitoc'
 \newlength{\Oldarrayrulewidth} % package 'array'
 \setminted{fontsize=\small,framesep=2mm,tabsize=4} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
 \counterwithin{listing}{chapter} % package 'chngcntr'
 \SetKwComment{Comment}{$\triangleright$\ }{} % package 'algorithm2e'
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{Comment}{#1}} % package 'algorithm2e'
+\SetCommentSty{mycommfont} % package 'algorithm2e'
 
 % add column types for big table
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -118,7 +120,7 @@
 \DeclareMathOperator*{\sizeof}{sizeof}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\sign}{sign}
-\DeclareMathOperator{\hardDec}{h}
+\DeclareMathOperator{\hardDec}{h_d}
 
 % Commands --------------------------------------------------------------------
 \newcommand{\R}{\textsuperscript{\textregistered}}

@@ -1,0 +1,133 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+
+  \newcommand{\LTESubEnc}[6]{
+  \begin{scope}[shift={#1},scale=#2]
+    \tikzset{XOR/.style={draw,circle, minimum height=0.35cm,append after command={
+            [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+            (\tikzlastnode.north) edge (\tikzlastnode.south)
+            (\tikzlastnode.east) edge (\tikzlastnode.west)
+            }
+        }
+    }
+
+    \tikzset{STA/.style={draw, minimum height=0.65cm, minimum width=0.65cm} }
+
+    \node (d1) at (2.0,0.0) [circle,fill,inner sep=1.5pt]{};
+    \node (d2) at (4.0,0.0) [circle,fill,inner sep=1.5pt]{};
+    \node (d3) at (6.0,0.0) [circle,fill,inner sep=1.5pt]{};
+    \node (d4) at (8.0,0.0) [circle,fill,inner sep=1.5pt]{};
+
+    \node[STA] (s0) at (3.0, 0.0) {#4};
+    \node[STA] (s1) at (5.0, 0.0) {#5};
+    \node[STA] (s2) at (7.0, 0.0) {#6};
+
+    \node[XOR] (x0) at (1.0,  0.0) {};
+    \node[XOR] (x1) at (4.0, +1.0) {};
+    \node[XOR] (x2) at (6.0, -1.0) {};
+    \node[XOR] (x3) at (8.0, +1.0) {};
+
+    \draw[- ,>=latex] (x0) -- (d1);
+    \draw[->,>=latex] (d1) -- (s0);
+    \draw[- ,>=latex] (s0) -- (d2);
+    \draw[->,>=latex] (d2) -- (x1);
+    \draw[->,>=latex] (d2) -- (s1);
+    \draw[- ,>=latex] (s1) -- (d3);
+    \draw[->,>=latex] (d3) -- (x2);
+    \draw[->,>=latex] (d3) -- (s2);
+
+    \draw[- ,>=latex] (s2) -- (d4);
+    \draw[->,>=latex] (d4) -- (x3);
+    \draw[->,>=latex] (x1) -- (x3);
+    \draw[->,>=latex] (d4) |- (x2);
+    \draw[->,>=latex] (x2) -| (x0);
+    \draw[->,>=latex] (d1) |- (x1);
+
+    \draw[->,>=latex] (x3) -- (9.0, 1.0) node [right, above] {#3};
+  \end{scope}
+  }
+
+  \newcommand{\LTETrellis}[2]{
+  \begin{scope}[shift={#1},scale=#2]
+    \newcommand\vsep{2.5}
+    \newcommand\hsep{0.96}
+
+    \node (t0_s0) at (0.0,-0.0)                                       [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_0$}]{};
+    \node (t0_s1) at (0.0,-\hsep)                                     [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_1$}]{};
+    \node (t0_s2) at (0.0,-\hsep-\hsep)                               [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_2$}]{};
+    \node (t0_s3) at (0.0,-\hsep-\hsep-\hsep)                         [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_3$}]{};
+    \node (t0_s4) at (0.0,-\hsep-\hsep-\hsep-\hsep)                   [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_4$}]{};
+    \node (t0_s5) at (0.0,-\hsep-\hsep-\hsep-\hsep-\hsep)             [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_5$}]{};
+    \node (t0_s6) at (0.0,-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep)       [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_6$}]{};
+    \node (t0_s7) at (0.0,-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt, label={[left,xshift=-1mm]$S_7$}]{};
+
+    \node (t1_s0) at (\vsep,-0.0)                                       [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_0$}]{};
+    \node (t1_s1) at (\vsep,-\hsep)                                     [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_1$}]{};
+    \node (t1_s2) at (\vsep,-\hsep-\hsep)                               [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_2$}]{};
+    \node (t1_s3) at (\vsep,-\hsep-\hsep-\hsep)                         [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_3$}]{};
+    \node (t1_s4) at (\vsep,-\hsep-\hsep-\hsep-\hsep)                   [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_4$}]{};
+    \node (t1_s5) at (\vsep,-\hsep-\hsep-\hsep-\hsep-\hsep)             [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_5$}]{};
+    \node (t1_s6) at (\vsep,-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep)       [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_6$}]{};
+    \node (t1_s7) at (\vsep,-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep-\hsep) [circle,fill,inner sep=1.5pt, label={[right,xshift=+1mm]$S_7$}]{};
+
+    \tikzset{b0/.style={->,>=latex, draw=Paired-1, fill=Paired-1, shorten >=2pt, shorten <= 2pt, dashed} }
+    \tikzset{b1/.style={->,>=latex, draw=Paired-5, fill=Paired-5, shorten >=2pt, shorten <= 2pt        } }
+
+    \draw[b0] (t0_s0) -- (t1_s0);
+    \draw[b0] (t0_s1) -- (t1_s4);
+    \draw[b0] (t0_s2) -- (t1_s5);
+    \draw[b0] (t0_s3) -- (t1_s1);
+    \draw[b0] (t0_s4) -- (t1_s2);
+    \draw[b0] (t0_s5) -- (t1_s6);
+    \draw[b0] (t0_s6) -- (t1_s7);
+    \draw[b0] (t0_s7) -- (t1_s3);
+
+    \draw[b1] (t0_s0) -- (t1_s4);
+    \draw[b1] (t0_s1) -- (t1_s0);
+    \draw[b1] (t0_s2) -- (t1_s1);
+    \draw[b1] (t0_s3) -- (t1_s5);
+    \draw[b1] (t0_s4) -- (t1_s6);
+    \draw[b1] (t0_s5) -- (t1_s2);
+    \draw[b1] (t0_s6) -- (t1_s3);
+    \draw[b1] (t0_s7) -- (t1_s7);
+
+    \draw[b0] (-2.0,-\hsep-\hsep-\hsep)       -- (-1.0,-\hsep-\hsep-\hsep)       node [midway, above, text=Paired-1] {0};
+    \draw[b1] (-2.0,-\hsep-\hsep-\hsep-\hsep) -- (-1.0,-\hsep-\hsep-\hsep-\hsep) node [midway, above, text=Paired-5] {1};
+
+  \end{scope}
+  }
+
+  \begin{tikzpicture}%[scale=\tikzscale]
+  \LTESubEnc{(0,0)}{1}{$p (c_2)$}{$D_0$}{$D_1$}{$D_2$};
+  \node (d0) at (0.0,0.0) [circle,fill,inner sep=1.5pt]{};
+  \draw[->,>=latex] (d0) -- (x0);
+
+  \draw[- ,>=latex] (-0.5,0.0) node [left,  above] {$u$} -- (d0);
+  \draw[->,>=latex] (d0) |- (9.0, 2.0) node [right, above] {$u~(c_1)$};
+
+
+  \LTESubEnc{(0,-3.5)}{1}{$p' (c_3)$}{$D'_0$}{$D'_1$}{$D'_2$};
+  \tikzset{PI/.style={draw, minimum height=1.10cm, minimum width=1.10cm} }
+  \node[PI, align=center] (pi1) at (0.0, -1.75) {\Large{$\Pi$}};
+
+  \draw[->,>=latex] (0,0) -- (pi1);
+  \draw[->,>=latex] (pi1) |- (x0) node [midway, left] {$u'$};
+
+  \LTETrellis{(11.75,2.25)}{1};
+  \end{tikzpicture}
+\end{document}

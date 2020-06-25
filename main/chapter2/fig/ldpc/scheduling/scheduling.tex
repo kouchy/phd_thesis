@@ -41,14 +41,14 @@
         \addplot[mark=x,         Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_20_ite.txt}; \label{plot:line11}
         \addplot[mark=+,         Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_40_ite.txt}; \label{plot:line12}
 
-        \coordinate (legend) at (axis description cs:0.39,0.03);
+        \coordinate (legend) at (axis description cs:0.465,0.015);
     \end{axis}
 
     \matrix[draw,
             matrix of nodes,
             anchor=south east,
             fill=white] at (legend) {
-            \small{\# ite.} & \small{F}        & \small{HL}       & \small{VL}  \\
+            \small{\# ite.} & \small{BP-F}        & \small{BP-HL}       & \small{BP-VL}  \\
             % \small{ 5}      & \ref{plot:line1} & \ref{plot:line5} & \ref{plot:line9} \\
             \small{10}      & \ref{plot:line2} & \ref{plot:line6} & \ref{plot:line10} \\
             \small{20}      & \ref{plot:line3} & \ref{plot:line7} & \ref{plot:line11} \\
