@@ -243,7 +243,19 @@ chapter2_fig: main/chapter2/fig/ldpc/bp_cn_update/bp_cn_update.tex \
               main/chapter2/fig/turbo/decoder/decoder.tex \
               main/chapter2/fig/turbo/decoder/colors \
               main/chapter2/fig/turbo/encoder_lte/encoder_lte.tex \
-              main/chapter2/fig/turbo/encoder_lte/colors
+              main/chapter2/fig/turbo/encoder_lte/colors \
+              main/chapter2/fig/turbo/iterations/iterations.tex \
+              main/chapter2/fig/turbo/iterations/colors \
+              main/chapter2/fig/turbo/iterations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i1.txt \
+              main/chapter2/fig/turbo/iterations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i2.txt \
+              main/chapter2/fig/turbo/iterations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i4.txt \
+              main/chapter2/fig/turbo/iterations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i6.txt \
+              main/chapter2/fig/turbo/iterations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i8.txt \
+              main/chapter2/fig/turbo/approximations/approximations.tex \
+              main/chapter2/fig/turbo/approximations/colors \
+              main/chapter2/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i6.txt \
+              main/chapter2/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_ML-MAP_i6.txt \
+              main/chapter2/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_EML-MAP_i6.txt
 	cd main/chapter2/fig/ldpc/bp_cn_update/                && rubber -d bp_cn_update.tex
 	cd main/chapter2/fig/ldpc/bp_vn_update/                && rubber -d bp_vn_update.tex
 	cd main/chapter2/fig/ldpc/iterations/                  && rubber -d iterations.tex
@@ -278,6 +290,8 @@ chapter2_fig: main/chapter2/fig/ldpc/bp_cn_update/bp_cn_update.tex \
 	cd main/chapter2/fig/turbo/encoder                     && rubber -d encoder.tex
 	cd main/chapter2/fig/turbo/decoder                     && rubber -d decoder.tex
 	cd main/chapter2/fig/turbo/encoder_lte                 && rubber -d encoder_lte.tex
+	cd main/chapter2/fig/turbo/iterations                  && rubber -d iterations.tex
+	cd main/chapter2/fig/turbo/approximations              && rubber -d approximations.tex
 
 chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
               main/chapter3/src/ldpc/bp_min_sum_simd.cpp \
@@ -619,6 +633,8 @@ clean: clean4all
 	cd main/chapter2/fig/turbo/encoder                     && rubber --clean encoder
 	cd main/chapter2/fig/turbo/decoder                     && rubber --clean decoder
 	cd main/chapter2/fig/turbo/encoder_lte                 && rubber --clean encoder_lte
+	cd main/chapter2/fig/turbo/iterations                  && rubber --clean iterations
+	cd main/chapter2/fig/turbo/approximations              && rubber --clean approximations
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean mandelbrot_speedup_32bit
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean mandelbrot_speedup_64bit
 	cd main/chapter3/fig/vectorization/inter_frame/        && rubber --clean inter_frame
@@ -719,6 +735,8 @@ mrproper: clean4all
 	cd main/chapter2/fig/turbo/encoder                     && rubber --clean -d encoder.tex
 	cd main/chapter2/fig/turbo/decoder                     && rubber --clean -d decoder.tex
 	cd main/chapter2/fig/turbo/encoder_lte                 && rubber --clean -d encoder_lte.tex
+	cd main/chapter2/fig/turbo/iterations                  && rubber --clean -d iterations.tex
+	cd main/chapter2/fig/turbo/approximations              && rubber --clean -d approximations.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_32bit.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber --clean -d mandelbrot_speedup_64bit.tex
 	cd main/chapter3/fig/vectorization/inter_frame/        && rubber --clean -d inter_frame.tex

@@ -1092,7 +1092,7 @@ Fig.~\ref{fig:alg_turbo_decoder} illustrates the internal structure of a turbo
 decoder. Two Soft Input Soft Output (SISO) decoders are represented with the
 interleaving process $\Pi$ and the deinterleaving process $\Pi^{-1}$. In this
 manuscript, we will only consider rate-1/3 codewords. $K$ represents the number
-of information bits and $N$ is the codeword size: $K = N / 3$.
+of information bits and $N$ is the codeword size: $N = K \times 3$.
 
 \paragraph{Algorithm Outline}
 
@@ -1234,7 +1234,36 @@ where the sets $U^1$ and $U^{-1}$ designate the set of states connected by paths
 where $u^k=1$ and the set of states connected by paths where $u^k=-1$,
 respectively (because of the BPSK modulation).
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{turbo/iterations/iterations}
+  \caption
+    [Decoding performance of the turbo decoder depending on the number of
+     iterations.]
+    {Decoding performance of the turbo decoder depending on the number of
+     iterations. LTE-Advanced code, $K = 6144$, $R = 1/3$, MAP algorithm.}
+  \label{plot:alg_turbo_iterations}
+\end{figure}
+
+Fig.~\ref{plot:alg_turbo_iterations} shows the decoding performance of the turbo
+decoder depending on the number of iterations. The biggest code from the
+LTE-Advanced standard is evaluated ($K = 6144$ and $R=1/3$). In one iteration,
+the BCJR decoder 1 and 2 are run. The computational complexity of one turbo
+decoding iteration is higher than one LDPC BP decoding iteration.
+
 \paragraph{Approximation of the MAP Decoder}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{turbo/approximations/approximations}
+  \caption
+    [Decoding performance of the turbo decoder depending on the approximations.]
+    {Decoding performance of the turbo decoder depending on the algorithm
+     approximations. The maximum a-posteriori (MAP), the max-log-MAP (ML-MAP)
+     and the enhanced max-log-MAP (EML-MAP, $\alpha = 0.75$) are evaluated.
+     $K = 6144$, $R=1/3$ and 6 iterations.}
+  \label{plot:alg_turbo_approximations}
+\end{figure}
 
 The $\maxstar$ operator of the MAP algorithm is compute intensive, this is
 mainly due to the logarithm and exponential functions in the correction term. It
@@ -1245,7 +1274,8 @@ hardware implementations possible. However, the ML-MAP algorithm negatively
 affects the decoding performance. It this then possible to partially recover the
 error-rate performance loss by scaling the extrinsic LLRs by a factor
 $\alpha$: this is called the \emph{Enhanced} max-log-MAP (EML-MAP)
-algorithm~\cite{Vogt2000,Studer2011}.
+algorithm~\cite{Vogt2000,Studer2011}. The impact of the approximations on the
+decoding performance is shown in Fig.~\ref{plot:alg_turbo_approximations}.
 
 \paragraph{Impact of the Quantification on the Error-rate}
 
@@ -1255,18 +1285,34 @@ algorithm~\cite{Vogt2000,Studer2011}.
   \caption
     [BER and FER of the turbo decoder for $K = 6144$ (6 iters) and $R=1/3$.]
     {Bit Error Rate (BER) and Frame Error Rate (FER) of the decoder for $K =
-    6144$ (6 iters) and $R=1/3$. Enhanced max-log-MAP algorithm (scaling
-    factor = 0.75). BPSK modulation and AWGN channel were used.}
+    6144$, $R=1/3$ and 6 iterations. Enhanced max-log-MAP algorithm ($\alpha =
+    0.75$).}
   \label{plot:alg_turbo_quantification}
 \end{figure}
 
 Fig.~\ref{plot:alg_turbo_quantification} shows the decoding performance of the
-proposed software turbo-decoder for the $K = 6144$ rate-1/3, LTE-specified
-turbo-code. The decoding performance of a floating-point decoder is provided as
-a reference. Unlike~\cite{Wu2013}, the proposed 16-bit implementation does not
-degrade the decoding performance. The 8-bit version of our decoder shows a
-0.15~dB degradation. The limited dynamic of 8-bit format together with early
-saturation inside the decoder are responsible for this small performance loss.
+turbo decoder depending on the quantification. \emph{float} is the ideal
+decoding performance of the EML-MAP algorithm on 32-bit floating-point.
+\emph{int-16} is a quantified version of the decoder, on 16-bit and with
+fixed-point arithmetic computations. Before to enter in the decoder, the
+$\bm{l}$ LLRs are converted from a floating-point representation to a
+fixed-point representation: they are saturated on $s = 6$ bits, of which $d = 3$
+bits are dedicated to the decimal part ($Q_{s,d}$). Inside the decoder, the
+saturation is made over 16 bits ($s = 16$). One can note that there is no
+decoding performance degradation. Finally, \emph{int-8} is the 8-bit quantified
+version of the decoder. Compared to the 16-bit version, the decimal part of the
+8-bit version is represented with 2 bits ($Q_{6,2}$) instead of 3. The internal
+saturations are on 8-bit. This version shows a 0.15 dB degradation. The limited
+dynamic of 8-bit format together with early saturation inside the decoder are
+responsible for this small performance loss.
+
+% Fig.~\ref{plot:alg_turbo_quantification} shows the decoding performance of the
+% proposed software turbo decoder for the $K = 6144$ rate-1/3, LTE-specified
+% turbo-code. The decoding performance of a floating-point decoder is provided as
+% a reference. Unlike~\cite{Wu2013}, the proposed 16-bit implementation does not
+% degrade the decoding performance. The 8-bit version of our decoder shows a
+% 0.15~dB degradation. The limited dynamic of 8-bit format together with early
+% saturation inside the decoder are responsible for this small performance loss.
 
 \section{Sparse Code Multiple Access}
 
