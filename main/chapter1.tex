@@ -34,7 +34,7 @@ The last section gives the main objectives of the thesis.
   \centering
   \includegraphics{intro/com_chain/com_chain}
   \caption{Digital communication chain.}
-  \label{fig:intro_com_chain}
+  \label{fig:ctx_com_chain}
 \end{figure}
 
 It is now commonplace to state that Humanity has entered the era of
@@ -46,7 +46,7 @@ based on a common abstract model proposed by Claude Shannon. In his seminal
 paper~\cite{Shannon1948}, he proposed to model a communication system with five
 components: an information source, a transmitter, a channel, a receiver and a
 destination. This model was later refined as shown in
-Figure~\ref{fig:intro_com_chain}. The source produces a digital message $\bm{u}$
+Figure~\ref{fig:ctx_com_chain}. The source produces a digital message $\bm{u}$
 to be transmitted (sequence of bits). The channel encoder transforms it in a
 codeword $\bm{c}$ to make it more robust to errors. In order to make possible
 the information transmission through the channel, it is necessary to shape the
@@ -94,7 +94,7 @@ distributed variable according to a normal (or Gaussian) law centered in zero
 and of variance $\sigma^2 = N_0 / 2$. So, we have $N_{chn} \simeq \mathcal{N}(0,
 \sigma^2)$ and:
 \begin{equation}
-P_r(y_i|x_i) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp{\Big(-\frac{(y_i-x_i)^2}{2\sigma^2}\Big)}.
+P(y_i|x_i) = \frac{1}{\sqrt{2\pi}\sigma}\exp{\Big(-\frac{(y_i-x_i)^2}{2\sigma^2}\Big)}.
 \end{equation}
 
 To estimate the correction power of a system it is very common to vary the
@@ -133,7 +133,7 @@ determines for each channel output data $y_i \in \bm{y}$ the most likely binary
 input $c_i \in \bm{c}$. The absolute value corresponds to the degree of
 reliability of the information. The mathematical expression for $l_i$ is:
 \begin{equation*}
-l_i = \log{\Big(\frac{P_r(y_i|c_i = 0)}{P_r(y_i|c_i = 1)}\Big)}.
+l_i = \log{\Big(\frac{P(y_i|c_i = 0)}{P(y_i|c_i = 1)}\Big)}.
 \end{equation*}
 
 \section{Capacity-approaching Channel Codes}
@@ -223,28 +223,28 @@ $\bm{u}$.
   \subfloat[][Specification of the processing chain.]
   {
     \includegraphics[scale=1]{simu/com_chain/com_chain}
-    \label{fig:simu_com_chain_specs}
+    \label{fig:ctx_simu_com_chain_specs}
   }
   \\
   \subfloat[][Input simulation parameters and output BER results.]
   {
     \includegraphics[scale=1]{simu/in_out/in_out}
-    \label{fig:simu_com_chain_in_out}
+    \label{fig:ctx_simu_com_chain_in_out}
   }
   \caption{Example of a digital communication system simulation.}
-  \label{fig:simu_com_chain}
+  \label{fig:ctx_simu_com_chain}
 \end{figure}
 
-Fig.~\ref{fig:simu_com_chain_specs} describes a processing sequence similar
-to the digital communication chain presented in Fig.~\ref{fig:intro_com_chain}.
+Fig.~\ref{fig:ctx_simu_com_chain_specs} describes a processing sequence similar
+to the digital communication chain presented in Fig.~\ref{fig:ctx_com_chain}.
 The only difference is that the \emph{sink} block has been replaced by what we
 call a \emph{monitor}. The \emph{monitor}, unlike the \emph{sink}, knows the $K$
 output information bits from the \emph{source} ($\bm{u}$). The $C$, $K$ and $N$
 parameters are, respectively, the type of the code, the number of information
 bits and the codeword size. These parameters have a direct impact on the
 selection of the \emph{channel encoder} and the \emph{channel decoder} blocks
-in the simulation. Fig.~\ref{fig:simu_com_chain_in_out} shows the BER output of
-the simulation. The $m$, $M$ and $s$ parameters allow to control the AWGN
+in the simulation. Fig.~\ref{fig:ctx_simu_com_chain_in_out} shows the BER output
+of the simulation. The $m$, $M$ and $s$ parameters allow to control the AWGN
 channel noise. $m$ is the minimum SNR value to simulate in the channel, while
 $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
 

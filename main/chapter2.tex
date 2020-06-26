@@ -5,11 +5,34 @@
 \chapter{Algorithms and Efficient Methods of Digital Communication Receiver}
 \label{chap:alg}
 
+The purpose of this chapter is to describe different receiver algorithms and
+methods representative of today and future digital communication standards.
+% The optimized algorithms implementations will be discussed in the next chapter.
+The first section of this chapter defines the mathematical operators used in the
+other sections.
+
+The second section presents the LDPC codes, first the encoding scheme is
+detailed and then the Belief Propagation decoder and its variants are detailed
+and compared.
+
+The third section presents the polar codes, first the encoding scheme is
+detailed and then the most famous decoding algorithms are explained and
+compared.
+% The notion of genericity and decoder flexibility are defined.
+
+The fourth section presents the Turbo codes encoding scheme as well as the turbo
+decoding algorithm. The BCJR sub-encoder and its variants are presented and
+compared.
+
+The fifth section presents the sparse code multiple access mechanism. Like in
+the other sections, the encoding and decoding schemes are presented and a new
+algorithmic approximation of the message passing algorithm is proposed and
+evaluated in terms of error-rate performance.
+
 \vspace*{\fill}
 \minitoccustom
 \vspace*{\fill}
 
-\newpage
 \section{Prerequisites}
 
 \begin{table}[htp]
@@ -160,11 +183,11 @@ channel and the variable node LLR values: $\hat{u}_n = \hardDec{(l_n + v_n)}$.
 
 In the Belief Propagation (BP) decoding algorithm, before to decide the decoded
 bits $\bm{\hat{u}}$, there are many iterations (5 to 100) between the variable
-nodes and the check nodes. In the first iteration, the messages $\bm{m}$ sent to
-the check nodes are directly the channel values $\bm{l}$. But, in the next
-iterations, the messages $\bm{m}$ are updated with the variable nodes values
-$\bm{v}$. To avoid direct auto-confirmation issues, the up-coming extrinsic LLR
-is systematically subtracted to the propagated message.
+nodes and the check nodes. In the first iteration, the a-priori information
+$\bm{a}$ sent to the check nodes is directly the channel values $\bm{l}$. But,
+in the next iterations, the a-priori information $\bm{a}$ is updated with the
+variable nodes values $\bm{v}$. To avoid direct auto-confirmation issues, the
+up-coming extrinsic LLR is systematically subtracted to the propagated message.
 
 \begin{figure}[htp]
   \centering
@@ -186,14 +209,14 @@ is systematically subtracted to the propagated message.
 Fig.~\ref{fig:alg_ldpc_bp} illustrates a single BP iteration. First, the check
 nodes are computed from the messages $m_j^i$ where $i$ is the index of the
 variable nodes and $j$ is the index of the check nodes. In the example, the
-$C_a$ check node computes $m^0_a \boxplus m^3_a \boxplus m^4_a \boxplus m^6_a
-\boxplus m^7_a$, where $m^0_a = l_0 + v_0 - e^{a}_0$, $m^3_a = l_3 + v_3 -
-e^{a}_3$, etc. In the first iteration $\bm{v}$ and $\bm{e}$ are initialized to
+$C_a$ check node computes $a^0_a \boxplus a^3_a \boxplus a^4_a \boxplus a^6_a
+\boxplus a^7_a$, where $a^0_a = l_0 + v_0 - e^{0}_a$, $a^3_a = l_3 + v_3 -
+e^{3}_a$, etc. In the first iteration $\bm{v}$ and $\bm{e}$ are initialized to
 0. Then, when all the check nodes have been computed it is possible to
 determine the new values of the $v_n$ variable nodes from the sum of the
 incoming extrinsic messages $e_j^n$. In the example, $v_0 = e^0_a + e^0_c$,
-where $e^0_a = m^3_a \boxplus m^4_a \boxplus m^6_a \boxplus m^7_a$ and $e^0_c =
-m^2_c \boxplus m^5_c \boxplus m^7_c$. When all the variable nodes have been
+where $e^0_a = a^3_a \boxplus a^4_a \boxplus a^6_a \boxplus a^7_a$ and $e^0_c =
+a^2_c \boxplus a^5_c \boxplus m^7_c$. When all the variable nodes have been
 updated, it is then possible to update the check nodes and so on.
 
 \begin{figure}[htp]
@@ -210,17 +233,16 @@ updated, it is then possible to update the check nodes and so on.
 Fig.~\ref{plot:alg_ldpc_iterations} shows the decoding performance of the BP
 algorithm depending on the number of iterations. Each time the number of
 iterations is doubled (from 5 to 40). A $\mathcal{H}$ parity matrix from the
-WiMAX standard (IEEE 802.16e) is used. One can notice that the SNR gain is not
-proportional with the number of iteration. Even so, there is a huge difference
-between 5 and 40 iterations. The computational effort required by the BP decoder
+WiMAX standard (IEEE 802.16e) is used. The need to perform many BP decoding
+iterations is demonstrated. The computational effort required by the BP decoder
 increases with the number of iterations. Thus, depending on the constraint
 (latency, throughput, correction power, etc.) the system designer can choose an
-appropriate number of iterations. The BP decoder can reduce its computational
-effort by implementing a early termination criterion. At the end of an iteration
-it is possible to decide the $\bm{\hat{u}}$ bits and to check is this bits
-verify the parity check constraints of the $\bm{\mathcal{H}}$ matrix. If yes,
-the decoder can stop before performing all the iterations. This is also called
-the syndrome verification.
+appropriate number of iterations. The required decoding computational effort can
+be reduced by implementing an early termination criterion. At the end of an
+iteration it is possible to decide the $\bm{\hat{u}}$ bits and to check if these
+bits verify the parity check constraints of the $\bm{\mathcal{H}}$ matrix. If
+yes, the decoder can stop before performing all the iterations. This is also
+called the syndrome verification.
 
 There are many variants of the BP algorithm, in the previous explanation, in an
 iteration, all the check nodes are computed first and then all the variable
@@ -264,7 +286,7 @@ complexity. To reduce the complexity on the $\boxplus$ operator it is possible
 to approximate it as follow:
 \begin{equation}
 \label{eq:alg_ldpc_ms}
-l_a \boxplus l_b = (2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \sign(l_a).\sign(l_b).\min(|l_a|, |l_b|).
+l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \sign(l_a.l_b).\min(|l_a|, |l_b|).
 \end{equation}
 This variant is called the \emph{Min-Sum} (MS)~\cite{Fossorier1999}.
 The expensive $\tanh$ functions are replaced by efficient $\sign$ and $\min$
@@ -273,7 +295,7 @@ performance. To solve this issue, the optimized \emph{Offset Min-Sum} (OMS) and
 \emph{Normalized Min-Sum} (NMS) approximations has been proposed
 in~\cite{Chen2002}:
 \begin{equation}
-l_a \boxplus l_b = (2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \alpha \times \big( \sign(l_a).\sign(l_b).\min(|l_a|, |l_b|) + \lambda \big),
+l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \alpha \times \big( \sign(l_a.l_b).\min(|l_a|, |l_b|) + \lambda \big),
 \end{equation}
 where $\alpha$ is the normalization factor of the NMS update rules and $\lambda$
 is the offset of the OMS update rules.
@@ -458,10 +480,6 @@ structure. In this manuscript, the Gaussian Approximation (GA) of the density
 evolution is used~\cite{Trifonov2012}.
 
 \subsection{Successive Cancellation List Decoding Algorithm}
-
-% \begin{itemize}
-%   \item \xmark~Prendre le schéma de Mathieu pour mieux décrire l'algo SCL
-% \end{itemize}
 
 \begin{algorithm}
   \caption{SCL decoding algorithm}\label{alg:polar_scl}
@@ -684,17 +702,6 @@ section.
 \subsection{Generic and Flexible Decoders}
 \label{sec:polar_genericity}
 
-% \begin{itemize}{}
-%   \item \xmark~Revoir le discours pour qu'il soit moins parti pris pour les
-%     décodeurs "Génériques/dynamiques"
-%   \item \xmark~Si on laisse ça ici il faut une section sur les décodeurs
-%     "générés/déroulés" au même niveau que la
-%     Section~\ref{sec:alg_polar_genericity} (tous les décodeurs proposés (SC et
-%     SCL) sont flexibles mais pas génériques)
-%   \item \xmark~Lever l'ambiguité entre génériques/dynamiques/flexibles dans tout
-%     le document
-% \end{itemize}
-
 One of the main contribution of this thesis lies in the flexibility and the
 genericity of the proposed software decoder. These terms need to be clearly
 defined in order to circumvent possible ambiguity. In the remainder of the
@@ -731,15 +738,6 @@ powers of two. The puncturing and shortening techniques
 in~\cite{Wang2014,Niu2013,Miloslavskaya2015} enable to construct polar codes of
 any length at the cost of slightly degraded decoding performance. The coding
 scheme can be completed with the specification of a CRC.
-
-% In~\cite{Sarkis2016}, the unrolling method is used: a specific description of
-% the decoder has to be generated for a specific polar code parameter set of $N$,
-% $K$, $R$, frozen bits set, puncturing pattern, CRC. This approach leads to very
-% fast software decoders at the price of the genericity, since a new source code
-% should be generated and compiled every time the modulation and coding scheme
-% (MCS) changes. This method is not adapted to wireless communication standards,
-% in which these parameters have to be adapted not only over time, but also for
-% the different users.
 
 The proposed decoders are completely generic regarding the code dimension $K$,
 the code length $N$, the frozen bits set $\bm{u}_{\mathcal{A}^c}$ and the
@@ -923,11 +921,7 @@ introduced by Peter Elias in 1955~\cite{Elias1955}. The objective was to propose
 an alternative to the block codes in term of codeword length flexibility:
 theoretically the length of a convolutional code is infinite. The coding scheme
 is made in a way that the output depends on the current input and on the inputs
-before. The current $c_k$ output bit can be expressed as a linear combination of
-the $\nu$ previous bits of the message:
-$c_k = \sum\limits_{j=0}^\nu g_ju_{k-j}$. The sequence of elements $g_j$ is
-called the code-generating sequence and it is often given in octal. $\nu$
-represents the number of elements memorized inside the encoder.
+before.
 
 \begin{figure}[htp]
   \centering
@@ -953,24 +947,30 @@ represents the number of elements memorized inside the encoder.
   \label{fig:alg_turbo_sub_encoder}
 \end{figure}
 
-Fig.~\ref{fig:alg_turbo_sub_encoder_graph} presents a convolutional encoder of
-rate $R = 1/2$ with a memory $\nu = 2$ ($D_0$ and $D_1$ are shift registers).
-Its two code-generating sequences $G_1 = (??)_8$ and $G_2 = (??)_8$ defines the
-$c_1$ and $c_2$ outputs respectively. In the example, the encoder has the
-particularity to be systematic because $c_1 = u$ and recursive because of the
-feedback loop before the first shift register $D_0$. In the literature, this
-type of coding scheme is called Recursive Systematic Convolutional (RSC). In
-Fig.~\ref{fig:alg_turbo_sub_encoder}, the number of $D$ memory $\nu = 2$ and
-so, the encoder have $2^\nu$ different states. Thus, a convolutional encoder can
-be seen as a Mealy's machine (or a finite-state machine) as shown in
-Fig.~\ref{fig:alg_turbo_sub_encoder_mealy}. The initial state $S_0$ corresponds
-to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$ and
-$D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and, finally,
-the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on the
-edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if the
-input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
-$c_2 = 0$ and will go in the state~$S_2$: this is denoted by \emph{1/10} below
-the oriented edge between $S_1$ and $S_2$.
+For a $R=1/2$ encoder, the current $p_k$ output parity bit can be expressed as a
+linear combination of the $\nu$ previous bits of the message:
+$p_k = \sum_{j=0}^\nu g^{(2)}_{j} u_{k-j} + \sum_{j=1}^\nu g^{(1)}_{j} p_{k-j}$,
+where $\nu$ represents the number of elements memorized inside the encoder.
+The sequence of elements $g_j$ is called the code-generating sequence and it is
+often given in octal. Fig.~\ref{fig:alg_turbo_sub_encoder_graph} presents a
+convolutional encoder of rate $R = 1/2$ with a memory $\nu = 2$ ($D_0$ and $D_1$
+are shift registers). Its two code-generating sequences $\bm{g^{(1)}} = (7)_8$
+and $\bm{g^{(2)}} = (5)_8$ defines the $c_2 = p$ output while $c_1 = u$. In
+the example, the encoder has the particularity to be systematic because
+$c_1 = u$ and recursive because of the feedback loop before the first shift
+register $D_0$. In the literature, this type of coding scheme is called
+Recursive Systematic Convolutional (RSC). Only RSC codes are considered in the
+document. In Fig.~\ref{fig:alg_turbo_sub_encoder}, the number of $D$ memory
+$\nu = 2$ and so, the encoder have $2^\nu = 4$ different states. Thus, a
+convolutional encoder can be seen as a Mealy's machine (or a finite-state
+machine) as shown in Fig.~\ref{fig:alg_turbo_sub_encoder_mealy}. The initial
+state $S_0$ corresponds to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds
+to $D_0 = 1$ and $D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and
+$D_1 = 1$ and, finally, the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$.
+The notation on the edges is in the form of $u/c_1c_2$. For instance, from the
+state~$S_1$, if the input bit $u$ is 1, then the encoder will output two bits
+$c_1 = 1$ and $c_2 = 0$ and will go in the state~$S_2$: this is denoted by
+\emph{1/10} below the oriented edge between $S_1$ and $S_2$.
 
 Fig.~\ref{fig:alg_turbo_sub_encoder_trellis} introduces a new representation of
 convolutional encoders: the trellis. This representation has been used the first
@@ -1016,71 +1016,9 @@ interleaved order are given to the sub-encoder 2.
 \subsection{Turbo Decoding Algorithm}
 \label{sec:turbo_overview}
 
-% \begin{itemize}
-%   \item \xmark~prendre le shémas du treillis de Thibaud pour illustrer le BCJR
-%     LTE (3G/4G)
-%   \item \xmark~prendre le schémas du décodeur Turbo de Thibaud pour mieux
-%     expliquer le décodeur complet
-% \end{itemize}
-
-% SHORT VERSION ---------------------------------------------------------------
-% The turbo-decoding process is an iterative process in which two soft input soft
-% output (SISO) decoders exchange extrinsic information. Each SISO decoder uses
-% the channel information and \textit{a priori} extrinsic information to compute
-% \textit{a posteriori} extrinsic information. The \textit{a posteriori}
-% information becomes the \textit{a priori} information for the other SISO decoder
-% and is exchanged via interleaver/deinterleaver.
-
-% In turbo-coding, the two component codes are convolutional codes, the associated
-% decoding modules perform the BCJR or forward-backward algorithm~\cite{Bahl1974}
-% which is optimal for the maximum a posteriori (MAP) decoding of convolutional
-% codes. In order to calculate the extrinsic information for a bit, a BCJR SISO
-% decoder first computes the probability that a trellis transition occurred during
-% the encoding process. The branch metrics associated with states
-% $s_i^k$ and $s_j^{k+1}$ are computed as:
-% \begin{equation}
-% \label{eq:turbo_gamma}
-%   \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{sys}^k + L_a^k)u^k + 0.5(L_p^k p^k).
-% \end{equation}
-% Here, $L_{sys}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
-% LLR for $k^{th}$ trellis section, respectively. In addition, the parity LLRs for
-% the $k^{th}$ trellis step are $L_p^k = L_{p0}^k$ for MAP decoder 0 and
-% $L_p^k = L_{p1}^k$ for MAP decoder 1. We do not need to evaluate the branch
-% metric $\gamma(s^k , s^{k+1})$ for all 16 possible branches, as there are only
-% four different branch metrics:
-% $\gamma^k_0 = 0.5(L_{sys}^k + L_a^k + L_p^k)$,
-% $\gamma^k_1 = 0.5(L_{sys}^k + L_a^k - L_p^k)$, $-\gamma^k_0$, and $-\gamma^k_1$.
-% After that, the SISO decoder computes forward and backward recursions over the
-% trellis representation of the convolutional code. In this work, we use the
-% Enhanced max-log-MAP algorithm~\cite{Robertson1995,Vogt2000}. For each state
-% $j$ of section $k$ of the trellis, the forward ($\alpha$) and backward ($\beta$)
-% metrics are computed as follows:
-% \begin{equation}
-% \label{eq:turbo_alpha}
-%   \alpha_j^{k+1} = max_{i \epsilon F} \{ \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) \}
-% \end{equation}
-% \begin{equation}
-% \label{eq:turbo_beta}
-%   \beta_j^k = max_{i \epsilon B} \{ \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) \}.
-% \end{equation}
-% Then, the extrinsic information for each bit at position $k$ is:
-% \begin{equation}
-% \label{eq:turbo_ext}
-% \begin{aligned}
-%   L_e^k = max_{\{s_k, s_{k+1}\}\epsilon U^1}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
-%   - max_{\{s_k, s_{k+1}\}\epsilon U^{-1}}\{ \alpha_i^k + \beta_j^{k+1} + \gamma(s_i^k, s_j^{k+1}) \} \\
-%   - L_{sys}^k - L_a^k,
-% \end{aligned}
-% \end{equation}
-% Finally, $L_e$ is scaled by a fixed factor of $0.75$.
-% %As the Enhanced max-log-MAP is implemented, $L_e$ is re-scaled by a factor of
-% %$0.75$ (fixed scaling factor).
-
-% LONG VERSION ----------------------------------------------------------------
-
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.9]{turbo/decoder/decoder}
+  \includegraphics[scale=1.0]{turbo/decoder/decoder}
   \caption{Structure of a turbo decoder.}
   \label{fig:alg_turbo_decoder}
 \end{figure}
@@ -1111,7 +1049,8 @@ sets of forward state metrics for each transmitted information bit; (iii) in the
 backward traversal step, it iteratively computes $K$ sets of backward state
 metrics for each transmitted information bit; (iv) to compute the extrinsic LLRs
 ($L_e$), the BCJR algorithm then combines the forward and backward state
-metrics.
+metrics. The $\bm{L_s}$, $\bm{L_p}$, $\bm{L'_p}$ vectors of LLRs correspond to
+the decoder input $\bm{l}$ split in 3 sub-sets.
 
 \begin{algorithm}
   \caption{Pseudo-code of the BCJR decoding algorithm.}
@@ -1154,34 +1093,40 @@ of the trellis.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{turbo/encoder_lte/encoder_lte}
-  \caption{Turbo LTE-Advanced encoder and its associated 8-state trellis.}
+  \includegraphics[width=1.0\textwidth]{turbo/encoder_lte/encoder_lte}
+  \caption
+    [Turbo LTE encoder and its associated 8-state trellis.]
+    {Turbo LTE encoder and its associated 8-state trellis.
+     $\bm{g^{(1)}} = (13)_8$, $\bm{g^{(2)}} = (15)_8$.}
   \label{fig:alg_turbo_encoder_lte}
 \end{figure}
 
-In this thesis, we focus on the turbo codes of the LTE-Advanced
-standard~\cite{ETSI2013} (4G mobile network).
-Fig.~\ref{fig:alg_turbo_encoder_lte} gives the definition of the LTE-Advanced
-turbo encoder. This encoder lead to a 8-state trellis. In the next sections and
-chapters, the LTE-Advanced trellis is always considered.
+In this thesis, we focus on the turbo codes of the LTE standard~\cite{ETSI2013}
+(3G and 4G mobile networks). Fig.~\ref{fig:alg_turbo_encoder_lte} gives the
+definition of the LTE turbo encoder. This encoder lead to a 8-state trellis. In
+the next sections and chapters, the LTE trellis is always considered.
 
 \paragraph{Branch-metric Computations}
 
-Let $s_j^{k+1}$ be the $j^{th}$ state associated with information bit $k+1$.
-There are two incoming branches into state $s_j^{k+1}$. Each incoming branch is
-associated with values $u^k$ and $p^k$, the $k^{th}$ information bit and the
-parity bit (both $\pm1$), respectively. The branch metrics associated with
-states $s_i^k$ and $s_j^{k+1}$ are computed as follows:
+Let $S_j^{k+1}$ be the $j^{th}$ state associated with information bit $k+1$ and
+$j \in \{0,7\}$. There are two incoming branches into state $S_j^{k+1}$. Each
+incoming branch is associated with values $u^k$ and $p^k$, the $k^{th}$
+information bit and the parity bit (both $\pm1$), respectively. The branch
+metrics associated with states $S_i^k$ and $S_j^{k+1}$ are computed as follows:
 \begin{equation}
 \label{eq:turbo_gamma}
- \gamma(s_i^k, s_j^{k+1}) = 0.5(L_{s}^k + L_a^k)u^k + 0.5(L_p^k p^k).
+ \gamma(S_i^k, S_j^{k+1}) = 0.5(L_{s}^k + L_a^k)u^k + 0.5(L_p^k p^k).
 \end{equation}
 Here, $L_{s}^k$ and $L_a^k$ are the systematic channel LLR and the a-priori
-LLR for $k^{th}$ trellis step, respectively. In addition, the parity LLRs for
-the $k^\text{th}$ trellis step are $L_p^k = L_{p}^{k}$ for MAP decoder 1 and
-$L_p^k = L_{p}^{'k}$ for MAP decoder 2. Note that we do not need to evaluate the
-branch metric $\gamma(s^k , s^{k+1})$ for all 16 possible branches, as there are
-only four different branch metrics:
+LLR for $k^{th}$ trellis step, respectively.
+In the BCJR SISO decoder 1, the $\bm{L_{s}}$, $\bm{L_{p}}$ and $\bm{L_{a}}$
+vectors of LLRs are considered (natural domain) while in the BCJR SISO decoder
+2, the $\bm{L'_{s}}$, $\bm{L'_{p}}$ and $\bm{L'_{a}}$ LLRs are used instead
+(interleaved domain). However, the computations in the natural and in the
+interleaved domain are similar, this is why only the operations in the natural
+domain are given here. Note that we do not need to evaluate the branch metric
+$\gamma(s^k , s^{k+1})$ for all 16 possible branches, as there are only four
+different branch metrics:
 $\gamma^k_0 = 0.5(L_{s}^k + L_a^k + L_p^k)$,
 $\gamma^k_1 = 0.5(L_{s}^k + L_a^k - L_p^k)$, $-\gamma^k_0$, and $-\gamma^k_1$.
 
@@ -1195,10 +1140,10 @@ state metrics of stage $k$. These state metrics are computed by:
 \begin{equation}
   \label{eq:turbo_alpha}
   \alpha_j^{k+1} =
-  \maxstar_{i \epsilon F} ( \alpha_i^k + \gamma(s_i^k, s_j^{k+1}) ),
+  \maxstar_{i \epsilon F} ( \alpha_i^k + \gamma(S_i^k, S_j^{k+1}) ),
 \end{equation}
 where the set $F$ contains the two indexes of the states in step $k$ connected
-to state $s_j^{k+1}$ (as defined by the trellis). The $\maxstar$ operator is
+to state $S_j^{k+1}$ (as defined by the trellis). The $\maxstar$ operator is
 defined as:
 \begin{equation}
    \maxstar(a,b) = \max(a,b) + \log(1 + \exp(-|a-b|)),
@@ -1211,10 +1156,10 @@ computed as:
 \begin{equation}
   \label{eq:turbo_beta}
   \beta_j^k =
-  \maxstar_{i \epsilon B} ( \beta_i^{k+1} + \gamma(s_j^k, s_i^{k+1}) ),
+  \maxstar_{i \epsilon B} ( \beta_i^{k+1} + \gamma(S_j^k, S_i^{k+1}) ),
 \end{equation}
 where $B$ is the set containing the indexes of states in step $k+1$ connected to
-state $s_j^k$ as defined by the trellis.
+state $S_j^k$ as defined by the trellis.
 
 \paragraph{Extrinsic LLR Computations}
 
@@ -1223,10 +1168,10 @@ LLRs for the $k^\text{th}$ bit are computed as:
 \begin{equation}
   \label{eq:turbo_ext}
   \begin{aligned}
-  L_e^k = \maxstar_{\{s_k, s_{k+1}\}\epsilon U^1}\big( \alpha_i^k + \beta_j^{k+1} +
-  \gamma(s_i^k, s_j^{k+1}) \big) \\
-  - \maxstar_{\{s_k, s_{k+1}\}\epsilon U^{-1}}\big( \alpha_i^k + \beta_j^{k+1} +
-  \gamma(s_i^k, s_j^{k+1}) \big) \\
+  L_e^k = \maxstar_{\{S_k, S_{k+1}\}\epsilon U^1}\big( \alpha_i^k + \beta_j^{k+1} +
+  \gamma(S_i^k, S_j^{k+1}) \big) \\
+  - \maxstar_{\{S_k, S_{k+1}\}\epsilon U^{-1}}\big( \alpha_i^k + \beta_j^{k+1} +
+  \gamma(S_i^k, S_j^{k+1}) \big) \\
   - L_{s}^k - L_a^k,
   \end{aligned}
 \end{equation}
@@ -1241,27 +1186,29 @@ respectively (because of the BPSK modulation).
     [Decoding performance of the turbo decoder depending on the number of
      iterations.]
     {Decoding performance of the turbo decoder depending on the number of
-     iterations. LTE-Advanced code, $K = 6144$, $R = 1/3$, MAP algorithm.}
+     iterations. LTE code, $K = 6144$, $R = 1/3$, MAP algorithm.}
   \label{plot:alg_turbo_iterations}
 \end{figure}
 
 Fig.~\ref{plot:alg_turbo_iterations} shows the decoding performance of the turbo
 decoder depending on the number of iterations. The biggest code from the
-LTE-Advanced standard is evaluated ($K = 6144$ and $R=1/3$). In one iteration,
-the BCJR decoder 1 and 2 are run. The computational complexity of one turbo
-decoding iteration is higher than one LDPC BP decoding iteration.
+LTE standard is evaluated ($K = 6144$ and $R=1/3$). In one iteration, the BCJR
+decoder 1 and 2 are run. Thus, the computational complexity of one turbo
+decoding iteration is higher than one LDPC BP decoding iteration. Notice that it
+has been shown that the BCJR is in fact an instance of the BP
+algorithm~\cite{McEliece1998}.
 
-\paragraph{Approximation of the MAP Decoder}
+\paragraph{Approximation of the MAP Operations in the BCJR Decoder}
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\textwidth]{turbo/approximations/approximations}
   \caption
     [Decoding performance of the turbo decoder depending on the approximations.]
-    {Decoding performance of the turbo decoder depending on the algorithm
+    {Decoding performance of the turbo decoder depending on the BCJR algorithm
      approximations. The maximum a-posteriori (MAP), the max-log-MAP (ML-MAP)
      and the enhanced max-log-MAP (EML-MAP, $\alpha = 0.75$) are evaluated.
-     $K = 6144$, $R=1/3$ and 6 iterations.}
+     $K = 6144$, $R=1/3$ and 6 decoding iterations.}
   \label{plot:alg_turbo_approximations}
 \end{figure}
 
@@ -1272,8 +1219,8 @@ term is simply removed. This approximation is called the \emph{max-log-MAP}
 algorithm (ML-MAP). It low computational complexity makes efficient software and
 hardware implementations possible. However, the ML-MAP algorithm negatively
 affects the decoding performance. It this then possible to partially recover the
-error-rate performance loss by scaling the extrinsic LLRs by a factor
-$\alpha$: this is called the \emph{Enhanced} max-log-MAP (EML-MAP)
+error-rate performance loss by scaling the extrinsic LLRs in the turbo decoder
+by a factor $\alpha$: this is called the \emph{Enhanced} max-log-MAP (EML-MAP)
 algorithm~\cite{Vogt2000,Studer2011}. The impact of the approximations on the
 decoding performance is shown in Fig.~\ref{plot:alg_turbo_approximations}.
 
@@ -1285,8 +1232,8 @@ decoding performance is shown in Fig.~\ref{plot:alg_turbo_approximations}.
   \caption
     [BER and FER of the turbo decoder for $K = 6144$ (6 iters) and $R=1/3$.]
     {Bit Error Rate (BER) and Frame Error Rate (FER) of the decoder for $K =
-    6144$, $R=1/3$ and 6 iterations. Enhanced max-log-MAP algorithm ($\alpha =
-    0.75$).}
+    6144$, $R=1/3$ and 6 decoding iterations. Enhanced max-log-MAP algorithm
+    ($\alpha = 0.75$).}
   \label{plot:alg_turbo_quantification}
 \end{figure}
 
@@ -1302,26 +1249,13 @@ saturation is made over 16 bits ($s = 16$). One can note that there is no
 decoding performance degradation. Finally, \emph{int-8} is the 8-bit quantified
 version of the decoder. Compared to the 16-bit version, the decimal part of the
 8-bit version is represented with 2 bits ($Q_{6,2}$) instead of 3. The internal
-saturations are on 8-bit. This version shows a 0.15 dB degradation. The limited
+saturations are on 8-bit. This version shows a 0.1 dB degradation. The limited
 dynamic of 8-bit format together with early saturation inside the decoder are
 responsible for this small performance loss.
 
-% Fig.~\ref{plot:alg_turbo_quantification} shows the decoding performance of the
-% proposed software turbo decoder for the $K = 6144$ rate-1/3, LTE-specified
-% turbo-code. The decoding performance of a floating-point decoder is provided as
-% a reference. Unlike~\cite{Wu2013}, the proposed 16-bit implementation does not
-% degrade the decoding performance. The 8-bit version of our decoder shows a
-% 0.15~dB degradation. The limited dynamic of 8-bit format together with early
-% saturation inside the decoder are responsible for this small performance loss.
-
 \section{Sparse Code Multiple Access}
 
-% \begin{itemize}
-%   \item \cmark~si on laisse le SCMA, je crois qu'il y a tout
-%   \item \cmark~refaire les vilains schémas
-% \end{itemize}
-
-\subsection{Introduction and Related Works}
+\subsection{Presentation and Related Works}
 
 Non-orthogonal Multiple Access (NOMA) mechanisms are investigated as means to
 improve the fifth-generation mobile communication systems (5G)~\cite{Islam2017}
@@ -1351,7 +1285,7 @@ extrinsic information and probabilities of the received signal. This is based on
 modeling the channel noise with a Gaussian probability density function (PDF). A
 classical improvement to this bottleneck is the computation of extrinsic
 information in the logarithm domain, which led to develop the log-MPA decoder.
-In~\cite{Liu2016}, fixed point and floating-point implementations of the MPA and
+In~\cite{Liu2016}, fixed-point and floating-point implementations of the MPA and
 log-MPA on FPGA are studied. The bit error rate performance and complexity of
 the MPA and log-MPA are compared and it is concluded that using log-MPA with 4
 message passing iterations achieves a good tradeoff between performance and
@@ -1376,74 +1310,131 @@ the convergence rate is accelerated. A Monte Carlo Markov Chain Method is
 proposed in~\cite{Chen2016} to decode SCMA signals and sphere decoding is also
 explored in~\cite{Yang2017,Wei2017} for SCMA receiver design.
 
-The main difference between this work and previously cited works is that the
-present paper combines an analytic view of MPA complexity with hardware and
-resource aware programming, exploiting hardware features available in general
-purpose processors (GPPs). The SCMA decoding algorithms are revised in light of
-the needs of Cloud Radio Access Networks (C-RANs) and to take full advantage of
-key hardware features available in GPPs such as their SIMD engine. In the early
-2000s, the performance of many processors improved significantly due to clock
-rate increases. This increase of performance needed very minimal if any
-programming effort, however the drawbacks of high clock rate was more power and
-energy consumption, overheating of processors, leakage currents and signal
-integrity problems. These disadvantages led designers to follow new paradigms
-such as thread-level and data-level parallelisms that provide good performance
-at lower clock speeds. Another challenge was data access efficiency in cache and
-RAM for performance critical algorithms. Higher performance also came from
-improved cache access efficiency of heterogeneous processors and parallel access
-to the L1 cache through vectorized instructions. Therefore, complicated and
-control heavy algorithms such as MPA have to be adapted for efficient execution
-on heterogeneous architectures and their exploitable parallelism must be
-expressed at every level of the code, whether in arithmetic or memory access
-instructions. Particularly, various Single Instruction Multiple Data (SIMD)
-extensions and thread-level parallelism are used to increase the throughput of
-MPA decoding on various platforms.
+The main difference between this work and previously cited works is to combine
+an analytic view of MPA complexity with hardware and resource aware programming,
+and to exploit hardware features available in general purpose processors (GPPs).
+The SCMA decoding algorithms are revised in light of the needs of Cloud Radio
+Access Networks (Cloud-RANs).
 
-This paper reports on two contributions that can be useful for any variation of
-the aforementioned MPA. First, MPA and log-MPA have been adapted to use SIMD
-extensions leveraging the available data-level parallelism. The algorithms are
-revised to have aligned and contiguous access to memory, which is crucial to
-achieve high memory throughput. Various SIMD instruction set architectures
-(ISAs) such as Advanced Vector Extensions (AVX), Streaming SIMD Extension (SSE),
-Knights Corner Instruction (KNCI) and ARM\R NEON are used to enhance the
-performance of various parts of the algorithm. Multi-threaded programming
-technique and power efficiency are also studied in this paper.
+% The main difference between this work and previously cited works is that the
+% present manuscript combines an analytic view of MPA complexity with hardware and
+% resource aware programming, exploiting hardware features available in general
+% purpose processors (GPPs). The SCMA decoding algorithms are revised in light of
+% the needs of Cloud Radio Access Networks (Cloud-RANs) and to take full advantage
+% of key hardware features available in GPPs such as their SIMD engine. In the
+% early 2000s, the performance of many processors improved significantly due to
+% clock rate increases. This increase of performance needed very minimal if any
+% programming effort, however the drawbacks of high clock rate was more power and
+% energy consumption, overheating of processors, leakage currents and signal
+% integrity problems. These disadvantages led designers to follow new paradigms
+% such as thread-level and data-level parallelisms that provide good performance
+% at lower clock speeds. Another challenge was data access efficiency in cache and
+% RAM for performance critical algorithms. Higher performance also came from
+% improved cache access efficiency of heterogeneous processors and parallel access
+% to the L1 cache through vectorized instructions. Therefore, complicated and
+% control heavy algorithms such as MPA have to be adapted for efficient execution
+% on heterogeneous architectures and their exploitable parallelism must be
+% expressed at every level of the code, whether in arithmetic or memory access
+% instructions. Particularly, various Single Instruction Multiple Data (SIMD)
+% extensions and thread-level parallelism are used to increase the throughput of
+% MPA decoding on various platforms.
 
-Second, efforts have been made to reduce the high dynamic ranges and high
-storage burden that are induced by the numerous calculations of the exponential
-function embedded in MPA, which is one of its main points of congestion. To
-eliminate calculations of the exponentials in the MPA, this paper uses
-approximate modeling of noise. Indeed, a Gaussian Probability Density Function
-(PDF) is estimated with sub-optimal, bell shaped, polynomial PDFs. Using
-polynomial PDFs enables a significant throughput improvement with a very small
-degradation on the bit error rate performance. In addition, this technique
-enables to use vectorized instructions for the calculation of the probabilities,
-as opposed to log-MPA. Details will be explained in the sequel. The impacts of
-turbo codes~\cite{Berrou1993}, polar codes~\cite{Arikan2009} and LDPC
-codes~\cite{Gallager1962,MacKay1995} are investigated.
+% This work reports on two contributions that can be useful for any variation of
+% the aforementioned MPA. First, MPA and log-MPA have been adapted to use SIMD
+% extensions leveraging the available data-level parallelism. The algorithms are
+% revised to have aligned and contiguous access to memory, which is crucial to
+% achieve high memory throughput. Various SIMD instruction set architectures
+% (ISAs) such as Advanced Vector Extensions (AVX), Streaming SIMD Extension (SSE),
+% Knights Corner Instruction (KNCI) and ARM\R NEON are used to enhance the
+% performance of various parts of the algorithm. Multi-threaded programming
+% technique and power efficiency are also studied in this paper.
 
-In this paper, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
+% Second, efforts have been made to reduce the high dynamic ranges and high
+% storage burden that are induced by the numerous calculations of the exponential
+% function embedded in MPA, which is one of its main points of congestion. To
+% eliminate calculations of the exponentials in the MPA, this paper uses
+% approximate modeling of noise. Indeed, a Gaussian Probability Density Function
+% (PDF) is estimated with sub-optimal, bell shaped, polynomial PDFs. Using
+% polynomial PDFs enables a significant throughput improvement with a very small
+% degradation on the bit error rate performance. In addition, this technique
+% enables to use vectorized instructions for the calculation of the probabilities,
+% as opposed to log-MPA. Details will be explained in the sequel. The impacts of
+% turbo codes~\cite{Berrou1993}, polar codes~\cite{Arikan2009} and LDPC
+% codes~\cite{Gallager1962,MacKay1995} are investigated.
+
+In this section, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
 and $\mathbb{C}$ denote binary, natural, integer, real and complex numbers.
 Scalar, vector and matrix are presented as $x$, $\bm{x}$, $\bm{X}$ respectively.
-The n'th element of a vector denoted by $\bm{x}_n$ and $\bm{X}_{n,m}$ is the
-element of n'th row and m'th column of matrix $\bm{X}$. Notation $\diag(x)$
-shows a diagonal matrix where its n'th diagonal element is $\bm{x_n}$. In
-addition, the transpose of a matrix is expressed as $\bm{X^T}$. The paper is
-organized as follows, Section~\ref{sec:scma_detection} introduces the SCMA
-algorithm. Maximum Likelihood, MPA and log-MPA decoding methods are explained in
-this section as a background to this research.
-Section~\ref{sec:opt_scma} elaborates on proposed improvements such as
-vectorizing the algorithm, exponential estimations, contiguous access to memory
-and other hardware oriented techniques. Section~\ref{sec:scma_perf} explores the
-bit error rate performance as well as the throughput, the latency, the power
-consumption, and the energy efficiency of the proposed MPA and log-MPA
-implementations. Some profiling metrics are given to better understand the
-results. Section~\ref{sec:scma_fec} is dedicated to study the effects of
-suggested techniques on block error rate after channel coding. Finally, the main
-findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
+The $n^\text{th}$ element of a vector denoted by $\bm{x}_n$ and $\bm{X}_{n,m}$
+is the element of $n^\text{th}$ row and $m^\text{th}$ column of matrix $\bm{X}$.
+Notation $\diag(x)$ shows a diagonal matrix where its n'th diagonal element is
+$\bm{x_n}$. In addition, the transpose of a matrix is expressed as $\bm{X^T}$.
+
+The next sub-sections present the SCMA from a digital communication system
+point of view and, then, the Maximum Likelihood, MPA and log-MPA decoding
+methods are presented. Finally, our Estimated-MPA (E-MPA) algorithm is
+described.
+% The paper is organized as follows, Section~\ref{sec:scma_detection} introduces
+% the SCMA algorithm. Maximum Likelihood, MPA and log-MPA decoding methods are
+% explained in this section as a background to this research.
+% Section~\ref{sec:opt_scma} elaborates on proposed improvements such as
+% vectorizing the algorithm, exponential estimations, contiguous access to memory
+% and other hardware oriented techniques. Section~\ref{sec:scma_perf} explores the
+% bit error rate performance as well as the throughput, the latency, the power
+% consumption, and the energy efficiency of the proposed MPA and log-MPA
+% implementations. Some profiling metrics are given to better understand the
+% results. Section~\ref{sec:scma_fec} is dedicated to study the effects of
+% suggested techniques on block error rate after channel coding. Finally, the main
+% findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 
 \subsection{Overview of the SCMA System Model}
 \label{sec:scma_overview}
+
+An SCMA encoder with $J$ users (layers) and $K$ physical resources is a function
+that maps a binary stream of data to $K$-dimensional complex constellations
+$f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
+$\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
+sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
+own codebook to generate the desired codeword according to the binary input
+stream. Fig.~\ref{fig:scma} shows SCMA uplink chain with $J = 6$, $K = 4$ and
+$N = 2$. SCMA codewords are spread over $K$ physical resources, such as OFDM
+tones. Fig.~\ref{fig:scma_enc} shows that in the multiplexed scheme of SCMA, all
+chosen codewords of the $J$ layers are added together after being multiplied by
+the channel coefficient $\bm{h}_j$. Then, the entire uplink chain is shown in
+Fig.~\ref{fig:scma_codec}. The output of the SCMA encoder is affected by the
+white additive noise $\bm{n}$:
+\begin{equation}
+  \label{eq:scma_1}
+  \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
+\end{equation}
+where $\bm{x}_j=(x_1,...,x_{Kj})^T$ and $\bm{h}_j=(h_1,...,h_{Kj})^T$ are
+respectively codeword and channel coefficients of layer $j$.
+Considering the digital communication chain presented in
+Fig.~\ref{fig:ctx_com_chain} the SCMA encoder can be seen as a digital modulator
+and the SCMA decoder can be seen as a digital demodulator.
+
+\subsection{SCMA Decoding Schemes}
+\label{sec:scma_detection}
+
+\paragraph{Maximum Likelihood}
+\label{sec:scma_ml}
+
+For an arbitrary codeword, the optimum decision, i.e. the one that minimizes the
+likelihood of transmission errors after decoding, is the one resulting from the
+Maximum Likelihood (ML) estimation, which can be described as:
+\begin{equation}
+  \label{eq:scma_2}
+  \bm{\hat{x}} = \argmin_{c \in \bm{X}}||\bm{y - c}||^2,
+\end{equation}
+given the received codeword. In \eqref{eq:scma_2}, the soft outputs
+$\hat{\bm{x}}$ are LLRs (denoted as $\bm{l}$ in Fig.~\ref{fig:ctx_com_chain}).
+When a signal is transmitted over an AWGN channel (of $\sigma^2$ variance), the
+probability function $\prob(\bm{y}|\bm{c})$ can be expressed as:
+\begin{equation}
+  \label{eq:scma_4}
+  \prob(\bm{y}|\bm{c}) = \frac{1}{\sqrt{2\pi}\sigma}\exp
+  \Bigg(-\frac{||\bm{y}-\bm{c}||^2}{2\sigma^2}\Bigg).
+\end{equation}
 
 \begin{figure}[htp]
   \centering
@@ -1470,73 +1461,21 @@ findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
     \includegraphics{scma/codec/codec_dec}
   }
   \caption
-    [SCMA encoding and decoding schemes.]
-    {SCMA encoding and decoding schemes.}
+    [SCMA system model, encoding and decoding schemes.]
+    {SCMA system model, encoding and decoding schemes.}
   \label{fig:scma}
 \end{figure}
 
-An SCMA encoder with $J$ users (layers) and $K$ physical resources is a function
-that maps a binary stream of data to $K$-dimensional complex constellations
-$f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
-$\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
-sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
-own codebook to generate the desired codeword according to the binary input
-stream. Fig.~\ref{fig:scma} shows SCMA uplink chain with $J = 6$, $K = 4$ and
-$N = 2$. SCMA codewords are spread over $K$ physical resources, such as OFDM
-tones. Fig.~\ref{fig:scma_enc} shows that in the multiplexed scheme of SCMA, all
-chosen codewords of the $J$ layers are added together after being multiplied by
-the channel coefficient $\bm{h}_j$. Then, the entire uplink chain is shown in
-Fig.~\ref{fig:scma_codec}. The output of the SCMA encoder is affected by the
-white additive noise $\bm{n}$.
-\begin{equation}
-  \label{eq:scma_1}
-  \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
-\end{equation}
-where $\bm{x}_j=(x_1,...,x_{Kj})^T$ and $\bm{h}_j=(h_1,...,h_{Kj})^T$ are
-respectively codeword and channel coefficients of layer $j$.
+Although the ML method provides the best guess for $\bm{\hat{x}}$, performing
+the computation with this method requires unacceptable complexity in real
+applications. In the case of six users and codebooks matrices size $4\times4$ as
+in Fig.~\ref{fig:scma_enc}, the calculation of the soft output for each bit
+in \eqref{eq:scma_4} needs 4096 exponential function computations, which is
+unacceptable. Nevertheless, the result of this method is used to compare with
+practical methods to characterize the BER performance degradation of MPA and
+log-MPA.
 
-\subsection{SCMA Detection Schemes}
-\label{sec:scma_detection}
-
-\subsubsection{Maximum Likelihood}
-\label{sec:scma_ml}
-
-For an arbitrary codeword, the optimum decision, i.e. the one that minimizes the
-likelihood of transmission errors after decoding, is the one resulting from the
-Maximum Likelihood (ML) estimation, which can be described as:
-\begin{equation}
-  \label{eq:scma_2}
-  \bm{\hat{x}_{ML}} = \argmin_{c \in \bm{X}}||\bm{y - c}||^2,
-\end{equation}
-given the received codeword. In \eqref{eq:scma_2}, the soft outputs
-$\hat{\bm{x}}$ are also called Log-Likelihood Ratios (LLRs) that can be
-calculated with the following equation:
-\begin{equation}
-  \label{eq:scma_3}
-  LLR_x = \ln\Bigg(\frac{\sum_{C\in\mathcal{L}_x^0} \prob(\bm{y}|\bm{c})}
-  {\sum_{C\in\mathcal{L}_x^1} \prob(\bm{y}|\bm{c})}\Bigg),
-\end{equation}
-where $LLR_x$ is the log likelihood ratio of bit $x$ obtained from codeword
-$\hat{\bm{x}}$. This codeword comes from $\mathcal{L}_x^1$ the set of codewords
-in which bit $x$ is 1 and $\mathcal{L}_x^0$ the set of codewords in which bit
-$x$ is 0. The probability function $\prob(\bm{y}|\bm{c})$ can be expressed as
-in \eqref{eq:scma_4} when a signal is transmitted over an additive white
-Gaussian channel with $\sigma^2$ variance:
-\begin{equation}
-  \label{eq:scma_4}
-  \prob(\bm{y}|\bm{c}) = \frac{1}{\sqrt{2\pi}\sigma}\exp
-  \Bigg(-\frac{||\bm{y}-\bm{c}||^2}{2\sigma^2}\Bigg).
-\end{equation}
-Although the ML method provides the best guess for $\bm{\hat{x}_{ML}}$,
-performing the computation with this method requires unacceptable complexity in
-real applications. In the case of six users and codebooks matrices size
-$4\times4$ as in Fig.~\ref{fig:scma_enc}, the calculation of the soft output
-for each bit in \eqref{eq:scma_4} needs 4096 exponential function computations,
-which is unacceptable. Nevertheless, in this article the result of this method
-is used to compare with practical methods to characterize the BER performance
-degradation of MPA and log-MPA.
-
-\subsubsection{Message Passing Algorithm (MPA)}
+\paragraph{Message Passing Algorithm}
 \label{sec:scma_mpa}
 
 Fig.~\ref{fig:scma_dec_graph} shows a Bayesian factor graph representation of an
@@ -1545,7 +1484,7 @@ the codebooks, exactly three users collide in each physical resource. There are
 four possible codewords for each of the three connected user's codebooks which
 gives 64 possible combined codewords in each physical resource. In the first
 step of the MPA, the 64~distances between each possible combined codewords and
-the actual received codeword are calculated.
+the actual received codeword are calculated:
 \begin{equation}
   \label{eq:scma_5}
   d_{RES  \beta}(\bm{m}, \bm{H}) =
@@ -1596,9 +1535,9 @@ guess swap at the user node:
 \end{equation}
 message passing between users and resources (see \eqref{eq:scma_8} and
 \eqref{eq:scma_9}) will be repeated three to eight times to reach the desired
-decoding performance. The final belief at each user B (i) is the multiplication
+decoding performance. The final belief at each user $B(i)$ is the multiplication
 of all incoming messages as illustrated in Fig.~{\ref{fig:scma_dec_alg}}(III)
-and \eqref{eq:scma_10} for UE4 and codeword $i$. Finally, \eqref{eq:scma_11} is
+and \eqref{eq:scma_10} for UE3 and codeword $i$. Finally, \eqref{eq:scma_11} is
 used to calculate soft outputs for bit $b_x$:
 \begin{equation}
   \label{eq:scma_10}
@@ -1606,17 +1545,17 @@ used to calculate soft outputs for bit $b_x$:
 \end{equation}
 \begin{equation}
   \label{eq:scma_11}
-  LLR_x = \ln \Bigg( \frac{\prob(\bm{y}|b_x=0)}{\prob(\bm{y}|b_x=1)} \Bigg) =
-  \ln \Bigg( \frac{\sum_m B_m(i)_{~when~b_x=0}}{\sum_m B_m(i)_{~when~b_x=1}}
+  \bm{\hat{x}} = \ln \Bigg( \frac{\prob(\bm{y}|b_x=0)}{\prob(\bm{y}|b_x=1)} \Bigg) =
+  \ln \Bigg( \frac{\sum_m B_m(i)_{~\text{when}~b_x=0}}{\sum_m B_m(i)_{~\text{when}~b_x=1}}
   \Bigg).
 \end{equation}
 
-\subsubsection{Log-MAP}
+\paragraph{Log-MAP}
 \label{sec:scma_log-map}
 
 Since calculation of exponentials in \eqref{eq:scma_7} requires relatively high
-computational effort, changing the algorithm to log domain using the Jacobi
-formula \eqref{eq:scma_12} is a classical improvement of MPA:
+computational effort, changing the algorithm to logarithmic domain using the
+Jacobi formula \eqref{eq:scma_12} is a classical improvement of MPA:
 \begin{equation}
   \label{eq:scma_12}
   \ln \Bigg( \sum\limits_{i-1}^N\exp(f_i) \Bigg) \approx \max\{f_1,f_2,...,f_N\}
@@ -1641,10 +1580,10 @@ The rest of the algorithm can be expressed as follows:
 \end{equation}
 \begin{equation}
   \label{eq:scma_16}
-  LLR_x = \max_i(B_m(i))_{~when~b_x=0} - \max_i(B_m(i))_{~when~b_x=1}.
+  \bm{\hat{x}} = \max_i(B_m(i))_{~\text{when}~b_x=0} - \max_i(B_m(i))_{~\text{when}~b_x=1}.
 \end{equation}
 
-\subsubsection{Estimated-MPA (E-MPA)}
+\paragraph{Estimated-MPA (E-MPA)}
 
 Computation of the exponentials in \eqref{eq:scma_7} is one of the most
 important bottlenecks of the MPA algorithm. It is possible to further accelerate
@@ -1655,11 +1594,11 @@ by sub-optimal bell-shaped polynomial distributions to model the noise. It will
 be shown in Section~\ref{sec:eval_scma_throughput} that using a
 polynomial estimation can increase the throughput while leading to marginal bit
 error rate degradation after the MPA decoding. However, these estimated
-probabilities cause small degradations of the block error rate (BLER)
-performance after the channel decoding (cf. Section~\ref{sec:scma_fec}). The
-proposed PDF must satisfy two conditions to be valid: 1) it must be positive and
-lower bounded at zero, 2) its integral over $(-\infty, \infty)$ must be equal to
-1. The following function is suggested to estimate the exponentials:
+probabilities cause small degradations of the FER performance after the channel
+decoding (cf. Section~\ref{sec:scma_fec}). The proposed PDF must satisfy two
+conditions to be valid: 1) it must be positive and lower bounded at zero, 2) its
+integral over $(-\infty, \infty)$ must be equal to 1. The following function is
+suggested to estimate the exponentials:
 \begin{equation}
   \label{eq:scma_18}
   \Psi^{'}_{d_{RES \beta}} = \frac{2 / \pi}{2\sigma^2 + 4d^4_{RES \beta}}.
@@ -1676,72 +1615,55 @@ effort. Thus,
 \end{equation}
 can be used as a systematic replacement to the exponential calculations.
 
-% \subsection{Evaluation of Error Performance and Convergence Rate}
-\subsection{Evaluation of Error Performance}
+\subsubsection{Uncoded Error Performance}
 \label{sec:scma_perf}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][BER performance comparison of ML, MPA and E-MPA for 5 iterations.]
-  {
-    \includegraphics[width=0.70\linewidth]{scma/ber_uncoded/ber_uncoded}
-    \label{plot:scma_ber_uncoded_a}
-  }
-  \\
-  % \qquad
-  \centering
-  \subfloat[][Convergence behavior of E-MPA and MPA.]
-  {
-    \includegraphics[width=0.70\linewidth]{scma/ber_uncoded_iter/ber_uncoded_iter}
-    \label{plot:scma_ber_uncoded_b}
-  }
-  \caption{Performance of MPA compared with E-MPA.}
-  \label{plot:scma_ber_uncoded}
+  \includegraphics[width=0.7\linewidth]{scma/ber_uncoded/ber_uncoded}
+  \caption{BER performance comparison of ML, MPA and E-MPA for 5 iterations.}
+  \label{plot:scma_ber_uncoded_a}
 \end{figure}
 
-Fig.~\ref{plot:scma_ber_uncoded_a} shows the performance comparison of a maximum
-likelihood (ML) decoder, an MPA decoder performing 5 iterations and an
-estimated-MPA (E-MPA) decoder as explained in Section~\ref{sec:opt_scma} also
-performing 5 iterations. There are very small differences in the bit error rate
-performance of the three decoders (less than 0.10 dB). Although both MPA and
-E-MPA show their optimum behavior with 5 iterations, the convergence behavior of
-the two methods are different as illustrated in
-Fig.~\ref{plot:scma_ber_uncoded_b}. E-MPA has a slower convergence rate for less
-than three iterations. This phenomenon is expected as the probability functions
-produced by bell-shaped polynomial PDF do not have the quality of probabilities
-produced by exponentials. However, the convergence behavior is almost identical
-for more than 4 iterations. The other optimizations like loops unrolling, fast
-math libraries and vectorization were not found to degrade the BER performance
-or the convergence rates.
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.7\linewidth]{scma/ber_uncoded_iter/ber_uncoded_iter}
+  \caption{Convergence behavior of E-MPA and MPA decoding algorithm.}
+  \label{plot:scma_ber_uncoded_b}
+\end{figure}
 
-\subsection{Channel Coding}
+Fig.~\ref{plot:scma_ber_uncoded_a} compares the ML, MPA and E-MPA SCMA decoding
+algorithms. There are very small differences in the bit error rate performance
+of the three decoders (less than 0.10 dB). Although both MPA and E-MPA show
+their optimum behavior with 5 iterations, the convergence behavior of the two
+methods are different as illustrated in Fig.~\ref{plot:scma_ber_uncoded_b}.
+E-MPA has a slower convergence rate for less than three iterations. This
+phenomenon is expected as the probability functions produced by bell-shaped
+polynomial PDF do not have the quality of probabilities produced by
+exponentials. However, the convergence behavior is almost identical for more
+than 4 iterations.
+
+\subsubsection{Coded Error Performance}
 \label{sec:scma_fec}
 
-\subsubsection{Complete Simulation Chain}
-\label{sec:scma_fec_chain}
+In the previous sections, algorithmic approximations have been proposed through
+the E-MPA SCMA decoding algorithms. These approximations lead to drastic
+reductions of the processing time and to an increase of the processing power
+efficiency (it will be discussed later in Section~x and Section~y). This is done
+with approximately no degradation of the BER performance in an uncoded
+environment. Nevertheless, in a full communication chain, multiple access
+algorithms are closely linked to the forward error correction modules. Indeed,
+the output of the channel encoder is the input of the SCMA encoder/modulator and
+the output of the SCMA decoder/demodulator is the input of the channel decoder.
+In this section, we propose to evaluate the decoding performance of the SCMA
+associated to different channel codes. Exceptionally in the manuscript, the SCMA
+encoder/decoder take the place of the BPSK modulator/demodulator used everywhere
+else.
 
-In the previous sections of this article, algorithmic improvements and
-implementation techniques have been proposed. These optimizations lead to
-drastic reductions of the processing time and to an increase of the processing
-power efficiency. This is done with approximately no degradation of the BER
-performance after SCMA decoding. Nevertheless, in a full communication chain,
-multiple access algorithms are closely linked to the Forward Error Correction
-(FEC) modules. Indeed, the input of the FEC decoder consists in the outputs of
-the SCMA decoder.
-
-In order to claim that the proposed improvements do not degrade the overall
-error performance, it is necessary to embed the SCMA encoder and decoder in a
-full communication chain. To this purpose, we used the \AFFECT\footnote{\AFFECT
-is an Open-source software (MIT license) for fast forward error correction
-simulations, see \url{http://aff3ct.github.io}} software which is an ideal
-tool that provides the necessary simulation models and allows performing the
-desired verifications.
-
-\AFFECT is Open-source and specifically designed to offer an efficient
-environment to the communication systems designers. Monte-Carlo simulations can
-be run to measure various metrics such as the BER and BLER performance, or the
-throughputs and latencies of each module, e.g. FEC encoders and decoders,
-modulation and demodulation blocks, or different channel models.
+For the error rate evaluation, the turbo decoders have been retained since they
+are used in the LTE standard~\cite{ETSI2013} (3G/4G mobile networks) as well
+as the polar and LDPC codes present in many wireless standards like the
+5G~\cite{ETSI2018} and the WiFi.
 
 \begin{figure}[htp]
   \centering
@@ -1750,8 +1672,6 @@ modulation and demodulation blocks, or different channel models.
   \includegraphics[width=0.70\linewidth]{scma/fec/fec_1_3}
     \label{plot:scma_fec_a}
   }
-  \\
-  % \qquad
   \centering
   \subfloat[][Code rate $R=1/2$.]
   {
@@ -1759,38 +1679,28 @@ modulation and demodulation blocks, or different channel models.
     \label{plot:scma_fec_b}
   }
   \caption
-    [BLER evaluation of MPA and E-MPA decoders combined with channel coding.]
-    {BLER evaluation of SCMA MPA and E-MPA decoders combined with LDPC, polar
+    [FER evaluation of MPA and E-MPA decoders combined with channel coding.]
+    {FER evaluation of SCMA MPA and E-MPA decoders combined with LDPC, polar
     and turbo codes.}
   \label{plot:scma_fec}
 \end{figure}
 
-According to the latest 3GPP report~\cite{ETSI2018}, in the 5G standard, the
-two selected code families are the LDPC and polar codes. Being implemented in
-the \AFFECT software, it is possible to test our SCMA decoders in a complete
-communication chain, in conjunction with state-of-the art LDPC, polar and even
-turbo decoders that were used in the LTE standard~\cite{ETSI2013}.
-Fig.~\ref{plot:scma_fec} shows the BLER performances of MPA and E-MPA decoders
+Fig.~\ref{plot:scma_fec} shows the FER performances of MPA and E-MPA decoders
 when combined with different channel codes. For a matter of reproducibility, the
-full parameters of the FEC used are reported in the next section. This research
-does not claim any novelty in channel coding, however, we found crucial to
-validate our proposed SCMA optimizations in a sufficiently complete
-communication chain.
-
-\subsubsection{Channel Coding Configurations}
-% \subsection{Forward Error Correction Characteristics}
-\label{sec:scma_fec_characteristics}
+full parameters of the FEC used are reported below. This evaluation does not
+claim  any novelty in channel coding, however, we found crucial to validate our
+proposed SCMA optimizations in a sufficiently complete communication chain.
 
 \paragraph{Turbo codes}
 
 In a first validation, the turbo code from the LTE standard is used. In the
-decoder, 6 iterations are done. The two sub-decoders implement the max-log
-Maximum A Posteriori algorithm (max-log-MAP)~\cite{Robertson1995} with a 0.75
-scaling factor~\cite{Vogt2000}. In Fig.~\ref{plot:scma_fec_a}, the rate is
-$R \approx 1/3$, no puncturing is performed, the number of information bits
-$K$ is 1024 and the codeword length $N$ is 3084. In Fig.~\ref{plot:scma_fec_b},
-$R \approx 1/2$ with the puncturing of half of the parity bits,
-$K=2048$, and $N=4108$.
+decoder, 6 iterations are done. The two sub-decoders implement the Enhanced
+Max-Log Maximum A-Posteriori algorithm (EML-MAP)~\cite{Robertson1995} with a
+$\alpha = 0.75$ scaling factor~\cite{Vogt2000}. In Fig.~\ref{plot:scma_fec_a},
+the rate is $R \approx 1/3$, no puncturing is performed, the number of
+information bits $K$ is 1024 and the codeword length $N$ is 3084. In
+Fig.~\ref{plot:scma_fec_b}, $R \approx 1/2$ with the puncturing of half of the
+parity bits, $K=2048$, and $N=4108$.
 
 \paragraph{LDPC codes}
 
@@ -1816,11 +1726,10 @@ applied in order to efficiently select the frozen bits. If this shift is
 not applied, the decoding performances of the polar code degrades drastically.
 The number of information bits and the codeword length are ($K=682$, $N=2048$)
 in Fig.~\ref{plot:scma_fec_a} and ($K=2048$, $N=4096$) in
-Fig.~\ref{plot:scma_fec_b}. The decoder is a Successive Cancellation List (SCL)
-decoder with $L=32$ and a 32-bit GZIP CRC that was proposed
-in~\cite{Leonardon2019}.
+Fig.~\ref{plot:scma_fec_b}. The decoder is the CRC-Aided Successive Cancellation
+List (CA-SCL) decoder with $L=32$ (the 32-bit GZIP CRC is used).
 
-\subsubsection{Effects of E-MPA on Error Correction}
+\paragraph{Effects of E-MPA on Error Correction}
 \label{sec:scma_fec_e-mpa}
 
 In Fig.~\ref{plot:scma_fec}, the number of iterations of the SCMA demodulator is
@@ -1839,13 +1748,47 @@ in order to meet the system constraints.
 
 \section{Discussion}
 
-\begin{itemize}
-  \item \xmark~mettre en avant le challenge d'avoir des algorithmes assez
-    différents avec des structures de données variées
-  \item \xmark~indiquer quelques utilisations typiques des algos les plus
-    utilisés (5G, satellite, etc.)
-  \item \xmark~dire que les décodeurs/démodulateurs présentés ne sont pas
-    exhausitifs par famille de code, ils sont juste représentatifs des plus
-    utilisés et discutés dans la littérature today (en citer quelques autres qui
-    semblent prometteurs)
-\end{itemize}
+In this chapter, the LDPC, the polar and the turbo channel codes have been
+presented. It is commonly accepted by the community to say that these codes
+gives the best decoding performance at the present day. The structure of these
+codes leads to decoding algorithms that have different characteristics. For
+instance, the LDPC BP decoder iteratively operates on a bi-bipartite graph
+while the polar SC decoder is the traversal of a binary tree. The turbo decoder
+is composed by two MAP sub-decoders that exchange soft information and each
+sub-decoder mainly traverses a trellis in the forward and backward way.
+Of course the list of the presented decoders is not exhaustive and it exists
+many more algorithms. However, we tried to focus on decoders that can achieve
+good decoding performance and which have a reasonable computational complexity.
+The challenge is then to accommodate with this variety of data structures and
+computations to propose interesting implementations in terms of throughput and
+latency. It will be discussed in the next chapter.
+
+Even if the 3 selected code families are known to be channel capacity
+approaching (they have decoding performance close to the Shannon's limit),
+depending on the constraints of the digital communication system, a code family
+can be preferred to the others. For instance, the polar codes are naturally
+flexible on the code rate $R$. For a given codeword $N = 2^m$, the encoding
+process can easily adapt to any code rates. This is not the case of the turbo
+codes where the code rate $R = 1/3$ is fixed by construction. It is possible to
+use puncturing techniques to loosen up that constraint a little bit. However,
+with the turbo codes, it is easy to have generic codeword lengths. This is the
+opposite with the polar codeword lengths that are power of 2. Like for the rate
+of the turbo codes, it is possible to use puncturing techniques on the polar
+codes in order to reduce the size of the codeword but extra processing has to be
+added. The LDPC codes are mainly defined by the $\mathcal{H}$ parity matrix,
+they are known to be fully efficient with large parity matrices. One can prefer
+to use the turbo codes for short codewords and the LDPC or the polar codes for
+larger codewords. An other important parameter is the decoding speed. Thus,
+trade-offs between error-rate performance, throughputs and latencies have to be
+made. At the end, it is very difficult to give general trends and each digital
+communication system has to be carefully evaluated before taking any decision.
+
+In the last section of this chapter, the SCMA mechanism is presented. Among the
+others, our E-MPA decoding algorithm is described. Then, it is evaluated without
+channel code first and combined with LDPC, polar and turbo codes after. The
+SCMA mechanism is not integrated in any standard at this time, even if it has
+been considered for the 5G. However it is very promising to deal with an
+increasing number of connected users in the future digital communication
+systems. Moreover, the proposed E-MPA algorithm seems to be adapted for
+efficient software and hardware implementations. This will be discussed in the
+next chapter.
