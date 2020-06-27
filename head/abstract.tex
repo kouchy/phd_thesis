@@ -1,0 +1,60 @@
+%!TEX root = ../my_thesis.tex
+
+\cleardoublepage
+\chapter*{Abstract}
+\vskip1em
+
+% Since their introduction in the 90's, turbo codes are considered as one of the
+% most powerful error-correcting code. Thanks to their excellent trade-off between
+% computational complexity and decoding performance, they were chosen in many
+% communication standards.
+
+% One way to characterize error-correcting codes is the evolution of the bit error
+% rate as a function of signal-to-noise ratio (SNR). The turbo code error rate
+% performance is divided in two different regions: the waterfall region and the
+% error floor region. In the waterfall region, a slight increase in SNR results in
+% a significant drop in error rate. In the error floor region, the error rate
+% performance is only slightly improved as the SNR grows. This error floor can
+% prevent turbo codes from being used in applications with low error rates
+% requirements. Therefore various constructions optimizations that lower the error
+% floor of turbo codes has been proposed in recent years by scientific community.
+% However, these approaches can not be considered for already standardized turbo
+% codes.
+
+% This thesis addresses the problem of lowering the error floor of turbo codes
+% without allowing any modification of the digital communication chain at the
+% transmitter side. For this purpose, the state-of-the-art post-processing
+% decoding method for turbo codes is detailed. It appears that efficient solutions
+% are expensive to implement due to the required multiplication of computational
+% resources or can strongly impact the overall decoding latency.
+
+% Firstly, two decoding algorithms based on the monitoring of decoder's internal
+% metrics are proposed. The waterfall region is enhanced by the first algorithm.
+% However, the second one marginally lowers the error floor. Then, the study shows
+% that in the error floor region, frames decoded by the turbo decoder are really
+% close to the word originally transmitted. This is demonstrated by a proposition
+% of an analytical prediction of the distribution of the number of bits in errors
+% per erroneous frame. This prediction rests on the distance spectrum of turbo
+% codes. Since the appearance of error floor region is due to only few bits in
+% errors, an identification metric is proposed. This lead to the proposal of an
+% algorithm that can correct residual errors. This algorithm, called
+% Flip-and-Check, rests on the generation of candidate words, followed by
+% verification according to an error-detecting code. Thanks to this decoding
+% algorithm, the error floor of turbo codes encountered in different standards
+% (LTE, CCSDS, DVB-RCS and DVB-RCS2) is lowered by one order of magnitude. This
+% performance improvement is obtained without considering an important
+% computational complexity overhead.
+
+% Finally, a hardware decoding architecture implementing the Flip-and-Check
+% algorithm is presented. A preliminary study of the impact of the different
+% parameters of this algorithm is carried out. It leads to the definition of
+% optimal values for some of these parameters. Others has to be adapted according
+% to the gains targeted in terms of decoding performance. The possible integration
+% of this algorithm along with existing turbo decoders is demonstrated thanks to
+% this hardware architecture. This therefore enables the lowering of the error
+% floors of standardized turbo codes.
+
+\vskip0.5cm
+\emph{Keywords:} Software-Defined Radio, Simulation, Error Correcting Codes,
+                 Software Implementation, Optimization, Parallelization,
+                 Open Source Code

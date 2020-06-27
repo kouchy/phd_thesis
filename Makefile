@@ -4,7 +4,8 @@ all: figs \
      settings/colors.tex \
      settings/settings_template.tex \
      settings/settings_custom.tex \
-     head/abstracts.tex \
+     head/resume.tex \
+     head/abstract.tex \
      head/dedication.tex \
      head/labo.tex \
      head/symbols.tex \
@@ -26,7 +27,8 @@ all: figs \
 fast: settings/colors.tex \
       settings/settings_template.tex \
       settings/settings_custom.tex \
-      head/abstracts.tex \
+      head/resume.tex \
+      head/abstract.tex \
       head/dedication.tex \
       head/labo.tex \
       head/symbols.tex \
