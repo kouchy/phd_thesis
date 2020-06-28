@@ -7,7 +7,7 @@
 
 La radio logicielle consiste à remplacer les traitements numériques auparavant
 réalisés à l'aide de matériels dédiés par des implémentations logicielles. De
-plus en plus, avec l'émergence de nouveaux standards de communications complexes
+plus en plus, avec l'émergence de nouveaux standards de communication complexes
 et la puissance de calcul grandissante des processeurs généralistes, il devient
 intéressant d'échanger l'efficacité énergétique des architectures dédiés par
 la souplesse et la facilité d'implémentation sur processeurs généralistes.
@@ -18,7 +18,7 @@ vérifier les bonnes propriétés de l'algorithme. Cela est généralement le r�
 la simulation: les concepteurs de systèmes de communication numériques évaluent
 d'abord les propriétés des algorithmes de traitement du signal dans des
 simulations logicielles. Ces dernières sont souvent coûteuses en temps de
-calcul, il n'est pas rare de devoir attendre plusieurs jours voire plusieurs
+calcul. Il n'est pas rare de devoir attendre plusieurs jours voire plusieurs
 semaines pour évaluer les performances globales d'un système en logiciel.
 
 Dans ce contexte, cette thèse propose d'étudier les algorithmes les plus
@@ -33,11 +33,11 @@ de communication actuels comme le Wi-Fi, l’Ethernet, les réseaux mobiles 3G, 
 et 5G, la télévision numérique, etc. Les décodeurs qui en découlent proposent le
 meilleur compromis résistance aux erreurs sur vitesse de décodage que l'on
 connaisse à ce jour. Chacune de ces familles vient avec des algorithmes de
-décodage différents et un des enjeux principal de cette thèse est de proposer
+décodage différents. Un des enjeux principal de cette thèse est de proposer
 des implémentations logicielles optimisées pour chacun d'entre eux. Des réponses
 sont apportées au cas par cas et des stratégies d'optimisation plus générales
-sont discutées. L'idée étant d'abstraire les stratégies d'optimisation possibles
-en étudiant un sous-ensemble de décodeurs représentatif.
+sont aussi discutées. L'idée étant d'abstraire les stratégies d'optimisation
+possibles en étudiant un sous-ensemble de décodeurs représentatif.
 
 Enfin, la dernière partie de cette thèse s'attache à la mise en œuvre d'un
 système de communication numérique complet à l'aide de la radio logicielle. Fort
@@ -45,14 +45,14 @@ des implémentations rapides de décodeurs proposées précédemment, un émette
 un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce standard
 est typiquement utilisé pour la diffusion de contenu multimédia par satellite. À
 cette occasion, un langage dédié à la radio logicielle a été développé pour
-tirer partie de l'architecture parallèle des processeurs généralistes actuels.
+tirer parti de l'architecture parallèle des processeurs généralistes actuels.
 Les résultats démontrent que le système atteint des débits suffisants pour être
 déployé en conditions réelles.
 
 Ces contributions ont été réalisées dans une dynamique d'ouverture et de
 partage, il en résulte une bibliothèque à code source ouvert nommée AFF3CT pour
 \emph{A Fast Forward Error Correction Toolbox}. Ainsi, les résultats proposés
-dans cette thèse peuvent aisément être reproduit. Cette philosophie est
+dans cette thèse peuvent aisément être reproduits. Cette philosophie est
 détaillée dans un chapitre du manuscrit.
 
 \vskip0.5cm
