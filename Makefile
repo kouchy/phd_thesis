@@ -435,6 +435,42 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter5/fig/turbo/energy/dat/data_K1024_SSE.txt \
               main/chapter5/fig/turbo/energy/dat/data_K6144_AVX.txt \
               main/chapter5/fig/turbo/energy/dat/data_K6144_SSE.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/WiMAX_thr.tex \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/WiMAX_lat.tex \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/colors \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_xeon_platinum_8168_SSE.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_xeon_platinum_8168_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/DVB-S2_thr.tex \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/DVB-S2_lat.tex \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/colors \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_xeon_platinum_8168_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N64800_K32400_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N64800_K32400_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N64800_K32400_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N64800_K32400_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N64800_K32400_xeon_platinum_8168_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N16200_K14400_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N16200_K14400_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N16200_K14400_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N16200_K14400_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N16200_K14400_xeon_platinum_8168_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_epyc_7452_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_epyc_7452_SSE.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_xeon_platinum_8168_AVX-512.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_xeon_platinum_8168_AVX.txt \
+              main/chapter5/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_xeon_platinum_8168_SSE.txt \
               main/chapter5/fig/scma/energy/energy.tex \
               main/chapter5/fig/scma/energy/colors \
               main/chapter5/fig/scma/profiling/profiling.tex \
@@ -466,6 +502,10 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 	cd main/chapter5/fig/polar/sc_colgate/                 && rubber -d sc_colgate.tex
 	cd main/chapter5/fig/turbo/thr/                        && rubber -d thr.tex
 	cd main/chapter5/fig/turbo/energy/                     && rubber -d energy.tex
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber -d WiMAX_thr.tex
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber -d WiMAX_lat.tex
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber -d DVB-S2_thr.tex
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber -d DVB-S2_lat.tex
 	cd main/chapter5/fig/scma/energy/                      && rubber -d energy.tex
 	cd main/chapter5/fig/scma/profiling/                   && rubber -d profiling.tex
 	cd main/chapter5/fig/simu/speedup                      && rubber -d speedup.tex
@@ -669,6 +709,10 @@ clean: clean4all
 	cd main/chapter5/fig/polar/sc_colgate/                 && rubber --clean sc_colgate
 	cd main/chapter5/fig/turbo/thr/                        && rubber --clean thr
 	cd main/chapter5/fig/turbo/energy/                     && rubber --clean energy
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber --clean WiMAX_thr
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber --clean WiMAX_lat
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber --clean DVB-S2_thr
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber --clean DVB-S2_lat
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean energy
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean profiling
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean speedup
@@ -772,6 +816,10 @@ mrproper: clean4all
 	cd main/chapter5/fig/turbo/thr/                        && rubber --clean -d thr.tex
 	cd main/chapter5/fig/turbo/energy/                     && rubber --clean -d energy.tex
 	cd main/chapter5/fig/scma/energy/                      && rubber --clean -d energy.tex
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber --clean -d WiMAX_thr.tex
+	cd main/chapter5/fig/ldpc/WiMAX_thr_lat/               && rubber --clean -d WiMAX_lat.tex
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber --clean -d DVB-S2_thr.tex
+	cd main/chapter5/fig/ldpc/DVB-S2_thr_lat/              && rubber --clean -d DVB-S2_lat.tex
 	cd main/chapter5/fig/scma/profiling/                   && rubber --clean -d profiling.tex
 	cd main/chapter5/fig/simu/speedup                      && rubber --clean -d speedup.tex
 	cd main/chapter5/fig/simu/throughput                   && rubber --clean -d throughput.tex

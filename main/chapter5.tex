@@ -772,6 +772,34 @@ alternative to GPU in future channel coding functions in cloud-based RAN.
 \section{LDPC Decoders}
 \label{sec:eval_ldpc}
 
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Throughput.]{\includegraphics[width=0.7\textwidth]{ldpc/WiMAX_thr_lat/WiMAX_thr}\label{plot:eval_ldpc_WiMAX_thr}}
+  % \quad
+  \\
+  \subfloat[][Latency.]{\includegraphics[width=0.7\textwidth]{ldpc/WiMAX_thr_lat/WiMAX_lat}\label{plot:eval_ldpc_WiMAX_lat}}
+  \caption
+    [LDPC decoder throughput and latency depending on the number of cores (WiMAX).]
+    {LDPC decoder throughput and latency depending on the number of cores.
+    (2304, 1152) IEEE 802.16e WiMAX code. BP-HL scheduling 50 iterations and NMS updates rules
+    ($\alpha = 0.875$). 16-bit fixed-point.}
+  \label{plot:eval_ldpc_WiMAX_thr_lat}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Throughput.]{\includegraphics[width=0.7\textwidth]{ldpc/DVB-S2_thr_lat/DVB-S2_thr}\label{plot:eval_ldpc_DVB-S2_thr}}
+  % \quad
+  \\
+  \subfloat[][Latency.]{\includegraphics[width=0.7\textwidth]{ldpc/DVB-S2_thr_lat/DVB-S2_lat}\label{plot:eval_ldpc_DVB-S2_lat}}
+  \caption
+    [LDPC decoder throughput and latency depending on the number of cores (DVB-S2).]
+    {LDPC decoder throughput and latency depending on the number of cores.
+    (16200, 14400) DVB-S2 code. BP-HL scheduling 50 iterations and NMS updates rules
+    ($\alpha = 0.875$). 16-bit fixed-point.}
+  \label{plot:eval_ldpc_DVB-S2_thr_lat}
+\end{figure}
+
 \section{FEC Software Decoders Hall of Fame}
 \label{sec:eval_hof}
 

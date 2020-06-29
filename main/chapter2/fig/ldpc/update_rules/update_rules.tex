@@ -31,6 +31,7 @@
         \addplot[mark=o,         Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_MS_40_ite.txt};  \label{plot:line2}
         \addplot[mark=square,    Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_OMS_40_ite.txt}; \label{plot:line3}
         \addplot[mark=triangle,  Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_NMS_40_ite.txt}; \label{plot:line4}
+        % \addplot[mark=x,         Paired-9!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_NMS_40_ite_p16.txt}; \label{plot:line5}
 
         \coordinate (legend) at (axis description cs:0.6,0.03);
     \end{axis}
@@ -42,7 +43,8 @@
             \small{Sum-Product Algorithm}                 & \ref{plot:line1} \\
             \small{Min-Sum}                               & \ref{plot:line2} \\
             \small{Offset Min-Sum ($\lambda = 0.5$)}      & \ref{plot:line3} \\
-            \small{Normalized Min-Sum ($\alpha = 0.825$)} & \ref{plot:line4} \\
+            \small{Normalized Min-Sum ($\alpha = 0.875$)} & \ref{plot:line4} \\
+            % \small{Normalized Min-Sum ($\alpha = 0.875$)} & \ref{plot:line5} \\
         };
   \end{tikzpicture}
 \end{document}

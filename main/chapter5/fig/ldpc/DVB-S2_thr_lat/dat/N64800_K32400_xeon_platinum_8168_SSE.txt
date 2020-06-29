@@ -1,0 +1,50 @@
+# Script:
+# #!/bin/bash
+#
+# AFF3CT_VERSION='2.3.5-386-g0faf620'
+# CMD='hwloc-bind socket:0 ./bin/aff3ct-$AFF3CT_VERSION --sim-type BFER -C LDPC --enc-type LDPC_DVBS2 -m 2.25 -M 2.25 -s 0.25 -e 100 -N 64800 -K 32400 --dec-implem NMS --dec-norm 0.875 -i 50 --dec-simd INTER -p 16 --qnt-bits 5 --qnt-dec 2  --dec-no-synd --sim-stats --chn-implem FAST --sim-coded --sim-sequence --qnt-implem FAST --dec-type BP_HORIZONTAL_LAYERED'
+# CMD_EXT='--ter-freq 0 --mnt-red-lazy --mnt-red-lazy-freq 10 --sim-stop-time 10'
+# CMD_FULL=$CMD" "$CMD_EXT
+#
+# START_THREAD=1
+# MAX_THREADS=24
+# STEP=1
+#
+# RES=$(eval $CMD_FULL" -t 1" | grep "decode_siho_cw")
+# SIM_THR=$(echo $RES | cut -d "|" -f 9,13)
+# echo "1 | $SIM_THR"
+#
+# for (( T=START_THREAD; T<=MAX_THREADS; T+=STEP ))
+# do
+#   RES=$(eval $CMD_FULL" -t $T" | grep "decode_siho_cw")
+#   SIM_THR=$(echo $RES | cut -d "|" -f 9,13)
+#   echo "$T | $SIM_THR"
+# done
+#
+# GCC 7.5.0: -O3 -funroll-loops -msse4.2 -faligned-new
+#CORE     THR   LAT
+#  1     6.29   82465.82
+   1     6.29   82431.46
+   2     6.29   82354.70
+   3     6.32   81991.55
+   4     6.23   83210.52
+   5     6.17   84000.79
+   6     6.04   85799.33
+   7     5.93   87386.28
+   8     5.76   90016.30
+   9     5.63   92072.14
+  10     5.50   94332.37
+  11     5.37   96557.44
+  12     5.27   98419.91
+  13     5.18   1.00e+05
+  14     5.04   1.03e+05
+  15     4.91   1.06e+05
+  16     4.77   1.09e+05
+  17     4.61   1.12e+05
+  18     4.42   1.17e+05
+  19     4.24   1.22e+05
+  20     4.10   1.26e+05
+  21     3.93   1.32e+05
+  22     3.79   1.37e+05
+  23     3.63   1.43e+05
+  24     3.50   1.48e+05
