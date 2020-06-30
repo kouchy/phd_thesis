@@ -5,18 +5,18 @@
 \chapter*{Résumé}
 \vskip1em
 
-Une radio logicielle en anglais \emph{Software-Defined Radio} ou SDR est un
+Une radio logicielle (en anglais \emph{Software-Defined Radio} ou SDR) est un
 système de communications numériques reconfigurable utilisant des techniques de
-traitement numérique du signal sur des architectures numériques programmables.
-Avec l'émergence de nouveaux standards de communications complexes et la
-puissance de calcul grandissante des processeurs généralistes, il devient
-intéressant d'échanger l'efficacité énergétique des architectures dédiées par la
+traitement du signal sur des architectures numériques programmables. Avec
+l'émergence de nouveaux standards de communications complexes et la puissance de
+calcul grandissante des processeurs généralistes, il devient intéressant
+d'échanger l'efficacité énergétique des architectures dédiées contre la
 souplesse et la facilité d'implémentation sur processeurs généralistes.
 
 Même lorsque l'implémentation d'un traitement numérique est finalement faite sur
 une puce dédiée, une version logicielle de ce traitement s'avère nécessaire en
 amont pour s'assurer des bonnes propriétés de la fonctionnalité. Cela est
-généralement réalisé via la simulation. Le simulations sont cependant souvent
+généralement réalisé via la simulation. Les simulations sont cependant souvent
 coûteuses en temps de calcul. Il n'est pas rare de devoir attendre plusieurs
 jours voire plusieurs semaines pour évaluer les performances du modèle
 fonctionnel d'un système.
@@ -27,28 +27,28 @@ actuelles. Ces algorithmes sont le plus souvent présents dans des décodeurs de
 codes correcteurs d'erreurs au niveau récepteur. Le rôle du codage canal est
 d’accroître la robustesse vis à vis des erreurs qui peuvent apparaître lorsque
 l'information transite au travers d'un canal de transmission. Trois grandes
-familles codes correcteurs d'erreurs sont étudiées dans nos travaux, à savoir
+familles de codes correcteurs d'erreurs sont étudiées dans nos travaux, à savoir
 les codes LDPC, les codes polaires et les turbo codes. Ces trois familles de
-code sont présentes dans la plupart des standards de communication actuels comme
+codes sont présentes dans la plupart des standards de communication actuels comme
 le Wi-Fi, l’Ethernet, les réseaux mobiles 3G, 4G et 5G, la télévision numérique,
 etc. Les décodeurs qui en découlent proposent le meilleur compromis entre la
 résistance aux erreurs et la vitesse de décodage. Chacune de ces familles repose
 sur des algorithmes de décodage spécifiques. Un des enjeux principal de cette
 thèse est de proposer des implémentations logicielles optimisées pour chacune
-des trois familles. Des réponses sont apportées de façon spécifique et des
-stratégies d'optimisation plus générales sont aussi discutées. L'idée est
-d'abstraire des stratégies d'optimisation possibles en étudiant un sous-ensemble
+des trois familles. Des réponses sont apportées de façon spécifique puis des
+stratégies d'optimisation plus générales sont discutées. L'idée est d'abstraire
+des stratégies d'optimisation possibles en étudiant un sous-ensemble
 représentatif de décodeurs.
 
 Enfin, la dernière partie de cette thèse propose la mise en œuvre d'un système
 de communications numériques complet à l'aide de la radio logicielle. En
-s’appuyant sur les implémentations rapides de décodeurs proposées précédemment,
-un émetteur et un récepteur compatibles avec le standard DVB-S2 sont
-implémentés. Ce standard est typiquement utilisé pour la diffusion de contenu
-multimédia par satellite. À cette occasion, un langage dédié à la radio
-logicielle a été développé pour tirer parti de l'architecture parallèle des
-processeurs généralistes actuels. Le système atteint des débits suffisants pour
-être déployé en condition opérationnelle.
+s’appuyant sur les implémentations rapides de décodeurs proposées, un émetteur
+et un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce
+standard est typiquement utilisé pour la diffusion de contenu multimédia par
+satellite. À cette occasion, un langage dédié à la radio logicielle est
+développé pour tirer parti de l'architecture parallèle des processeurs
+généralistes actuels. Le système atteint des débits suffisants pour être déployé
+en condition opérationnelle.
 
 Les différentes contributions des travaux de thèse ont été faites dans une
 dynamique d'ouverture, de partage et de réutilisabilité. Il en résulte une

@@ -16,7 +16,8 @@
 \begin{document}
   \begin{tikzpicture}
     \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
-                 width=0.675\linewidth, height=1.000\linewidth,
+                 % width=0.675\linewidth, height=1.000\linewidth,
+                 width=1.0\linewidth, height=0.70\linewidth,
                  xticklabel style={black!70}, yticklabel style={black!70},
                  xlabel=$E_b/N_0$ (dB), grid=both, grid style={gray!30},
                  ylabel=Bit and Frame Error Rate,
@@ -24,6 +25,7 @@
                  %xmin=0, xmax=14,
                  %ymin=0.0000000002,
                  ymode = log,
+                 ytick={1,0.1,0.01,0.001,0.0001,0.00001,0.000001, 0.0000001, 0.00000001, 0.000000001},
                  %tick align=outside, tickpos=left,
                  legend pos=south west, legend columns=1]
         \addplot[mark=o,      Dark2-7,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line1}
@@ -31,7 +33,7 @@
         \addplot[mark=square, Dark2-8,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line3}
         \addplot[mark=square, Dark2-8!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line4}
         % \coordinate (legend) at (axis description cs:0.655,0.03);
-        \coordinate (legend) at (axis description cs:0.755,0.03);
+        \coordinate (legend) at (axis description cs:0.47,0.03);
     \end{axis}
 
     % \matrix[draw,
