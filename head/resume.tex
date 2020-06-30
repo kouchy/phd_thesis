@@ -5,57 +5,59 @@
 \chapter*{Résumé}
 \vskip1em
 
-La radio logicielle consiste à remplacer les traitements numériques auparavant
-réalisés à l'aide de matériels dédiés par des implémentations logicielles. De
-plus en plus, avec l'émergence de nouveaux standards de communication complexes
-et la puissance de calcul grandissante des processeurs généralistes, il devient
-intéressant d'échanger l'efficacité énergétique des architectures dédiés par
-la souplesse et la facilité d'implémentation sur processeurs généralistes.
+Une radio logicielle en anglais \emph{Software-Defined Radio} ou SDR est un
+système de communications numériques reconfigurable utilisant des techniques de
+traitement numérique du signal sur des architectures numériques programmables.
+Avec l'émergence de nouveaux standards de communications complexes et la
+puissance de calcul grandissante des processeurs généralistes, il devient
+intéressant d'échanger l'efficacité énergétique des architectures dédiées par la
+souplesse et la facilité d'implémentation sur processeurs généralistes.
 
-Même si l'implémentation d'un traitement numérique est finalement faite sur une
-puce dédiée, la version logicielle de ce traitement est nécessaire afin de
-vérifier les bonnes propriétés de l'algorithme. Cela est généralement le rôle de
-la simulation: les concepteurs de systèmes de communication numériques évaluent
-d'abord les propriétés des algorithmes de traitement du signal dans des
-simulations logicielles. Ces dernières sont souvent coûteuses en temps de
-calcul. Il n'est pas rare de devoir attendre plusieurs jours voire plusieurs
-semaines pour évaluer les performances globales d'un système en logiciel.
+Même lorsque l'implémentation d'un traitement numérique est finalement faite sur
+une puce dédiée, une version logicielle de ce traitement s'avère nécessaire en
+amont pour s'assurer des bonnes propriétés de la fonctionnalité. Cela est
+généralement réalisé via la simulation. Le simulations sont cependant souvent
+coûteuses en temps de calcul. Il n'est pas rare de devoir attendre plusieurs
+jours voire plusieurs semaines pour évaluer les performances du modèle
+fonctionnel d'un système.
 
 Dans ce contexte, cette thèse propose d'étudier les algorithmes les plus
 coûteux en temps de calcul dans les chaînes de communication numériques
-actuelles. Ces algorithmes sont le plus souvent les décodeurs de codage canal
-que l'on trouve dans les récepteurs. Le rôle du codage canal est d’accroître la
-résistance aux erreurs qui peuvent apparaître lorsque l'information transite
-entre l’émetteur et le récepteur. Trois grandes familles de codage canal sont
-alors présentées, à savoir les codes LDPC, les codes polaires et les turbo
-codes. Ces trois familles de code sont utilisées dans la plupart des standards
-de communication actuels comme le Wi-Fi, l’Ethernet, les réseaux mobiles 3G, 4G
-et 5G, la télévision numérique, etc. Les décodeurs qui en découlent proposent le
-meilleur compromis résistance aux erreurs sur vitesse de décodage que l'on
-connaisse à ce jour. Chacune de ces familles vient avec des algorithmes de
-décodage différents. Un des enjeux principal de cette thèse est de proposer
-des implémentations logicielles optimisées pour chacun d'entre eux. Des réponses
-sont apportées au cas par cas et des stratégies d'optimisation plus générales
-sont aussi discutées. L'idée étant d'abstraire les stratégies d'optimisation
-possibles en étudiant un sous-ensemble de décodeurs représentatif.
+actuelles. Ces algorithmes sont le plus souvent présents dans des décodeurs de
+codes correcteurs d'erreurs au niveau récepteur. Le rôle du codage canal est
+d’accroître la robustesse vis à vis des erreurs qui peuvent apparaître lorsque
+l'information transite au travers d'un canal de transmission. Trois grandes
+familles codes correcteurs d'erreurs sont étudiées dans nos travaux, à savoir
+les codes LDPC, les codes polaires et les turbo codes. Ces trois familles de
+code sont présentes dans la plupart des standards de communication actuels comme
+le Wi-Fi, l’Ethernet, les réseaux mobiles 3G, 4G et 5G, la télévision numérique,
+etc. Les décodeurs qui en découlent proposent le meilleur compromis entre la
+résistance aux erreurs et la vitesse de décodage. Chacune de ces familles repose
+sur des algorithmes de décodage spécifiques. Un des enjeux principal de cette
+thèse est de proposer des implémentations logicielles optimisées pour chacune
+des trois familles. Des réponses sont apportées de façon spécifique et des
+stratégies d'optimisation plus générales sont aussi discutées. L'idée est
+d'abstraire des stratégies d'optimisation possibles en étudiant un sous-ensemble
+représentatif de décodeurs.
 
-Enfin, la dernière partie de cette thèse s'attache à la mise en œuvre d'un
-système de communication numérique complet à l'aide de la radio logicielle. Fort
-des implémentations rapides de décodeurs proposées précédemment, un émetteur et
-un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce standard
-est typiquement utilisé pour la diffusion de contenu multimédia par satellite. À
-cette occasion, un langage dédié à la radio logicielle a été développé pour
-tirer parti de l'architecture parallèle des processeurs généralistes actuels.
-Les résultats démontrent que le système atteint des débits suffisants pour être
-déployé en conditions réelles.
+Enfin, la dernière partie de cette thèse propose la mise en œuvre d'un système
+de communications numériques complet à l'aide de la radio logicielle. En
+s’appuyant sur les implémentations rapides de décodeurs proposées précédemment,
+un émetteur et un récepteur compatibles avec le standard DVB-S2 sont
+implémentés. Ce standard est typiquement utilisé pour la diffusion de contenu
+multimédia par satellite. À cette occasion, un langage dédié à la radio
+logicielle a été développé pour tirer parti de l'architecture parallèle des
+processeurs généralistes actuels. Le système atteint des débits suffisants pour
+être déployé en condition opérationnelle.
 
-Ces contributions ont été réalisées dans une dynamique d'ouverture et de
-partage, il en résulte une bibliothèque à code source ouvert nommée AFF3CT pour
-\emph{A Fast Forward Error Correction Toolbox}. Ainsi, les résultats proposés
-dans cette thèse peuvent aisément être reproduits. Cette philosophie est
-détaillée dans un chapitre du manuscrit.
+Les différentes contributions des travaux de thèse ont été faites dans une
+dynamique d'ouverture, de partage et de réutilisabilité. Il en résulte une
+bibliothèque à code source ouvert nommée AFF3CT pour \emph{A Fast Forward Error
+Correction Toolbox}. Ainsi, tous les résultats proposés dans cette thèse peuvent
+aisément être reproduits et étendus. Cette philosophie est détaillée dans un
+chapitre spécifique du manuscrit de thèse.
 
 \vskip0.5cm
-\emph{Mots clefs :} Radio logicielle, Simulation, Codes correcteurs d'erreurs,
-                    Implémentation logicielle, Optimisation, Parallélisation,
-                    Code source ouvert
+\emph{Mots clefs :} Radio logicielle, Simulation fonctionnelle, Codes
+                    correcteurs d'erreurs, Implémentation logicielle,
+                    Optimisation, Parallélisation, Code source ouvert
