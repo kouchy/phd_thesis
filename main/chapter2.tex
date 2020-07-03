@@ -39,7 +39,7 @@ error-rate performance.
   \centering
   \caption{Elementary operations in $GF_2$ (logical \emph{exclusive or} and
     \emph{and}).}
-  \label{tab:ctx_gf2_operations}
+  \label{tab:alg_gf2_operations}
    \begin{tabular}{c c c c}
    $a$ & $b$ & $a \oplus b$ & $ab$ \\
     \hline
@@ -58,7 +58,7 @@ with $K < N$. There are $2^K$ codewords $\bm{c}$. The two operators used to
 generate a codeword are the addition and the multiplication. In $GF_2$, the
 addition is equivalent to the logical \emph{exclusive or} ($\oplus$) and
 the multiplication is equivalent to the logical \emph{and} (cf.
-Table~\ref{tab:ctx_gf2_operations}).
+Table~\ref{tab:alg_gf2_operations}).
 
 In this section, all the presented decoders are working on \emph{soft}
 information. This mean that the decoders input is a vector of $N$ likelihoods in
@@ -75,6 +75,7 @@ more compute intensive than the encoders. In the logarithmic domain, the
 multiplication becomes a simple addition.
 
 \section{Low-Density Parity-Check Codes}
+\label{sec:alg_ldpc}
 
 \subsection{Coding Scheme}
 
@@ -134,16 +135,16 @@ $\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
   \centering
   \includegraphics{ldpc/parity_checks/parity_checks}
   \caption{Parity-check constraints of an LDPC code on a Tanner graph.}
-  \label{fig:ctx_ldpc_parity_checks}
+  \label{fig:alg_ldpc_parity_checks}
 \end{figure}
 
 The construction of an Low-Density Parity-Check (LDPC) code is based on the
-combination of many parity-check nodes. Fig.~\ref{fig:ctx_ldpc_parity_checks} is
+combination of many parity-check nodes. Fig.~\ref{fig:alg_ldpc_parity_checks} is
 an example of LDPC code with four parity-check constraints denoted as $a$, $b$,
 $c$ and $d$. The parity-check constraints are also known as the \emph{check
 nodes} ($C_N$). And the \emph{variable nodes} ($V_N$) are the bits of the LDPC
 codeword. The parity-check matrix corresponding to the
-Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
+Fig.~\ref{fig:alg_ldpc_parity_checks} Tanner graph is:
 \begin{equation*}
 \bm{\mathcal{H}} =
 \begin{bmatrix}
@@ -156,7 +157,7 @@ Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
 
 The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
 matrix (less that 3\% of 1). The example shown in
-Fig.~\ref{fig:ctx_ldpc_parity_checks} is here to help to the comprehension and
+Fig.~\ref{fig:alg_ldpc_parity_checks} is here to help to the comprehension and
 is not a real LDPC code: there is much more than 3\% of 1 in the corresponding
 $\bm{\mathcal{H}}$ matrix.
 
@@ -174,7 +175,7 @@ l_4)\big)$, etc.
 In LDPC codes, there is more than one parity-check node, it is then possible to
 compute all the check nodes connected to a variable node and to store the result
 in vector $\bm{v}$. Each LLR $v_n \in \bm{v}$ corresponds to a variable node.
-For instance, considering Fig.~\ref{fig:ctx_ldpc_parity_checks}, $V_0$ is
+For instance, considering Fig.~\ref{fig:alg_ldpc_parity_checks}, $V_0$ is
 connected to $C_a$ and $C_c$ so its LLR value can be computed as follow: $v_0
 = e_0 + e_1 = (l_3 \boxplus l_4 \boxplus l_6 \boxplus l_7) + (l_2 \boxplus l_5
 \boxplus l_7)$, where $e_0$ and $e_1$ are the extrinsic information computed
@@ -295,6 +296,7 @@ performance. To solve this issue, the optimized \emph{Offset Min-Sum} (OMS) and
 \emph{Normalized Min-Sum} (NMS) approximations have been proposed
 in~\cite{Chen2002}:
 \begin{equation}
+\label{eq:alg_ldpc_onms}
 l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \alpha \times \big( \sign(l_a.l_b).\min(|l_a|, |l_b|) + \lambda \big),
 \end{equation}
 where $\alpha$ is the normalization factor of the NMS update rules and $\lambda$
@@ -319,7 +321,7 @@ results demonstrate the efficiency of the OMS and NMS approximations. In real
 systems they are very often preferred to the original SPA.
 
 \section{Polar Codes}
-\label{sec:alg_polar_decoders}
+\label{sec:alg_polar}
 
 \subsection{Coding Scheme}
 
@@ -420,7 +422,7 @@ rectangle (four XORs per node).
   \centering
   \includegraphics{polar/sc_decoder/sc_decoder}
   \caption{Full SC decoding tree ($N = 16$)}
-  \label{fig:polar_sc_decoder}
+  \label{fig:alg_polar_sc_decoder}
 \end{figure}
 
 The Successive Cancellation (SC) decoding algorithm has been introduced by
@@ -434,15 +436,15 @@ contains $2^d$ nodes, each node of that layer $d$ containing $2^{m-d}$ LLRs
 ($\bm{l}$) are stored in the root node. Then, the decoder performs a pre-order
 traversal of the tree. When a node is visited in the downward direction, LLRs of
 the node are updated. In the upward direction, partial sums are updated.
-Fig.~\ref{fig:polar_sc_decoder} summarizes the computations performed in both
-directions. The update functions are:
+Fig.~\ref{fig:alg_polar_sc_decoder} summarizes the computations performed in
+both directions. The update functions are:
 \begin{eqnarray}
 \left\{\begin{array}{l c l c l}
 \lambda_c &=& f(\lambda_a,\lambda_b) &=& \lambda_a \boxplus \lambda_b \approx \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
 \lambda_c &=& g(\lambda_a,\lambda_b,s)&=&(1-2s)\lambda_a+\lambda_b\\
 (\hat{s}_{c}, \hat{s}_{d}) &=& h(\hat{s}_{a}, \hat{s}_{b}) &=& (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
 \end{array}\right.
-\label{eq:polar_f_g_h}
+\label{eq:alg_polar_f_g_h}
 \end{eqnarray}
 The $f$ and $g$ functions both generate a single LLR. The $h$ function provides
 a couple of partial sums. The $f$ function is the Min-Sum approximation of the
@@ -482,7 +484,7 @@ evolution is used~\cite{Trifonov2012}.
 \subsection{Successive Cancellation List Decoding Algorithm}
 
 \begin{algorithm}
-  \caption{SCL decoding algorithm.}\label{alg:alg_polar_scl}
+  \caption{SCL decoding algorithm.}\label{alg:alg_polar_scl_decoder}
 
   % \small
   \SetKwProg{Fn}{Function}{}{}
@@ -539,9 +541,9 @@ evolution is used~\cite{Trifonov2012}.
 
 The Successive Cancellation List (SCL) algorithm is an evolution of the
 SC~\cite{Tal2011}. The SCL algorithm is summarized in
-Algorithm~\ref{alg:alg_polar_scl}. Unlike the SC algorithm, the SCL decoder
-builds a list of candidate codewords along the decoding. At each call of the
-``$\updatePaths()$'' sub-routine (l.16), $2L$ candidates are generated. A
+Algorithm~\ref{alg:alg_polar_scl_decoder}. Unlike the SC algorithm, the SCL
+decoder builds a list of candidate codewords along the decoding. At each call of
+the ``$\updatePaths()$'' sub-routine (l.16), $2L$ candidates are generated. A
 path metric is then evaluated to keep only the $L$~best candidates among the
 $2L$ paths. The path metrics are calculated as
 in~\cite{Balatsoukas-Stimming2015}. At the end of the decoding process, the
@@ -573,7 +575,7 @@ the end of each decoding.
     {Example of tree pruning on a small binary tree ($N = 8$). The tree is cut
     and the computations are versioned according to the location of the frozen
     bits.}
-  \label{fig:tree_pruning_example}
+  \label{fig:alg_polar_tree_pruning_example}
 \end{figure}
 
 Frozen bits fully define the decoders leaf values, hence some part of the
@@ -593,8 +595,9 @@ the path metric calculation~\cite{Sarkis2016}. This tree-pruned version of the
 algorithm is called Simplified SCL (SSCL) and the CA-SSCL when a CRC is used to
 discriminate the final candidate codewords. The tree pruning technique can
 drastically reduce the amount of computation in the decoding process. The
-Fig.~\ref{fig:tree_pruning_example} shows that more than half of the tree nodes
-can be removed for $N = 8$ (this is representative of the real-life codes).
+Fig.~\ref{fig:alg_polar_tree_pruning_example} shows that more than half of the
+tree nodes can be removed for $N = 8$ (this is representative of the real-life
+codes).
 
 \subsection{Adaptive Successive Cancellation List Decoding Algorithm}
 
@@ -616,14 +619,15 @@ adapted to the polar code length. If the CRC length is too short, the decoding
 performance may be degraded because of false detections. These adaptive versions
 of SSCL can achieve higher throughputs. Indeed, a large proportion of frames can
 be decoded with a single SC decoding. This is especially true when the SNR is
-high. This will be further discussed in Section~\ref{sec:polar_genericity}.
+high. This will be further discussed in
+Section~\ref{sec:alg_polar_generic_flexible}.
 
 \subsection{Algorithmic Comparison of the Decoders}
 
 \begin{table}[htp]
   \centering
   \caption{Throughput and latency comparison of polar decoding algorithms.}
-  \label{tab:polar_algos}
+  \label{tab:alg_polar_algos}
   % {\small
    \begin{tabular}{r c c c}
     \textbf{Decoding}  & \textbf{BER \& FER}   & \multirow{1}{*}{\textbf{Throughput}} & \textbf{Max. Latency}        \\
@@ -642,10 +646,10 @@ high. This will be further discussed in Section~\ref{sec:polar_genericity}.
 \end{table}
 
 In order to better distinguish all the algorithmic variations, we compare their
-main features in Table~\ref{tab:polar_algos}. Each algorithm is characterized in
-terms of decoding performance, throughput, and worst case latency for a software
-implementation. The non-simplified versions of the adaptive SCL algorithms are
-not included in the table for readability.
+main features in Table~\ref{tab:alg_polar_algos}. Each algorithm is
+characterized in terms of decoding performance, throughput, and worst case
+latency for a software implementation. The non-simplified versions of the
+adaptive SCL algorithms are not included in the table for readability.
 
 The SC and especially the SSC algorithms achieve very high throughput and low
 latency with poor BER and FER performances. The SCL algorithm improves the
@@ -653,11 +657,11 @@ decoding performance compared to the SC algorithm, but its computational
 complexity leads to an increased latency and a lower throughput. The SSCL
 algorithm improves the decoding throughput and latency without any impact in
 terms of BER and FER performances, as long as the tree pruning is not too deep,
-as will be discussed in Section~\ref{sec:polar_genericity}. Therefore, tree
-pruning is applied to all the following algorithms, namely CA-SSCL, FA-SSCL and
-PA-SSCL. By applying CRC to the SCL algorithm, one can achieve better BER and
-FER performances at the cost of computational complexity overhead. The Adaptive
-SCL algorithms reduce the decoding time with no impact on BER and FER
+as will be discussed in Section~\ref{sec:alg_polar_generic_flexible}. Therefore,
+tree pruning is applied to all the following algorithms, namely CA-SSCL, FA-SSCL
+and PA-SSCL. By applying CRC to the SCL algorithm, one can achieve better BER
+and FER performances at the cost of computational complexity overhead. The
+Adaptive SCL algorithms reduce the decoding time with no impact on BER and FER
 performances. Furthermore, a tradeoff between throughput and worst case latency
 is possible with the use of either PA-SSCL or FA-SSCL decoding algorithms.
 
@@ -668,7 +672,7 @@ is possible with the use of either PA-SSCL or FA-SSCL decoding algorithms.
     [Decoding performance comparison between CA-SCL and SC decoders.]
     {Decoding performance comparison between CA-SCL and SC decoders.
     Code rate $R = 1/2$, and 32-bit CRC (GZip).}
-  \label{plot:polar_algos_comparison}
+  \label{plot:alg_polar_algos_comparison}
 \end{figure}
 
 CA-SCL decoding performances for large code lengths ($N > 2^{14}$) combined with
@@ -680,8 +684,8 @@ the presented simulations use the Monte Carlo method with a Binary Phase-Shift
 Keying (BPSK) modulation. The communication channel is an Additive White
 Gaussian Noise (AWGN) channel based on the Mersenne Twister pseudo-random number
 generator (MT19937)~\cite{Matsumoto1998} and the Box-Muller
-transform~\cite{Box1958}. Figure~\ref{plot:polar_algos_comparison} compares the
-BER/FER performances of CA-SCL with SC decoding for a large range of code
+transform~\cite{Box1958}. Figure~\ref{plot:alg_polar_algos_comparison} compares
+the BER/FER performances of CA-SCL with SC decoding for a large range of code
 lengths. As expected, it appears that the coding gain brought by the SCL
 algorithm decreases for larger $N$ values. In the case of $N=2^{16}$, the
 improvement caused by the use of the CA-SCL algorithm with $L=32$ and a 32-bit
@@ -700,7 +704,7 @@ Thus, it is possible to switch from one to another as shown in the following
 section.
 
 \subsection{Generic and Flexible Decoders}
-\label{sec:polar_genericity}
+\label{sec:alg_polar_generic_flexible}
 
 One of the main contribution of this thesis lies in the flexibility and the
 genericity of the proposed software decoder. These terms need to be clearly
@@ -721,7 +725,6 @@ degrees of freedom to the decoder in order to find the best tradeoff between
 decoding performance, throughput or latency for a given polar code.
 
 \subsubsection{Genericity}
-\label{sec:alg_polar_genericity}
 
 In the context of wireless communications, the standards define several
 different code lengths~$N$ that have to be supported to share bandwidth between
@@ -778,18 +781,19 @@ the configuration of the software decoder for any given polar code.
     {Tradeoffs between CA-SSCL decoding and throughput performances depending on
     $L$. $N=2048$, $R=0.5$, and 32-bit CRC (GZip). For $L=1$, the SSC decoder is
     used with a ($2048$,$1024$) polar code.}
-  \label{plot:polar_scl_l}
+  \label{plot:alg_polar_scl_l}
 \end{figure}
 
 As mentioned earlier, the list size $L$ impacts both speed and decoding
-performance. In Figure~\ref{plot:polar_scl_l}, the throughput as well as BER and
-FER performances of the CA-SSCL algorithm are shown for different $L$ values. A
-($2048$,$1024$) polar code with a 32-bit CRC is considered. The computational
-complexity increases linearly with $L$: the throughput is approximately halved
-when $L$ is doubled, except for the case of the SC algorithm ($L=1$) which is
-much faster. Indeed, there is no overhead due to the management of different
-candidate paths during the decoding. For $L\geq4$ and $E_b/N_0=2$, the FER is
-also approximately halved when the list size $L$ is doubled.
+performance. In Figure~\ref{plot:alg_polar_scl_l}, the throughput as well as BER
+and FER performances of the CA-SSCL algorithm are shown for different $L$
+values. A ($2048$,$1024$) polar code with a 32-bit CRC is considered. The
+computational complexity increases linearly with $L$: the throughput is
+approximately halved when $L$ is doubled, except for the case of the SC
+algorithm ($L=1$) which is much faster. Indeed, there is no overhead due to the
+management of different candidate paths during the decoding. For $L\geq4$ and
+$E_b/N_0=2$, the FER is also approximately halved when the list size $L$ is
+doubled.
 
 \paragraph{Tree Pruning Strategy}
 
@@ -809,7 +813,7 @@ contribution of each node type on the throughput.
     [Impact of the \texttt{REP} node size on fixed-point SSCL decoding.]
     {Impact of the \texttt{REP} node size on fixed-point SSCL decoding.
     Code ($2048$,$1723$), $L=32$.}
-  \label{plot:polar_scl_bfer_rep}
+  \label{plot:alg_polar_scl_bfer_rep}
 \end{figure}
 
 Another important parameter in both software and hardware implementations is the
@@ -821,16 +825,16 @@ that can benefit from the 8-bit and 16-bit fixed-point representations of LLRs
 and internal path metrics. In the 8-bit mode LLRs and path metrics are saturated
 between $-127$ and $+127$ after each operation. Moreover, to avoid overflows,
 the path metrics are normalized after each ``$\updatePaths()$'' call (cf.
-Alg.~\ref{alg:alg_polar_scl}) by subtracting the smallest metric to each one of
-them. Figure~\ref{plot:polar_scl_bfer_rep} shows the BER and FER performances of
-the CA-SSCL decoder for 32-bit floating-point, 16-bit and 8-bit fixed-point
-representations. One can observe that the \verb|REP| nodes degrade the decoding
-performance in a 8-bit representation because of accumulation (red triangles
-curve). Indeed, it is necessary to add all the LLRs of a \verb|REP| node
-together in order to process it, which may lead to an overflow in the case of
-fixed-point representation. It can happen when the size of the repetition nodes
-is not limited ($\texttt{REP}_\texttt{2+}$). However, the size limitation of the
-repetition nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue.
+Alg.~\ref{alg:alg_polar_scl_decoder}) by subtracting the smallest metric to each
+one of them. Figure~\ref{plot:alg_polar_scl_bfer_rep} shows the BER and FER
+performances of the CA-SSCL decoder for 32-bit floating-point, 16-bit and 8-bit
+fixed-point representations. One can observe that the \verb|REP| nodes degrade
+the decoding performance in a 8-bit representation because of accumulation (red
+triangles curve). Indeed, it is necessary to add all the LLRs of a \verb|REP|
+node together in order to process it, which may lead to an overflow in the case
+of fixed-point representation. It can happen when the size of the repetition
+nodes is not limited ($\texttt{REP}_\texttt{2+}$). However, the size limitation
+of the repetition nodes to 8 ($\texttt{REP}_\texttt{8-}$) fixes this issue.
 
 \paragraph{Supporting Different Variants of the Decoding Algorithms}
 
@@ -846,7 +850,7 @@ CA-SSCL, PA-SSCL, FA-SSCL.
     {Frame Error Rate (FER) performance and throughput of the Fully and
     Partially Adaptive SSCL decoders (FA and PA). Code ($2048$,$1723$) and
     32-bit CRC (GZip). 32-bit floating-point representation.}
-  \label{plot:polar_scl_adaptive}
+  \label{plot:alg_polar_scl_adaptive}
 \end{figure}
 
 As shown in~\cite{Sarkis2016}, the adaptive version of the SCL algorithm yields
@@ -857,9 +861,9 @@ not valid for any of the generated codewords at a given stage until the value
 $L_{max}$. By contrast, the adaptive decoding algorithm implemented
 in~\cite{Sarkis2016}, called in this manuscript Partially Adaptive SCL
 (PA-SSCL), directly increases the list depth from $1$ (SC) to $L_{max}$. In
-Figure~\ref{plot:polar_scl_adaptive}, the two versions (FA-SSCL and PA-SSCL) are
-compared on a ($2048$,$1723$) polar code and 32-bit CRC (GZip). The LLRs values
-are based on a 32-bit floating point representation. Note that as the FER
+Figure~\ref{plot:alg_polar_scl_adaptive}, the two versions (FA-SSCL and PA-SSCL)
+are compared on a ($2048$,$1723$) polar code and 32-bit CRC (GZip). The LLRs
+values are based on a 32-bit floating point representation. Note that as the FER
 performance of PA-SSCL and FA-SSCL are exactly the same, the related error
 performance plots completely overlap. The throughput of the FA-SSCL algorithm is
 higher than that of the PA-SSCL algorithm for some SNR values, depending on the
@@ -874,14 +878,14 @@ although the average latency decreases, the worst case latency increases.
   \includegraphics[width=0.70\textwidth]{polar/scl_bfer/scl_bfer_crc}
   \caption{Impact of the CRC size on SCL and A-SCL decoding. Code ($2048$,
     $1723$), $L=32$.}
-  \label{plot:polar_scl_bfer_crc}
+  \label{plot:alg_polar_scl_bfer_crc}
 \end{figure}
 
 The adaptive versions of the algorithm achieve better throughputs, but CA-SCL
 may also be chosen depending on the CRC. One may observe in
-Figure~\ref{plot:polar_scl_bfer_crc} that an adaptive decoder dedicated to an
-8-bit CRC with a ($2048$,$1723$) polar code and $L=32$ leads to a loss of $0.5$
-dB for a FER of $10^{-5}$ compared to its non adaptive counterpart.
+Figure~\ref{plot:alg_polar_scl_bfer_crc} that an adaptive decoder dedicated to
+an 8-bit CRC with a ($2048$,$1723$) polar code and $L=32$ leads to a loss of
+$0.5$ dB for a FER of $10^{-5}$ compared to its non adaptive counterpart.
 
 Both polar code genericity and decoding algorithm flexibility are helpful to
 support the recommendations of wireless communications in an SDR or Cloud-RAN
@@ -910,6 +914,7 @@ standard, it is still possible to generate one specific unrolled decoder per
 configuration.
 
 \section{Turbo Codes}
+\label{sec:alg_turbo}
 
 \subsection{Coding Scheme}
 
@@ -1110,7 +1115,7 @@ incoming branch is associated with values $u^k$ and $p^k$, the $k^{th}$
 information bit and the parity bit (both $\pm1$), respectively. The branch
 metrics associated with states $S_i^k$ and $S_j^{k+1}$ are computed as follows:
 \begin{equation}
-\label{eq:turbo_gamma}
+\label{eq:alg_turbo_gamma}
  \gamma(S_i^k, S_j^{k+1}) = 0.5(L_{s}^k + L_a^k)u^k + 0.5(L_p^k p^k).
 \end{equation}
 Here, $L_{s}^k$ and $L_a^k$ are the systematic channel LLR and the a priori
@@ -1134,7 +1139,7 @@ $\bm{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
 $j^{th}$ forward state metric $\alpha_j^{k+1}$ only depends on two forward
 state metrics of stage $k$. These state metrics are computed by:
 \begin{equation}
-  \label{eq:turbo_alpha}
+  \label{eq:alg_turbo_alpha}
   \alpha_j^{k+1} =
   \maxstar_{i \epsilon F} ( \alpha_i^k + \gamma(S_i^k, S_j^{k+1}) ),
 \end{equation}
@@ -1146,11 +1151,11 @@ defined as:
 \end{equation}
 where $\log(1 + \exp(-|a-b|))$ is a correction term.
 Computation of the backward state metrics is similar to that of the forward
-trellis traversal in Eq.~\ref{eq:turbo_alpha}. The vector of backward state
+trellis traversal in Eq.~\ref{eq:alg_turbo_alpha}. The vector of backward state
 metrics, denoted by $\bm{\beta^k} = [\beta_0^k, ..., \beta_7^k]$, is
 computed as:
 \begin{equation}
-  \label{eq:turbo_beta}
+  \label{eq:alg_turbo_beta}
   \beta_j^k =
   \maxstar_{i \epsilon B} ( \beta_i^{k+1} + \gamma(S_j^k, S_i^{k+1}) ),
 \end{equation}
@@ -1162,7 +1167,7 @@ state $S_j^k$ as defined by the trellis.
 After the forward and backward iterations have been carried out, the extrinsic
 LLRs for the $k^\text{th}$ bit are computed as:
 \begin{equation}
-  \label{eq:turbo_ext}
+  \label{eq:alg_turbo_ext}
   \begin{aligned}
   L_e^k = \maxstar_{\{S_k, S_{k+1}\}\epsilon U^1}\big( \alpha_i^k + \beta_j^{k+1} +
   \gamma(S_i^k, S_j^{k+1}) \big) \\
@@ -1249,6 +1254,7 @@ limited dynamic of 8-bit format together with early saturation inside the
 decoder are responsible for this small performance loss.
 
 \section{Sparse Code Multiple Access}
+\label{sec:alg_scma}
 
 \subsection{Presentation and Related Works}
 
@@ -1360,21 +1366,21 @@ The next sub-sections present the SCMA from a digital communication system
 point of view and, then, the Maximum Likelihood, MPA and log-MPA decoding
 methods are presented. Finally, our Estimated-MPA (E-MPA) algorithm is
 described.
-% The paper is organized as follows, Section~\ref{sec:scma_detection} introduces
-% the SCMA algorithm. Maximum Likelihood, MPA and log-MPA decoding methods are
-% explained in this section as a background to this research.
+% The paper is organized as follows, Section~\ref{sec:alg_scma_detection}
+% introduces the SCMA algorithm. Maximum Likelihood, MPA and log-MPA decoding
+% methods are explained in this section as a background to this research.
 % Section~\ref{sec:opt_scma} elaborates on proposed improvements such as
 % vectorizing the algorithm, exponential estimations, contiguous access to memory
-% and other hardware oriented techniques. Section~\ref{sec:scma_perf} explores the
-% bit error rate performance as well as the throughput, the latency, the power
-% consumption, and the energy efficiency of the proposed MPA and log-MPA
+% and other hardware oriented techniques. Section~\ref{sec:alg_scma_error_rate}
+% explores the bit error rate performance as well as the throughput, the latency,
+% the power consumption, and the energy efficiency of the proposed MPA and log-MPA
 % implementations. Some profiling metrics are given to better understand the
-% results. Section~\ref{sec:scma_fec} is dedicated to study the effects of
+% results. Section~\ref{sec:alg_scma_fec} is dedicated to study the effects of
 % suggested techniques on block error rate after channel coding. Finally, the main
 % findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 
 \subsection{Overview of the SCMA System Model}
-\label{sec:scma_overview}
+\label{sec:alg_scma_overview}
 
 In this section, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
 and $\mathbb{C}$ denote binary, natural, integer, real and complex numbers.
@@ -1390,15 +1396,15 @@ $f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
 $\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
 sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
 own codebook to generate the desired codeword according to the binary input
-stream. Fig.~\ref{fig:scma} shows the SCMA uplink chain with $J = 6$, $K = 4$
-and $N = 2$. SCMA codewords are spread over $K$ physical resources, such as OFDM
-tones. Fig.~\ref{fig:scma_enc} shows that in the multiplexed scheme of SCMA, all
-chosen codewords of the $J$ layers are added together after being multiplied by
-the channel coefficient $\bm{h}_j$. Then, the entire uplink chain is shown in
-Fig.~\ref{fig:scma_codec}. The output of the SCMA encoder is affected by the
-white additive noise $\bm{n}$:
+stream. Fig.~\ref{fig:alg_scma} shows the SCMA uplink chain with $J = 6$,
+$K = 4$ and $N = 2$. SCMA codewords are spread over $K$ physical resources, such
+as OFDM tones. Fig.~\ref{fig:alg_scma_enc} shows that in the multiplexed scheme
+of SCMA, all chosen codewords of the $J$ layers are added together after being
+multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
+is shown in Fig.~\ref{fig:alg_scma_codec}. The output of the SCMA encoder is
+affected by the white additive noise $\bm{n}$:
 \begin{equation}
-  \label{eq:scma_1}
+  \label{eq:alg_scma_1}
   \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
 \end{equation}
 where $\bm{x}_j=(x_1,...,x_{Kj})^T$ and $\bm{h}_j=(h_1,...,h_{Kj})^T$ are
@@ -1408,24 +1414,24 @@ Fig.~\ref{fig:ctx_com_chain} the SCMA encoder can be seen as a digital modulator
 and the SCMA decoder can be seen as a digital demodulator.
 
 \subsection{SCMA Decoding Schemes}
-\label{sec:scma_detection}
+\label{sec:alg_scma_detection}
 
 \paragraph{Maximum Likelihood}
-\label{sec:scma_ml}
+\label{sec:alg_scma_ml}
 
 For an arbitrary codeword, the optimum decision, i.e. the one that minimizes the
 likelihood of transmission errors after decoding, is the one resulting from the
 Maximum Likelihood (ML) estimation, which can be described as:
 \begin{equation}
-  \label{eq:scma_2}
+  \label{eq:alg_scma_2}
   \bm{\hat{x}} = \argmin_{c \in \bm{X}}||\bm{y - c}||^2,
 \end{equation}
-given the received codeword. In \eqref{eq:scma_2}, the soft outputs
+given the received codeword. In \eqref{eq:alg_scma_2}, the soft outputs
 $\hat{\bm{x}}$ are LLRs (denoted as $\bm{l}$ in Fig.~\ref{fig:ctx_com_chain}).
 When a signal is transmitted over an AWGN channel (of $\sigma^2$ variance), the
 probability function $\prob(\bm{y}|\bm{c})$ can be expressed as:
 \begin{equation}
-  \label{eq:scma_4}
+  \label{eq:alg_scma_4}
   \prob(\bm{y}|\bm{c}) = \frac{1}{\sqrt{2\pi}\sigma}\exp
   \Bigg(-\frac{||\bm{y}-\bm{c}||^2}{2\sigma^2}\Bigg).
 \end{equation}
@@ -1433,17 +1439,17 @@ probability function $\prob(\bm{y}|\bm{c})$ can be expressed as:
 \begin{figure}[htp]
   \centering
   \subfloat[][SCMA encoder with 6 users (layers) and 4 physical resources.]{
-    \label{fig:scma_enc}
+    \label{fig:alg_scma_enc}
     \includegraphics{scma/codec/codec_enc}
   }
   \\
   \subfloat[][SCMA uplink chain with channel coding.]{
-    \label{fig:scma_codec}
+    \label{fig:alg_scma_codec}
     \includegraphics{scma/codec/codec_chain}
   }
   \\
   \subfloat[][Factor graph representation of a decoder.]{
-    \label{fig:scma_dec_graph}
+    \label{fig:alg_scma_dec_graph}
     \includegraphics{scma/codec/codec_graph}
   }
   \quad
@@ -1451,45 +1457,45 @@ probability function $\prob(\bm{y}|\bm{c})$ can be expressed as:
               (I)   Resource to user message,
               (II)  Guess swap at each user and user to resource message,
               (III) Final guess at each user.]{
-    \label{fig:scma_dec_alg}
+    \label{fig:alg_scma_dec_alg}
     \includegraphics{scma/codec/codec_dec}
   }
   \caption
     [SCMA system model, encoding and decoding schemes.]
     {SCMA system model, encoding and decoding schemes.}
-  \label{fig:scma}
+  \label{fig:alg_scma}
 \end{figure}
 
 Although the ML method provides the best guess for $\bm{\hat{x}}$, performing
 the computation with this method requires unacceptable complexity in real
 applications. In the case of six users and codebooks matrix size $4\times4$ as
-in Fig.~\ref{fig:scma_enc}, the calculation of the soft output for each bit
-in \eqref{eq:scma_4} needs 4096 exponential function computations, which is
+in Fig.~\ref{fig:alg_scma_enc}, the calculation of the soft output for each bit
+in \eqref{eq:alg_scma_4} needs 4096 exponential function computations, which is
 unacceptable. Nevertheless, the result of this method is used to compare with
 practical methods to characterize the BER performance degradation of MPA and
 log-MPA.
 
 \paragraph{Message Passing Algorithm}
-\label{sec:scma_mpa}
+\label{sec:alg_scma_mpa}
 
-Fig.~\ref{fig:scma_dec_graph} shows a Bayesian factor graph representation of an
-MPA decoder with six users and four physical resources. Thanks to the sparsity
-of the codebooks, exactly three users collide in each physical resource. There
-are four possible codewords for each of the three connected user's codebooks
-which gives 64 possible combined codewords in each physical resource. In the
-first step of the MPA, the 64~distances between each possible combined codeword
-and the actual received codeword are calculated:
+Fig.~\ref{fig:alg_scma_dec_graph} shows a Bayesian factor graph representation
+of an MPA decoder with six users and four physical resources. Thanks to the
+sparsity of the codebooks, exactly three users collide in each physical
+resource. There are four possible codewords for each of the three connected
+user's codebooks which gives 64 possible combined codewords in each physical
+resource. In the first step of the MPA, the 64~distances between each possible
+combined codeword and the actual received codeword are calculated:
 \begin{equation}
-  \label{eq:scma_5}
+  \label{eq:alg_scma_5}
   d_{RES  \beta}(\bm{m}, \bm{H}) =
   \underset{l \subset \zeta, m_u\in\{1,...,K\}}{||\bm{y}_\beta -
   \sum \bm{h}_{l,m_u} \bm{x}_{l,m_u} ||},
 \end{equation}
 $\zeta$ is the set of users connected to resource $\beta$ and the
-considered codeword is denoted as $m$. For instance, \eqref{eq:scma_5} can be
-rewritten for resource 4 as:
+considered codeword is denoted as $m$. For instance, \eqref{eq:alg_scma_5} can
+be rewritten for resource 4 as:
 \begin{equation}
-  \label{eq:scma_6}
+  \label{eq:alg_scma_6}
   \begin{split}
   d_{RES 4}(m_2,m_4,m_6,\bm{h}_2, \bm{h}_4, \bm{h}_5) =
   \underset{m_{2,4,6}=1,2,3,4}{|| \bm{y_4} - \Big(\bm{h}_2\bm{x}_2(m_2) +
@@ -1497,148 +1503,149 @@ rewritten for resource 4 as:
   \end{split}
 \end{equation}
 In which $m_2$, $m_4$, $m_5$ indicate the different codewords for users 5, 4,
-and 2 in \eqref{eq:scma_6}. Assuming perfect channel estimation and Gaussian
+and 2 in \eqref{eq:alg_scma_6}. Assuming perfect channel estimation and Gaussian
 noise, these Euclidean distances can be expressed as probabilities using
-\eqref{eq:scma_7}:
+\eqref{eq:alg_scma_7}:
 \begin{equation}
-  \label{eq:scma_7}
+  \label{eq:alg_scma_7}
   \Psi(d_{RES \beta}) = \exp \Bigg(-\frac{d_{RES \beta}^2}{2\sigma^2} \Bigg).
 \end{equation}
 After calculating the residual probability of each codeword with
-\eqref{eq:scma_7}, iterative MPA starts exchanging beliefs (probabilities) on
-possible received codewords among the users and resources nodes of the
-factor-graph. According to Fig.~\ref{fig:scma_dec_alg} (I), a message from
+\eqref{eq:alg_scma_7}, iterative MPA starts exchanging beliefs (probabilities)
+on possible received codewords among the users and resources nodes of the
+factor-graph. According to Fig.~\ref{fig:alg_scma_dec_alg} (I), a message from
 resources to users has been defined to contain extrinsic information of two
 other connected users. For instance, a message from resource 4 to user 2
 containing the probability information of codeword $i$ can be expressed as:
 \begin{equation}
-  \label{eq:scma_8}
+  \label{eq:alg_scma_8}
   \begin{split}
   \mu_{RES4 \rightarrow UE2}(i) = \sum\limits_{j=1}^4 \sum\limits_{i=1}^4 \Psi
   \Big(d_{RES4}(i,j,k,\bm{H}) \Big)
   \times \mu_{UE4 \rightarrow RES4}(j) \times \mu_{UE5 \rightarrow RES4}(k).
   \end{split}
 \end{equation}
-As shown in Fig.~\ref{fig:scma_dec_alg}(II) there are only two resources
+As shown in Fig.~\ref{fig:alg_scma_dec_alg}(II) there are only two resources
 connected to each user. A message from a user to a resource is a normalized
 guess swap at the user node:
 \begin{equation}
-  \label{eq:scma_9}
+  \label{eq:alg_scma_9}
   \mu_{UE3 \rightarrow RES1}(i) = \frac{\mu_{RES3 \rightarrow UE3}(i)}
   {\sum_i\mu_{RES3 \rightarrow UE3}(i)},
 \end{equation}
-message passing between users and resources (see \eqref{eq:scma_8} and
-\eqref{eq:scma_9}) will be repeated three to eight times to reach the desired
-decoding performance. The final belief at each user $B(i)$ is the multiplication
-of all incoming messages as illustrated in Fig.~{\ref{fig:scma_dec_alg}}(III)
-and \eqref{eq:scma_10} for UE3 and codeword $i$. Finally, \eqref{eq:scma_11} is
-used to calculate soft outputs for bit $b_x$:
+message passing between users and resources (see \eqref{eq:alg_scma_8} and
+\eqref{eq:alg_scma_9}) will be repeated three to eight times to reach the
+desired decoding performance. The final belief at each user $B(i)$ is the
+multiplication of all incoming messages as illustrated in
+Fig.~{\ref{fig:alg_scma_dec_alg}}(III) and \eqref{eq:alg_scma_10} for UE3 and
+codeword $i$. Finally, \eqref{eq:alg_scma_11} is used to calculate soft outputs
+for bit $b_x$:
 \begin{equation}
-  \label{eq:scma_10}
+  \label{eq:alg_scma_10}
   B_3(i) = \mu_{RES1 \rightarrow UE3}(i) \times \mu_{RES3 \rightarrow UE3}(i),
 \end{equation}
 \begin{equation}
-  \label{eq:scma_11}
+  \label{eq:alg_scma_11}
   \bm{\hat{x}} = \ln \Bigg( \frac{\prob(\bm{y}|b_x=0)}{\prob(\bm{y}|b_x=1)} \Bigg) =
   \ln \Bigg( \frac{\sum_m B_m(i)_{~\text{when}~b_x=0}}{\sum_m B_m(i)_{~\text{when}~b_x=1}}
   \Bigg).
 \end{equation}
 
 \paragraph{Log-MAP}
-\label{sec:scma_log-map}
+\label{sec:alg_scma_log-map}
 
-Since calculation of exponentials in \eqref{eq:scma_7} requires relatively high
-computational effort, changing the algorithm to logarithmic domain using the
-Jacobi formula \eqref{eq:scma_12} is a classical improvement of MPA:
+Since calculation of exponentials in \eqref{eq:alg_scma_7} requires relatively
+high computational effort, changing the algorithm to logarithmic domain using
+the Jacobi formula \eqref{eq:alg_scma_12} is a classical improvement of MPA:
 \begin{equation}
-  \label{eq:scma_12}
+  \label{eq:alg_scma_12}
   \ln \Bigg( \sum\limits_{i-1}^N\exp(f_i) \Bigg) \approx \max\{f_1,f_2,...,f_N\}
 \end{equation}
-using Jacobi formula, \eqref{eq:scma_8} can be reduced to:
+using Jacobi formula, \eqref{eq:alg_scma_8} can be reduced to:
 \begin{equation}
-  \label{eq:scma_13}
+  \label{eq:alg_scma_13}
   \mu_{RES1 \rightarrow UE5}(i) = \underset{j,k=1,...,4}
   {\max \Bigg(-\frac{d_{RES1}^2(i,j,k,\bm{H})}{2\sigma^2} \Bigg)} +
   \mu_{UE2 \rightarrow RES1}(j) + \mu_{UE3 \rightarrow RES1}(k),
 \end{equation}
 due to elimination of exponential's high dynamic ranges, there is no need to
-normalize the guess swap and \eqref{eq:scma_9} will be:
+normalize the guess swap and \eqref{eq:alg_scma_9} will be:
 \begin{equation}
-  \label{eq:scma_14}
+  \label{eq:alg_scma_14}
   \mu_{UE3 \rightarrow RES1}(i) = \mu_{RES3 \rightarrow UE3}(i).
 \end{equation}
 The rest of the algorithm can be expressed as follows:
 \begin{equation}
-  \label{eq:scma_15}
+  \label{eq:alg_scma_15}
   B_3(i) = \mu_{RES3 \rightarrow UE3}(i) + \mu_{RES1 \rightarrow UE3}(i),
 \end{equation}
 \begin{equation}
-  \label{eq:scma_16}
+  \label{eq:alg_scma_16}
   \bm{\hat{x}} = \max_i(B_m(i))_{~\text{when}~b_x=0} - \max_i(B_m(i))_{~\text{when}~b_x=1}.
 \end{equation}
 
 \paragraph{Estimated-MPA (E-MPA)}
 
-Computation of the exponentials in \eqref{eq:scma_7} is one of the most
+Computation of the exponentials in \eqref{eq:alg_scma_7} is one of the most
 important bottlenecks of the MPA algorithm. It is possible to further accelerate
 the computation by using proper estimations. The exact exponential computation
 is not essential to produce a satisfying estimation in the MPA algorithms.
-Considering that \eqref{eq:scma_7} represents a Gaussian PDF, it can be replaced
-by sub-optimal bell-shaped polynomial distributions to model the noise. It will
-be shown in Section~\ref{sec:eval_scma_throughput} that using a
+Considering that \eqref{eq:alg_scma_7} represents a Gaussian PDF, it can be
+replaced by sub-optimal bell-shaped polynomial distributions to model the noise.
+It will be shown in Section~\ref{sec:eval_scma_throughput} that using a
 polynomial estimation can increase the throughput while leading to marginal bit
 error rate degradation after the MPA decoding. However, these estimated
 probabilities cause small degradations of the FER performance after the channel
-decoding (cf. Section~\ref{sec:scma_fec}). The proposed PDF must satisfy two
+decoding (cf. Section~\ref{sec:alg_scma_fec}). The proposed PDF must satisfy two
 conditions to be valid: 1) it must be positive and lower bounded at zero, 2) its
 integral over $(-\infty, \infty)$ must be equal to 1. The following function is
 suggested to estimate the exponentials:
 \begin{equation}
-  \label{eq:scma_18}
+  \label{eq:alg_scma_18}
   \Psi^{'}_{d_{RES \beta}} = \frac{2 / \pi}{2\sigma^2 + 4d^4_{RES \beta}}.
 \end{equation}
 The computation of $\Psi^{'}$ is faster than the original
-$\Psi$~\cite{Ghaffari2017}. The probabilities produced using \eqref{eq:scma_7}
-and \eqref{eq:scma_18} are normalized according to \eqref{eq:scma_9}.
-Furthermore, the numerator $2/\pi$ does not play an important role in MPA and
-can be uniformly eliminated from all calculations to reduce the computational
-effort. Thus,
+$\Psi$~\cite{Ghaffari2017}. The probabilities produced using
+\eqref{eq:alg_scma_7} and \eqref{eq:alg_scma_18} are normalized according to
+\eqref{eq:alg_scma_9}. Furthermore, the numerator $2/\pi$ does not play an
+important role in MPA and can be uniformly eliminated from all calculations to
+reduce the computational effort. Thus,
 \begin{equation}
-  \label{eq:scma_19}
+  \label{eq:alg_scma_19}
   \Psi^{'}_{d_{RES \beta}} \approx \frac{1}{2\sigma^2 + 4d^4_{RES \beta}},
 \end{equation}
 can be used as a systematic replacement to the exponential calculations.
 
 \subsubsection{Uncoded Error Performance}
-\label{sec:scma_perf}
+\label{sec:alg_scma_error_rate}
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\linewidth]{scma/ber_uncoded/ber_uncoded}
   \caption{BER performance comparison of ML, MPA and E-MPA for 5 iterations.}
-  \label{plot:scma_ber_uncoded_a}
+  \label{plot:alg_scma_ber_uncoded_a}
 \end{figure}
 
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.7\linewidth]{scma/ber_uncoded_iter/ber_uncoded_iter}
   \caption{Convergence behavior of E-MPA and MPA decoding algorithm.}
-  \label{plot:scma_ber_uncoded_b}
+  \label{plot:alg_scma_ber_uncoded_b}
 \end{figure}
 
-Fig.~\ref{plot:scma_ber_uncoded_a} compares the ML, MPA and E-MPA SCMA decoding
-algorithms. There are very small differences in the bit error rate performance
-of the three decoders (less than 0.10 dB). Although both MPA and E-MPA show
-their optimum behavior with 5 iterations, the convergence behavior of the two
-methods are different as illustrated in Fig.~\ref{plot:scma_ber_uncoded_b}.
-E-MPA has a slower convergence rate for less than three iterations. This
-phenomenon is expected as the probability functions produced by bell-shaped
-polynomial PDF do not have the quality of probabilities produced by
-exponentials. However, the convergence behavior is almost identical for more
-than 4 iterations.
+Fig.~\ref{plot:alg_scma_ber_uncoded_a} compares the ML, MPA and E-MPA SCMA
+decoding algorithms. There are very small differences in the bit error rate
+performance of the three decoders (less than 0.10 dB). Although both MPA and
+E-MPA show their optimum behavior with 5 iterations, the convergence behavior of
+the two methods are different as illustrated in
+Fig.~\ref{plot:alg_scma_ber_uncoded_b}. E-MPA has a slower convergence rate for
+less than three iterations. This phenomenon is expected as the probability
+functions produced by bell-shaped polynomial PDF do not have the quality of
+probabilities produced by exponentials. However, the convergence behavior is
+almost identical for more than 4 iterations.
 
 \subsubsection{Coded Error Performance}
-\label{sec:scma_fec}
+\label{sec:alg_scma_fec}
 
 In the previous sections, algorithmic approximations have been proposed through
 the E-MPA SCMA decoding algorithms. These approximations lead to drastic
@@ -1664,48 +1671,50 @@ as the polar and LDPC codes present in many wireless standards like the
   \subfloat[][Code rate $R=1/3$.]
   {
     \includegraphics[width=0.70\textwidth]{scma/fec/fec_1_3}
-    \label{plot:scma_fec_a}
+    \label{plot:alg_scma_fec_r1_3}
   }
   \\
   \subfloat[][Code rate $R=1/2$.]
   {
     \includegraphics[width=0.70\textwidth]{scma/fec/fec_1_2}
-    \label{plot:scma_fec_b}
+    \label{plot:alg_scma_fec_r1_2}
   }
   \caption
     [FER evaluation of MPA and E-MPA decoders combined with channel coding.]
     {FER evaluation of SCMA MPA and E-MPA decoders combined with LDPC, polar
     and turbo codes.}
-  \label{plot:scma_fec}
+  \label{plot:alg_scma_fec}
 \end{figure}
 
-Fig.~\ref{plot:scma_fec} shows the FER performances of MPA and E-MPA decoders
-when combined with different channel codes. For a matter of reproducibility, the
-full parameters of the FEC used are reported below. This evaluation does not
-claim  any novelty in channel coding, however, we found crucial to validate our
-proposed SCMA optimizations in a sufficiently complete communication chain.
+Fig.~\ref{plot:alg_scma_fec} shows the FER performances of MPA and E-MPA
+decoders when combined with different channel codes. For a matter of
+reproducibility, the full parameters of the FEC used are reported below. This
+evaluation does not claim  any novelty in channel coding, however, we found
+crucial to validate our proposed SCMA optimizations in a sufficiently complete
+communication chain.
 
 \paragraph{Turbo codes}
 
 In a first validation, the turbo code from the LTE standard is used. In the
 decoder, 6 iterations are done. The two sub-decoders implement the Enhanced
 Max-Log Maximum A-Posteriori algorithm (EML-MAP)~\cite{Robertson1995} with a
-$\alpha = 0.75$ scaling factor~\cite{Vogt2000}. In Fig.~\ref{plot:scma_fec_a},
-the rate is $R \approx 1/3$, no puncturing is performed, the number of
-information bits $K$ is 1024 and the codeword length $N$ is 3084. In
-Fig.~\ref{plot:scma_fec_b}, $R \approx 1/2$ with the puncturing of half of the
-parity bits, $K=2048$, and $N=4108$.
+$\alpha = 0.75$ scaling factor~\cite{Vogt2000}. In
+Fig.~\ref{plot:alg_scma_fec_r1_3}, the rate is $R \approx 1/3$, no puncturing is
+performed, the number of information bits $K$ is 1024 and the codeword length
+$N$ is 3084. In Fig.~\ref{plot:alg_scma_fec_r1_2}, $R \approx 1/2$ with the
+puncturing of half of the parity bits, $K=2048$, and $N=4108$.
 
 \paragraph{LDPC codes}
 
 In a second set of validations, the LDPC codes used in this paper are based on
 MacKay's matrices that have been taken from its personal
 webpage\footnote{MacKay's webpage: \url{http://www.inference.org.uk/mackay/codes/data.html}}.
-In Fig.~\ref{plot:scma_fec_a}, the matrix used is ($K=272$, $N=816$), and in
-Fig.~\ref{plot:scma_fec_b} the matrix is ($K=2000$, $N=4000$). In both figures,
-the decoder used is a Belief Propagation (BP) decoder with an Horizontal Layered
-scheduling~\cite{Yeo2001}. For the update rules, the Sum-Product Algorithm (SPA)
-has been used~\cite{MacKay1999}. The number of iterations is 100.
+In Fig.~\ref{plot:alg_scma_fec_r1_3}, the matrix used is ($K=272$, $N=816$), and
+in Fig.~\ref{plot:alg_scma_fec_r1_2} the matrix is ($K=2000$, $N=4000$). In both
+figures, the decoder used is a Belief Propagation (BP) decoder with an
+Horizontal Layered (BP-HL) scheduling~\cite{Yeo2001}. For the update rules, the
+Sum-Product Algorithm (SPA) has been used~\cite{MacKay1999}. The number of
+iterations is 100.
 
 \paragraph{Polar codes}
 
@@ -1719,26 +1728,26 @@ given SNR. Therefore, a shift on the input SNR of the GA algorithm must be
 applied in order to efficiently select the frozen bits. If this shift is
 not applied, the decoding performances of the polar code degrades drastically.
 The number of information bits and the codeword length are ($K=682$, $N=2048$)
-in Fig.~\ref{plot:scma_fec_a} and ($K=2048$, $N=4096$) in
-Fig.~\ref{plot:scma_fec_b}. The decoder is the CRC-Aided Successive Cancellation
-List (CA-SCL) decoder with $L=32$ (the 32-bit GZIP CRC is used).
+in Fig.~\ref{plot:alg_scma_fec_r1_3} and ($K=2048$, $N=4096$) in
+Fig.~\ref{plot:alg_scma_fec_r1_2}. The decoder is the CRC-Aided Successive
+Cancellation List (CA-SCL) decoder with $L=32$ (the 32-bit GZIP CRC is used).
 
 \paragraph{Effects of E-MPA on Error Correction}
-\label{sec:scma_fec_e-mpa}
+\label{sec:alg_scma_fec_e-mpa}
 
-In Fig.~\ref{plot:scma_fec}, the number of iterations of the SCMA demodulator is
-5. The objective of simulating multiple channel codes is not to compare them
-with each other. A fair comparison of the different channel codes would indeed
-impose using the same code lengths and more importantly their computational
-complexity should be compared, which is not the case here. Our goal here is to
-study the impact of using E-MPA on the BER and FER performances when the channel
-codes are included in the communication chain. For each channel code, two curves
-are plotted: one for the E-MPA and the other for the MPA. Only 0.2 to 0.4 dB
-separate the two versions of the algorithm for all the considered channel codes.
-These results show the extent to which uncertainty of estimations affects
-channel coding. The decoding speed improvement brought by the E-MPA algorithm
-has a cost in terms of decoding performance. This trade-off should be considered
-in order to meet the system constraints.
+In Fig.~\ref{plot:alg_scma_fec}, the number of iterations of the SCMA
+demodulator is 5. The objective of simulating multiple channel codes is not to
+compare them with each other. A fair comparison of the different channel codes
+would indeed impose using the same code lengths and more importantly their
+computational complexity should be compared, which is not the case here. Our
+goal here is to study the impact of using E-MPA on the BER and FER performances
+when the channel codes are included in the communication chain. For each channel
+code, two curves are plotted: one for the E-MPA and the other for the MPA. Only
+0.2 to 0.4 dB separate the two versions of the algorithm for all the considered
+channel codes. These results show the extent to which uncertainty of estimations
+affects channel coding. The decoding speed improvement brought by the E-MPA
+algorithm has a cost in terms of decoding performance. This trade-off should be
+considered in order to meet the system constraints.
 
 \section{Discussion}
 

@@ -648,7 +648,7 @@ described in~\cite{Sarkis2016} (4.0 Mb/s). The proposed CA-SSCL decoder is
 approximately 4 times faster than the generic implementation
 in~\cite{Sarkis2014b} ($0.52$ Mb/s) and 2 times faster than the CA-SCL
 implementation in~\cite{Shen2016} ($1.1$ Mb/s) thanks to the implementation
-improvements detailed in Section~\ref{sec:polar_implem}. Furthermore, the
+improvements detailed in Section~\ref{sec:opt_polar_scl}. Furthermore, the
 proposed decoder exhibits a much deeper level of genericity and flexibility than
 the ones proposed in~\cite{Sarkis2014,Shen2016}. Indeed, the following features
 were not enabled: the customization of the tree pruning, the 8-bit and 16-bit
@@ -658,10 +658,10 @@ algorithm.
 When implemented on the same target (i7-2600), the proposed PA-SSCL is
 competitive with the unrolled PA-SSCL in~\cite{Sarkis2016}, being only two times
 slower. This can be explained by the improvements concerning the CRC that are
-described in Section \ref{sec:polar_crc}, especially the information bits
-extraction in the SC decoder. Finally, as mentioned before, the throughput of
-the proposed FA-SSCL significantly outperforms all the other SCL decoders (up to
-345.5 Mb/s at 4.5 dB in 32-bit floating-point).
+described in Section \ref{sec:opt_polar_scl_crc}, especially the information
+bits extraction in the SC decoder. Finally, as mentioned before, the throughput
+of the proposed FA-SSCL significantly outperforms all the other SCL decoders (up
+to 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
 
 \section{Turbo Decoders}
 \label{sec:eval_turbo}
@@ -1136,17 +1136,17 @@ GNU compiler reaches 3.51 Mbps utilizing all four physical cores of the
 processor (SMT on). Log-MPA improves the performance to 6.37 Mbps benefiting
 from elimination of the exponential calculations, still in \verb|-O3|. However,
 using the fast math libraries (\verb|-Ofast|) and the loop optimizations from
-Section~\ref{sec:scma_improvements_float} increases the throughput to 14.85 Mbps
-for MPA and to 10.31 Mbps for log-MPA. It is important to observe that MPA
-outperforms the log-MPA with the fast math libraries and more aggressive
-optimizations, without compromising on the bit error rate performance. This is
-because log-MPA induces inefficient data accesses due to the messages passed
-from resources to users. This phenomenon will be investigated further in
-Section~\ref{sec:eval_scma}. Using the AVX and SSE SIMD ISAs reduces the
-branch mispredictions and the cache misses (cf.
-Section~\ref{sec:scma_improvements_flattening}). Consequently, the throughput is
+Section~\ref{sec:opt_scma_float} increases the throughput to 14.85 Mbps for MPA
+and to 10.31 Mbps for log-MPA. It is important to observe that MPA outperforms
+the log-MPA with the fast math libraries and more aggressive optimizations,
+without compromising on the bit error rate performance. This is because log-MPA
+induces inefficient data accesses due to the messages passed from resources to
+users. This phenomenon will be investigated further in
+Section~\ref{sec:eval_scma}. Using the AVX and SSE SIMD ISAs reduces the branch
+mispredictions and the cache misses (cf.
+Section~\ref{sec:opt_scma_flattening}). Consequently, the throughput is
 increased to 67.83 Mbps in MPA and to 75.46 Mbps for the E-MPA where the $\Psi'$
-estimated exponentials from \eqref{eq:scma_19} are performed. These results
+estimated exponentials from \eqref{eq:alg_scma_19} are performed. These results
 confirm significant throughput gains for the proposed implementations, while the
 energy consumption is reduced. Utilizing AVX increases the average power
 consumption of MPA and log-MPA from 35 to 40 Watts but throughput and latency
@@ -1308,9 +1308,9 @@ VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
 Fig.~\ref{plot:eval_scma_profiling} reports profiling results obtained with
 different SCMA decoders variations when applied to the decoding of 768 Million
 bits. Results were organized to show the existence of five bottlenecks i.e.
-logarithms in \eqref{eq:scma_11}, exponentials in \eqref{eq:scma_7}, complex
-norm and complex subtraction in \eqref{eq:scma_5} and messages passed from
-resources to users in \eqref{eq:scma_8}.
+logarithms in \eqref{eq:alg_scma_11}, exponentials in \eqref{eq:alg_scma_7},
+complex norm and complex subtraction in \eqref{eq:alg_scma_5} and messages
+passed from resources to users in \eqref{eq:alg_scma_8}.
 
 Observing MPA and MPA (\verb|-Ofast|) reveals the overhead of exponentials and
 complex norms in the algorithm. For example, the decoder spent more than 62
@@ -1327,8 +1327,8 @@ SIMD implementation methods. By contrast, log-MPA has not shown good performance
 using fast math library when compared to MPA. Inefficient memory access, cache
 misses and high number of branches are among the reasons that made log-MPA
 exhibits lower throughput than expected. Those phenomena are induced by
-comparison operations embedded in the $\max(.)$ function in \eqref{eq:scma_13}.
-Nevertheless, without using fast math libraries, log-MPA
+comparison operations embedded in the $\max(.)$ function in
+\eqref{eq:alg_scma_13}. Nevertheless, without using fast math libraries, log-MPA
 still offers performance gains over MPA.
 
 \section{Analysis of the Simulator Throughput on a Selection of CPUs}
@@ -1432,7 +1432,7 @@ threads, the presented speedups do not all have the same number of measurement
 points. In Figure~\ref{plot:simu_speedup_throughput}, an $N=2048$ and $K=1723$
 Polar code (FA-SCL decoder, $L=32$, 32-bit GZip \verb|0x04C11DB7| CRC) is
 simulated with a BPSK modulation and over an AWGN channel ($E_b/N_0 = 4.5$~dB,
-last SNR point of the blue curve in Figure~\ref{fig:intro_bfer_polar}). The
+last SNR point of the blue curve in Figure~\ref{fig:ctx_bfer_polar}). The
 frozen bits of the polar code have been generated with the Gaussian
 Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
 vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with

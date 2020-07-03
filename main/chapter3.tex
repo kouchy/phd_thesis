@@ -100,7 +100,7 @@ expanded as an operation and a \verb|blend| instead.
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/mipp/mli.cpp}
   \caption{Medium Level Interface encapsulation.}
-  \label{lst:vec_mipp_mli}
+  \label{lst:opt_mipp_mli}
 \end{listing}
 
 The \MIPP Medium Level Interface (\MIPP med.) provides additional expressiveness
@@ -111,7 +111,7 @@ type and the number of elements inside the vector register and the mask
 register, respectively. One can notice that in these register objects are typed,
 unlike the \MIPP low register basic type. It avoids to write the type when a
 \MIPP function is called. The function type can then be directly selected from
-the parameter type. Listing~\ref{lst:vec_mipp_mli} illustrates the
+the parameter type. Listing~\ref{lst:opt_mipp_mli} illustrates the
 template-based encapsulation, which enables \MIPP to override common arithmetic
 and comparison operators.
 
@@ -134,7 +134,7 @@ this value.
 }
 
 \subsection{Implementation Details}
-\label{sec:vec_mipp_implem}
+\label{sec:opt_mipp_implem}
 
 \MIPP targets SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2, FMA3, KNCI, AVX-512F
 and AVX-512BW instruction sets on x86 and related architectures, as well as
@@ -239,7 +239,7 @@ presented here could have evolved since this publication.
   % \tabcolsep=6pt
   \centering
   \caption{Comparison of various SIMD wrappers: General Information and Features.}
-  \label{tab:vec_comparison_general}
+  \label{tab:opt_mipp_comparison_general}
   % \begin{adjustbox}{angle=90}
   % {\resizebox{\linewidth}{!}{
   \begin{tabular}{r r r r | c c c}
@@ -261,20 +261,21 @@ presented here could have evolved since this publication.
   % \end{adjustbox}
 \end{table}
 
-Table~\ref{tab:vec_comparison_general} and
-Table~\ref{tab:vec_comparison_isa_data} compare various SIMD wrappers.
-Table~\ref{tab:vec_comparison_general} is focusing on the general features while
-Table~\ref{tab:vec_comparison_general} is targeting the supported instruction
-sets and data types. They aims to present an overview of some prominent
-solutions, though them is by no means exhaustive due to the richness of the SIMD
-wrapper landscape. Some of the wrappers presented, such as \MIPP, \Vc,
-\BoostSIMD, \VCL and \TSIMD, have been designed in an academic research context.
+Table~\ref{tab:opt_mipp_comparison_general} and
+Table~\ref{tab:opt_mipp_comparison_isa_data} compare various SIMD wrappers.
+Table~\ref{tab:opt_mipp_comparison_general} is focusing on the general features
+while Table~\ref{tab:opt_mipp_comparison_isa_data} is targeting the supported
+instruction sets and data types. They aims to present an overview of some
+prominent solutions, though them is by no means exhaustive due to the richness
+of the SIMD wrapper landscape. Some of the wrappers presented, such as \MIPP,
+\Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic research
+context.
 \begin{table}[htp]
   % \renewcommand{\arraystretch}{0.95}
   % \tabcolsep=6pt
   \centering
   \caption{Comparison of various SIMD wrappers : Supported ISA and Data Type.}
-  \label{tab:vec_comparison_isa_data}
+  \label{tab:opt_mipp_comparison_isa_data}
   % \begin{adjustbox}{angle=90}
   % {\resizebox{\linewidth}{!}{
   \begin{tabular}{r || c c c c c || c c | c c c c}
@@ -313,7 +314,7 @@ characteristics. The \textit{Math Func.}~ column indicates which wrapper
 supports additional mathematical sub-routines, not necessarily available as
 native CPU instructions (exponential, logarithm, trigonometric functions for
 instance), and required by algorithms such as the Box-Muller Transform (see
-Section~\ref{sec:vec_awgn}). The \textit{\Cxx Technique} column indicates
+Section~\ref{sec:opt_simu_awgn}). The \textit{\Cxx Technique} column indicates
 whether the wrapper is designed as an expression template framework, or whether
 it relies on operator overloading techniques. The expression template feature is
 a powerful technique to automatically drive the rewriting of whole arithmetic
@@ -326,7 +327,7 @@ are that the source code complexity of the wrapper is dramatically increased.
 currently available \Cxx compilers produce huge amounts of arcane error messages
 at the slightest mistake in the end user program. For these reasons, we decided
 not to base \MIPP on the expression template technique. As mentioned in
-Section~\ref{sec:vec_mipp_implem}, maintaining SIMD wrappers, and porting them
+Section~\ref{sec:opt_mipp_implem}, maintaining SIMD wrappers, and porting them
 to new instruction sets is error prone by nature, due to the large number of
 routines, cryptic intrinsics names, and specific instruction set details. A
 comprehensive testing suite is therefore critical to validate new development,
@@ -337,13 +338,13 @@ found similar test suites in the software distributions of \VCL, \xsimd and
 teams of these wrappers.
 
 \subsubsection{Experimentation Protocol}
-\label{opt:mipp_protocol}
+\label{sec:opt_mipp_protocol}
 
 \begin{table}[htp]
   \tabcolsep=6pt
   \centering
   \caption{Specifications of the target processors.}
-  \label{tab:vec_specs}
+  \label{tab:opt_mipp_specs}
   % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c c c c}
   \textbf{Name}                   & \textbf{Exynos5422} & \textbf{RK3399} & \textbf{Core\TM i5-5300U}  & \textbf{Xeon Phi\TM 7230} \\ \hline \hline
@@ -359,13 +360,13 @@ teams of these wrappers.
 \end{table}
 
 Four architectures are considered for performance results, summarized in
-Table~\ref{tab:vec_specs}. The Cortex-A15 is used to evaluate the NEON
+Table~\ref{tab:opt_mipp_specs}. The Cortex-A15 is used to evaluate the NEON
 instruction set in 32-bit. The Cortex-A72 is used to evaluate the 64-bit NEON
-instructions for Figure~\ref{plot:vec_mandelbrot}. The Core\TM i5 is used for
-both SSE and AVX benchmarks. The Xeon Phi\TM is used for AVX-512 instructions.
-Source codes are compiled with the GNU \Cxx~5 compiler using the common flags:
-\verb|-O3| \verb|-funroll-loops|. The additional architecture specific flags
-are:
+instructions for Figure~\ref{plot:opt_mipp_mandelbrot}. The Core\TM i5 is used
+for both SSE and AVX benchmarks. The Xeon Phi\TM is used for AVX-512
+instructions. Source codes are compiled with the GNU \Cxx~5 compiler using the
+common flags: \verb|-O3| \verb|-funroll-loops|. The additional architecture
+specific flags are:
 1) \verb|-march=armv7-a| \verb|-mfpu=neon-vfpv4| on Cortex-A15,
 2) \verb|-march=armv8-a| on Cortex-A72,
 3) \verb|-msse4.2| for SSE or \verb|-mavx2 -mfma| for AVX on Core\TM i5,
@@ -380,11 +381,11 @@ version is compiled for each SIMD instruction set.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Float 32-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit}\label{plot:vec_mandelbrot_32}}
+  \subfloat[][Float 32-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit}\label{plot:opt_mipp_mandelbrot_32}}
   \quad
-  \subfloat[][Float 64-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit}\label{plot:vec_mandelbrot_64}}
+  \subfloat[][Float 64-bit]{\includegraphics[width=0.485\textwidth]{vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit}\label{plot:opt_mipp_mandelbrot_64}}
   \caption{Speedups over the Mandelbrot naive auto-vectorized implementation.}
-  \label{plot:vec_mandelbrot}
+  \label{plot:opt_mipp_mandelbrot}
 \end{figure}
 
 We now compare \MIPP with the open-source wrappers presented above, both
@@ -394,15 +395,15 @@ as possible the risk of unfairness of the port on each wrapper. This problem is
 compute-bound. The chosen implementation relies on a floating-point
 representation (available online\footnote{Mandelbrot set source code:
 \url{https://gitlab.inria.fr/acassagn/mandelbrot}}).
-Figure~\ref{plot:vec_mandelbrot} presents the speedups obtained on various
+Figure~\ref{plot:opt_mipp_mandelbrot} presents the speedups obtained on various
 instruction sets on single-precision floating-point format (cf.
-Fig.~\ref{plot:vec_mandelbrot_32}) and on double-precision floating-point format
-(cf. Fig.~\ref{plot:vec_mandelbrot_64}). SSE stands for SSE4.2, NEON stands for
-NEONv2 (includes the FMA instructions), AVX stands for AVX2+FMA3 and AVX-512
-stands for AVX-512F (with FMA instructions). The FMA benefit ranges from 17\%
-(AVX2) to 26\% (AVX-512). An SIMD with intrinsics version has been hand-coded
-for each specific instruction set. The intrinsics version is considered the
-``\emph{golden}'' model.
+Fig.~\ref{plot:opt_mipp_mandelbrot_32}) and on double-precision floating-point
+format (cf. Fig.~\ref{plot:opt_mipp_mandelbrot_64}). SSE stands for SSE4.2, NEON
+stands for NEONv2 (includes the FMA instructions), AVX stands for AVX2+FMA3 and
+AVX-512 stands for AVX-512F (with FMA instructions). The FMA benefit ranges from
+17\% (AVX2) to 26\% (AVX-512). An SIMD with intrinsics version has been
+hand-coded for each specific instruction set. The intrinsics version is
+considered the ``\emph{golden}'' model.
 
 \textbf{\BoostSIMD} only supports the SSE instruction set, even when the code is
 compiled with one of the AVX or AVX-512 flags. It is insufficient for our
@@ -415,7 +416,7 @@ not available in the GitHub repository at the time of writing. \textbf{\xsimd}
 achieves performance close to the intrinsic version in SSE and AVX. However, it
 currently lacks NEON and AVX-512 support. Moreover, it does not support small
 8-bit and 16-bit integers, needed for Successive Cancellation decoders (see
-Section~\ref{sec:vec_polar}).
+Section~\ref{sec:opt_polar}).
 
 \textbf{\Vc} is one of the earliest developed SIMD \Cxx wrapper. We used
 Branch~1.3 for the performance measurements, the latest stable branch at this
@@ -457,7 +458,7 @@ implementations of the same code are possible. \MIPP offers to the programmer
 the control on the intrinsics taken and ensures portability.
 
 \section{Vectorization Strategies}
-\label{sec:opt_vec_strat}
+\label{sec:opt_vec}
 
 The vectorization is a key to develop high performance implementations of signal
 processing algorithms. One of the main constraint of these algorithms is their
@@ -482,7 +483,7 @@ CPUs. The next subsections presents the vectorization strategies we identified
 to effectively implement signal processing algorithms on CPUs.
 
 \subsection{Intra-frame SIMD Strategy}
-\label{sec:opt_vec_strat_intra}
+\label{sec:opt_vec_intra}
 
 The \emph{intra-frame} SIMD strategy consists in using the vectorization to
 process a single frame. With this strategy, the available level of parallelism
@@ -502,7 +503,7 @@ permutation extra-instructions need to be added. These extra-instructions are
 generally a limiting factor in the efficiency of the intra-frame SIMD strategy.
 
 \subsection{Inter-frame SIMD Strategy}
-\label{sec:opt_vec_strat_inter}
+\label{sec:opt_vec_inter}
 
 Unlike the intra-frame SIMD strategy, the \emph{inter-frame} SIMD strategy
 processes many frames in parallel. The idea is to fill the SIMD registers with
@@ -522,25 +523,25 @@ $p_\text{SIMD}$ but the latency of a single frame is unchanged.
   \caption
     [Frame reordering operation before and after an inter-frame SIMD process.]
     {Frame reordering operation before and after an inter-frame SIMD process.}
-  \label{fig:vec_reordering_process_inter_simd}
+  \label{fig:opt_vec_inter_frame}
 \end{figure}
 
 Moreover, one may note that the $N$ bits of a frame are naturally transmitted
 frame by frame. It is then necessarily to perform a reordering operation before
 to start the inter-frame SIMD computations. This reordering process is shown in
-Fig.~\ref{fig:vec_reordering_process_inter_simd} where $F$ frames are
-represented by different colors and the elements inside a single frame can be
-identified by the different patterns. All the first elements of each frame are
-regrouped together in memory, then all the second elements of each frame are
-regrouped together, and so on. The dual reverse reordering operation is
-performed at the end of the inter-frame SIMD computations. The reordering
-operations are the main key to reach high throughputs in the inter-frame SIMD
-strategy. They enable efficient load and store instructions. These reordering
-and reversed reordering operations could be replaced by gather and scatter
-instructions each time a load and store instructions are required. But this
-solution has shown poorer performance on current CPU architectures. The selected
-version with the reordering operations comes with a much better data locality at
-the cost of extra operations before and after the SIMD computations.
+Fig.~\ref{fig:opt_vec_inter_frame} where $F$ frames are represented by different
+colors and the elements inside a single frame can be identified by the different
+patterns. All the first elements of each frame are regrouped together in memory,
+then all the second elements of each frame are regrouped together, and so on.
+The dual reverse reordering operation is performed at the end of the inter-frame
+SIMD computations. The reordering operations are the main key to reach high
+throughputs in the inter-frame SIMD strategy. They enable efficient load and
+store instructions. These reordering and reversed reordering operations could be
+replaced by gather and scatter instructions each time a load and store
+instructions are required. But this solution has shown poorer performance on
+current CPU architectures. The selected version with the reordering operations
+comes with a much better data locality at the cost of extra operations before
+and after the SIMD computations.
 
 \begin{figure}[htp]
   \centering
@@ -550,7 +551,7 @@ the cost of extra operations before and after the SIMD computations.
      $p_\text{SIMD} = 4$.]
     {MIPP implementation of the SIMD frame reordering process for
      $p_\text{SIMD} = 4$.}
-  \label{fig:vec_reordering_process_inter_simd_mipp}
+  \label{fig:opt_vec_reordering}
 \end{figure}
 
 It is then mandatory to minimize the overhead introduced by the reordering
@@ -564,12 +565,12 @@ registers $\bm{r^c} = [r^a_0, r^b_0, ..., r^a_{p_\text{SIMD}/2-1},
 r^b_{p_\text{SIMD}/2-1}]$ and $\bm{r^d} = [r^a_{p_\text{SIMD}/2},
 r^b_{p_\text{SIMD}/2}, ..., r^a_{p_\text{SIMD}-1}, r^b_{p_\text{SIMD}-1}]$.
 The \verb|mipp::interleave| function is applied $N \times \log_2(F)$ times.
-Fig.~\ref{fig:vec_reordering_process_inter_simd_mipp} shows the \MIPP
-implementation of the reordering process for $F = p_\text{SIMD} = 4$. To
-increase the speed of the reordering process, the template meta-programming
-technique has been used to unroll the \verb|mipp::interleave| calls. The generic
-reversed reordering process has also be implemented with \MIPP and the principle
-is similar to the reordering process.
+Fig.~\ref{fig:opt_vec_reordering} shows the \MIPP implementation of the
+reordering process for $F = p_\text{SIMD} = 4$. To increase the speed of the
+reordering process, the template meta-programming technique has been used to
+unroll the \verb|mipp::interleave| calls. The generic reversed reordering
+process has also be implemented with \MIPP and the principle is similar to the
+reordering process.
 
 \subsection{Inter/intra-frame SIMD Strategy}
 
@@ -582,19 +583,20 @@ strategy on two frames. The inter/intra-frame SIMD strategy is also a good
 candidate to make trade-offs between low latency and high throughput.
 
 \section{Efficient Functional Simulations}
+\label{sec:opt_simu}
 
 This section focuses on computational blocks specific to the functional
-simulation of digital communication systems. In this type of simulation,
+simulation of digital communication systems. In this type of simulations,
 the channel model can take a non negligible amount of time this is why we
 propose a vectorized version of the AWGN channel. Additionally when fixed-point
 decoders are benched, the output LLRs of the demodulator have to be converted
 from a floating-point representation to a fixed-point representation. This
 process can also take an important amount of time and it has been optimized.
 The proposed implementations are briefly evaluated with the protocol defined in
-Section~\ref{opt:mipp_protocol}.
+Section~\ref{sec:opt_mipp_protocol}.
 
 \subsection{Box-Muller Transform}
-\label{sec:vec_awgn}
+\label{sec:opt_simu_awgn}
 
 Monte Carlo simulations of digital communication systems provide an empirical
 way to evaluate error correction performance of the system. In this kind of
@@ -614,13 +616,13 @@ in $]0, 1]$:
 Then, $z_1$ and $z_2$ are independent and normally distributed samples.
 
 \begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/awgn/box_muller_simd.cpp}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/simu/awgn/box_muller_simd.cpp}
   \caption{Box-Muller Transform SIMD kernel with \MIPP.}
-  \label{lst:vec_awgn_box_muller_simd}
+  \label{lst:opt_simu_awgn_box_muller_simd}
 \end{listing}
 
-Listing~\ref{lst:vec_awgn_box_muller_simd} presents a \MIPP implementation of
-the Box-Muller transform. \verb|uniRand| is a vector of independent and
+Listing~\ref{lst:opt_simu_awgn_box_muller_simd} presents a \MIPP implementation
+of the Box-Muller transform. \verb|uniRand| is a vector of independent and
 uniformly distributed random numbers (for instance generated with the MT19937
 PRNG). \verb|norRand| is a vector of independent and normally distributed random
 numbers. The code stresses SIMD units with multiplications, \verb|mipp::sqrt|
@@ -633,7 +635,7 @@ intra-frame SIMD strategy.
   % \tabcolsep=6pt
   \centering
   \caption{AWGN channel with \MIPP.}
-  \label{tab:vec_awgn_speedup}
+  \label{lst:opt_simu_awgn_speedup}
   % {\small
   \begin{tabular}{r | r  r r r}
                       & \textbf{NEON} & \textbf{SSE} & \textbf{AVX} & \textbf{AVX-512} \\ \hline \hline
@@ -646,10 +648,10 @@ intra-frame SIMD strategy.
 
 The \MIPP wrapper helps to write a readable code without sacrificing the
 performance. It also gives the opportunity to compile this same source code for
-various architectures. Table~\ref{tab:vec_awgn_speedup} presents the measured
-speedups with the same \MIPP code compiled for NEON, SSE, AVX and AVX-512,
-compared to the sequential code (can be auto-vectorized). It also shows the
-actual throughput (T/P) for each instruction set. The conversion of
+various architectures. Table~\ref{lst:opt_simu_awgn_speedup} presents the
+measured speedups with the same \MIPP code compiled for NEON, SSE, AVX and
+AVX-512, compared to the sequential code (can be auto-vectorized). It also shows
+the actual throughput (T/P) for each instruction set. The conversion of
 floating-point format from single precision to double precision only requires to
 replace the \verb|float| keyword by \verb|double|. The ability to switch
 seamlessly from one data type to another is clearly a strength of the \MIPP
@@ -674,22 +676,22 @@ with $y$ the current floating-point value, $s$ the number of bits of the
 quantized number, including $v$ bits for the fractional part.
 
 \begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/quantizer/quantizer_seq.cpp}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/simu/quantizer/quantizer_seq.cpp}
   \caption{Sequential implementation of the quantizer.}
-  \label{lst:vec_quantizer_seq}
+  \label{lst:opt_simu_quantizer_seq}
 \end{listing}
 
 \begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/quantizer/quantizer_simd.cpp}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/simu/quantizer/quantizer_simd.cpp}
   \caption{SIMD implementation of the quantizer with \MIPP.}
-  \label{lst:vec_quantizer_simd}
+  \label{lst:opt_simu_quantizer_simd}
 \end{listing}
 
 \begin{table}[htp]
   % \tabcolsep=6pt
   \centering
   \caption{Quantizer speedups with \MIPP.}
-  \label{tab:vec_quantizer_speedup}
+  \label{tab:opt_simu_quantizer_speedup}
   % {\small
   \begin{tabular}{r | r  r r}
                       & \textbf{NEON} & \textbf{SSE}  & \textbf{AVX}  \\ \hline \hline
@@ -701,21 +703,22 @@ quantized number, including $v$ bits for the fractional part.
 \end{table}
 
 The associate sequential code is presented in
-Listing~\ref{lst:vec_quantizer_seq}. The code converts \verb|float| (32-bit
+Listing~\ref{lst:opt_simu_quantizer_seq}. The code converts \verb|float| (32-bit
 floating-point number) to \verb|int8_t| (8-bit signed integer). Although the
 scalar code is fairlty simple, the compiler fails to auto-vectorize the
 \verb|for-loop|. \MIPP allows to convert floating-point data types to integers
 with the \verb|mipp::cvt| function. It also compresses larger data types into
 shorter ones with the \verb|mipp::pack| function. The \MIPP code is presented in
-Listing~\ref{lst:vec_quantizer_simd}. It performs explicit data types packaging,
-while in the sequential code, this operation is done implicitly by the
-\verb|(int8_t)| cast. Table~\ref{tab:vec_quantizer_speedup} presents the
-obtained speedups with \MIPP. For this specific case study the speedups are
+Listing~\ref{lst:opt_simu_quantizer_simd}. It performs explicit data types
+packaging, while in the sequential code, this operation is done implicitly by
+the \verb|(int8_t)| cast. Table~\ref{tab:opt_simu_quantizer_speedup} presents
+the obtained speedups with \MIPP. For this specific case study the speedups are
 significant for SSE and AVX. They are less important with the NEON instruction
 set but still non-negligible. We do not provide results for AVX-512, since an
 AVX-512BW compatible CPU would be required and the Xeon Phi\TM is not.
 
 \section{LDPC Decoders}
+\label{sec:opt_ldpc}
 
 The LDPC decoders have been extensively studied in the literature. In this
 section we focus on the Belief Propagation (BP) algorithm and its variants. On
@@ -793,7 +796,7 @@ floating-point and fixed-point representations of the LLRs values. The generic
 \verb|B| type is for the decoder output bits representation.
 
 Before to start the decoder, the reordering process explained in
-Section~\ref{sec:opt_vec_strat_inter} is performed. After the last decoding
+Section~\ref{sec:opt_vec_inter} is performed. After the last decoding
 iteration, the output bits are decided from the updated variable nodes
 ($\bm{v}$) and the input LLRs ($\bm{l}$). Once it is done the reversed
 reordering is performed to recover the natural order of the frames.
@@ -819,14 +822,14 @@ rules classes. In this work, the merge operation has been realized manually but
 it could be interesting to automate this process.
 
 \section{Polar Decoders}
-\label{sec:vec_polar}
+\label{sec:opt_polar}
 
-The polar decoder algorithms presented in Section~\ref{sec:alg_polar_decoders}
-has a number of characteristics of interest for its optimization:
+The polar decoder algorithms presented in Section~\ref{sec:alg_polar} has a
+number of characteristics of interest for its optimization:
 \begin{itemize}
   \item The tree traversal is sequential, but $f$, $g$ and $h$ (cf.
-    Eq.~\ref{eq:polar_f_g_h}) are applied element-wise to all elements of the
-    LLR and bits in the nodes and their children. As there is no dependence
+    Eq.~\ref{eq:alg_polar_f_g_h}) are applied element-wise to all elements of
+    the LLR and bits in the nodes and their children. As there is no dependence
     between computations involving different elements of the same node, these
     node computations can be parallelized or vectorized (cf. the
     intra-frame SIMD strategy introduced in~\cite{Giard2014}),
@@ -852,31 +855,31 @@ explored. For instance, the recursive structure of the tree computation can be
 fully flatten, depending on the size of the code length.
 
 \subsection{Tree Pruning Strategy}
-\label{sec:opt_tree_pruning}
+\label{sec:opt_polar_tree_pruning}
 
 \subsubsection{Pattern Matching Algorithm}
-\label{sec:opt_pattern_matching}
+\label{sec:opt_polar_pattern_matching}
 
 In order to perform the polar tree pruning, we implemented a pattern matching
 algorithm. For instance, knowing the initial location of the frozen bits, this
 algorithm can generate the pruned tree structure as illustrated in
-Fig.~\ref{fig:polar_sc_decoder}. Each internal node has a tag indicating the
-type of processing required at that node (recursive children processing,
-$f$/$g$/$h$ functions to be applied or not). This tag is initially set to
-\emph{any}.
+Fig.~\ref{fig:alg_polar_tree_pruning_example}. Each internal node has a tag
+indicating the type of processing required at that node (recursive children
+processing, $f$/$g$/$h$ functions to be applied or not). This tag is initially
+set to \emph{any}.
 
 \begin{figure}[htp]
   \centering
   \includegraphics[scale=1.0]{polar/patterns/patterns}
   \caption{Polar sub-tree rewriting rules for processing specialization.}
-  \label{fig:polar_patterns}
+  \label{fig:opt_polar_patterns}
 \end{figure}
 
 For some sub-tree pattern configurations, the processing to be performed at the
 root of such sub-trees can be simplified, or even skipped completely, for
 instance when a node only has two frozen bit leaf children. To exploit such
 properties, the decoder generator repeatedly applies the set of sub-tree
-rewriting rules listed in Fig.~\ref{fig:polar_patterns} using a depth first
+rewriting rules listed in Fig.~\ref{fig:opt_polar_patterns} using a depth first
 traversal to alter the node tags, until no rewriting rule applies anymore.
 
 Each rewriting rule defines a subtree pattern \emph{selector}, a new \emph{tag}
@@ -901,7 +904,7 @@ the third rule of the third column specializes the $g$ functions in $g_r$, but
 does not prune the recursive children processing.
 
 Rewriting rules are ordered by priority (left to right, then top row to bottom
-row in Fig.~\ref{fig:polar_patterns}), thus if more than one rule match an
+row in Fig.~\ref{fig:opt_polar_patterns}), thus if more than one rule match an
 encountered subtree, the highest priority rule is applied. The priority order is
 chosen such as to favor strongest computation reducing rules over rules with
 minor impact, and to ensure confluence by selecting the most specific pattern
@@ -914,31 +917,32 @@ given node.
 % SC --------------------------------------------------------------------------
 \begin{figure}[htp]
   \centering
-  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:polar_sc_tree_cut_intra}}
+  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:opt_polar_sc_tree_cut_intra}}
   \quad
-  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:polar_sc_tree_cut_inter}}
+  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:opt_polar_sc_tree_cut_inter}}
   \caption
     [Throughput of the SSC decoder depending on the different optimizations.]
     {Throughput of the SSC decoder depending on the different optimizations for
     $N = 2048$, for intra-frame vectorization on the left and inter-frame
     vectorization on the right, resp. (on the Intel\R Xeon\TM E31225 CPU).}
-  \label{plot:polar_sc_tree_cut}
+  \label{plot:opt_polar_sc_tree_cut}
 \end{figure}
 
 The tree pruning step has a dramatical effect in general. For instance, on the
 SSC decoder, the reference code for a rate of 1/2 has 2047 nodes, whereas only
 291 nodes remain in the pruned version. However, the individual effect of each
-rewriting rule is not trivial. The plots in Fig.~\ref{plot:polar_sc_tree_cut}
-show the respective impact of several rewriting rules (\verb|R0|, \verb|R1|,
-\verb|REP| and \verb|SPC|), with $N = 2048$ and multiple code rates, for
-intra-frame and inter-frame vectorization respectively. The purpose of the plots
-is to show that no single rewriting rule dominates for every code rate, and that
-the respective impact of each rule may vary a lot from rate to rate, making the
-case for the flexible, extensible proposed architecture. Indeed, the rewriting
-rule set can also be enriched with rules for specific ranges of code rate. For
-instance, the rule \emph{Single Parity Check} (\verb|SPC|) has been applied with
-different level limits for 9/10 code rate, where it has a significant impact and
-may benefit from fine tuning.
+rewriting rule is not trivial. The plots in
+Fig.~\ref{plot:opt_polar_sc_tree_cut} show the respective impact of several
+rewriting rules (\verb|R0|, \verb|R1|, \verb|REP| and \verb|SPC|), with
+$N = 2048$ and multiple code rates, for intra-frame and inter-frame
+vectorization respectively. The purpose of the plots is to show that no single
+rewriting rule dominates for every code rate, and that the respective impact of
+each rule may vary a lot from rate to rate, making the case for the flexible,
+extensible proposed architecture. Indeed, the rewriting rule set can also be
+enriched with rules for specific ranges of code rate. For instance, the rule
+\emph{Single Parity Check} (\verb|SPC|) has been applied with different level
+limits for 9/10 code rate, where it has a significant impact and may benefit
+from fine tuning.
 
 % SCL -------------------------------------------------------------------------
 \begin{figure}[htp]
@@ -949,10 +953,10 @@ may benefit from fine tuning.
     {Impact of the specialized nodes on the SSCL coded throughput.
     32-bit intra-frame vectorization, $N=2048$ and $L=32$
     (on the Intel\R Core\TM i5-6600K CPU).}
-  \label{plot:polar_scl_tree_cut}
+  \label{plot:opt_polar_scl_tree_cut}
 \end{figure}
 
-Figure~\ref{plot:polar_scl_tree_cut} shows the impact of the different tree
+Figure~\ref{plot:opt_polar_scl_tree_cut} shows the impact of the different tree
 pruning optimizations on the SSCL decoder throughput depending on the code
 rate (intra-frame vectorization only). The performance improvements are
 cumulative. Coded throughput, in which the redundant bits are taken in account,
@@ -973,7 +977,7 @@ It has also been observed in~\cite{Sarkis2016} that when the \verb|SPC| node
 size is not limited to $4$, the decoding performance may be degraded.
 Consequently the size is limited to $4$ in $\texttt{SPC}_\texttt{4}$. For
 $\texttt{SPC}_\texttt{4+}$ nodes, there is no size limit. The two node types are
-considered in Figure~\ref{plot:polar_scl_tree_cut}. Therefore, the depth at
+considered in Figure~\ref{plot:opt_polar_scl_tree_cut}. Therefore, the depth at
 which dedicated nodes are activated in the proposed decoder can be adjusted, in
 order to offer a tradeoff between throughput and decoding performance.
 
@@ -986,7 +990,7 @@ order to offer a tradeoff between throughput and decoding performance.
     {Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @ $10^{-5}$
      FER. 32-bit intra-frame SIMD strategy (on the Intel\R Core\TM i5-6600K
      CPU).}
-  \label{plot:polar_scl_spc}
+  \label{plot:opt_polar_scl_spc}
 \end{figure}
 
 According to our experiments, the aforementioned statement about performance
@@ -994,13 +998,13 @@ degradation caused by $\texttt{SPC}_\texttt{4+}$ nodes is not always accurate
 depending on the code and decoder parameters. The impact of switching
 \textit{on} or \textit{off} $\texttt{SPC}_\texttt{4+}$ nodes on decoding
 performance and throughput at a FER of $10^{-5}$ is detailed in
-Figure~\ref{plot:polar_scl_spc}. It shows that $\texttt{SPC}_\texttt{4+}$ nodes
-have only a small effect on the decoding performance. With $L=8$, an SNR
+Figure~\ref{plot:opt_polar_scl_spc}. It shows that $\texttt{SPC}_\texttt{4+}$
+nodes have only a small effect on the decoding performance. With $L=8$, an SNR
 degradation lower than 0.1 dB is observed, except for one particular
 configuration. Throughput improvements of $8$ to $23$ percents are observed. If
 $L=32$, the SNR losses are more substantial (up to $0.5$ dB), whereas throughput
 improvements are approximately the same. Besides this observation,
-Figure~\ref{plot:polar_scl_spc} shows how the proposed decoder flexibility
+Figure~\ref{plot:opt_polar_scl_spc} shows how the proposed decoder flexibility
 enables to optimize easily the decoder tree pruning, both for software
 implementations or for hardware implementations in which tree pruning can also
 be applied~\cite{Lin2014}.
@@ -1067,14 +1071,14 @@ sequential implementations.
 \subsubsection{Dynamic implementation}
 
 The concept of generic and flexible decoder is defined in
-Section~\ref{sec:polar_genericity}. In this section, if a decoder is generic and
-flexible, it is called \emph{dynamic} (as opposed as \emph{generated} or
-\emph{unrolled} decoders). The proposed dynamic SSC decoder directly uses the
-polar API introduced in Section~\ref{sec:opt_polar_api}. The same source code is
-able to accommodate with different frozen bit layouts and different parameters
-($N$, $K$, SNR). It is the first non-generated version (to the best of our
-knowledge) to support both multi-precision (32-bit, 16-bit and 8-bit) and
-multi-SIMD strategies (intra-frame or inter-frame).
+Section~\ref{sec:alg_polar_generic_flexible}. In this section, if a decoder is
+generic and flexible, it is called \emph{dynamic} (as opposed as
+\emph{generated} or \emph{unrolled} decoders). The proposed dynamic SSC decoder
+directly uses the polar API introduced in Section~\ref{sec:opt_polar_api}. The
+same source code is able to accommodate with different frozen bit layouts and
+different parameters ($N$, $K$, SNR). It is the first non-generated version (to
+the best of our knowledge) to support both multi-precision (32-bit, 16-bit and
+8-bit) and multi-SIMD strategies (intra-frame or inter-frame).
 
 The main challenge of the dynamic SSC decoder is to maintain a good performance
 level at the bottom of the tree. Near the leaves, the decoder spends a
@@ -1128,7 +1132,7 @@ thus results from two distinct parts:
     apply successively cuts and specializations on the tree. They are described
     through a set of rewriting rules, that can be customized according to the
     specificities of the decoder and to the constraints in term of code size for
-    instance (c.f. Section~\ref{sec:opt_pattern_matching}).
+    instance (c.f. Section~\ref{sec:opt_polar_pattern_matching}).
   \item A library of architecture dependent \emph{elementary computation
     building blocks}, corresponding to the implementation variants of the $f$,
     $g$ and $h$ functions (fixed- or floating-point versions, scalar or vector
@@ -1147,20 +1151,20 @@ highly optimized routines, without interferences.
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/generated_sc_decoder.cpp}
   \caption{The final code generated corresponding to the pruned tree in
-    Fig.~\ref{fig:tree_pruning_example}.}
-  \label{lst:polar_patterns_example}
+    Fig.~\ref{fig:alg_polar_tree_pruning_example}.}
+  \label{lst:opt_polar_generated_sc_decoder}
 \end{listing}
 
 The decoder generator first builds the binary tree structure from the pattern
-matching algorithm presented in Section~\ref{sec:opt_pattern_matching}. Then,
-once the tree has been fully specialized, the P-EDGE generator perform a second
-tree traversal pass to output the resulting decoder. An example of such a tree
-specialization process together with the generator output is shown in
-Fig.~\ref{fig:tree_pruning_example} and in
-Listing~\ref{lst:polar_patterns_example}. In
-Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
-\verb|gr|, \verb|spc| and \verb|h|) is applied on $4$ elements. This number
-of elements is given as a static template parameter as well as a standard
+matching algorithm presented in Section~\ref{sec:opt_polar_pattern_matching}.
+Then, once the tree has been fully specialized, the P-EDGE generator perform a
+second tree traversal pass to output the resulting decoder. An example of such a
+tree specialization process together with the generator output is shown in
+Fig.~\ref{fig:alg_polar_tree_pruning_example} and in
+Listing~\ref{lst:opt_polar_generated_sc_decoder}. In
+Listing~\ref{lst:opt_polar_generated_sc_decoder}, each operation (\verb|f|,
+\verb|rep|, \verb|gr|, \verb|spc| and \verb|h|) is applied on $4$ elements. This
+number of elements is given as a static template parameter as well as a standard
 function parameter. Depending on the selected polar API, one or the other will
 be used. Of course with fully unrolled decoders, it is much more efficient to
 use an API implementation that uses the template parameter to fully unroll the
@@ -1175,19 +1179,19 @@ loops at compile time.
   }
   \\
   \subfloat[][Without compression.]{
-    \label{fig:eval_polar_sc_gen_compression_wo}
+    \label{fig:opt_polar_sc_gen_compression_wo}
     \includegraphics{polar/sc_gen_compression/sc_gen_no_compression}
   }
   \\
   \subfloat[][With compression.]{
-    \label{fig:eval_polar_sc_gen_compression_w}
+    \label{fig:opt_polar_sc_gen_compression_w}
     \includegraphics{polar/sc_gen_compression/sc_gen_compression}
   }
   \caption
     [Pruned polar decoding tree representation without and with compression.]
     {Pruned polar decoding tree representation ($N = 128, K = 64$) without
     and with the compression sub-tree folding algorithm.}
-  \label{fig:eval_polar_sc_gen_compression}
+  \label{fig:opt_polar_sc_gen_compression}
 \end{figure}
 
 Decoders are generated as straight-line code (no recursive calls), with all node
@@ -1199,7 +1203,7 @@ generated code, we moved the buffer offsets from template arguments to function
 arguments, which enabled the compiler to factorize more function calls than
 before (improvement by a factor of 10), 2) we implemented a sub-tree folding
 algorithm in the P-EDGE generator (see
-Fig.~\ref{fig:eval_polar_sc_gen_compression}), to detect multiple occurrences of
+Fig.~\ref{fig:opt_polar_sc_gen_compression}), to detect multiple occurrences of
 a same sub-tree and to put the corresponding code into a dedicated function
 (improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
 with the size of the tree).
@@ -1240,6 +1244,7 @@ technique~\cite{LeGal2015a} to pack several bits together by using shifts and
 masking instructions.
 
 \subsection{Successive Cancellation List Decoders}
+\label{sec:opt_polar_scl}
 
 In this section, the proposed implementation of the SSCL class of decoders
 focuses on intra-frame SIMD dynamic decoders. A description of a fully unrolled
@@ -1250,12 +1255,12 @@ decoders of the literature. The polar API (c.f.~\ref{sec:opt_polar_api}) enables
 to benefit from the SIMD instructions for various target architectures.
 Optimizations of CRC checking benefit to both the non-adaptive and adaptive
 versions of the CA-SSCL algorithms. The new sorting technique presented in
-Section~\ref{sec:polar_sorting} can be applied to each variation of the SSCL
-algorithm. Finally, an efficient implementation of the partial sums memory
+Section~\ref{sec:opt_polar_scl_sorting} can be applied to each variation of the
+SSCL algorithm. Finally, an efficient implementation of the partial sums memory
 management is proposed. It is particularly effective for short polar codes.
 
 \subsubsection{Improving Cyclic Redundancy Checking}
-\label{sec:polar_crc}
+\label{sec:opt_polar_scl_crc}
 
 By profiling the Adaptive SCL decoder, one may observe that a significant amount
 of time is spent to process the cyclic redundancy checks. Its computational
@@ -1286,19 +1291,20 @@ the decision. This method is strictly equivalent to do the cyclic redundancy
 check of each candidate and then to select the one with the best metric. With
 the adopted order, decoding time is saved by reducing the average number of
 checked candidates. This strategy has been adopted in the
-``$\selectBestPath()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl}, l.18).
+``$\selectBestPath()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl_decoder},
+l.18).
 
 \subsubsection{LLR and Metric Sorting}
-\label{sec:polar_sorting}
+\label{sec:opt_polar_scl_sorting}
 
 % Metric sorting is involved in the aforementioned path selection step, but also
 Metric sorting is involved in the path selection step, but also
-in the ``$\updatePaths()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl}, l.16) and
-consequently in each leaf. Sorting the LLRs is also necessary in \verb|R1| and
-\verb|SPC| nodes. Because of a lack of information about the sorting technique
-presented in~\cite{Sarkis2016}, its reproduction is not possible. In the
-following of the paragraph the sorting algorithm used in the SCL decoder is
-described.
+in the ``$\updatePaths()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl_decoder},
+l.16) and consequently in each leaf. Sorting the LLRs is also necessary in
+\verb|R1| and \verb|SPC| nodes. Because of a lack of information about the
+sorting technique presented in~\cite{Sarkis2016}, its reproduction is not
+possible. In the following of the paragraph the sorting algorithm used in the
+SCL decoder is described.
 
 In \verb|R1| nodes, a Chase-$2$~\cite{Chase1972} algorithm is applied. The two
 minimum absolute values of the LLRs have to be identified. The way to do the
@@ -1324,12 +1330,12 @@ duplicated.
 \subsubsection{Partial Sums Memory Management}
 
 An SCL decoder can be seen as $L$ replications of an SC decoder. The first
-possible memory layout is the one given in Figure~\ref{fig:polar_sc_decoder}. In
-this layout, the partial sums $\hat{s}$ of each node is stored in a dedicated
-array. Therefore, a memory of size $2N-1$ bits is necessary in the SC decoder,
-or $L(2N -1)$ bits in the SCL decoder. This memory layout is described
-in~\cite{Tal2011} and applied in previous software
-implementations~\cite{Sarkis2014b,Sarkis2016,Shen2016}.
+possible memory layout is the one given in
+Figure~\ref{fig:alg_polar_sc_decoder}. In this layout, the partial sums
+$\hat{s}$ of each node is stored in a dedicated array. Therefore, a memory of
+size $2N-1$ bits is necessary in the SC decoder, or $L(2N -1)$ bits in the SCL
+decoder. This memory layout is described in~\cite{Tal2011} and applied in
+previous software implementations~\cite{Sarkis2014b,Sarkis2016,Shen2016}.
 
 A possible improvement is to change the memory layout to reduce its footprint.
 Due to the order of operations in both SC and SCL algorithms, the partial sums
@@ -1343,9 +1349,9 @@ SCL decoder.
 In the case of the SCL algorithm, $L$ paths have to be assigned to $L$ partial
 sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
 advantage of pointers is that when a path is duplicated, in the
-``$\updatePaths()$'' sub-routine of Alg.~\ref{alg:alg_polar_scl}, the partial
-sums are not copied. Actually, they can be shared between paths thanks to the
-use of pointers. This method limits the number of memory transactions.
+``$\updatePaths()$'' sub-routine of Alg.~\ref{alg:alg_polar_scl_decoder}, the
+partial sums are not copied. Actually, they can be shared between paths thanks
+to the use of pointers. This method limits the number of memory transactions.
 Unfortunately, it is not possible to take advantage of the memory space
 reduction: the partial sums have to be stored on $L(2N -1)$ bits. There is an
 alternative to this mechanism. If a logical path is statically assigned to a
@@ -1361,28 +1367,29 @@ called SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
     {Information throughput of the SSCL decoder depending on the codeword
     size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$ (on the
     Intel\R Core\TM i5-6600K CPU).}
-  \label{plot:polar_scl_cpy_vs_ptr}
+  \label{plot:opt_polar_scl_cpy_vs_ptr}
 \end{figure}
 
 Our experiments have proved that the overhead of handling pointers plus the
 extra memory space requirement cause the SSCL$_{\texttt{cpy}}$ to be more
 efficient than the SSCL$_{\texttt{ptr}}$ for short and medium code lengths, as
-shown in Figure~\ref{plot:polar_scl_cpy_vs_ptr}. The 32-bit version uses
+shown in Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr}. The 32-bit version uses
 floating-point LLRs, whereas 16-bit and 8-bit versions are in fixed-point.
 Notice that in this work, each bit of the partial sums is stored on an 8-bit,
 16-bit or 32-bit number accordingly to the LLR data type. The code rate $R$ is
 equal to $1/2$. The throughput of the SSCL$_{\texttt{cpy}}$ version is higher
 for $N \leq 8192$ whereas the SSCL$_{\texttt{ptr}}$ version is more efficient
 for higher values of $N$. Although it does not appear in
-Figure~\ref{plot:polar_scl_cpy_vs_ptr}, experiments showed that the lower $L$
-is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
-SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:polar_scl_cpy_vs_ptr} also illustrates
-the impact of the representation of partial sums. For very high values of $N$,
-8-bit fixed point representation takes advantage of fewer cache misses.
-According to the results presented in Figure~\ref{plot:polar_algos_comparison},
-as the decoding performance improvements of the SCL algorithm are not very
-significant compared to the SC algorithm for long polar codes,
-SSCL$_{\texttt{cpy}}$ is the appropriate solution in most practical cases.
+Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr}, experiments showed that the lower
+$L$ is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
+SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr} also
+illustrates the impact of the representation of partial sums. For very high
+values of $N$, 8-bit fixed point representation takes advantage of fewer cache
+misses. According to the results presented in
+Figure~\ref{plot:alg_polar_algos_comparison}, as the decoding performance
+improvements of the SCL algorithm are not very significant compared to the SC
+algorithm for long polar codes, SSCL$_{\texttt{cpy}}$ is the appropriate
+solution in most practical cases.
 
 In our decoder description, LLRs are managed with pointers, as it is the case in
 other software implementations of the
@@ -1395,7 +1402,7 @@ beneficial in any use case.
 \begin{table}[htp]
   \centering
   \caption{Polar decoders memory footprint (in bytes).}
-  \label{tab:polar_scl_memory_footprint}
+  \label{tab:opt_polar_scl_memory_footprint}
   %{\small
    \begin{tabular}{r r}
     \textbf{Algorithms}        & \textbf{Memory Footprint} \\
@@ -1415,7 +1422,7 @@ is mainly driven by the LLRs ($\bm{\lambda}$) and the partial sums
 ($\bm{\hat{s}}$) as they linearly depend on $LN$. The buffers related to the
 path metrics can be neglected as they linearly depend on $L$. The memory
 footprint of the CRC is also negligible, the only requirement is a lookup table
-of 256 integers. Table~\ref{tab:polar_scl_memory_footprint} summarizes the
+of 256 integers. Table~\ref{tab:opt_polar_scl_memory_footprint} summarizes the
 memory footprint estimation of the various decoders while $Q$ stands for the
 size of the element (1, 2 or 4 bytes). The channel LLRs are taken into account
 in the approximation. As explained in the previous section, the
@@ -1428,7 +1435,7 @@ decoder.
 
 % \begin{itemize}
 %   \item \cmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
-%     elle doit aller dans la Section~\ref{sec:opt_vec_strat_inter} à terme
+%     elle doit aller dans la Section~\ref{sec:opt_vec_inter} à terme
 %   \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
 %   \item \xmark~introduire la version version vectorisée inter/intra-frame,
 %     expliquer pourquoi c'est intéressant
@@ -1485,7 +1492,7 @@ frames on the CPU SIMD units (inter-frame strategy): the decoding of $F$ frames
 is vectorized. Before the decoding process can be launched, this new approach
 requires to: (a) buffer a set of $F$ frames and (b) reorder the input LLRs in
 order to make the SIMDization efficient with memory aligned transactions (see
-Section~\ref{sec:opt_vec_strat_inter}). Similarly, a reversed-reordering step
+Section~\ref{sec:opt_vec_inter}). Similarly, a reversed-reordering step
 has to be performed at the end of the decoding process. These reordering
 operations are expensive but they make the complete decoding process very
 regular and efficient for SIMD parallelization. Moreover, reordering is applied
@@ -1493,7 +1500,7 @@ only once, independently of the number of decoding iterations.
 
 \begin{algorithm}
   \caption{Loop fusion BCJR implementation}
-  \label{alg:turbo_bcjr_loop_fusion}
+  \label{alg:opt_turbo_bcjr_loop_fusion}
 
   % \small
   \For(\Comment*[f]{Vectorized loop}){all frames}
@@ -1530,7 +1537,7 @@ parallel (through vectors). This means all computations inside this loop operate
 on SIMD vectors instead of scalars, and the inner loops can be turned into
 sequential loops on SIMD vectors. This gives the opportunity for memory
 optimizations, through loop fusion. The initial 4 inner loops are merged into 2
-loops. Algorithm~\ref{alg:turbo_bcjr_loop_fusion} presents this loop fusion
+loops. Algorithm~\ref{alg:opt_turbo_bcjr_loop_fusion} presents this loop fusion
 optimization. This makes possible the scalar promotion of $\beta_j$ (no longer
 an array), since it can be directly reused from the CPU registers. In this
 version, the SIMD are always stressed.
@@ -1543,7 +1550,7 @@ cores. Large memory footprint, exceeding L3 cache capacity may reduce the
 effective speedup, as shown in Section~\ref{sec:eval_turbo}.
 
 \subsection{Implementation of the Decoder}
-\label{sec:turbo_implem}
+\label{sec:opt_turbo_implem}
 
 %The presented decoder implementation is available in the \AFFECT software.
 The use of \Cxx templates associated to our generic SIMD library (\MIPP) enables
@@ -1682,17 +1689,18 @@ Phi\TM KNights Corner (KNC) architecture.
 \subsection{Flattening Matrices to Reduce Cache Misses and Branch Misses}
 \label{sec:opt_scma_flattening}
 
-Considering \eqref{eq:scma_6} and \eqref{eq:scma_7}, there are 64 calculations
-of distances and probabilities for each resource (256 for all resources). Using
-a multidimensional array ($4\times4\times4$) should be avoided, because it
-typically causes bad data locality, which leads to an increased number of cache
-misses. These misses negatively affect the throughput, and this is significant,
-since this process must be repeated in the decoder for each received 12-bit
-block of data. Flattening a $d$-dimensional array to a vector using
-\eqref{eq:scma_17} is appropriate to prevent cache misses and improve the
-spatial locality of data. This is done with the help of an index defined as:
+Considering \eqref{eq:alg_scma_6} and \eqref{eq:alg_scma_7}, there are 64
+calculations of distances and probabilities for each resource (256 for all
+resources). Using a multidimensional array ($4\times4\times4$) should be
+avoided, because it typically causes bad data locality, which leads to an
+increased number of cache misses. These misses negatively affect the throughput,
+and this is significant, since this process must be repeated in the decoder for
+each received 12-bit block of data. Flattening a $d$-dimensional array to a
+vector using \eqref{eq:opt_scma_17} is appropriate to prevent cache misses and
+improve the spatial locality of data. This is done with the help of an index
+defined as:
 \begin{equation}
-  \label{eq:scma_17}
+  \label{eq:opt_scma_17}
   \text{index} = \sum\limits_{i=1}^d\Bigg( \prod\limits_{j=i+1}^d N_j \Bigg)n_i.
 \end{equation}
 Where $N_j$ is the size of the $j^{th}$ dimension of the array and $n_i$ is the
@@ -1724,8 +1732,8 @@ Nowadays, AVX units use sixteen 256-bit YMM registers and a 32-bit MXCSR control
 register to handle vectors of eight 32-bit or four 64-bit floating-point
 numbers. The AVX ISA allows to perform SSE instructions using the lower 128-bit
 lane of the YMM registers. For MPA, the SIMD instructions are used to 1) compute
-the complex norm $||.||$ in \eqref{eq:scma_5} and \eqref{eq:scma_6},
-2) calculate the exponentials in \eqref{eq:scma_7}, 3) perform users to
+the complex norm $||.||$ in \eqref{eq:alg_scma_5} and \eqref{eq:alg_scma_6},
+2) calculate the exponentials in \eqref{eq:alg_scma_7}, 3) perform users to
 resources messaging and final guesses at each user.
 
 \paragraph{SIMD Computation of Complex Norms}
@@ -1736,7 +1744,7 @@ resources messaging and final guesses at each user.
   \caption
     [MPA AVX complex norm computations using Array of Structures (AoS).]
     {MPA AVX complex norm computations using Array of Structures (AoS).}
-  \label{fig:scma_simd_norm_aos}
+  \label{fig:opt_scma_simd_norm_aos}
 \end{figure}
 
 \begin{figure}[htp]
@@ -1745,24 +1753,25 @@ resources messaging and final guesses at each user.
   \caption
     [MPA AVX complex norm computations using Structure of Arrays (SoA).]
     {MPA AVX complex norm computations using Structure of Arrays (SoA).}
-  \label{fig:scma_simd_norm_soa}
+  \label{fig:opt_scma_simd_norm_soa}
 \end{figure}
 
-Equations~\eqref{eq:scma_5} and \eqref{eq:scma_6} use a complex norm function
-$||.||$, it can be optimized by using SIMD instructions. There are two ways to
-perform this computation: Fig.~\ref{fig:scma_simd_norm_aos} depicts how to
-implement the norm function using an Array of Structures (AoS) for complex
-numbers. In this method, the complex numbers are represented as two consecutive
-floating-point numbers. The implementation with AoS uses six intrinsic
-functions: one load (\verb|_mm256_loadu_ps|), one store
+Equations~\eqref{eq:alg_scma_5} and \eqref{eq:alg_scma_6} use a complex norm
+function $||.||$, it can be optimized by using SIMD instructions. There are two
+ways to perform this computation: Fig.~\ref{fig:opt_scma_simd_norm_aos} depicts
+how to implement the norm function using an Array of Structures (AoS) for
+complex numbers. In this method, the complex numbers are represented as two
+consecutive floating-point numbers. The implementation with AoS uses six
+intrinsic functions: one load (\verb|_mm256_loadu_ps|), one store
 (\verb|_mm256_storeu_ps|), one multiplication (\verb|_mm256_mul_ps|), one
 permutation of the lanes (\verb|_mm256_permute2f128_ps|), one horizontal
 addition (\verb|_mm256_hadd_ps|) and one extraction of the highest lane of the
-AVX register (\verb|_mm256_extractf128_ps|). Fig.~\ref{fig:scma_simd_norm_soa}
-sketches the computation of the complex norm using a Structure of Array (SoA)
-data layout. This implementation also uses six intrinsic functions: two loads
-(\verb|_mm256_loadu_ps|), one store (\verb|_mm256_storeu_ps|), two standard
-multiplications (\verb|_mm256_mul_ps|), one addition (\verb|_mm256_add_ps|).
+AVX register (\verb|_mm256_extractf128_ps|).
+Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the complex
+norm using a Structure of Array (SoA) data layout. This implementation also uses
+six intrinsic functions: two loads (\verb|_mm256_loadu_ps|), one store
+(\verb|_mm256_storeu_ps|), two standard multiplications (\verb|_mm256_mul_ps|),
+one addition (\verb|_mm256_add_ps|).
 
 Our experiments demonstrated that the SoA method leads to higher performance
 than the AoS method. This is mainly due to the higher number of elements
@@ -1777,24 +1786,25 @@ shuffle instructions and 2) trivial to extend for different register lengths.
   \centering
   \includegraphics[scale=0.9]{scma/simd_exp/simd_exp}
   \caption {MPA vectorized exponentials ($N_0 = 2\sigma^2$).}
-  \label{fig:scma_simd_exp}
+  \label{fig:opt_scma_simd_exp}
 \end{figure}
 
-To speedup the computational time of the exponentials used in \eqref{eq:scma_7},
-the MIPP wrapper~\cite{Cassagne2018} has been used. The flattened complex and
-normalized numbers are calculated as shown in Fig.~\ref{fig:scma_simd_norm_aos}
-and Fig.~\ref{fig:scma_simd_norm_soa} to produce the preliminary values used to
-compute the probabilities. Fig.~\ref{fig:scma_simd_exp} illustrates the full
-process on a vector of eight floating-point numbers. First the values are loaded
-into the YMM registers, then they are multiplied by $-1/2\sigma^2$ and finally
-the exponential function is performed according to \eqref{eq:scma_7}.
+To speedup the computational time of the exponentials used in
+\eqref{eq:alg_scma_7}, the MIPP wrapper~\cite{Cassagne2018} has been used. The
+flattened complex and normalized numbers are calculated as shown in
+Fig.~\ref{fig:opt_scma_simd_norm_aos} and Fig.~\ref{fig:opt_scma_simd_norm_soa}
+to produce the preliminary values used to compute the probabilities.
+Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full process on a vector of
+eight floating-point numbers. First the values are loaded into the YMM
+registers, then they are multiplied by $-1/2\sigma^2$ and finally the
+exponential function is performed according to \eqref{eq:alg_scma_7}.
 
 \paragraph{Exponential Approximation with the Estimated-MPA (E-MPA) algorithm}
 
-\eqref{eq:scma_19} can be used as a systematic replacement to the vectorized
-exponential MIPP function used in Fig.~\ref{fig:scma_simd_exp}. It reduces the
-overall number of instructions to three intrinsic functions: two multiplications
-(\verb|_mm256_mul_ps|) and one addition (\verb|_mm256_add_ps|).
+\eqref{eq:alg_scma_19} can be used as a systematic replacement to the vectorized
+exponential MIPP function used in Fig.~\ref{fig:opt_scma_simd_exp}. It reduces
+the overall number of instructions to three intrinsic functions: two
+multiplications (\verb|_mm256_mul_ps|) and one addition (\verb|_mm256_add_ps|).
 
 \paragraph{SIMD Message Passing}
 
@@ -1802,17 +1812,17 @@ overall number of instructions to three intrinsic functions: two multiplications
   \centering
   \includegraphics[scale=0.9]{scma/simd_final_guess/simd_final_guess}
   \caption {MPA vectorized computations of final guesses.}
-  \label{fig:scma_simd_final_guess}
+  \label{fig:opt_scma_simd_final_guess}
 \end{figure}
 
 Some remaining parts of the MPA can be vectorized too. Especially, the guess
 swaps and the computation of the final guesses at each user node can be
-vectorized using SSE instructions. Fig.~\ref{fig:scma_simd_final_guess} shows
-the computation of final guesses for user 4. There are four messages from a
-resource to a user containing the probabilities of four different codewords,
+vectorized using SSE instructions. Fig.~\ref{fig:opt_scma_simd_final_guess}
+shows the computation of final guesses for user 4. There are four messages from
+a resource to a user containing the probabilities of four different codewords,
 which are the elements of the SSE vectors. According to
-Fig.~\ref{fig:scma_simd_final_guess} these vectors of probabilities are loaded
-into SSE, NEON or the lowest lane of the AVX registers.
+Fig.~\ref{fig:opt_scma_simd_final_guess} these vectors of probabilities are
+loaded into SSE, NEON or the lowest lane of the AVX registers.
 
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}

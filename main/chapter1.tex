@@ -268,25 +268,25 @@ while $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][LDPC code ($R = 5/6$).                ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:intro_bfer_ldpc}}   \quad{}
-  \subfloat[][Turbo code ($R \approx 1/3$).         ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_turbo} \label{fig:intro_bfer_turbo}}  \\
-  \subfloat[][Polar code ($R \approx 0.84$).        ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_polar} \label{fig:intro_bfer_polar}}  \quad{}
-  \subfloat[][Turbo product code ($R \approx 0.78$).]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_tpc}   \label{fig:intro_bfer_tpc}}    \\
-  \subfloat[][Algebraic codes ($R \approx 0.93$).   ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:intro_bfer_bch_rs}} \quad{}
-  \subfloat[][Convolutional codes ($R \approx 1/2)$.]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_rsc}   \label{fig:intro_bfer_rsc}}
+  \subfloat[][LDPC code ($R = 5/6$).                ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_ldpc}  \label{fig:ctx_bfer_ldpc}}   \quad{}
+  \subfloat[][Turbo code ($R \approx 1/3$).         ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_turbo} \label{fig:ctx_bfer_turbo}}  \\
+  \subfloat[][Polar code ($R \approx 0.84$).        ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_polar} \label{fig:ctx_bfer_polar}}  \quad{}
+  \subfloat[][Turbo product code ($R \approx 0.78$).]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_tpc}   \label{fig:ctx_bfer_tpc}}    \\
+  \subfloat[][Algebraic codes ($R \approx 0.93$).   ]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_bch_rs}\label{fig:ctx_bfer_bch_rs}} \quad{}
+  \subfloat[][Convolutional codes ($R \approx 1/2)$.]{\includegraphics[width=0.475\textwidth]{simu/bfer/bfer_rsc}   \label{fig:ctx_bfer_rsc}}
   \caption
     [BER and FER simulation results on various code families.]
     {BER and FER simulation results on various code families and decoder
     configurations. Lower is better. The codes are given in the $(N,K)$ form.}
-  \label{fig:intro_bfer}
+  \label{fig:ctx_bfer}
 \end{figure}
 
-As an illustration, Fig.~\ref{fig:intro_bfer} presents BER and FER decoding
+As an illustration, Fig.~\ref{fig:ctx_bfer} presents BER and FER decoding
 performances estimated with Monte Carlo simulations on a large variety of code
 families and decoding parameters. On each graphic, the BER is plotted with solid
 lines while the FER is plotted with dashed lines. Both the BER and the FER
 depend on the SNR ($E_b/N_0$). The higher the SNR is, the lower the noise is and
-therefore fewer errors. For instance, in Fig.~\ref{fig:intro_bfer_ldpc}, on
+therefore fewer errors. For instance, in Fig.~\ref{fig:ctx_bfer_ldpc}, on
 the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the
 configuration 2 of the decoder achieves better decoding performance than the
 configuration 1 because the {\color{Paired-3} green} curve is below the
@@ -294,7 +294,7 @@ configuration 1 because the {\color{Paired-3} green} curve is below the
 there is two decoder configurations, the second one gives better BER/FER
 decoding performance. This is achieved at the cost of a higher computational
 effort duing the decoding process compared to the first configuration. The
-purpose of Fig.~\ref{fig:intro_bfer} is not to compare the codes with each
+purpose of Fig.~\ref{fig:ctx_bfer} is not to compare the codes with each
 others but to introduce the typical BER/FER curves that will be used in the next
 chapters. It shows that there is a large set of possible combinations of codes
 and decoding configurations.

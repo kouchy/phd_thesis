@@ -295,15 +295,16 @@ chapter2_fig: main/chapter2/fig/ldpc/bp_cn_update/bp_cn_update.tex \
 	cd main/chapter2/fig/turbo/iterations                  && rubber -d iterations.tex
 	cd main/chapter2/fig/turbo/approximations              && rubber -d approximations.tex
 
-chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
-              main/chapter3/src/ldpc/bp_min_sum_simd.cpp \
+chapter3_fig: main/chapter3/src/ldpc/bp_scheduling_hl.cpp \
+              main/chapter3/src/ldpc/bp_update_rule_ms.cpp \
               main/chapter3/src/mipp/mli.cpp \
               main/chapter3/src/polar/f_g_h_simd.cpp \
-              main/chapter3/src/polar/f_seq.cpp \
-              main/chapter3/src/polar/f_simd.cpp \
               main/chapter3/src/polar/generated_sc_decoder.cpp \
-              main/chapter3/src/quantizer/quantizer_seq.cpp \
-              main/chapter3/src/quantizer/quantizer_simd.cpp \
+              main/chapter3/src/simu/awgn/box_muller_simd.cpp \
+              main/chapter3/src/simu/quantizer/quantizer_seq.cpp \
+              main/chapter3/src/simu/quantizer/quantizer_simd.cpp \
+              main/chapter3/src/turbo/alpha_generic.cpp \
+              main/chapter3/src/turbo/alpha_unrolled.cpp \
               main/chapter3/fig/vectorization/mandelbrot_speedup/dat/perf_mandelbrot_32bit.dat \
               main/chapter3/fig/vectorization/mandelbrot_speedup/dat/perf_mandelbrot_64bit.dat \
               main/chapter3/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit.tex \
@@ -365,7 +366,10 @@ chapter3_fig: main/chapter3/src/awgn/box_muller_simd.cpp \
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber -d simd_exp.tex
 	cd main/chapter3/fig/scma/simd_final_guess/            && rubber -d simd_final_guess.tex
 
-chapter4_fig: main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module.tex \
+chapter4_fig: main/chapter4/src/library/modules_allocation.cpp \
+              main/chapter4/src/library/sockets_binding.cpp \
+              main/chapter4/src/library/tasks_execution.cpp \
+	            main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module.tex \
               main/chapter4/fig/soft_archi/com_chain_task_module/colors
 	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber -d com_chain_task_module.tex
 
@@ -516,7 +520,8 @@ chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 	cd main/chapter5/fig/simu/throughput                   && rubber -d throughput.tex
 	cd main/chapter5/fig/simu/chain                        && rubber -d chain.tex
 
-chapter6_fig: main/chapter6/fig/dsl/loop/loop.tex \
+chapter6_fig: main/chapter6/src/pipeline/pipeline.cpp \
+              main/chapter6/fig/dsl/loop/loop.tex \
               main/chapter6/fig/dsl/loop/colors \
               main/chapter6/fig/dsl/nested_loops/nested_loops.tex \
               main/chapter6/fig/dsl/nested_loops/colors \
