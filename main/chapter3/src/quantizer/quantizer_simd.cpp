@@ -9,7 +9,8 @@ void quantize_simd(const std::vector<float > &Y1,
 	assert(s >= 2);
 	const float q_max = (1 << (s-2)) + (1 << (s-2)) -1;
 	const float q_min = -q_max;
-	for (size_t k = 0; k < K; k += 4 * N) {
+	for (size_t k = 0; k < K; k += 4 * N)
+	{
 		// implicit loads and q = 2^v * y +- 0.5
 		mipp::Reg<float> q32_0 = mipp::round(factor * &Y1[k + 0*N]);
 		mipp::Reg<float> q32_1 = mipp::round(factor * &Y1[k + 1*N]);

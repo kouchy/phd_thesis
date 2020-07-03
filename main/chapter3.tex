@@ -5,46 +5,40 @@
 \chapter{Optimization Strategies}
 \label{chap:opt}
 
-% \vspace*{\fill}
+\vspace*{\fill}
 \minitoccustom
-% \vspace*{\fill}
+\vspace*{\fill}
 
-% \section{Algorithmic Simplifications}
-
-% \section{Memory Data Layer}
-
-% \section{Quantification}
-
-% \section{Vectorization~\cite{Cassagne2018}}
-
+\newpage
 \section{\MIPP: A \Cxx Wrapper for SIMD Instructions}
 
 Recent articles have proposed several optimized software decoders, corresponding
-to different channel codes : LDPC codes~\cite{LeGal2015,LeGal2016}, polar
-codes~\cite{Giard2016b,Sarkis2016,Cassagne2015c,Cassagne2016b}, turbo
-codes~\cite{Zhang2012,Wu2013,Cassagne2016a}. All of these works show the
-possibility to reach a good level of \textit{performance} by  making extensive
-use of SIMD (Single Instruction Multiple Data) units. This is often achieved at
-the price of a reduced \textit{flexibility}, by resorting to specific
-intrinsics, or by making assumptions on the data types. However, these decoders
-should be implemented in a single source code, in which the following parameters
-could be changed at runtime: the channel code type, the decoding algorithm, the
-number of decoding iterations, the data format, etc. Another important aspect is
-the \textit{portability} of the source code on different hardwares (Intel\R x86,
+to different channel codes : LDPC codes~\cite{LeGal2015,LeGal2016,LeGal2017a},
+polar codes~\cite{Giard2016b,Sarkis2016,Cassagne2015c,Cassagne2016b,
+Leonardon2019}, turbo codes~\cite{Zhang2012,Wu2013,Cassagne2016a,LeGal2019a}.
+All of these works show the possibility to reach a good level of
+\textit{performance} by making extensive use of SIMD (Single Instruction
+Multiple Data) units. This is often achieved at the price of a reduced
+\textit{flexibility}, by resorting to specific intrinsics, or by making
+assumptions on the data types. However, these decoders should be implemented in
+a single source code, in which the following parameters could be changed at
+runtime: the channel code type, the decoding algorithm, the number of decoding
+iterations, the data format, etc. Another important aspect is the
+\textit{portability} of the source code on different hardwares (Intel\R x86,
 Xeon Phi\TM KNL and ARM\R) and the possibility to use different instruction sets
 (SSE, AVX, AVX-512, NEON). These three constraints (performance, flexibility,
 portability) push towards the use of a SIMD library that helps in the
 abstraction of the SIMD instruction sets, while still allowing a fine grain
 tuning of performance.
 
-We propose in this thesis a new \Cxx SIMD wrapper, covering the needs in terms
+In this thesis, we propose a new \Cxx SIMD wrapper, covering the needs in terms
 of expressiveness and of performance for the channel codes. Our contributions
 are:
 \begin{itemize}
   \item A portable and high performance  \Cxx SIMD wrapper called \MIPP, for
     SSE, AVX, AVX-512 and NEON instruction sets;
-  \item An implementation of several channel codes with this wrapper. We
-    present the main advantages of \MIPP in this context;
+  % \item An implementation of several channel codes with this wrapper. We
+  %   present the main advantages of \MIPP in this context;
   \item A comparison with other state-of-the-art SIMD wrappers on a Mandelbrot
     code, demonstrating that the code based on \MIPP has similar performance as
     hand-written intrinsics.
@@ -61,7 +55,7 @@ intrinsics counterpart, for a given instruction set. While \MIPP is mostly
 written in \Cxy{98}, it still requires \Cxy{11}-compliant compiler due to the
 use of convenient features such as the \verb|auto| and \verb|using| keywords.
 \MIPP is Open-source (under the MIT license) and the full code is available on
-GitHub\footnote{\MIPP source code: \url{https://github.com/aff3ct/MIPP}}.
+GitHub~\cite{Cassagne2018}.
 
 \MIPP provides two application programming interface levels. The
 \emph{Low Level Interface} (low) implements a basic, thin abstraction layer on
@@ -90,14 +84,17 @@ In the AVX-512 instruction set, one \textit{regular} vector operation plus one
 masking operation can be performed in one CPU clock cycle. For instance, the
 following instruction performs \verb|"m ? a+b : src"|, an addition and a masking
 operation:
-\mint{C++}|__m512 _mm512_mask_add_ps(__m512 src, __mmask16 m, __m512 a, __m512 b);|
 
+\mint{C++}|__m512 _mm512_mask_add_ps(__m512 src, __mmask16 m, __m512 a, __m512 b);|
+{\noindent
 \MIPP natively supports such operations with the \verb|mipp::mask| function. The
 previous example becomes in \MIPP:
+}
 \mint{C++}|mipp::mask<float,mipp::add<float>>(m, src, a, b);|
+{\noindent
 For instruction sets without masking support, the \verb|mipp::mask| call is
 expanded as an operation and a \verb|blend| instead.
-
+}
 \subsection{Medium Level Interface}
 
 \begin{listing}[htp]
@@ -122,13 +119,19 @@ and comparison operators.
 constructor of the \verb|mipp::Reg| object will call the \verb|mipp::load|
 function automatically. Thus, a load in \MIPP low:
 \mint{C++}|mipp::reg a = mipp::load<float>(aligned_ptr);|
+{\noindent
 can be simplified into:
+}
 \mint{C++}|mipp::Reg<float> a = aligned_ptr;|
+{\noindent
 with \MIPP med. level. An initializer list
 can be used with a \MIPP med. vector register:
+}
 \mint{C++}|mipp::Reg<float> a = {1.f, 2.f, 3.f, 4.f};|
+{\noindent
 Likewise, a scalar assigned to a vector sets all elements to
 this value.
+}
 
 \subsection{Implementation Details}
 \label{sec:vec_mipp_implem}
@@ -145,6 +148,7 @@ compiler uses \verb|AVX| instructions even if the architecture supports
 set and the data type. A dedicated function returns the number of elements in a
 \MIPP register:
 \mint{C++}|constexpr int n = mipp::nElmtsPerRegister<T>();|
+{\noindent
 A shortened version is also defined as: \verb|mipp::N<T>()|. Whenever
 vectorization takes place in loops, \MIPP's philosophy is to change the stride
 of the loop from one to the size of registers. The stride can be statically
@@ -153,6 +157,7 @@ If the loop size is not a multiple of the registers size, 1) a sequential tail
 loop can be implemented to compute the remaining elements, 2) the padding
 technique can be implemented to force the loop size to be a multiple of the
 vector registers.
+}
 
 When the instruction set cannot be determined, \MIPP med. falls back on
 sequential instructions. In this case, \MIPP does not use any intrinsic anymore.
@@ -167,7 +172,9 @@ supplies an aligned memory allocator, to be used with types such as the
 requirements are not guaranteed by the default \Cxx memory allocator. The \MIPP
 memory allocator can be used as follows:
 \mint{C++}|std::vector<T,mipp::allocator> aligned_data;|
+{\noindent
 and shortened like this: \verb|mipp::vector<T>|.
+}
 
 \MIPP comes with a comprehensive unitary test suite to validate new instruction
 set ports and new feature implementations. It has successfully been tested with
@@ -185,7 +192,9 @@ Since the function passed to the reduction operator is resolved at the compile
 time, the code remains efficient. Any function with the following prototype can
 be used as the reduction function:
 \mint{C++}|mipp::Reg<T> func(mipp::Reg<T>, mipp::Reg<T>);|
+{\noindent
 E.g., the code below computes the smallest element in a register:
+}
 \begin{minted}{C++}
 mipp::Reg<float> r = {4.f, 2.f, 1.f, 3.f};
 float min = mipp::Reduction<mipp::min>::sapply(r);
@@ -194,7 +203,141 @@ The \verb|min| scalar variable will be assigned \verb|1.f| as the result. For
 convenience, a set of functions is predefined, based on this generic reduction
 feature: \verb|hadd|, \verb|hsub|, \verb|hmul| and \verb|hdiv|.
 
-\subsection{Experimentation Protocol}
+\subsection{Related Works}
+
+Many SIMD programming solutions have been surveyed in~\cite{Pohl2016} to take
+advantage of modern instruction sets. The existing alternatives can be
+decomposed into three main models: 1)~intrinsics or assembly code; 2)~dedicated
+language; and 3)~dedicated library. The intrinsics or assembly approaches are
+non-portable, low-level solutions which target specific architectures. They
+offer maximum control to take advantage of instruction set specificities, and to
+fine tune register usage. However, it is quite difficult to develop and maintain
+a low-level code in the long run. Some languages have been designed to provide
+programmers with SIMD programming constructs. Many of them are based on general
+purpose languages extended with some kinds of annotation mechanism (e.g.
+pragmas) such as OpenMP~\cite{OpenMP2013}, Cilk Plus~\cite{Robison2013} or
+ispc~\cite{Pharr2012}. They offer higher expressiveness, better portability and
+generally more readable code, at the expense of less programmer control, and
+vectorization performance. More specialized languages, such as
+OpenCL~\cite{Howes2015}, enable the programmer to retain more control, as the
+counterpart of writing some more specific code.
+In this paper, the focus is given to the library approach since we want to
+maximize performance, maximize portability and deal with existing \Cxx codes. In
+order to let the compiler inline library calls, which is critical for the
+intended SIMD programming model purpose, such library are usually header-only.
+Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
+
+\subsubsection{\Cxx SIMD Wrappers}
+
+This section and the next one propose to compare the different SIMD wrappers
+we found. This comparison has been made in 2018 when we wrote a paper dedicated
+to MIPP~\cite{Cassagne2018}. Be aware that the features of the other wrappers
+presented here could have evolved since this publication.
+
+\begin{table}[htp]
+  % \renewcommand{\arraystretch}{0.95}
+  % \tabcolsep=6pt
+  \centering
+  \caption{Comparison of various SIMD wrappers: General Information and Features.}
+  \label{tab:vec_comparison_general}
+  % \begin{adjustbox}{angle=90}
+  % {\resizebox{\linewidth}{!}{
+  \begin{tabular}{r r r r | c c c}
+  % \hline
+  \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{General Information}}}      & \multicolumn{3}{c}{\multirow{2}{*}{\textbf{Features}}}\\
+                &                     &                &                  &                &                    &                 \\ \hline
+  \textbf{Name} & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}   \\ %\cline{11-16}
+                &                     & \textbf{Year}  &                  & \textbf{Func.} & \textbf{Technique} & \textbf{Suite}  \\ \hline \hline
+  \MIPP         & \cite{Cassagne2018} & 2013           & MIT              & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
+  \VCL          & \cite{Fog}          & 2012           & GNU GPL          & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
+  \simdpp       & \cite{Kanapickas}   & 2013           & Boost Software   & \xmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
+  \TSIMD        & \cite{Moller2016}   & 2016           & Open-source      & \xmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
+  \Vc           & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
+  \xsimd        & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
+  \BoostSIMD    & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
+  \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\ %\hline
+  \end{tabular}
+  % }}
+  % \end{adjustbox}
+\end{table}
+
+Table~\ref{tab:vec_comparison_general} and
+Table~\ref{tab:vec_comparison_isa_data} compare various SIMD wrappers.
+Table~\ref{tab:vec_comparison_general} is focusing on the general features while
+Table~\ref{tab:vec_comparison_general} is targeting the supported instruction
+sets and data types. They aims to present an overview of some prominent
+solutions, though them is by no means exhaustive due to the richness of the SIMD
+wrapper landscape. Some of the wrappers presented, such as \MIPP, \Vc,
+\BoostSIMD, \VCL and \TSIMD, have been designed in an academic research context.
+\begin{table}[htp]
+  % \renewcommand{\arraystretch}{0.95}
+  % \tabcolsep=6pt
+  \centering
+  \caption{Comparison of various SIMD wrappers : Supported ISA and Data Type.}
+  \label{tab:vec_comparison_isa_data}
+  % \begin{adjustbox}{angle=90}
+  % {\resizebox{\linewidth}{!}{
+  \begin{tabular}{r || c c c c c || c c | c c c c}
+  % \hline
+  {\multirow{4}{*}{\textbf{Name}}} & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                 & \multicolumn{6}{c}{\multirow{2}{*}{\textbf{Data Type}}}                    \\
+                                   & \multicolumn{5}{c||}{}                                                          & \multicolumn{6}{c}{}                                                       \\ \cline{2-12}
+                                   & \textbf{SSE} & \textbf{AVX} & \textbf{AVX512} & \textbf{NEON} & \textbf{AltiV.} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c}{\textbf{Integer}} \\ %\cline{2-12}
+                                   & 128-bit      & 256-bit      & 512-bit         & 128-bit       & 128-bit         & 64      & 32                        & 64     & 32     & 16     & 8         \\ \hline \hline
+  \MIPP                            & \cmark       & \cmark       & \cmark          & \cmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
+  \VCL                             & \cmark       & \cmark       & \cmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
+  \simdpp                          & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
+  \TSIMD                           & \cmark       & \cmark       & \xmark          & \cmark        & \xmark          & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
+  \Vc                              & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark    \\ %\cline{2-19}
+  \xsimd                           & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark    \\ %\cline{2-19}
+  \BoostSIMD                       & \cmark       & \xmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
+  \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\hline
+  \end{tabular}
+  % }}
+  % \end{adjustbox}
+\end{table}
+Some others, \simdpp and \xsimd, appear to be standalone development efforts by
+individual programmers or maintainers. Proprietary, closed-source solutions also
+exist on the market, such as \bSIMD, which is an extended version of \BoostSIMD,
+or the commercial version of \VCL. The \textit{Instruction Set} column is broken
+up into five families among the most widely available on the market: NEON, SSE,
+AVX, AVX-512 and AltiVec. For the sake of conciseness, we choose not to list all
+the instruction sets ``sub-variants'' (such as SSE2, SSE3, etc). \simdpp et
+\bSIMD propose the most comprehensive instruction set compatibility. At the other
+end of the range, \xsimd and \BoostSIMD only support Intel\R SIMD instruction
+sets. The \textit{Data Type} column of the table summarizes the supported vector
+element types and precisions. In their public version, and at the time of
+writing, \Vc does not support 8-bit integers, \xsimd does not support 8-bit and
+16-bit integers and \TSIMD does not support 64-bit data types, to the best of
+our knowledge. The \textit{Features} column highlights some additional
+characteristics. The \textit{Math Func.}~ column indicates which wrapper
+supports additional mathematical sub-routines, not necessarily available as
+native CPU instructions (exponential, logarithm, trigonometric functions for
+instance), and required by algorithms such as the Box-Muller Transform (see
+Section~\ref{sec:vec_awgn}). The \textit{\Cxx Technique} column indicates
+whether the wrapper is designed as an expression template framework, or whether
+it relies on operator overloading techniques. The expression template feature is
+a powerful technique to automatically drive the rewriting of whole arithmetic
+expressions into SIMD hardware instructions or instruction sequences. For
+instance if the user writes \verb|d = a * b + c|, the wrapper can automatically
+match a \emph{fused multiply and add} instruction (FMA). \BoostSIMD and \bSIMD
+extensively use this technique~\cite{Esterie2012,Esterie2012a}. The drawbacks
+are that the source code complexity of the wrapper is dramatically increased.
+\BoostSIMD and \bSIMD have a dependency on the Boost framework to build, and
+currently available \Cxx compilers produce huge amounts of arcane error messages
+at the slightest mistake in the end user program. For these reasons, we decided
+not to base \MIPP on the expression template technique. As mentioned in
+Section~\ref{sec:vec_mipp_implem}, maintaining SIMD wrappers, and porting them
+to new instruction sets is error prone by nature, due to the large number of
+routines, cryptic intrinsics names, and specific instruction set details. A
+comprehensive testing suite is therefore critical to validate new development,
+optimizations and ports on new instruction sets. This is why \MIPP, as well as
+\Vc, \BoostSIMD, \simdpp and \bSIMD come with their own test suites. We have not
+found similar test suites in the software distributions of \VCL, \xsimd and
+\TSIMD; however, test suites might be in use internally, within the development
+teams of these wrappers.
+
+\subsubsection{Experimentation Protocol}
+\label{opt:mipp_protocol}
 
 \begin{table}[htp]
   \tabcolsep=6pt
@@ -232,169 +375,6 @@ sizes fit into the last level cache (LLC) of CPUs. The references for the
 speedup computations are always sequential versions of the SIMD codes. Those
 reference versions can be auto-vectorized by the compiler, thus a reference
 version is compiled for each SIMD instruction set.
-
-\subsection{Related Works}
-
-Many SIMD programming solutions have been surveyed in~\cite{Pohl2016} to take
-advantage of modern instruction sets. The existing alternatives can be
-decomposed into three main models: 1)~intrinsics or assembly code; 2)~dedicated
-language; and 3)~dedicated library. The intrinsics or assembly approaches are
-non-portable, low-level solutions which target specific architectures. They
-offer maximum control to take advantage of instruction set specificities, and to
-fine tune register usage. However, it is quite difficult to develop and maintain
-a low-level code in the long run. Some languages have been designed to provide
-programmers with SIMD programming constructs. Many of them are based on general
-purpose languages extended with some kinds of annotation mechanism (e.g.
-pragmas) such as OpenMP~\cite{OpenMP2013}, Cilk Plus~\cite{Robison2013} or
-ispc~\cite{Pharr2012}. They offer higher expressiveness, better portability and
-generally more readable code, at the expense of less programmer control, and
-vectorization performance. More specialized languages, such as
-OpenCL~\cite{Howes2015}, enable the programmer to retain more control, as the
-counterpart of writing some more specific code.
-In this paper, the focus is given to the library approach since we want to
-maximize performance, maximize portability and deal with existing \Cxx codes. In
-order to let the compiler inline library calls, which is critical for the
-intended SIMD programming model purpose, such library are usually header-only.
-Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
-
-\subsubsection{\Cxx SIMD Wrappers}
-
-\begin{itemize}
-  \item \xmark~mettre à jour les wrappers SIMD, il y en a de nouveaux et les
-    actuels ont évolués
-  \item \xmark~problème: il faudrait refaire les XP
-    Figure~\ref{plot:vec_mandelbrot} et tout le discours qui va avec... :-(
-    (solution possible : citer et dater l'article pour dire de quand date la
-    mise à jour)
-\end{itemize}
-
-% \begin{table}
-%   \renewcommand{\arraystretch}{0.95}
-%   \tabcolsep=6pt
-%   \centering
-%   \caption{Comparison of various SIMD wrappers.}
-%   \label{tab:vec_comparison}
-%   \begin{adjustbox}{angle=90}
-%   {\resizebox{0.975\textheight}{!}{
-%   \begin{tabular}{|r|r|r|r|r||c|c|c|c|c||c|c|c|c|c|c||c|c|c|}
-%   \hline
-%   \multicolumn{5}{|c||}{\multirow{2}{*}{\textbf{General Information}}}                                                               & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                                                                & \multicolumn{6}{c||}{\multirow{2}{*}{\textbf{Data Type}}}                    & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Features}}} \\
-%   \multicolumn{5}{|c||}{}                                                                                                            & \multicolumn{5}{c||}{}                                                                                                         & \multicolumn{6}{c||}{}                                                       & \multicolumn{3}{c|}{}                                  \\ \hline
-%   \multicolumn{2}{|r|}{\textbf{Name}}                                      & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{SSE} & \textbf{AVX} & \textbf{AVX-512} & \textbf{NEON} & \textbf{AltiVec} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c||}{\textbf{Integer}} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}    \\ \cline{11-16}
-%   \multicolumn{2}{|r|}{}                                                   &                     & \textbf{Year}  &                  & 128-bit      & 256-bit      & 512-bit          & 128-bit       & 128-bit          & 64      & 32                        & 64     & 32     & 16     & 8           & \textbf{Func.} & \textbf{Technique} & \textbf{Suite}   \\ \hline \hline
-%   \multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Library}}} & \MIPP      & $-$                 & 2013           & MIT              & \cmark       & \cmark       & \cmark           & \cmark        & \xmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.      & \cmark           \\ \cline{2-19}
-%                                                               & \VCL       & \cite{Fog}          & 2012           & GNU GPL          & \cmark       & \cmark       & \cmark           & \xmark        & \xmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.      & \textbf{N/A}     \\ \cline{2-19}
-%                                                               & \simdpp    & \cite{Kanapickas}   & 2013           & Boost Software   & \cmark       & \cmark       & \cmark           & \cmark        & \cmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \xmark         & Expr. templ.       & \cmark           \\ \cline{2-19}
-%                                                               & \TSIMD     & \cite{Moller2016}   & 2016           & Open-source      & \cmark       & \cmark       & \xmark           & \cmark        & \xmark           & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark      & \xmark         & Op. overload.      & \textbf{N/A}     \\ \cline{2-19}
-%                                                               & \Vc        & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark       & \cmark       & \xmark           & \xmark        & \xmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark      & \cmark         & Op. overload.      & \cmark           \\ \cline{2-19}
-%                                                               & \xsimd     & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark       & \cmark       & \xmark           & \xmark        & \xmark           & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark      & \cmark         & Op. overload.      & \textbf{N/A}     \\ \cline{2-19}
-%                                                               & \BoostSIMD & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark       & \xmark       & \xmark           & \xmark        & \xmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.       & \cmark           \\ \cline{2-19}
-%                                                               & \bSIMD     & \cite{Esterie2012a} & 2017           & Non-free         & \cmark       & \cmark       & \cmark           & \cmark        & \cmark           & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.       & \cmark           \\ \hline
-%   \end{tabular}
-%   }}
-%   \end{adjustbox}
-% \end{table}
-
-\begin{table}[htp]
-  % \renewcommand{\arraystretch}{0.95}
-  % \tabcolsep=6pt
-  \centering
-  \caption{Comparison of various SIMD wrappers: General Information and Features.}
-  \label{tab:vec_comparison}
-  % \begin{adjustbox}{angle=90}
-  % {\resizebox{\linewidth}{!}{
-  \begin{tabular}{r r r r | c c c}
-  % \hline
-  \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{General Information}}}      & \multicolumn{3}{c}{\multirow{2}{*}{\textbf{Features}}}\\
-                &                     &                &                  &                &                    &                 \\ \hline
-  \textbf{Name} & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}   \\ %\cline{11-16}
-                &                     & \textbf{Year}  &                  & \textbf{Func.} & \textbf{Technique} & \textbf{Suite}  \\ \hline \hline
-  \MIPP         & \cite{Cassagne2018} & 2013           & MIT              & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
-  \VCL          & \cite{Fog}          & 2012           & GNU GPL          & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \simdpp       & \cite{Kanapickas}   & 2013           & Boost Software   & \xmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
-  \TSIMD        & \cite{Moller2016}   & 2016           & Open-source      & \xmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \Vc           & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
-  \xsimd        & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \BoostSIMD    & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
-  \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\ %\hline
-  \end{tabular}
-  % }}
-  % \end{adjustbox}
-\end{table}
-
-
-\begin{table}[htp]
-  % \renewcommand{\arraystretch}{0.95}
-  % \tabcolsep=6pt
-  \centering
-  \caption{Comparison of various SIMD wrappers : Supported ISA and Data Type.}
-  \label{tab:vec_comparison}
-  % \begin{adjustbox}{angle=90}
-  % {\resizebox{\linewidth}{!}{
-  \begin{tabular}{r || c c c c c || c c | c c c c}
-  % \hline
-  {\multirow{4}{*}{\textbf{Name}}} & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                 & \multicolumn{6}{c}{\multirow{2}{*}{\textbf{Data Type}}}                    \\
-                                   & \multicolumn{5}{c||}{}                                                          & \multicolumn{6}{c}{}                                                       \\ \cline{2-12}
-                                   & \textbf{SSE} & \textbf{AVX} & \textbf{AVX512} & \textbf{NEON} & \textbf{AltiV.} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c}{\textbf{Integer}} \\ %\cline{2-12}
-                                   & 128-bit      & 256-bit      & 512-bit         & 128-bit       & 128-bit         & 64      & 32                        & 64     & 32     & 16     & 8         \\ \hline \hline
-  \MIPP                            & \cmark       & \cmark       & \cmark          & \cmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \VCL                             & \cmark       & \cmark       & \cmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \simdpp                          & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \TSIMD                           & \cmark       & \cmark       & \xmark          & \cmark        & \xmark          & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \Vc                              & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark    \\ %\cline{2-19}
-  \xsimd                           & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark    \\ %\cline{2-19}
-  \BoostSIMD                       & \cmark       & \xmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\hline
-  \end{tabular}
-  % }}
-  % \end{adjustbox}
-\end{table}
-
-Table~\ref{tab:vec_comparison} compares various SIMD wrappers. It aims to
-present an overview of some prominent solutions, though it is by no means
-exhaustive due to the richness of the SIMD wrapper landscape. Some of the
-wrappers presented, such as \MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been
-designed in an academic research context. Some others, \simdpp and \xsimd,
-appear to be standalone development efforts by individual programmers or
-maintainers. Proprietary, closed-source solutions also exist on the market, such
-as \bSIMD, which is an extended version of \BoostSIMD, or the commercial version
-of \VCL. The \textit{Instruction Set} column is broken up into five families
-among the most widely available on the market: NEON, SSE, AVX, AVX-512 and
-AltiVec. For the sake of conciseness, we choose not to list all the instruction
-sets ``sub-variants'' (such as SSE2, SSE3, etc). \simdpp et \bSIMD propose the
-most comprehensive instruction set compatibility. At the other end of the range,
-\xsimd and \BoostSIMD only support Intel\R SIMD instruction sets. The
-\textit{Data Type} column of the table summarizes the supported vector element
-types and precisions. In their public version, and at the time of writing, \Vc
-does not support 8-bit integers, \xsimd does not support 8-bit and 16-bit
-integers and \TSIMD does not support 64-bit data types, to the best of our
-knowledge. The \textit{Features} column highlights some additional
-characteristics. The \textit{Math Func.}~ column indicates which wrapper
-supports additional mathematical sub-routines, not necessarily available as
-native CPU instructions (exponential, logarithm, trigonometric functions for
-instance), and required by algorithms such as the Box-Muller Transform (see
-Section~\ref{sec:vec_awgn}). The \textit{\Cxx Technique} column indicates
-whether the wrapper is designed as an expression template framework, or whether
-it relies on operator overloading techniques. The expression template feature is
-a powerful technique to automatically drive the rewriting of whole arithmetic
-expressions into SIMD hardware instructions or instruction sequences. For
-instance if the user writes \verb|d = a * b + c|, the wrapper can automatically
-match a \emph{fused multiply and add} instruction (FMA). \BoostSIMD and \bSIMD
-extensively use this technique~\cite{Esterie2012,Esterie2012a}. The drawbacks
-are that the source code complexity of the wrapper is dramatically increased.
-\BoostSIMD and \bSIMD have a dependency on the Boost framework to build, and
-currently available \Cxx compilers produce huge amounts of arcane error messages
-at the slightest mistake in the end user program. For these reasons, we decided
-not to base \MIPP on the expression template technique. As mentioned in
-Section~\ref{sec:vec_mipp_implem}, maintaining SIMD wrappers, and porting them
-to new instruction sets is error prone by nature, due to the large number of
-routines, cryptic intrinsics names, and specific instruction set details. A
-comprehensive testing suite is therefore critical to validate new development,
-optimizations and ports on new instruction sets. This is why \MIPP, as well as
-\Vc, \BoostSIMD, \simdpp and \bSIMD come with their own test suites. We have not
-found similar test suites in the software distributions of \VCL, \xsimd and
-\TSIMD; however, test suites might be in use internally, within the development
-teams of these wrappers.
 
 \subsubsection{Qualitative and Quantitative Comparisons}
 
@@ -469,9 +449,9 @@ one. The obtained results do not show any performance penalties when using \MIPP
 medium level interface. The obtained speedups are close to the intrinsics
 version.
 
-\MIPP corresponds to a programming model close to the intrinsics, with some
-adaptation to architectures. Still, a high performance code requires that the
-developer knows how to decompose efficiently some computation with the SIMD
+\textbf{\MIPP} corresponds to a programming model close to the intrinsics, with
+some adaptation to architectures. Still, a high performance code requires that
+the developer knows how to decompose efficiently some computation with the SIMD
 instructions. Between AVX-512 and SSE or NEON for instance, several
 implementations of the same code are possible. \MIPP offers to the programmer
 the control on the intrinsics taken and ensures portability.
@@ -479,18 +459,62 @@ the control on the intrinsics taken and ensures portability.
 \section{Vectorization Strategies}
 \label{sec:opt_vec_strat}
 
-\begin{itemize}
-  \item \xmark~présenter la vectorisation intra-frame et inter-frame, c'est
-    redondant dans toutes les sections suivantes
-  \item \xmark~présenter intra-frame et inter-frame sans donner d'avis, l'avis
-    sera donné dans la partie discussion
-\end{itemize}
+The vectorization is a key to develop high performance implementations of signal
+processing algorithms. One of the main constraint of these algorithms is their
+low latency requirement. A typical signal processing latency ranges between
+one microsecond to a few nanoseconds. Therefore, the famous multi-threading
+parallelism is not well-suited to speedup a single signal processing algorithm.
+Indeed, the thread creation time and the extra cost of the threads
+synchronization are too high compared to the expected latency of these
+algorithms. For instance, on modern CPUs, the order of magnitude of a mutex
+lock/unlock is the nanosecond. On the other hand, the latency of a SIMD
+instruction is very low on current CPUs. Depending on the targeted instruction
+it can vary from one CPU cycle to about ten cycles. Moreover, generally the
+signal processing algorithms are implemented on hardware targets. Consequently,
+these algorithms have been refined to take advantage of the fixed-point
+arithmetic. It enables software implementations working on 16-bit and 8-bit
+integers. Combining the vectorization and the fixed-point arithmetic leads to a
+high level of SIMD parallelism. For instance, if we consider the AVX-512 ISA,
+there is 512-bit in the registers. If the computations are made on 8-bit
+integers, the available parallelism is $p^\text{8-bit}_\text{SIMD} = 512 / 8 =
+64$. This is more than the number of cores available in most of the current
+CPUs. The next subsections presents the vectorization strategies we identified
+to effectively implement signal processing algorithms on CPUs.
 
-\subsection{Intra-frame}
+\subsection{Intra-frame SIMD Strategy}
 \label{sec:opt_vec_strat_intra}
 
-\subsection{Inter-frame}
+The \emph{intra-frame} SIMD strategy consists in using the vectorization to
+process a single frame. With this strategy, the available level of parallelism
+depends on the characteristics of the signal processing algorithm. It is up to
+the developer to clearly identify the intrinsic parallelism of the algorithm and
+to map the latter on the SIMD instructions. One of the main advantages of this
+method is that the latency of the processing can be divided, at best, by the
+parallelism factor $p_\text{SIMD}$. Thus, the intra-frame SIMD strategy is a key
+of very low latency signal processing implementations on CPUs. Note that the
+throughput can also be increased by a factor of $p_\text{SIMD}$. However, a
+limitation of the \emph{intra-frame} strategy is when the algorithm intrinsic
+parallelism is lower than $p_\text{SIMD}$. In this specific case, the SIMD
+instructions cannot be used at 100\% and some efficiency is loss. Even if the
+intrinsic parallelism is higher than $p_\text{SIMD}$ the targeted algorithm can
+require data movements inside the SIMD registers and some shuffle and
+permutation extra-instructions need to be added. These extra-instructions are
+generally a limiting factor in the efficiency of the intra-frame SIMD strategy.
+
+\subsection{Inter-frame SIMD Strategy}
 \label{sec:opt_vec_strat_inter}
+
+Unlike the intra-frame SIMD strategy, the \emph{inter-frame} SIMD strategy
+processes many frames in parallel. The idea is to fill the SIMD registers with
+data coming from different frames. If there is a $p_\text{SIMD}$ parallelism,
+then $F = p_\text{SIMD}$ frames will be used to fulfill the SIMD registers. The
+main advantage of this strategy is that the available level of parallelism does
+not depend on the algorithm. In other words, it is always possible to use 100\%
+of the SIMD registers. Thus, the inter-frame SIMD strategy is a key of very high
+throughput signal processing implementations on CPUs. However, this technique
+does not reduce the overall latency of the processing as it computes $F =
+p_\text{SIMD}$ in parallel, the throughput can be increased by a factor
+$p_\text{SIMD}$ but the latency of a single frame is unchanged.
 
 \begin{figure}[htp]
   \centering
@@ -501,40 +525,73 @@ the control on the intrinsics taken and ensures portability.
   \label{fig:vec_reordering_process_inter_simd}
 \end{figure}
 
-\subsection{Inter/Intra-frame}
+Moreover, one may note that the $N$ bits of a frame are naturally transmitted
+frame by frame. It is then necessarily to perform a reordering operation before
+to start the inter-frame SIMD computations. This reordering process is shown in
+Fig.~\ref{fig:vec_reordering_process_inter_simd} where $F$ frames are
+represented by different colors and the elements inside a single frame can be
+identified by the different patterns. All the first elements of each frame are
+regrouped together in memory, then all the second elements of each frame are
+regrouped together, and so on. The dual reverse reordering operation is
+performed at the end of the inter-frame SIMD computations. The reordering
+operations are the main key to reach high throughputs in the inter-frame SIMD
+strategy. They enable efficient load and store instructions. These reordering
+and reversed reordering operations could be replaced by gather and scatter
+instructions each time a load and store instructions are required. But this
+solution has shown poorer performance on current CPU architectures. The selected
+version with the reordering operations comes with a much better data locality at
+the cost of extra operations before and after the SIMD computations.
 
-% \section{Error Correction Coding in 5G}
-\section{Efficient Monte Carlo Simulations}
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.9]{vectorization/reordering/reordering}
+  \caption
+    [MIPP implementation of the SIMD frame reordering process for
+     $p_\text{SIMD} = 4$.]
+    {MIPP implementation of the SIMD frame reordering process for
+     $p_\text{SIMD} = 4$.}
+  \label{fig:vec_reordering_process_inter_simd_mipp}
+\end{figure}
 
-\begin{itemize}
-  \item \cmark~l'idée de cette section est de regrouper les algos utiles dans la
-    simulation qui prennent un temps non négligeable et qui ont été optimisés
-    pour que la chaîne complète soit performante
-  \item \xmark~le texte d'introduction est à modifier
-  \item \xmark~on pourrait rajouter le démodulateur générique, c'est un mix de
-    SIMD et code séquentiel, je pense que c'est assez astucieux et ça montre
-    qu'avec MIPP on peut facilement mixer du code séquentiel avec du code
-    vectorisé ce qui est plus dur avec des wrappers de plus haut niveau (qui
-    mangent les boucles)
-\end{itemize}
+It is then mandatory to minimize the overhead introduced by the reordering
+operations. To this purpose we developed a SIMD reordering function that
+extensively uses the \verb|mipp::interleave| function to reorder the elements.
+This function is completely vectorized and generic on the data types and the
+frame sizes. The \verb|mipp::interleave| function takes two registers $\bm{r^a}
+= [r^a_0, r^a_1, ..., r^a_{p_\text{SIMD}}]$ and $\bm{r^b} = [r^b_0, r^b_1,
+..., r^b_{p_\text{SIMD}-1}]$ as input parameters and returns two output
+registers $\bm{r^c} = [r^a_0, r^b_0, ..., r^a_{p_\text{SIMD}/2-1},
+r^b_{p_\text{SIMD}/2-1}]$ and $\bm{r^d} = [r^a_{p_\text{SIMD}/2},
+r^b_{p_\text{SIMD}/2}, ..., r^a_{p_\text{SIMD}-1}, r^b_{p_\text{SIMD}-1}]$.
+The \verb|mipp::interleave| function is applied $N \times \log_2(F)$ times.
+Fig.~\ref{fig:vec_reordering_process_inter_simd_mipp} shows the \MIPP
+implementation of the reordering process for $F = p_\text{SIMD} = 4$. To
+increase the speed of the reordering process, the template meta-programming
+technique has been used to unroll the \verb|mipp::interleave| calls. The generic
+reversed reordering process has also be implemented with \MIPP and the principle
+is similar to the reordering process.
 
-It is now viable to implement channel coding algorithms on programmable
-processors under real time constraints. This kind of optimized software
-implementation could be used in some scenarios of the future 5G mobile
-communication standards. Beside the real time implementation, it is also
-necessary to predict the error correction capability of a channel code. To this
-end, the classical method is to use Monte Carlo simulations in which noise
-samples are added to the coded data in such a way that one can estimate the
-residual bit error rate after the channel decoding process. The generation of
-uncorrelated random data is a computationally intensive task and also requires
-optimization. In this section, we present several algorithms that will be used
-in future 5G communication systems together with a random sample generation
-algorithm and a quantizer used for simulation of communication systems. For each
-algorithm, a description of the \MIPP-optimized implementation is provided. Some
-speedup measurements are given for different instruction sets. All the source
-codes are implemented in \AFFECT\footnote{\AFFECT source code:
-\url{https://github.com/aff3ct/aff3ct}}, an Open-source library dedicated to the
-channel coding.
+\subsection{Inter/intra-frame SIMD Strategy}
+
+The \emph{inter/intra-frame} SIMD strategy is the combination of the two
+previous strategies. For instance, if we have an hardware parallelism
+$p_\text{SIMD} = 16$ and if the algorithm we want to optimize has only an
+intrinsic parallelism of 8, it is possible to use the intra-frame SIMD strategy
+to absorb the parallelism of the algorithm and to use the inter-frame SIMD
+strategy on two frames. The inter/intra-frame SIMD strategy is also a good
+candidate to make trade-offs between low latency and high throughput.
+
+\section{Efficient Functional Simulations}
+
+This section focuses on computational blocks specific to the functional
+simulation of digital communication systems. In this type of simulation,
+the channel model can take a non negligible amount of time this is why we
+propose a vectorized version of the AWGN channel. Additionally when fixed-point
+decoders are benched, the output LLRs of the demodulator have to be converted
+from a floating-point representation to a fixed-point representation. This
+process can also take an important amount of time and it has been optimized.
+The proposed implementations are briefly evaluated with the protocol defined in
+Section~\ref{opt:mipp_protocol}.
 
 \subsection{Box-Muller Transform}
 \label{sec:vec_awgn}
@@ -558,7 +615,7 @@ Then, $z_1$ and $z_2$ are independent and normally distributed samples.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/awgn/box_muller_simd.cpp}
-  \caption{Box-Muller Transform \MIPP kernel.}
+  \caption{Box-Muller Transform SIMD kernel with \MIPP.}
   \label{lst:vec_awgn_box_muller_simd}
 \end{listing}
 
@@ -567,7 +624,10 @@ the Box-Muller transform. \verb|uniRand| is a vector of independent and
 uniformly distributed random numbers (for instance generated with the MT19937
 PRNG). \verb|norRand| is a vector of independent and normally distributed random
 numbers. The code stresses SIMD units with multiplications, \verb|mipp::sqrt|
-and \verb|mipp::sincos| calls.
+and \verb|mipp::sincos| calls. The $U_1$ and $U_2$ are independent variables, so
+the algorithm intrinsic parallelism directly depends on the frame size $N$.
+Generally $N > p_\text{SIMD}$, this is why the proposed implementation uses the
+intra-frame SIMD strategy.
 
 \begin{table}[htp]
   % \tabcolsep=6pt
@@ -593,11 +653,12 @@ actual throughput (T/P) for each instruction set. The conversion of
 floating-point format from single precision to double precision only requires to
 replace the \verb|float| keyword by \verb|double|. The ability to switch
 seamlessly from one data type to another is clearly a strength of the \MIPP
-library. In the source code of the \AFFECT library, the register type is based
-on a generic type name \verb|T| (\verb|mipp::Reg<T>|). This way the same source
-code can work on \verb|float| or on \verb|double| data types.
+library. In the real source code, the register type is based on a generic type
+name \verb|T| (\verb|mipp::Reg<T>|). This way the same source code can work on
+\verb|float| or on \verb|double| data types.
 
 \subsection{Quantizer}
+\label{sec:opt_simu_quantizer}
 
 During the implementation of ECC decoders, a common step is to convert the
 floating-point representation into a fixed-point representation. This is
@@ -620,7 +681,7 @@ quantized number, including $v$ bits for the fractional part.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/quantizer/quantizer_simd.cpp}
-  \caption{SIMD implementation of the quantizer.}
+  \caption{SIMD implementation of the quantizer with \MIPP.}
   \label{lst:vec_quantizer_simd}
 \end{listing}
 
@@ -654,10 +715,111 @@ significant for SSE and AVX. They are less important with the NEON instruction
 set but still non-negligible. We do not provide results for AVX-512, since an
 AVX-512BW compatible CPU would be required and the Xeon Phi\TM is not.
 
+\section{LDPC Decoders}
+
+The LDPC decoders have been extensively studied in the literature. In this
+section we focus on the Belief Propagation (BP) algorithm and its variants. On
+CPUs, the inter-frame SIMD strategy has been explored and leads to very high
+throughputs on many different codes~\cite{LeGal2016}. On the other hand, the
+intra strategy has also be studied~\cite{LeGal2019a,Xu2019}, the achieved
+throughputs are lower compared to the inter-frame SIMD strategy but the
+latencies are very promising. To the best of our knowledge, the implementations
+proposed in the literature are always targeting a specific scheduling and update
+rules. We found this is a limitation to explore new trade-offs. The purpose of
+this work is to propose a generic implementation with a clear separation of
+concerns between the scheduling and the updates rules.
+
+\subsection{Generic Belief Propagation Implementation}
+
+The intra- and inter-frame SIMD strategies have been considered and the
+inter-frame strategy has been adopted. The reason of this choice is that
+the intra-frame implementations of the BP are directly depending on the
+$\mathcal{H}$ parity matrix. In many current standards using the LDPC codes, the
+$\mathcal{H}$ parity matrices are \emph{Quasi-Cyclic} (QC). QC $\mathcal{H}$
+parity matrices are matrices that are composed of an array of $Z \times Z$
+circulant identity sub-matrices. $Z$ is the order that defines the parallelism
+level. So, the intra-frame SIMD parallelism directly depends on the
+$\mathcal{H}$ parity matrix and if the parity matrix is QC or not. Even if the
+selected $\mathcal{H}$ matrix is QC, the $Z$ intrinsic parallelism can be
+smaller than $p_\text{SIMD}$ or higher but not a multiple of $p_\text{SIMD}$. At
+the end we found that the intra-frame SIMD strategy is not a good candidate for
+a generic implementation.
+
+Our main motivation in the proposed implementation is to be able to write the
+scheduling code (BP-F, BP-HL, BP-VL, etc) once and to combine this scheduling
+with any update rules (SPA, MS, OMS, NMS, etc.) written once too.
+Listing~\ref{lst:opt_ldpc_bp_scheduling_hl} shows the implementation of the
+BP horizontal layered (BP-HL) scheduling. \verb|var_nodes| is the vector of
+LLRs in the variable nodes ($\bm{v}$). \verb|contribs| is the vector of the a
+priori information ($\bm{a}$) and \verb|messages| is the vector containing the
+extrinsic LLRs ($\bm{e}$). In the horizontal layered scheduling, the
+extrinsic LLRs can be updated inside a single iteration. This is the key of a
+faster convergence compared to the flooding scheduling. In the presented
+\verb|decode_single_ite| method, one can note that inner methods are called on
+the \verb|up_rules| member. The \verb|up_rules| member is an object of
+\verb|Update_rules| class. This class is generic and given as a template
+parameter. This way, the traditional inheriting scheme is bypassed. This choice
+has been made to improve the efficiency of the decoder. Using inheritance would
+have prevented the compiler to inline method calls on the \verb|up_rules|
+member. The \verb|Update_rules| class can be all the update rules like the SPA,
+the MS, the OMS, the NMS, etc. An \verb|Update_rules| class has to implement the
+interface composed by the \verb|begin_chk_node_in|, \verb|compute_chk_node_in|,
+\verb|end_chk_node_in|, \verb|begin_chk_node_out|, \verb|compute_chk_node_out|
+and \verb|end_chk_node_out| methods.
+
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/ldpc/bp_scheduling_hl.cpp}
+  \caption{LDPC BP-HL scheduling implementation.}
+  \label{lst:opt_ldpc_bp_scheduling_hl}
+\end{listing}
+
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/ldpc/bp_update_rule_ms.cpp}
+  \caption{LDPC MS update rules implementation.}
+  \label{lst:opt_ldpc_bp_update_rule_ms}
+\end{listing}
+
+Listing~\ref{lst:opt_ldpc_bp_update_rule_ms} is the implementation of the MS
+update rules. For the sake of conciseness, the \verb|begin_chk_node_out| and
+\verb|end_chk_node_out| methods are not shown. These methods are empty in the
+MS update rules. Each operation in the methods of the \verb|Update_rules_MS|
+class is vectorized thanks to \MIPP. It results a readable source code close to
+a traditional \Cxx code where the \verb|std| namespace has been replaced by the
+\verb|mipp| namespace.
+
+Both the scheduling and update rules implementations have a generic real
+\verb|R| type. This way the same BP decoder can automatically adapt to
+floating-point and fixed-point representations of the LLRs values. The generic
+\verb|B| type is for the decoder output bits representation.
+
+Before to start the decoder, the reordering process explained in
+Section~\ref{sec:opt_vec_strat_inter} is performed. After the last decoding
+iteration, the output bits are decided from the updated variable nodes
+($\bm{v}$) and the input LLRs ($\bm{l}$). Once it is done the reversed
+reordering is performed to recover the natural order of the frames.
+
+We implemented the flooding, the horizontal layered and the vertical layered
+scheduling as well as the SPA, log-SPA, MS, OMS, NMS and AMS update rules.
+The main advantage of the proposed methodology is to ease the creation of new
+scheduling strategies and update rules without scarifying too much the
+throughput performance. It is then possible to quickly evaluate the error-rate
+performance of the new algorithm and to combine it with all the previously
+implemented strategies.
+
+\subsection{Specialized Belief Propagation Implementation}
+
+Unfortunately, even if we observed that the function calls in the
+\verb|decode_single_ite| method are effectively inlined by the compiler, we were
+not able to remove some useless memory loads and stores. These extra memory
+loads and stores are the consequence of the compiler limited knowledge on the
+application. As the horizontal layered scheduling and the MS, NMS and OMS update
+rules are often used, we decided to specialize a decoder for them. The
+specialized decoder consists in the merge of the scheduling class and the update
+rules classes. In this work, the merge operation has been realized manually but
+it could be interesting to automate this process.
+
 \section{Polar Decoders}
 \label{sec:vec_polar}
-
-\subsection{Overview}
 
 The polar decoder algorithms presented in Section~\ref{sec:alg_polar_decoders}
 has a number of characteristics of interest for its optimization:
@@ -667,7 +829,7 @@ has a number of characteristics of interest for its optimization:
     LLR and bits in the nodes and their children. As there is no dependence
     between computations involving different elements of the same node, these
     node computations can be parallelized or vectorized (cf. the
-    \emph{intra-frame} strategy introduced in~\cite{Giard2014}),
+    intra-frame SIMD strategy introduced in~\cite{Giard2014}),
   \item Frozen bits fully define their leaf values, hence some part of the
     traversal can be cut and its computation avoided, depending on the
     location of the frozen bits as introduced in
@@ -675,7 +837,7 @@ has a number of characteristics of interest for its optimization:
   \item The decoder can be specialized for a particular configuration of frozen
     bits, as frozen bit locations do not change for many frames,
   \item Similarly, multiple frames can be decoded concurrently, with parallel or
-    vector code. Such \emph{inter-frame} optimizations can increase the decoding
+    vector code. Such inter-frame optimizations can increase the decoding
     throughput, however at the expense of latency, which is also one important
     metric of the application (cf.~\cite{LeGal2015a}).
 \end{itemize}
@@ -690,290 +852,22 @@ explored. For instance, the recursive structure of the tree computation can be
 fully flatten, depending on the size of the code length.
 
 \subsection{Tree Pruning Strategy}
+\label{sec:opt_tree_pruning}
 
-% SC --------------------------------------------------------------------------
-\begin{figure}[htp]
-  \centering
-  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:polar_sc_tree_cut_intra}}
-  \quad
-  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:polar_sc_tree_cut_inter}}
-  \caption
-    [Throughput of the SC decoder depending on the different optimizations.]
-    {Throughput of the SC decoder depending on the different optimizations for
-    $N = 2048$, for intra-frame vectorization on the left and inter-frame
-    vectorization on the right, resp. (on the Intel\R Xeon\TM CPU E31225).}
-  \label{plot:polar_sc_tree_cut}
-\end{figure}
+\subsubsection{Pattern Matching Algorithm}
+\label{sec:opt_pattern_matching}
 
-The tree pruning step has a dramatical effect in general. For example, on the SC
-decoder, the reference code for a rate of 1/2 has 2047 nodes, whereas only 291
-nodes remain in the pruned version. However, the individual effect of each
-rewriting rule is not trivial. The plots in Fig.~\ref{plot:polar_sc_tree_cut}
-show the respective impact of several rewriting rules (\verb|R0|, \verb|R1|,
-\verb|REP| and \verb|SPC|), with $N = 2048$ and multiple code rates, for
-intra-frame and inter-frame vectorization respectively. The purpose of the plots
-is to show that no single rewriting rule dominates for every code rate, and that
-the respective impact of each rule may vary a lot from rate to rate, making the
-case for the flexible, extensible proposed architecture. Indeed, the rewriting
-rule set can also be enriched with rules for specific ranges of code rate. For
-instance, the rule \emph{Single Parity Check} (\verb|SPC|) has been applied with
-different level limits for 9/10 code rate, where it has a significant impact and
-may benefit from fine tuning.
-
-% SCL -------------------------------------------------------------------------
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.70\textwidth]{polar/scl_tree_cut/scl_tree_cut}
-  \caption
-    [Impact of the specialized nodes on the SCL coded throughput.]
-    {Impact of the specialized nodes on the SCL coded throughput,
-    intra-frame vectorization, $N=2048$ and $L=32$.}
-  \label{plot:polar_scl_tree_cut}
-\end{figure}
-
-Figure~\ref{plot:polar_scl_tree_cut} shows the impact of the different tree
-pruning optimizations on the CA-SSCL decoder throughput depending on the code
-rate (intra-frame vectorization only). The performance improvements are
-cumulative. Coded throughput, in which the redundant bits are taken in account,
-is shown instead of information throughput, for which only information bits are
-considered in order to illustrate the computational effort without the influence
-of the fact that higher rate codes involve higher information throughput.
-
-The coded throughput of the original unpruned algorithm (\verb|ref|), decreases
-as the code rate increases. Indeed, frozen bit leaf nodes are faster to process
-than information bit leaf nodes, in which a threshold detection is necessary. As
-there are more \verb|R0| and \verb|REP| nodes in low code rates, the tree
-pruning is more efficient in the case of low code rates. The same explanation
-can be given for \verb|R1| nodes in high code rates. \verb|R1| node pruning is
-more efficient than \verb|R0| node pruning on average. Indeed, a higher amount
-of computations is saved in \verb|R1| nodes than in \verb|R0| nodes.
-
-It has also been observed in~\cite{Sarkis2016} that when the \verb|SPC| node
-size is not limited to $4$, the decoding performance may be degraded.
-Consequently the size is limited to $4$ in $\texttt{SPC}_\texttt{4}$.
-$\texttt{SPC}_\texttt{4+}$ nodes, there is no size limit. The two node types are
-considered in Figure~\ref{plot:polar_scl_tree_cut}. Therefore, the depth at
-which dedicated nodes are activated in the proposed decoder can be adjusted, in
-order to offer a tradeoff between throughput and decoding performance.
+In order to perform the polar tree pruning, we implemented a pattern matching
+algorithm. For instance, knowing the initial location of the frozen bits, this
+algorithm can generate the pruned tree structure as illustrated in
+Fig.~\ref{fig:polar_sc_decoder}. Each internal node has a tag indicating the
+type of processing required at that node (recursive children processing,
+$f$/$g$/$h$ functions to be applied or not). This tag is initially set to
+\emph{any}.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{polar/scl_spc/scl_spc_diff}
-  % \caption{Impact of the specialized nodes on the SCL coded throughput.
-  \caption{Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @
-    $10^{-5}$ FER.}
-  \label{plot:polar_scl_spc}
-\end{figure}
-
-According to our experiments, the aforementioned statement about performance
-degradation caused by $\texttt{SPC}_\texttt{4+}$ nodes is not always accurate
-depending on the code and decoder parameters. The impact of switching
-\textit{on} or \textit{off} $\texttt{SPC}_\texttt{4+}$ nodes on decoding
-performance and throughput at a FER of $10^{-5}$ is detailed in
-Figure~\ref{plot:polar_scl_spc}. It shows that $\texttt{SPC}_\texttt{4+}$ nodes
-have only a small effect on the decoding performance. With $L=8$, an SNR
-degradation lower than 0.1 dB is observed, except for one particular
-configuration. Throughput improvements of $8$ to $23$ percents are observed. If
-$L=32$, the SNR losses are more substantial (up to $0.5$ dB), whereas throughput
-improvements are approximately the same. Besides this observation,
-Figure~\ref{plot:polar_scl_spc} shows how the proposed decoder flexibility in
-the \AFFECT environment enables to optimize easily the decoder tree pruning,
-both for software implementations or for hardware implementations in which tree
-pruning can also be applied~\cite{Lin2014}.
-
-% \begin{listing}[htp]
-%   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/f_seq.cpp}
-%   \caption{The C++ implementation of the $f$ function: sequential version.}
-%   \label{lst:vec_polar_f_seq}
-% \end{listing}
-
-% \begin{listing}[htp]
-%   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/f_simd.cpp}
-%   \caption{The C++ implementation of the $f$ function: SIMD version.}
-%   \label{lst:vec_polar_f_simd}
-% \end{listing}
-
-% \begin{listing}[htp]
-%   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/f_g_h_simd.cpp}
-%   \caption{\MIPP implementations of $f$, $g$ and $h$ functions.}
-%   \label{lst:vec_polar_f_g_h_simd}
-% \end{listing}
-
-% Polar codes have been introduced by \Arikan in 2008~\cite{Arikan2009}.
-% They have also been selected as channel codes in the future 5G standard to
-% improve the reliability of the data control channels.
-% We present the Successive Cancellation (SC) polar decoding algorithm.
-% As Min-Sum for LDPC codes, SC decoding is also a message passing algorithm.
-% Here, messages propagate on a binary tree in a depth-first scheduling.
-% Figure~\ref{fig:polar_sc_decoder} shows a polar code tree representation.
-% Descending messages are LLRs, ascending messages are bits. Each node applies an
-% update rule on the messages. When going down to the left, rule~$f$ is applied;
-% when going down to the right, rule~$g$ is applied,
-% when going up, rule~$h$ function is applied:
-% {
-%   \begin{eqnarray*}
-%     \left\{\begin{array}{l c l}
-%       f(\lambda_a,\lambda_b) &=& sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
-%       g(\lambda_a,\lambda_b,\hat{s}_a)&=&(1-2\hat{s}_a)\lambda_a+\lambda_b\\
-%       h(\hat{s}_a,\hat{s}_b)&=& (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b})
-%     \end{array}\right.
-%     \label{eq:vec_f_g_h}
-%   \end{eqnarray*}
-% }
-% The number of elements to compute per node is halved from one layer to the next.
-% E.g. in Layer~1, 8~independent elements can be computed in the $f,g,h$ functions
-% while in the Layer~2, there are only 4~independent elements to compute by node.
-% Listing~\ref{lst:vec_polar_f_g_h_simd} presents an 8-bit fixed-point SIMD
-% implementation of rules $f,g,h$. They compute multiple elements in the same
-% frame to exploit the \textit{intra-frame} parallelism.
-% This strategy has a lower throughput than inter-frame strategy but it also a
-% lower latency.
-% It is constrained by the decoding algorithm, which has a limited intrinsic
-% parallelism.
-% Indeed, at some point in the lowest layers of the tree, there is not enough
-% parallelism anymore, and sequential $f,g,h$ functions have to be used instead.
-% As for the LDPC decoder, the data type of the SC decoder can be switched from
-% \verb|int8_t| to \verb|int16_t|, \verb|int32_t|, \verb|float| or \verb|double|.
-
-% \begin{table}[htp]
-%   % \tabcolsep=6pt
-%   \centering
-%   \caption{SC decoder speedups with \MIPP.}
-%   \label{tab:vec_polar_speedup}
-%   % {\small
-%   \begin{tabular}{r|r|r|r}
-%                       & \textbf{NEON} & \textbf{SSE} & \textbf{AVX} \\ \hline
-%   \textbf{SIMD size}  & 16            & 16           & 32           \\ \hline
-%   \textbf{T/P} (Mb/s) & 148.7         & 528.3        & 483.0        \\ \hline
-%   \textbf{Speedup}    & $\times 3.1$  & $\times 4.4$ & $\times 3.8$ \\
-%   \end{tabular}
-%   % }
-% \end{table}
-
-% In typical SC applications, some tree cuts can be applied statically out of the
-% decoder selected parameters. Such tree cut instances significantly reduce the
-% number of traversed nodes in the low levels of the tree, where parallelism is
-% low. Such a tree cut version (Fast-SSC \cite{Giard2014}) has been used for the
-% experiments presented here. Table~\ref{tab:vec_polar_speedup} shows the obtained
-% speedups. This time, even if the potential parallelism is high (16 for
-% NEON and SSE, 32 for AVX), the measured speedups does not exceed 4.4, due to
-% the remaining low parallelism nodes. Also the sequential implementation of the
-% code has been almost fully auto-vectorized. The SSE code performs better than
-% the AVX one, because of the nature of the algorithm. Actually, using larger
-% SIMD registers is good for nodes with enough parallelism, but this reduces the
-% total number of nodes which can be effectively vectorized. In these
-% sub-optimal cases, the SIMD loads and stores cannot be aligned anymore and
-% sometime a sequential code replaces the SIMD implementation. As a consequence,
-% for the selected codewords, it is more advantageous to use SSE than AVX.
-
-\subsection{Polar Application Programming Interface}
-\label{sec:polar_api}
-
-% SCL -------------------------------------------------------------------------
-
-\begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/f_g_h_simd.cpp}
-  \caption{C++ SIMD implementation of the $f$, $g$ and $h$ functions.}
-  \label{lst:polar_f_g_h_simd}
-\end{listing}
-
-The main challenge in implementing an architecture dependent API is to provide
-enough flexibility to enable varied type, data layout and optimization
-strategies such as intra-frame SIMDization (intra-SIMD) and inter-frame
-SIMDization (inter-SIMD), without breaking the high level skeleton abstraction.
-To meet this requirement, our building block library heavily relies on generic
-programming and compile time specialization by the means of \Cxx templates, in a
-manner inspired by \emph{expression template} techniques~\cite{Stroustrup2013}.
-Template specializations provide node functions.
-
-Reducing the decoding time with SIMD instructions is a classical technique in
-former software polar decoder implementations. The proposed polar decoders are
-based on specific building blocks included from the Polar
-API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast and optimized
-implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
-functions. Listing~\ref{lst:polar_f_g_h_simd} details the SIMD implementation of
-these functions. This implementation is based on MIPP, consequently, the
-description is clear, portable, multi-format (32-bit floating-point, 16-bit and
-8-bit fixed-points) and as fast as an architecture specific code. The
-\verb|mipp::Reg<B>| and \verb|mipp::Reg<R>| types correspond to SIMD registers.
-\verb|B| and \verb|R| define the type of the elements that are contained in this
-register. \verb|B| for \textit{bit} could be \verb|int|, \verb|short| or
-\verb|char|. \verb|R| for \textit{real} could be \verb|float|, \verb|short| or
-\verb|char|. In Listing~\ref{lst:polar_f_g_h_simd}, each operation is made on
-multiple elements at the same  time. For instance, line 19, the addition between
-all the elements of the \verb|neg_la| and \verb|lb| registers is executed in one
-CPU cycle. We also tried an auto-vectorized approach but even if all the
-routines were well vectorized (from the compiler report), the performance was,
-at least, 3 times slower than the MIPP handwritten versions.
-
-% A single SIMD set is needed because \emph{SIMD routines are common to both
-% intra-SIMD and inter-SIMD}. In the later case, the generated decoder packs as
-% many frames together from the frame stream as the vector size in a transparent
-% manner. In both cases, offsets are fully precomputed at compile time.
-% \textbf{Intra-SIMD} exploits SIMD units without increasing the decoder latency,
-% since it still processes frames one at a time and thus preserves fine grain
-% frame pipelining. However, at leaf nodes and nearby, too few elements remain to
-% fill SIMD units. For instance, 4-way SIMD registers are fully filled only at
-% level 2 and above. Thus, Intra-SIMD will only be effective on trees that can be
-% heavily pruned from these numerous scalar nodes. Even if the tree is heavily
-% pruned some nodes can't be fully vectorized in the lower layers. In this
-% context, the building blocks of the Polar API automatically switch from SIMD to
-% sequential implementations.
-
-\subsection{Successive Cancellation Decoder}
-
-\subsubsection{Unrolled/Generated Implementation}
-
-\paragraph{Specialized Decoder Skeletons and Polar API.}
-
-The tree structure at the heart of SC decoders is fully determined by the
-parameters of a given code instance: the code size, the code rate ($R = K / N$),
-position of the frozen bits. All these parameters are  statically known at
-compile time. Thus, the recursive tree traversal code structure and the
-corresponding tree data structure are challenging to vectorize and to optimize
-for a compiler. Our Polar ECC Decoder Generation Environment (P-EDGE) builds on
-this property to provide a general framework for polar decoder design,
-generation and optimization. Beyond the \emph{code parameters}, Polar decoders
-can be tweaked and optimized in many different orthogonal or loosely coupled
-ways: \emph{Elementary} type (floating point, fixed point),
-\emph{Element containers} (array size), \emph{Data layout} (bit packing
-techniques), \emph{Instruction Set} (x86, ARM\R), \emph{SIMD} support (scalar,
-intra-frame or inter-frame processing vectorization), \emph{SIMD instruction set
-variant} (SSE, AVX, AVX-512, NEON), as well as the set and relative priorities
-of the \emph{rewriting rules for tree pruning}. Our framework enables to quickly
-experiment the different combinations of all optimizations. The decoder code
-thus results from two distinct parts:
-\begin{itemize}
-  \item An architecture independent \emph{specialized decoder skeleton}
-    generated by our decoder generator, from a given frozen bits location input.
-    Starting from the naive, recursive expression of the computational tree, we
-    apply successively cuts and specializations on the tree. They are described
-    through a set of rewriting rules, that can be customized according to the
-    specificities of the decoder and to the constraints in term of code size for
-    instance.
-  \item A library of architecture dependent \emph{elementary computation
-    building blocks}, corresponding to the implementation variants of the $f$,
-    $g$ and $h$ functions (fixed or floating point versions, scalar or vector
-    versions, ...). These blocks do not depend on the frozen bits location and
-    can therefore be used by any specialized skeleton.
-\end{itemize}
-
-This separation of concerns between high-level specialized algorithmic skeletons
-and low-level arithmetic routines, enables both ECC experts to focus on
-optimizing algorithm skeletons and architecture experts to focus on writing
-highly optimized routines, without interferences.
-
-\paragraph{Decoder Generation.}
-
-The decoder generator first builds the binary tree structure as shown in
-Fig.~\ref{fig:polar_sc_decoder} from the frozen bit location input. Each
-internal node has a tag indicating the type of processing required at that node
-(recursive children processing, $f$/$g$/$h$ functions to be applied or not).
-This tag is initially set to \emph{standard}.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics{polar/patterns/patterns}
+  \includegraphics[scale=1.0]{polar/patterns/patterns}
   \caption{Polar sub-tree rewriting rules for processing specialization.}
   \label{fig:polar_patterns}
 \end{figure}
@@ -995,17 +889,16 @@ set of rewriting rules can thus easily be enriched with new rules to generate
 even more specialized versions.
 
 Patterns on the first two rows result in cutting away both children. For
-instance, the first rule, named \emph{Rate~0, leaf children}, cuts the two
-frozen bit leaf children of the parent node, and tag it as \emph{Rate~0} (white
-node). Processing is completely skipped on this node since the values of the
-bits are unconditionally known. The \emph{Repetition} rules match subtrees where
-only the rightmost leaf is black (tag \emph{Rate~1}), the others being frozen
-bits. In this case, the whole subtree is cut and replaced by a more simple
-processing. Moreover a single, specialized $rep$ function is applied on the node
-instead of the three functions $f$, $g$ and $h$. The third line describes
-partial cuts and specialization. For instance, the rule ``Repetition, left
-only'' specializes the $g$ and $h$ functions to use, but does not prune the
-recursive children processing.
+instance, the first rule, cuts the two frozen bit leaf children of the parent
+node, and tag it as \verb|R0| (blue node). Processing is completely skipped on
+this node since the values of the bits are unconditionally known. The \verb|REP|
+rules match subtrees where only the rightmost leaf is black, the others being
+frozen bits. In this case, the whole subtree is cut and replaced by a more
+simple processing. Moreover a single, specialized $rep$ function is applied
+on the node instead of the three functions $f$, $g$ and $h$. The three first
+rules of the third line describes partial cuts and specialization. For instance,
+the third rule of the third column specializes the $g$ functions in $g_r$, but
+does not prune the recursive children processing.
 
 Rewriting rules are ordered by priority (left to right, then top row to bottom
 row in Fig.~\ref{fig:polar_patterns}), thus if more than one rule match an
@@ -1016,6 +909,241 @@ first. Rules selectors can match on node tags and/or node levels (leaf, specific
 level, above or below some level). A given rule is applied at most once on a
 given node.
 
+\subsubsection{Effect of the Tree Pruning on the Decoding Performances}
+
+% SC --------------------------------------------------------------------------
+\begin{figure}[htp]
+  \centering
+  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:polar_sc_tree_cut_intra}}
+  \quad
+  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:polar_sc_tree_cut_inter}}
+  \caption
+    [Throughput of the SSC decoder depending on the different optimizations.]
+    {Throughput of the SSC decoder depending on the different optimizations for
+    $N = 2048$, for intra-frame vectorization on the left and inter-frame
+    vectorization on the right, resp. (on the Intel\R Xeon\TM E31225 CPU).}
+  \label{plot:polar_sc_tree_cut}
+\end{figure}
+
+The tree pruning step has a dramatical effect in general. For instance, on the
+SSC decoder, the reference code for a rate of 1/2 has 2047 nodes, whereas only
+291 nodes remain in the pruned version. However, the individual effect of each
+rewriting rule is not trivial. The plots in Fig.~\ref{plot:polar_sc_tree_cut}
+show the respective impact of several rewriting rules (\verb|R0|, \verb|R1|,
+\verb|REP| and \verb|SPC|), with $N = 2048$ and multiple code rates, for
+intra-frame and inter-frame vectorization respectively. The purpose of the plots
+is to show that no single rewriting rule dominates for every code rate, and that
+the respective impact of each rule may vary a lot from rate to rate, making the
+case for the flexible, extensible proposed architecture. Indeed, the rewriting
+rule set can also be enriched with rules for specific ranges of code rate. For
+instance, the rule \emph{Single Parity Check} (\verb|SPC|) has been applied with
+different level limits for 9/10 code rate, where it has a significant impact and
+may benefit from fine tuning.
+
+% SCL -------------------------------------------------------------------------
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_tree_cut/scl_tree_cut}
+  \caption
+    [Impact of the specialized nodes on the SSCL coded throughput.]
+    {Impact of the specialized nodes on the SSCL coded throughput.
+    32-bit intra-frame vectorization, $N=2048$ and $L=32$
+    (on the Intel\R Core\TM i5-6600K CPU).}
+  \label{plot:polar_scl_tree_cut}
+\end{figure}
+
+Figure~\ref{plot:polar_scl_tree_cut} shows the impact of the different tree
+pruning optimizations on the SSCL decoder throughput depending on the code
+rate (intra-frame vectorization only). The performance improvements are
+cumulative. Coded throughput, in which the redundant bits are taken in account,
+is shown instead of information throughput, for which only information bits are
+considered in order to illustrate the computational effort without the influence
+of the fact that higher rate codes involve higher information throughput.
+
+The coded throughput of the original unpruned algorithm (\verb|ref|), decreases
+as the code rate increases. Indeed, frozen bit leaf nodes are faster to process
+than information bit leaf nodes, in which a threshold detection is necessary. As
+there are more \verb|R0| and \verb|REP| nodes in low code rates, the tree
+pruning is more efficient in the case of low code rates. The same explanation
+can be given for \verb|R1| nodes in high code rates. \verb|R1| node pruning is
+more efficient than \verb|R0| node pruning on average. Indeed, a higher amount
+of computations is saved in \verb|R1| nodes than in \verb|R0| nodes.
+
+It has also been observed in~\cite{Sarkis2016} that when the \verb|SPC| node
+size is not limited to $4$, the decoding performance may be degraded.
+Consequently the size is limited to $4$ in $\texttt{SPC}_\texttt{4}$. For
+$\texttt{SPC}_\texttt{4+}$ nodes, there is no size limit. The two node types are
+considered in Figure~\ref{plot:polar_scl_tree_cut}. Therefore, the depth at
+which dedicated nodes are activated in the proposed decoder can be adjusted, in
+order to offer a tradeoff between throughput and decoding performance.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.70\textwidth]{polar/scl_spc/scl_spc_diff}
+  \caption
+    [Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @$10^{-5}$
+     FER]
+    {Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @ $10^{-5}$
+     FER. 32-bit intra-frame SIMD strategy (on the Intel\R Core\TM i5-6600K
+     CPU).}
+  \label{plot:polar_scl_spc}
+\end{figure}
+
+According to our experiments, the aforementioned statement about performance
+degradation caused by $\texttt{SPC}_\texttt{4+}$ nodes is not always accurate
+depending on the code and decoder parameters. The impact of switching
+\textit{on} or \textit{off} $\texttt{SPC}_\texttt{4+}$ nodes on decoding
+performance and throughput at a FER of $10^{-5}$ is detailed in
+Figure~\ref{plot:polar_scl_spc}. It shows that $\texttt{SPC}_\texttt{4+}$ nodes
+have only a small effect on the decoding performance. With $L=8$, an SNR
+degradation lower than 0.1 dB is observed, except for one particular
+configuration. Throughput improvements of $8$ to $23$ percents are observed. If
+$L=32$, the SNR losses are more substantial (up to $0.5$ dB), whereas throughput
+improvements are approximately the same. Besides this observation,
+Figure~\ref{plot:polar_scl_spc} shows how the proposed decoder flexibility
+enables to optimize easily the decoder tree pruning, both for software
+implementations or for hardware implementations in which tree pruning can also
+be applied~\cite{Lin2014}.
+
+\subsection{Polar Application Programming Interface}
+\label{sec:opt_polar_api}
+
+% SCL -------------------------------------------------------------------------
+
+The main challenge in implementing an architecture dependent Application
+Programming Interface (API) is to provide enough flexibility to enable varied
+type, data layout and optimization strategies such as intra-frame SIMDization
+(intra-SIMD) and inter-frame SIMDization (inter-SIMD), without breaking the high
+level skeleton abstraction. To meet this requirement, our API heavily relies on
+generic programming and compile time specialization by the means of \Cxx
+templates, in a manner inspired by \emph{expression template}
+techniques~\cite{Stroustrup2013}. Template specializations provide node
+functions.
+
+Reducing the decoding time with SIMD instructions is a classical technique in
+former software polar decoder implementations. The proposed polar decoders are
+based on specific building blocks included from the Polar
+API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast and optimized
+implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
+functions. Listing~\ref{lst:opt_polar_api} details the SIMD implementation of
+these functions. These implementations are based on \MIPP, consequently, the
+description is clear, portable, multi-format (32-bit floating-point, 16-bit and
+8-bit fixed-points) and as fast as an architecture specific code. The
+\verb|mipp::Reg<B>| and \verb|mipp::Reg<R>| types correspond to SIMD registers.
+\verb|B| and \verb|R| define the type of the elements that are contained in this
+register. \verb|B| for \textit{bit} could be \verb|int|, \verb|short| or
+\verb|char|. \verb|R| for \textit{real} could be \verb|float|, \verb|short| or
+\verb|char|. In Listing~\ref{lst:opt_polar_api}, each operation is made on
+multiple elements at the same  time. For instance, line 17, the addition between
+all the elements of the \verb|neg_la| and \verb|lb| registers is executed in one
+CPU cycle. We also tried an auto-vectorized approach but even if all the
+routines were well vectorized (from the compiler report), the performance was,
+at least, 3 times slower than the MIPP handwritten versions. The template
+\verb|N_ELMTS| parameter is not used in the proposed \verb|API_polar_SIMD|
+implementation. The need of this parameter will be explained in the next
+section.
+
+\begin{listing}%[htp]
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/f_g_h_simd.cpp}
+  \caption{Example of a \Cxx SIMD polar API ($f$, $g$ and $h$ functions are
+    implemented).}
+  \label{lst:opt_polar_api}
+\end{listing}
+
+A single SIMD polar API is needed to both intra-frame and inter-frame
+strategies. In both cases, only the input and output pointers changes. The
+intra-frame strategy exploits SIMD units without increasing the decoder latency,
+since it still processes frames one at a time and thus preserves fine grain
+frame pipelining. However, at leaf nodes and nearby, too few elements remain to
+fill SIMD units. For instance, 4-way SIMD registers are fully filled only at
+level 2 and above. Thus, intra-frame strategy will only be effective on trees
+that can be heavily pruned from these numerous scalar nodes. Even if the tree is
+heavily pruned some nodes can't be fully vectorized in the lower layers. In this
+context, the building blocks of the polar API automatically switch from SIMD to
+sequential implementations.
+
+\subsection{Successive Cancellation Decoders}
+
+\subsubsection{Dynamic implementation}
+
+The concept of generic and flexible decoder is defined in
+Section~\ref{sec:polar_genericity}. In this section, if a decoder is generic and
+flexible, it is called \emph{dynamic} (as opposed as \emph{generated} or
+\emph{unrolled} decoders). The proposed dynamic SSC decoder directly uses the
+polar API introduced in Section~\ref{sec:opt_polar_api}. The same source code is
+able to accommodate with different frozen bit layouts and different parameters
+($N$, $K$, SNR). It is the first non-generated version (to the best of our
+knowledge) to support both multi-precision (32-bit, 16-bit and 8-bit) and
+multi-SIMD strategies (intra-frame or inter-frame).
+
+The main challenge of the dynamic SSC decoder is to maintain a good performance
+level at the bottom of the tree. Near the leaves, the decoder spends a
+non-negligible part of the time in recursive function calls and short loop
+executions. In Listing~\ref{lst:opt_polar_api} the loops lines 6,15,23 cannot
+be unrolled by the compiler because \verb|n_elmts| is a runtime parameter. Thus,
+a useless overhead is due to the loop condition evaluation. To overcome this
+problem, we wrote a SSC sub-decoder with the template meta-programming
+technique. The idea is to fully unroll the recursive calls and to statically
+give the number of elements in the loops lines 6,15,23. To this purpose, a
+specific \verb|API_polar_SIMD_static| has been developed. The source code is
+mainly the same as the \verb|API_polar_SIMD| implementation, the only difference
+is that the \verb|n_elmts| parameter has been replaced by the static
+\verb|N_ELMTS| parameter in the loops. Then, the compiler is able to unroll
+the loops. The size of the unrolled sub-tree can be adjusted from a static
+parameter in the source code. We found that a sub-tree with a depth of 6 gives
+a good level of performance. Increasing the size of the sub-tree more than 6 did
+not give any performance gains in our tests. As a consequence, the proposed
+flexible decoder cannot decode polar codes smaller than $N = 2^6 = 64$. This is
+acceptable knowing that the error-rate performance of the SSC decoder is known
+to be good for large frame sizes.
+
+To go even further a reach highest throughputs and lowest latencies possible,
+the next section proposes to fully unroll/generate the SSC decoder.
+
+\subsubsection{Unrolled/Generated Implementation}
+
+\paragraph{Specialized Decoder Skeletons and Polar API}
+
+The tree structure at the heart of SC decoders is fully determined by the
+parameters of a given code instance: the code size, the code rate ($R = K / N$),
+position of the frozen bits. All these parameters are  statically known at
+compile time. Thus, the recursive tree traversal code structure and the
+corresponding tree data structure are challenging to vectorize and to optimize
+for a compiler. Our Polar ECC Decoder Generation Environment (P-EDGE) builds on
+this property to provide a general framework for polar decoder design,
+generation and optimization. Beyond the \emph{code parameters}, Polar decoders
+can be tweaked and optimized in many different orthogonal or loosely coupled
+ways: \emph{Elementary} type (floating-point, fixed-point),
+\emph{Element containers} (array size), \emph{Data layout} (bit packing
+techniques), \emph{Instruction Set} (x86, ARM\R), \emph{SIMD} support (scalar,
+intra-frame or inter-frame processing vectorization), \emph{SIMD instruction set
+variant} (SSE, AVX, AVX-512, NEON), as well as the set and relative priorities
+of the \emph{rewriting rules for tree pruning}. Our framework enables to quickly
+experiment the different combinations of all optimizations. The decoder code
+thus results from two distinct parts:
+\begin{itemize}
+  \item An architecture independent \emph{specialized decoder skeleton}
+    generated by our decoder generator, from a given frozen bits location input.
+    Starting from the naive, recursive expression of the computational tree, we
+    apply successively cuts and specializations on the tree. They are described
+    through a set of rewriting rules, that can be customized according to the
+    specificities of the decoder and to the constraints in term of code size for
+    instance (c.f. Section~\ref{sec:opt_pattern_matching}).
+  \item A library of architecture dependent \emph{elementary computation
+    building blocks}, corresponding to the implementation variants of the $f$,
+    $g$ and $h$ functions (fixed- or floating-point versions, scalar or vector
+    versions, ...). These blocks do not depend on the frozen bits location and
+    can therefore be used by any specialized skeleton (c.f.
+    Section~\ref{sec:opt_polar_api}).
+\end{itemize}
+
+This separation of concerns between high-level specialized algorithmic skeletons
+and low-level arithmetic routines, enables both ECC experts to focus on
+optimizing algorithm skeletons and architecture experts to focus on writing
+highly optimized routines, without interferences.
+
+\paragraph{Decoder Generation}
+
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/polar/generated_sc_decoder.cpp}
   \caption{The final code generated corresponding to the pruned tree in
@@ -1023,17 +1151,20 @@ given node.
   \label{lst:polar_patterns_example}
 \end{listing}
 
-Finally, once the tree has been fully specialized, the generator perform a
-second tree traversal pass to output the resulting decoder. An example of such a
-tree specialization process together with the generator output is shown in
+The decoder generator first builds the binary tree structure from the pattern
+matching algorithm presented in Section~\ref{sec:opt_pattern_matching}. Then,
+once the tree has been fully specialized, the P-EDGE generator perform a second
+tree traversal pass to output the resulting decoder. An example of such a tree
+specialization process together with the generator output is shown in
 Fig.~\ref{fig:tree_pruning_example} and in
-Listing~\ref{lst:polar_patterns_example}. One may notice that in the
-Listing~\ref{lst:polar_patterns_example} the polar API presented in
-Listing~\ref{lst:polar_f_g_h_simd} is not compatible. This is because the polar
-API has been previously simplified, in the real implementation the $f$, $g$ and
-$h$ function implementation can be applied to a generic number of elements. In
+Listing~\ref{lst:polar_patterns_example}. In
 Listing~\ref{lst:polar_patterns_example}, each operation (\verb|f|, \verb|rep|,
-\verb|gr|, \verb|spc| and \verb|xo|) is applied on $4$ elements.
+\verb|gr|, \verb|spc| and \verb|h|) is applied on $4$ elements. This number
+of elements is given as a static template parameter as well as a standard
+function parameter. Depending on the selected polar API, one or the other will
+be used. Of course with fully unrolled decoders, it is much more efficient to
+use an API implementation that uses the template parameter to fully unroll the
+loops at compile time.
 
 \paragraph{Source Code Compression}
 
@@ -1067,91 +1198,59 @@ reducing decoder binary sizes using two compression techniques: 1) in the
 generated code, we moved the buffer offsets from template arguments to function
 arguments, which enabled the compiler to factorize more function calls than
 before (improvement by a factor of 10), 2) we implemented a sub-tree folding
-algorithm in the generator (see Fig.~\ref{fig:eval_polar_sc_gen_compression}),
-to detect multiple occurrences of a same sub-tree and to put the corresponding
-code into a dedicated function (improvement by a factor of 5 for $N=2^{16}$, the
-compression ratio increases with the size of the tree).
+algorithm in the P-EDGE generator (see
+Fig.~\ref{fig:eval_polar_sc_gen_compression}), to detect multiple occurrences of
+a same sub-tree and to put the corresponding code into a dedicated function
+(improvement by a factor of 5 for $N=2^{16}$, the compression ratio increases
+with the size of the tree).
 
-\subsubsection{Dynamic Implementation}
+\subsubsection{LLRs and Partial Sums Memory Management}
 
-\begin{itemize}
-  \item \xmark~expliquer l'unrolling partiel à base de templates.
-  \item \xmark~"dynamic" = "generic" présenté dans les algos
-\end{itemize}
-
-We extend the \AFFECT software with a new version of the Fast-SSC decoder,
-called \emph{dynamic} decoder. This version uses the same building blocks (the
-polar API) as the generated versions, but the same code is able to accommodate
-with different frozen bit layouts and different parameters (length, SNR).
-\Cxy{11} template specialization features are used to enable the compiler to
-perform loop unrolling starting from a selected level in the decoding tree. It
-is the first non-generated version (to the best of our knowledge) to support
-both multi-precision (32-bit, 16-bit and 8-bit) and multi-SIMD strategies
-(intra-frame or inter-frame).
-
-% ceci est redit dans la section evaluation -----------------------------------
-By design, generated decoders are still faster than the dynamic decoder (up to
-20\%). However each generated decoder is optimized for a single SNR. For very
-large frame sizes, the dynamic decoder outperforms generated decoders because
-the heavily unrolled generated decoders exceed Level 1 instruction cache sizeF
-capacity.
-% ceci est redit dans la section evaluation -----------------------------------
-
-\subsubsection{LLRs and Partial Sum Memory Management}
-
-The decoder stores its state using two data buffers, one for the LLR values
-($\lambda$) and the other for the bits (partial sums $s$). The ``logical'' tree
-layout is implemented as a simple and efficient \emph{heap} vector data layout.
-Traversing the tree therefore corresponds to moving through the array, at
-different offsets and considering different index intervals. The LLR offset is
-computed from the graph depth~$d$ (or the node vertical indexing) as follows:
-%\begin{equation}
-%  off_{\lambda}(d) = \begin{cases}
-%    0                                         &\text{$d = 0$},\\
-%    \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}} &\text{otherwise.}
-%\end{cases}
-%\end{equation}
+The memory management is similar in the flexible SSC decoder and in the unrolled
+versions. Each time, the decoder stores its state using two data buffers, one
+for the LLR values ($\bm{\lambda}$) and the other for the bits (partial sums
+$\bm{\hat{s}}$). The ``logical'' tree layout is implemented as a simple and
+efficient \emph{heap} vector data layout. Traversing the tree therefore
+corresponds to moving through the array, at different offsets and considering
+different index intervals. The LLR offset is computed from the graph depth~$d$
+(or the node vertical indexing) as follows:
+% \begin{equation}
+%   off_{l}(d = 0) = 0,~off_{l}(d > 0) =
+%   \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
+% \end{equation}
 \begin{equation}
-  off_{\lambda}(d = 0) = 0,~off_{\lambda}(d > 0) =
-  \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
+ o_{\lambda}(d) = \begin{cases}
+   0                                         &\text{$d = 0$},\\
+   \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}} &\text{otherwise.}
+\end{cases}
 \end{equation}
-Given~$l$ the lane (or the node horizontal indexing), the bit offset is
+Given~$l_a$ the lane (or the node horizontal indexing), the bit offset is
 determined as follows:
 \begin{equation}
-  off_{s}(d,l) = \frac{N}{2^d} \times l.
+  o_{\hat{s}}(d,l_a) = \frac{N}{2^d} \times l_a.
 \end{equation}
 The LLR buffer size is $2N$ and the bit buffer is $N$, for a frame of $N$ bits.
 Thus, the memory footprint per frame is:
 \begin{equation}
   mem_{fp} = N \times (2 \times \sizeof(LLR) + \sizeof(bit)).
 \end{equation}
-LLRs element size is 4 bytes (float) or 1 byte (fixed point numbers). The
+LLRs element size is 4 bytes (float) or 1 byte (fixed-point numbers). The
 inter-SIMD version also employs a \emph{bit packing} memory footprint reduction
 technique~\cite{LeGal2015a} to pack several bits together by using shifts and
 masking instructions.
 
 \subsection{Successive Cancellation List Decoders}
 
-\subsubsection{Software implementation optimizations}
-\label{sec:polar_implem}
-
-The genericity and flexibility of the formerly described decoder prevent from
-using some optimizations. Unrolling the description as in~\cite{Sarkis2016} is
-not possible at runtime, although code generation could be used to produce an
-unrolled version of any decoder as in \cite{Cassagne2015c}. Moreover, in the
-case of large code lengths, the unrolling strategy can generate very large
-compiled binary files. This can cause instruction cache misses that would
-dramatically impact the decoder throughput. On the contrary, the size of the
-executable files of the proposed decoder are constant with respect to the code
-parameters ($N$, $K$, $L$). The number of cycles lost due to cache misses is,
-according to our experiments, less than 0.01\% of the total number of cycles.
-Still, some implementation improvements are necessary in order to be competitive
-with specific unrolled decoders of the literature. The software library for
-polar codes from \cite{Cassagne2015c,Cassagne2016b} enables to benefit from
-the SIMD instructions for various target architectures. Optimizations of CRC
-checking benefit to both the non-adaptive and adaptive versions of the CA-SCL
-algorithms. The new sorting technique presented in
-Section~\ref{sec:polar_sorting} can be applied to each variation of the SCL
+In this section, the proposed implementation of the SSCL class of decoders
+focuses on intra-frame SIMD dynamic decoders. A description of a fully unrolled
+SSCL decoder has been previously evaluated in~\cite{Sarkis2016} and we want to
+oppose it to more generic and flexible decoders. Some implementation
+improvements are necessary in order to be competitive with specific unrolled
+decoders of the literature. The polar API (c.f.~\ref{sec:opt_polar_api}) enables
+to benefit from the SIMD instructions for various target architectures.
+Optimizations of CRC checking benefit to both the non-adaptive and adaptive
+versions of the CA-SSCL algorithms. The new sorting technique presented in
+Section~\ref{sec:polar_sorting} can be applied to each variation of the SSCL
 algorithm. Finally, an efficient implementation of the partial sums memory
 management is proposed. It is particularly effective for short polar codes.
 
@@ -1186,13 +1285,15 @@ best to the worst. Once a candidate with a valid CRC is found, it is chosen as
 the decision. This method is strictly equivalent to do the cyclic redundancy
 check of each candidate and then to select the one with the best metric. With
 the adopted order, decoding time is saved by reducing the average number of
-checked candidates.
+checked candidates. This strategy has been adopted in the
+``$\selectBestPath()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl}, l.18).
 
 \subsubsection{LLR and Metric Sorting}
 \label{sec:polar_sorting}
 
-Metric sorting is involved in the aforementioned path selection step, but also
-in the \textit{update\_paths()} sub-routine (Alg.~\ref{alg:polar_scl}, l.16) and
+% Metric sorting is involved in the aforementioned path selection step, but also
+Metric sorting is involved in the path selection step, but also
+in the ``$\updatePaths()$'' sub-routine (Alg.~\ref{alg:alg_polar_scl}, l.16) and
 consequently in each leaf. Sorting the LLRs is also necessary in \verb|R1| and
 \verb|SPC| nodes. Because of a lack of information about the sorting technique
 presented in~\cite{Sarkis2016}, its reproduction is not possible. In the
@@ -1207,7 +1308,7 @@ in~\cite{Knuth1973}. The lower stages of this algorithm can be parallelized
 thanks to SIMD instructions in the way described in~\cite{Furtak2007}. According
 to our experimentations, Schreier's algorithm is the most efficient compared to
 parallelized Batcher's merge exchange, partial quick-sort or heap-sort
-implemented in the C++ standard library in the case of \verb|R1| nodes. At the
+implemented in the \Cxx standard library in the case of \verb|R1| nodes. At the
 end, we chose not to apply the SIMD implementation of the Schreier's algorithm
 because: 1) the speedup was negligible, 2) in 8-bit fixed-point, only
 $N \leq 256$ codewords can be considered.
@@ -1220,7 +1321,7 @@ LLR sorting in \verb|R1| and \verb|SPC| nodes and for path metrics sorting. The
 sorting of path metrics is applied to choose the paths to be removed, kept or
 duplicated.
 
-\subsubsection{Partial Sum Memory Management}
+\subsubsection{Partial Sums Memory Management}
 
 An SCL decoder can be seen as $L$ replications of an SC decoder. The first
 possible memory layout is the one given in Figure~\ref{fig:polar_sc_decoder}. In
@@ -1232,7 +1333,7 @@ implementations~\cite{Sarkis2014b,Sarkis2016,Shen2016}.
 
 A possible improvement is to change the memory layout to reduce its footprint.
 Due to the order of operations in both SC and SCL algorithms, the partial sums
-on a given layer are only used once by the $\bm{h}$ function and can then be
+on a given layer are only used once by the $h$ function and can then be
 overwritten. Thus, a dedicated memory allocation is not necessary at each layer
 of the tree. The memory can be shared between the stages. Therefore the memory
 footprint can be reduced from $2N-1$ to $N$ in the SC decoder as shown
@@ -1242,7 +1343,7 @@ SCL decoder.
 In the case of the SCL algorithm, $L$ paths have to be assigned to $L$ partial
 sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
 advantage of pointers is that when a path is duplicated, in the
-\textit{update\_paths()} sub-routine of Alg.~\ref{alg:polar_scl}, the partial
+``$\updatePaths()$'' sub-routine of Alg.~\ref{alg:alg_polar_scl}, the partial
 sums are not copied. Actually, they can be shared between paths thanks to the
 use of pointers. This method limits the number of memory transactions.
 Unfortunately, it is not possible to take advantage of the memory space
@@ -1258,7 +1359,8 @@ called SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
   \caption
     [Throughput of the SSCL decoder depending on the partial sums management.]
     {Information throughput of the SSCL decoder depending on the codeword
-    size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$.}
+    size ($N$) and the partial sums management. $R = 1 / 2$, $L = 8$ (on the
+    Intel\R Core\TM i5-6600K CPU).}
   \label{plot:polar_scl_cpy_vs_ptr}
 \end{figure}
 
@@ -1307,33 +1409,34 @@ beneficial in any use case.
   %}
 \end{table}
 
-The exact memory footprint of the decoders is hard to obtain as there are many
-small buffers related to the implementation. However, the memory footprint is
-mainly driven by the LLRs ($\lambda$) and the partial sums ($\hat{s}$) as they
-linearly depend on $LN$. The buffers related to the path metrics can be
-neglected as they linearly depend on $L$. The memory footprint of the CRC is
-also negligible, the only requirement is a lookup table of 256 integers.
-Table~\ref{tab:polar_scl_memory_footprint} summarizes the memory footprint
-estimation of the various decoders while $Q$ stands for the size of the element
-(1, 2 or 4 bytes). The channel LLRs are taken into account in the approximation.
-As explained in the previous section, the SSCL$_{\texttt{ptr}}$ version of the
-code requires twice the amount of data for the partial sums. Notice that the
-memory footprint of the adaptive decoders is a little bit higher than the other
-SCL since it includes an additional SC decoder.
+The exact memory footprint of the SSCl decoders is hard to obtain as there are
+many small buffers related to the implementation. However, the memory footprint
+is mainly driven by the LLRs ($\bm{\lambda}$) and the partial sums
+($\bm{\hat{s}}$) as they linearly depend on $LN$. The buffers related to the
+path metrics can be neglected as they linearly depend on $L$. The memory
+footprint of the CRC is also negligible, the only requirement is a lookup table
+of 256 integers. Table~\ref{tab:polar_scl_memory_footprint} summarizes the
+memory footprint estimation of the various decoders while $Q$ stands for the
+size of the element (1, 2 or 4 bytes). The channel LLRs are taken into account
+in the approximation. As explained in the previous section, the
+SSCL$_{\texttt{ptr}}$ version of the code requires twice the amount of data for
+the partial sums. Notice that the memory footprint of the adaptive decoders is a
+little bit higher than the other SSCL since it includes an additional SSC
+decoder.
 
 \section{Turbo Decoders}
 
-\begin{itemize}
-  \item \cmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
-    elle doit aller dans la Section~\ref{sec:opt_vec_strat_inter} à terme
-  \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
-  \item \xmark~introduire la version version vectorisée inter/intra-frame,
-    expliquer pourquoi c'est intéressant
-\end{itemize}
+% \begin{itemize}
+%   \item \cmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
+%     elle doit aller dans la Section~\ref{sec:opt_vec_strat_inter} à terme
+%   \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
+%   \item \xmark~introduire la version version vectorisée inter/intra-frame,
+%     expliquer pourquoi c'est intéressant
+% \end{itemize}
 
-\subsection{Intra-frame versus inter-frame parallelism}
+% \subsection{Intra-frame versus Inter-frame Parallelism}
 
-A Turbo decoder is in charge of decoding a large set of frames. Two strategies{}
+A Turbo decoder is in charge of decoding a large set of frames. Two strategies
 are then possible to speedup the decoding process. i)
 \textit{Intra-frame parallelism} : the decoder exploits the parallelism within
 the turbo-decoding process by executing concurrent tasks during
@@ -1375,53 +1478,52 @@ In this work, we focus on the inter-frame parallelization and show that the use
 of this approach allows some register-reuse optimizations that are not possible
 in the intra-frame strategy.
 
-\subsubsection{Inter-frame parallelism on multi-core CPUs}
+\subsection{Inter-frame Parallelism on Multi-core CPUs}
 
 The contribution of this work is to propose an efficient mapping of multiple
-frames on the CPU SIMD units (inter-frame strategy): the decoding of $M$ frames
+frames on the CPU SIMD units (inter-frame strategy): the decoding of $F$ frames
 is vectorized. Before the decoding process can be launched, this new approach
-requires to: (a) buffer a set of $M$ frames and (b) reorder the input LLRs in
+requires to: (a) buffer a set of $F$ frames and (b) reorder the input LLRs in
 order to make the SIMDization efficient with memory aligned transactions (see
-Fig.~\ref{fig:vec_reordering_process_inter_simd}). Similarly, a
-reversed-reordering step has to be performed at the end of the decoding process.
-These reordering operations are expensive but they make the complete decoding
-process very regular and efficient for SIMD parallelization. Moreover,
-reordering is applied only once, independently of the number of decoding
-iterations.
+Section~\ref{sec:opt_vec_strat_inter}). Similarly, a reversed-reordering step
+has to be performed at the end of the decoding process. These reordering
+operations are expensive but they make the complete decoding process very
+regular and efficient for SIMD parallelization. Moreover, reordering is applied
+only once, independently of the number of decoding iterations.
 
 \begin{algorithm}
   \caption{Loop fusion BCJR implementation}
   \label{alg:turbo_bcjr_loop_fusion}
 
   % \small
-  \For(// Vectorized loop){$all~frames$}
+  \For(\Comment*[f]{Vectorized loop}){all frames}
   {
     $\boldsymbol{\alpha}^0\gets \initAlpha()$
 
-    \For(// Sequential loop){$k=1;~k<K;~k=k+1$}
+    \For(\Comment*[f]{Sequential loop}){$k=1;~k<K;~k=k+1$}
     {
-      $\boldsymbol{\gamma}^{k-1}\gets \computeGamma(L_{sys}^{k-1}, L_{p}^{k-1}, L_{e}^{k-1})$
+      $\boldsymbol{\gamma}^{k-1}\gets \computeGamma(L_{s}^{k-1}, L_{p}^{k-1}, L_{a}^{k-1})$
 
       $\boldsymbol{\alpha}^k\gets \computeAlpha(\boldsymbol{\alpha}^{k-1}, \boldsymbol{\gamma}^{k-1})$
     }
 
-    $\boldsymbol{\gamma}^{K-1}\gets \computeGamma(L_{sys}^{K-1}, L_{p}^{K-1}, L_{e}^{K-1})$
+    $\boldsymbol{\gamma}^{K-1}\gets \computeGamma(L_{s}^{K-1}, L_{p}^{K-1}, L_{a}^{K-1})$
 
     $\boldsymbol{\beta}^{K-1}\gets \initBeta()$
 
-    $L_e^{K-1}\gets \computeExtrinsic(\boldsymbol{\alpha}^{K-1}, \boldsymbol{\beta}^{K-1}, \boldsymbol{\gamma}^{K-1})$
+    $L_e^{K-1}\gets \computeExtrinsic(\boldsymbol{\alpha}^{K-1}, \boldsymbol{\beta}^{K-1}, \boldsymbol{\gamma}^{K-1}, L_{s}^{K-1}, L_{a}^{K-1})$
 
-    \For(// Sequential loop){$k=K-2;~k \geq 0;~k=k-1$}
+    \For(\Comment*[f]{Sequential loop}){$k=K-2;~k \geq 0;~k=k-1$}
     {
       $\boldsymbol{\beta}^k\gets \computeBeta(\boldsymbol{\beta}^{k+1}, \boldsymbol{\gamma}^{k})$
 
-      $L_e^{k}\gets \computeExtrinsic(\boldsymbol{\alpha}^{k}, \boldsymbol{\beta}^k, \boldsymbol{\gamma}^{k})$
+      $L_e^{k}\gets \computeExtrinsic(\boldsymbol{\alpha}^{k}, \boldsymbol{\beta}^k, \boldsymbol{\gamma}^{k}, L_{s}^{k}, L_{a}^{k})$
     }
   }
 \end{algorithm}
 
 In the proposed implementation, the inter-frame parallelism is used to fill the
-SIMD units of the CPU cores. Algorithm~\ref{alg:turbo_bcjr} illustrates the
+SIMD units of the CPU cores. Algorithm~\ref{alg:alg_turbo_bcjr} illustrates the
 traditional implementation of the BCJR (used for the \emph{intra-frame}
 vectorization). The inter-frame strategy makes the outer loop on the frame
 parallel (through vectors). This means all computations inside this loop operate
@@ -1433,30 +1535,30 @@ optimization. This makes possible the scalar promotion of $\beta_j$ (no longer
 an array), since it can be directly reused from the CPU registers. In this
 version, the SIMD are always stressed.
 
-On a multicore processor, each core decodes $M$ frames using its own SIMD unit
-and $T$ threads are activated, a total of $M\times T$ frames are therefore
+On a multicore processor, each core decodes $F$ frames using its own SIMD unit
+and $T$ threads are activated, a total of $F\times T$ frames are therefore
 decoded simultaneously with the inter-frame strategy. Theoretically, this SPMD
 parallelization strategy provide an acceleration up to a factor $T$, with $T$
 cores. Large memory footprint, exceeding L3 cache capacity may reduce the
 effective speedup, as shown in Section~\ref{sec:eval_turbo}.
 
-\subsection{Implementation of the decoder}
+\subsection{Implementation of the Decoder}
 \label{sec:turbo_implem}
 
-The presented decoder implementation is available in the \AFFECT software. The
-use of \Cxx templates associated to our generic SIMD library enables the
-same source code to be compiled using different formats (32-bit \verb|float|,
-16-bit \verb|short|, and 8-bit \verb|char|) and different SIMD instructions
-(SSE, AVX and NEON), providing possible trade-offs between SIMDization,
-throughput and error-correction performance.
+%The presented decoder implementation is available in the \AFFECT software.
+The use of \Cxx templates associated to our generic SIMD library (\MIPP) enables
+the same source code to be compiled using different formats (32-bit
+\verb|float|, 16-bit \verb|short|, and 8-bit \verb|char|) and different SIMD
+instructions (SSE, AVX and NEON), providing possible trade-offs between
+SIMDization, throughput and error-correction performance.
 
-\subsubsection{Fixed-point representation}
+\subsubsection{Fixed-point Representation}
 
 Nowadays on x86 CPUs, there are large SIMD registers: SSE/NEON are 128 bits
 wide and AVX are 256 bits wide. The number of elements that can be vectorized
 depends on the SIMD length and on the data format:
-$n_{elem} = \sizeof(SIMD) / \sizeof(data)$. So, the key for a large parallelism
-is to work on short data.
+$p_\text{SIMD} = \sizeof(\text{SIMD}) / \sizeof(\text{data})$. So, the key for a
+large parallelism is to work on short data.
 
 As there is no floating-point support for 16-bit and 8-bit data, a fixed-point
 representation is used. The AWGN channel soft information is quantized as
@@ -1464,42 +1566,47 @@ representation is used. The AWGN channel soft information is quantized as
 follows: $y_{s,v}^k = \Psi(2^v . y^k \pm 0.5)$, with $y^k$ the current
 floating-point value from the channel, $s$ the number of bit of the quantized
 number, including $v$ bits for the fractional part and the saturation function
-$\Psi(x) = min(max(x, -2^{s-1} +1), 2^{s-1} -1)$. In the experiments
-(cf. Fig.~\ref{plot:turbo_bfer}) $Q_{s,v}$ denotes this channel quantization.
+$\Psi(x) = \min(\max(x, -2^{s-1} +1), 2^{s-1} -1)$. This is also explained ins
+Section~\ref{sec:opt_simu_quantizer}. In
+Fig.~\ref{plot:alg_turbo_quantification}), $Q_{s,v}$ denotes this channel
+quantization.
 
 During the turbo-decoding process, the extrinsic values grow at each iteration.
 It is then necessary for internal LLRs to have a larger dynamic than the channel
 information. Depending on data format, 16-bit or 8-bit, the quantization used in
 the decoder is $Q_{16,3}$ or $Q_{8,2}$, respectively.
 
-\subsubsection{Memory allocations}
+\subsubsection{Memory Allocations}
 
-The systematic information $L_{sys_N}$/$L_{sys_I}$ and the parity information
-$L_{p_N}$/$L_{p_I}$  are stored in the natural domain $N$ as well as in the
-interleaved domain $I$. Two extrinsic vectors are also stored: $L_{e_N}$ in $N$
-and $L_{e_I}$ in $I$. Inside the BCJR decoding and per trellis section, two
-$\gamma_{i}$ and eight $\alpha_{j}$ metrics are stored. Thanks to the loop
-fusion optimization, the eight $\beta_j$ metrics are not stored in the global
-memory. In the proposed implementation $i \in \{0,1\}$ and
+The systematic information $\bm{L_s}$/$\bm{L'_s}$ and the parity information
+$\bm{L_p}$/$\bm{L'_p}$ are stored in the natural domain $\mathcal{N}$ as well as
+in the interleaved domain $\mathcal{I}$. Moreover, two extrinsic vectors are
+stored: $\bm{L_{e:1 \rightarrow 2}}$ in $\mathcal{N}$ and
+$\bm{L_{e:2 \rightarrow 1}}$ in $\mathcal{I}$ as well as two a priori vectors:
+$\bm{L_{a:1 \rightarrow 2}}$ in $\mathcal{I}$ and
+$\bm{L_{a:2 \rightarrow 1}}$ in $\mathcal{N}$. Inside the BCJR decoding and per
+trellis section, two $\gamma_{i}$ and eight $\alpha_{j}$ metrics are stored.
+Thanks to the loop fusion optimization, the eight $\beta_j$ metrics are not
+stored in the global memory. In the proposed implementation $i \in \{0,1\}$ and
 $j \in \{0,1,2,3,4,5,6,7\}$. Notice that all those previously-mentioned vectors
-are $K$-bit wide and are duplicated $M\times T$ times because of the inter-frame
+are $K$-bit wide and are duplicated $F\times T$ times because of the inter-frame
 strategy. The memory footprint in bytes is approximatively equal to:
-$16 \times K \times sizeof(data) \times M \times T$.
-The interleaving and deinterleaving lookup tables have been neglected in this
-model.
+$18 \times K \times \sizeof(\text{data}) \times F \times T$ (where
+$F = p_\text{SIMD}$). The interleaving and deinterleaving lookup tables have
+been neglected in this model.
 %We did not consider the 2 lookup tables (interleaving and deinterleaving) in
 %this model as they are not duplicated $M\times T$ times.
 
-\subsubsection{Forward trellis traversal}
+\subsubsection{Forward Trellis Traversal}
 
 The objective is to reduce the number of loads/stores, performing the arithmetic
 computations (\verb|add| and \verb|max|) inside registers. The max-log-MAP
-algorithm only stresses the integer pipeline of the CPU. This kind of operations
-takes only one cycle to execute when the latency is also very small (1 cycle
-too). In contrast, a load/store can take a larger number of cycles depending on
-where the current value is loaded/stored in the memory hierarchy. Using data
-directly from the registers is cost-free but loading/storing it from the
-L1/L2/L3 cache can take up to 30 cycles (at worst).
+(ML-MAP) algorithm only stresses the integer pipeline of the CPU. This kind of
+operations takes only one cycle to execute when the latency is also very small
+(1 cycle too). In contrast, a load/store can take a larger number of cycles
+depending on where the current value is loaded/stored in the memory hierarchy.
+Using data directly from the registers is cost-free but loading/storing it from
+the L1/L2/L3 cache can take up to 30 cycles (at worst).
 
 Per trellis section $k$, the two $\gamma_i^k$ metrics are computed from the
 systematic and the parity information. These two $\gamma_i^k$ are directly
@@ -1508,15 +1615,15 @@ bits available, the trellis traversal requires to normalize the $\alpha_j^k$
 because of the accumulations along the multiple sections.  In 8-bit format, the
 $\alpha_j^k$ metrics are normalized for each section: the first $\alpha_0^k$
 value is subtracted to all the $\alpha_j^k$ (including $\alpha_0^k$ itself). In
-the 16-bit decoder, the normalization is only applied every eight steps (like
-in~\cite{Wu2013}), since there are enough bits to accumulate eight values. We
-have observed in experiments that there is no performance degradation due to the
-normalization process. At the end of a trellis section $k$ the two $\gamma_i^k$
-and the eight normalized $\alpha_j^k$ are stored in  memory. In the next trellis
-section ($k+1$) the eight previous $\alpha_j^k$ are not loaded from memory but
-they are directly reused from registers to compute the $\alpha_j^{k+1}$ values.
+the 16-bit decoder, the normalization is only applied every eight steps, since
+there are enough bits to accumulate eight values. We have observed in
+experiments that there is no performance degradation due to the normalization
+process. At the end of a trellis section $k$ the two $\gamma_i^k$ and the eight
+normalized $\alpha_j^k$ are stored in  memory. In the next trellis section
+($k+1$) the eight previous $\alpha_j^k$ are not loaded from memory but they are
+directly reused from registers to compute the $\alpha_j^{k+1}$ values.
 
-\subsubsection{Backward trellis traversal}
+\subsubsection{Backward Trellis Traversal}
 
 Per trellis section $k$, the two $\gamma_i^k$ metrics are loaded from the
 memory. These two metrics are then used to compute, on the fly, the eight
@@ -1529,68 +1636,48 @@ metrics are directly reused from registers in order to compute the next
 $\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are then never stored in the
 memory.
 
-\section{LDPC Decoders}
-
-\begin{itemize}
-  \item \xmark~section très incomplète
-  \item \xmark~on pourrait parler de la technique utilisée pour avoir des
-    décodeurs BP génériques (avec des illustrations de code, ça repose sur du
-    C++17), décodeurs séquentiels ou vectorisation inter-frame
-  \item \xmark~décodeurs génériques avec "separation of concerns":
-    1) "scheduling" (BP-flooding/HL/VL), 2) "update nodes" (SPA, log-SPA, MS,
-    ...)
-\end{itemize}
+\subsubsection{Loop Unrolling}
 
 \begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/ldpc/bp_min_sum_simd.cpp}
-  \caption{LDPC decoder implementation with \MIPP.}
-  \label{lst:vec_ldpc_bp_min_sum_simd}
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/turbo/alpha_generic.cpp}
+  \caption{Generic implementation of the $\bm{\alpha^k}$ computations.}
+  \label{lst:opt_turbo_alpha_generic}
 \end{listing}
 
-\begin{table}[htp]
-  % \tabcolsep=6pt
-  \centering
-  \caption{LDPC decoder speedups with \MIPP.}
-  \label{tab:vec_ldpc_speedup}
-  % {\small
-  \begin{tabular}{r| r r r}
-                      & \textbf{NEON} & \textbf{SSE} & \textbf{AVX}  \\ \hline \hline
-  \textbf{SIMD size}  & 8             & 8            & 16            \\ %\hline
-  \textbf{T/P} (Mb/s) & 8.3           & 30.3         & 53.2          \\ %\hline
-  \textbf{Speedup}    & $\times 9.7$  & $\times 8.8$ & $\times 15.2$ \\
-  \end{tabular}
-  % }
-\end{table}
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{main/chapter3/src/turbo/alpha_unrolled.cpp}
+  \caption{Unrolled implementation of the $\bm{\alpha^k}$ computations.}
+  \label{lst:opt_turbo_alpha_unrolled}
+\end{listing}
 
-Listing~\ref{lst:vec_ldpc_bp_min_sum_simd} shows a 16-bit fixed-point LDPC
-decoder. This decoder works on several frames at once. Each element of the SIMD
-registers corresponds to an element of a specific frame. This approach is called
-the \textit{inter-frame} vectorization. This strategy maximizes decoder
-throughput at the expense of latency. Notice that the data type can be switched
-from \verb|int16_t| to \verb|int8_t|, \verb|int32_t|, \verb|float| or
-\verb|double|. This \MIPP feature is important for digital communication:
-adapting the data type without changing the source code enables to address
-varying constraints with a single source code. Table~\ref{tab:vec_ldpc_speedup}
-presents speedups obtained with \MIPP. Ten iterations are performed and a stop
-criterion was implemented for the tests based on parity check constraints (not
-shown in Listing~\ref{lst:vec_ldpc_bp_min_sum_simd}). The $H$ matrix comes from
-the IEEE 802.3an standard (10Gbps Ethernet). Speedups are close to the SIMD
-width. In NEON and SSE they even exceed it. Such result can be explained by an
-optimized memory management compared to the sequential version of the code.
+The computations of the eight $\alpha^k_j$ states can be implemented with
+a generic \verb|trellis| structure as shown in
+Listing~\ref{lst:opt_turbo_alpha_generic}. The main problem is that the loop
+line 1 can't be unrolled by the compiler and there is extra memory accesses (or
+indirections) due to the \verb|trellis| vector. Knowing precisely the structure
+of the trellis in the LTE standard (c.f. Fig.~\ref{fig:alg_turbo_encoder_lte}),
+it is possible to fully unroll the loop. The unrolled code is shown in
+Listing~\ref{lst:opt_turbo_alpha_unrolled}. This version is adopted in
+the evaluation section as it leads to significant throughput improvements.
+The same optimization is also applied to the computation of the $\beta^k_j$
+states. One can note that the source code examples are simplified: \verb|gamma|
+represents the good $\gamma^k_i$.
 
-\section{SCMA Demodulators}
+\section{SCMA Decoders}
 \label{sec:opt_scma}
 
 Besides methodical improvements of the MPA such as log-MPA, hardware oriented
-improvements are important to take full benefit of C-RAN servers capabilities.
-Since MPA and log-MPA are control heavy algorithms, mishandling of data can
-induce huge performance losses. This section explores how MPA can be
+improvements are important to take full benefit of Cloud-RAN servers
+capabilities. Since MPA and log-MPA are control heavy algorithms, mishandling of
+data can induce huge performance losses. This section explores how MPA can be
 reformulated: 1) to improve data locality in cache and to reduce cache misses
 and branch mispredictions 2) to reorder the data paths in order to help
 exploiting data-level parallelism at each step of the MPA and log-MPA algorithms
 and 3) to exploit approximated modeling of additive white Gaussian noise in
 order to eliminate exponential calculations and to drastically reduce the number
-of instructions for SSE, NEON, AVX and KNCI ISAs.
+of instructions for SSE, NEON, AVX and KNCI ISAs. KNCI is an ISA closes to the
+AVX-512 SIMD engine. KNCI ISA has been developed especially for the Intel\R Xeon
+Phi\TM KNights Corner (KNC) architecture.
 
 \subsection{Flattening Matrices to Reduce Cache Misses and Branch Misses}
 \label{sec:opt_scma_flattening}
@@ -1606,7 +1693,7 @@ block of data. Flattening a $d$-dimensional array to a vector using
 spatial locality of data. This is done with the help of an index defined as:
 \begin{equation}
   \label{eq:scma_17}
-  index = \sum\limits_{i=1}^d\Bigg( \prod\limits_{j=i+1}^d N_j \Bigg)n_i.
+  \text{index} = \sum\limits_{i=1}^d\Bigg( \prod\limits_{j=i+1}^d N_j \Bigg)n_i.
 \end{equation}
 Where $N_j$ is the size of the $j^{th}$ dimension of the array and $n_i$ is the
 location of a target element in that dimension. Improving data locality with
@@ -1625,39 +1712,40 @@ NEON), AVX or KNCI ISAs.
 \label{sec:opt_scma_adapting_algorithms}
 
 SSE, NEON, AVX and KNCI ISAs handle SIMD operations. KNCI and AVX use 512-bit
-and 256-bit registers, while SSE and NEON use 128-bit registers. For instance,
-an AVX operation can process eight 32-bit floating-point numbers simultaneously.
-The AVX instructions also provide high-performance loads and stores to the cache
-memory due to data vectorization. Flattening matrices to vectors is a
-prerequisite to enable AVX contiguous accesses to the memory. Vectorized
-instructions such as AVX are accessible in C++ through intrinsic functions. An
-intrinsic is a function that directly maps to an assembly instructions (for some
-rare exceptions it can be more than one instruction). Nowadays, AVX units use
-sixteen 256-bit YMM registers and a 32-bit MXCSR control register to handle
-vectors of eight 32-bit or four 64-bit floating-point numbers. The AVX ISA
-allows to perform SSE instructions using the lower 128-bit lane of the YMM
-registers. For MPA, the SIMD instructions are used to 1) compute the complex
-norm $||.||$ in \eqref{eq:scma_5} and \eqref{eq:scma_6}, 2) calculate the
-exponentials in \eqref{eq:scma_7}, 3) perform users to resources messaging and
-final guesses at each user.
+and 256-bit registers respectively, while SSE and NEON use 128-bit registers.
+For instance, an AVX operation can process eight 32-bit floating-point numbers
+simultaneously. The AVX instructions also provide high-performance loads and
+stores to the cache memory due to data vectorization. Flattening matrices to
+vectors is a prerequisite to enable AVX contiguous accesses to the memory.
+Vectorized instructions such as AVX are accessible in \Cxx through intrinsic
+functions. An intrinsic is a function that directly maps to an assembly
+instructions (for some rare exceptions it can be more than one instruction).
+Nowadays, AVX units use sixteen 256-bit YMM registers and a 32-bit MXCSR control
+register to handle vectors of eight 32-bit or four 64-bit floating-point
+numbers. The AVX ISA allows to perform SSE instructions using the lower 128-bit
+lane of the YMM registers. For MPA, the SIMD instructions are used to 1) compute
+the complex norm $||.||$ in \eqref{eq:scma_5} and \eqref{eq:scma_6},
+2) calculate the exponentials in \eqref{eq:scma_7}, 3) perform users to
+resources messaging and final guesses at each user.
 
-\subsubsection{SIMD Computation of Complex Norms}
+\paragraph{SIMD Computation of Complex Norms}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Array of Structures (AoS).]{
-    \label{fig:scma_simd_norm_aos}
-    \includegraphics{scma/simd_norm/simd_norm_aos}
-  }
-  \\
-  \subfloat[][Structure of Arrays (SoA).]{
-    \label{fig:scma_simd_norm_soa}
-    \includegraphics{scma/simd_norm/simd_norm_soa}
-  }
+  \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_aos}
   \caption
-    [MPA complex norm AVX algorithm using AoS and SoA.]
-    {MPA complex norm AVX algorithms.}
-  \label{fig:scma_simd_norm}
+    [MPA AVX complex norm computations using Array of Structures (AoS).]
+    {MPA AVX complex norm computations using Array of Structures (AoS).}
+  \label{fig:scma_simd_norm_aos}
+\end{figure}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_soa}
+  \caption
+    [MPA AVX complex norm computations using Structure of Arrays (SoA).]
+    {MPA AVX complex norm computations using Structure of Arrays (SoA).}
+  \label{fig:scma_simd_norm_soa}
 \end{figure}
 
 Equations~\eqref{eq:scma_5} and \eqref{eq:scma_6} use a complex norm function
@@ -1676,53 +1764,46 @@ data layout. This implementation also uses six intrinsic functions: two loads
 (\verb|_mm256_loadu_ps|), one store (\verb|_mm256_storeu_ps|), two standard
 multiplications (\verb|_mm256_mul_ps|), one addition (\verb|_mm256_add_ps|).
 
-Our experiments demonstrated that these two methods have similar performances,
-however we used the Structure of Arrays (SoA) since it is 1) easier to port for
-the ISAs that lack from shuffle instructions and 2) trivial to extend for
-different register lengths.
+Our experiments demonstrated that the SoA method leads to higher performance
+than the AoS method. This is mainly due to the higher number of elements
+computed in parallel in the SoA method. For the same number of SIMD
+instructions, the number of read and written elements is doubled compared to the
+AoS method. The SoA method is also 1) easier to port for the ISAs that lack from
+shuffle instructions and 2) trivial to extend for different register lengths.
 
-\subsubsection{SIMD Computation of Exponential}
-
-To speedup the computational time of the exponentials used in \eqref{eq:scma_7},
-the MIPP wrapper~\cite{Cassagne2018} has been used. MIPP proposes a vectorized
-implementation of the exponential based on a series expansion. Many intrinsic
-functions are encapsulated to compute the exponential. MIPP also allows to write
-portable intrinsic codes. A single SIMD code is written for multiple ISAs such
-as SSE, NEON, AVX, AVX-512 and KNCI thanks to the meta-programming techniques.
+\paragraph{SIMD Computation of Exponential}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Vectorized Exponentials ($N_0 = 2\sigma^2$)]{
-    \label{fig:scma_simd_exp}
-    \includegraphics{scma/simd_exp_mul/simd_exp}
-  }
-  \\
-  \subfloat[][Vectorized calculation of final guess at user 4.]{
-    \label{fig:scma_simd_final_guess}
-    \includegraphics{scma/simd_exp_mul/simd_final_guess}
-  }
-  \caption
-    [MPA vectorized Exponentials and computation of final guess.]
-    {MPA vectorized Exponentials and computation of final guess.}
-  \label{fig:scma_simd_exp_final_guess}
+  \includegraphics[scale=0.9]{scma/simd_exp/simd_exp}
+  \caption {MPA vectorized exponentials ($N_0 = 2\sigma^2$).}
+  \label{fig:scma_simd_exp}
 \end{figure}
 
-The flattened complex and normalized numbers are calculated as shown in
-Fig.~\ref{fig:scma_simd_norm_aos} and Fig.~\ref{fig:scma_simd_norm_soa} to
-produce the preliminary values used to compute the probabilities.
-Fig.~\ref{fig:scma_simd_exp} illustrates the full process on a vector of
-eight floating-point numbers. First the values are loaded into the YMM
-registers, then they are multiplied by $-1/2\sigma^2$ and finally the
-exponential function is performed according to \eqref{eq:scma_7}.
+To speedup the computational time of the exponentials used in \eqref{eq:scma_7},
+the MIPP wrapper~\cite{Cassagne2018} has been used. The flattened complex and
+normalized numbers are calculated as shown in Fig.~\ref{fig:scma_simd_norm_aos}
+and Fig.~\ref{fig:scma_simd_norm_soa} to produce the preliminary values used to
+compute the probabilities. Fig.~\ref{fig:scma_simd_exp} illustrates the full
+process on a vector of eight floating-point numbers. First the values are loaded
+into the YMM registers, then they are multiplied by $-1/2\sigma^2$ and finally
+the exponential function is performed according to \eqref{eq:scma_7}.
 
-\subsubsection{Exponential Approximation: Estimated-MPA (E-MPA)}
+\paragraph{Exponential Approximation with the Estimated-MPA (E-MPA) algorithm}
 
 \eqref{eq:scma_19} can be used as a systematic replacement to the vectorized
 exponential MIPP function used in Fig.~\ref{fig:scma_simd_exp}. It reduces the
 overall number of instructions to three intrinsic functions: two multiplications
 (\verb|_mm256_mul_ps|) and one addition (\verb|_mm256_add_ps|).
 
-\subsubsection{SIMD Message Passing}
+\paragraph{SIMD Message Passing}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.9]{scma/simd_final_guess/simd_final_guess}
+  \caption {MPA vectorized computations of final guesses.}
+  \label{fig:scma_simd_final_guess}
+\end{figure}
 
 Some remaining parts of the MPA can be vectorized too. Especially, the guess
 swaps and the computation of the final guesses at each user node can be
@@ -1733,8 +1814,7 @@ which are the elements of the SSE vectors. According to
 Fig.~\ref{fig:scma_simd_final_guess} these vectors of probabilities are loaded
 into SSE, NEON or the lowest lane of the AVX registers.
 
-% \subsection{Accuracy of Floating-point Computations and Other Traditional Optimization}
-\subsubsection{Accuracy of Floating-point Computations}
+\paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}
 
 The finite precision of floating-point calculations induces losses in the

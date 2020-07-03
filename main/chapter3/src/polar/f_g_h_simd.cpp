@@ -1,27 +1,29 @@
 template <typename B, typename R>
-class API_polar_simd : public API_polar
+class API_polar_SIMD : public API_polar
 {
-public:
-	static mipp::Reg<R> f(const mipp::Reg<R> &la, const mipp::Reg<R> &lb)
-	{
-		auto abs_la  = mipp::abs(la);
-		auto abs_lb  = mipp::abs(lb);
-		auto abs_min = mipp::min(abs_la, abs_lb);
-		auto sign    = mipp::sign(la, lb);
-		auto lc      = mipp::neg(abs_min, sign);
-
-		return lc;
+	template <int N_ELMTS = 0> // <- this template parameter is not used here
+	static void f(const R *la, const R *lb, R *lc, const int n_elmts) {
+		for (auto n = 0; n < n_elmts; n += mipp::N<R>())
+		{   // lc = f(la,lb) = sign(la.lb).min(|la|, |lb|)
+			auto r = mipp::neg(mipp::min(mipp::abs(&la[n]), mipp::abs(&lb[n])),
+			                   mipp::sign(&la[n], &lb[n]));
+			r.store(&lc[n]);
+		}
 	}
-	static mipp::Reg<R> g(const mipp::Reg<R> &la, const mipp::Reg<R> &lb,
-	                      const mipp::Reg<B> &sa)
-	{
-		auto neg_la = mipp::neg(la, sa);
-		auto lc     = neg_la + lb;
-
-		return lc;
+	template <int N_ELMTS = 0> // <- this template parameter is not used here
+	static void g(const R *la, const R *lb, const B *sa, R *lc, const int n_elmts) {
+		for (auto n = 0; n < n_elmts; n += mipp::N<R>())
+		{   // lc = g(la,lb,sa) = (1-2sa)la + lb
+			auto r = mipp::neg(&la[n], &sa[n]) + &lb[n];
+			r.store(&lc[n]);
+		}
 	}
-	static mipp::Reg<B> h(const mipp::Reg<B>& sa, const mipp::Reg<B>& sb)
-	{
-		return sa ^ sb;
+	template <int N_ELMTS = 0> // <- this template parameter is not used here
+	static void h(const B *sa, const B *sb, B *sc, const int n_elmts) {
+		for (auto n = 0; n < n_elmts; n += mipp::N<R>())
+		{   // sc = h(sa,sb) = sa XOR sb
+			auto r = mipp::R<B>(&sa[n]) ^ mipp::R<B>(&sb[n]);
+			r.store(&sc[n])
+		}
 	}
 };

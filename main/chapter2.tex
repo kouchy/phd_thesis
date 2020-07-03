@@ -429,8 +429,8 @@ starting from the root node. For a code length $N=2^m$, the corresponding tree
 thus includes $m + 1$ node layers, indexed from $d=0$ (root node layer) down to
 $d=m$ (leaf nodes layers). As the tree is initially full, each layer $d$
 contains $2^d$ nodes, each node of that layer $d$ containing $2^{m-d}$ LLRs
-($\lambda$) and $2^{m-d}$ binary values denoted as \textit{partial sums}
-($\hat{s}$). At the decoder initialization, LLRs received from the channel
+($\bm{\lambda}$) and $2^{m-d}$ binary values denoted as \textit{partial sums}
+($\bm{\hat{s}}$). At the decoder initialization, LLRs received from the channel
 ($\bm{l}$) are stored in the root node. Then, the decoder performs a pre-order
 traversal of the tree. When a node is visited in the downward direction, LLRs of
 the node are updated. In the upward direction, partial sums are updated.
@@ -482,7 +482,7 @@ evolution is used~\cite{Trifonov2012}.
 \subsection{Successive Cancellation List Decoding Algorithm}
 
 \begin{algorithm}
-  \caption{SCL decoding algorithm.}\label{alg:polar_scl}
+  \caption{SCL decoding algorithm.}\label{alg:alg_polar_scl}
 
   % \small
   \SetKwProg{Fn}{Function}{}{}
@@ -492,9 +492,9 @@ evolution is used~\cite{Trifonov2012}.
   \KwData{$\lambda$ is a 2D buffer ($[L][2N]$) to store the LLRs.}
   \KwData{$\hat{s}$ is a 2D buffer ($[L][N]$) to store the bits.}
 
-  \Fn{SCL\_decode ($N, o_{\lambda}, o_{\hat{s}}$)}
+  \Fn(\Comment*[f]{$o_{\lambda}$ and $o_{\hat{s}}$ are offsets in $\bm{\lambda}$ and $\bm{\hat{s}}$, resp.}){$\SCLDecode(N, o_{\lambda}, o_{\hat{s}})$}
   {
-    $N_{\frac{1}{2}} = N / 2$
+    $N_{\frac{1}{2}} \gets N / 2$
 
     \uIf(\Comment*[f]{not a leaf node}){$N > 1$}
     {
@@ -502,51 +502,51 @@ evolution is used~\cite{Trifonov2012}.
       {
         \For(\Comment*[f]{apply the $f$ function}){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
         {
-          $\lambda[p][o_\lambda + N + i] = \bm{f}(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i])$
+          $\lambda[p][o_\lambda + N + i] \gets f(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i])$
         }
       }
 
-      \textit{SCL\_decode ($N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}}$)} \Comment*[r]{recursive call to the decoder}
+      $\SCLDecode(N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}})$ \Comment*[r]{recursive call to the decoder}
 
       \For{$p=0$ \textbf{to} $L-1$}
       {
         \For(\Comment*[f]{apply the $g$ function}){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
         {
-          $\lambda[p][o_\lambda + N + i] = \bm{g}(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i], \hat{s}[p][o_{\hat{s}} + i])$
+          $\lambda[p][o_\lambda + N + i] \gets g(\lambda[p][o_\lambda + i], \lambda[p][o_\lambda + N_{\frac{1}{2}} + i], \hat{s}[p][o_{\hat{s}} + i])$
         }
       }
 
-      \textit{SCL\_decode ($N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}} + N_{\frac{1}{2}}$)} \Comment*[r]{recursive call to the decoder}
+      $\SCLDecode(N_{\frac{1}{2}}, o_{\lambda} + N, o_{\hat{s}} + N_{\frac{1}{2}})$ \Comment*[r]{recursive call to the decoder}
 
       \For{$p=0$ \textbf{to} $L-1$}
       {
         \For(\Comment*[f]{update the partial sums ($h$ function)}){$i=0$ \textbf{to} $N_{\frac{1}{2}}-1$}
         {
-          $\hat{s}[p][o_{\hat{s}} + i] = \bm{h}(\hat{s}[p][o_{\hat{s}} + i], \hat{s}[p][o_{\hat{s}} + N_{\frac{1}{2}} + i])$
+          $\hat{s}[p][o_{\hat{s}} + i] \gets h(\hat{s}[p][o_{\hat{s}} + i], \hat{s}[p][o_{\hat{s}} + N_{\frac{1}{2}} + i])$
         }
       }
     }
     \Else(\Comment*[f]{a leaf node})
     {
-      \textit{update\_paths ()} \Comment*[r]{update, create and delete paths}
+      $\updatePaths()$ \Comment*[r]{update, create and delete paths}
     }
   }
 
-  \textit{SCL\_decode ($N, 0, 0$)} \Comment*[r]{launch the decoder}
+  $\SCLDecode(N, 0, 0)$ \Comment*[r]{launch the decoder}
 
-  \textit{select\_best\_path ()}
+  $\selectBestPath()$
 \end{algorithm}
 
 The Successive Cancellation List (SCL) algorithm is an evolution of the
 SC~\cite{Tal2011}. The SCL algorithm is summarized in
-Algorithm~\ref{alg:polar_scl}. Unlike the SC algorithm, the SCL decoder builds a
-list of candidate codewords along the decoding. At each call of the
-\textit{update\_paths()} sub-routine (l.16), $2L$ candidates are generated. A
+Algorithm~\ref{alg:alg_polar_scl}. Unlike the SC algorithm, the SCL decoder
+builds a list of candidate codewords along the decoding. At each call of the
+``$\updatePaths()$'' sub-routine (l.16), $2L$ candidates are generated. A
 path metric is then evaluated to keep only the $L$~best candidates among the
 $2L$ paths. The path metrics are calculated as
 in~\cite{Balatsoukas-Stimming2015}. At the end of the decoding process, the
 candidate codeword with the best path metric is selected in the
-\textit{select\_best\_path()} sub-routine (l.18). The decoding complexity of the
+``$\selectBestPath()$'' sub-routine (l.18). The decoding complexity of the
 SCL algorithm grows as $O(LN\log_2N)$. This linear complexity in L leads to
 significant improvements in BER/FER performances compared to the SC decoder,
 especially for small code lengths.
@@ -820,8 +820,8 @@ our knowledge, the proposed decoder is the first SCL software implementation
 that can benefit from the 8-bit and 16-bit fixed-point representations of LLRs
 and internal path metrics. In the 8-bit mode LLRs and path metrics are saturated
 between $-127$ and $+127$ after each operation. Moreover, to avoid overflows,
-the path metrics are normalized after each \textit{update\_paths()} call (cf.
-Alg.~\ref{alg:polar_scl}) by subtracting the smallest metric to each one of
+the path metrics are normalized after each ``$\updatePaths()$'' call (cf.
+Alg.~\ref{alg:alg_polar_scl}) by subtracting the smallest metric to each one of
 them. Figure~\ref{plot:polar_scl_bfer_rep} shows the BER and FER performances of
 the CA-SSCL decoder for 32-bit floating-point, 16-bit and 8-bit fixed-point
 representations. One can observe that the \verb|REP| nodes degrade the decoding
@@ -1238,15 +1238,15 @@ decoding performance of the EML-MAP algorithm on 32-bit floating-point.
 \emph{int-16} is a quantified version of the decoder, on 16-bit and with
 fixed-point arithmetic computations. Before to enter in the decoder, the
 $\bm{l}$~LLRs are converted from a floating-point representation to a
-fixed-point representation: they are saturated on $s = 6$ bits, of which $d = 3$
-bits are dedicated to the decimal part ($Q_{s,d}$). Inside the decoder, the
+fixed-point representation: they are saturated on $s = 6$ bits, of which $v = 3$
+bits are dedicated to the fractional part ($Q_{s,v}$). Inside the decoder, the
 saturation is made over 16 bits ($s = 16$). One can note that there is no
 decoding performance degradation. Finally, \emph{int-8} is the 8-bit quantified
-version of the decoder. Compared to the 16-bit version, the decimal part of the
-8-bit version is represented with 2 bits ($Q_{6,2}$) instead of 3. The internal
-saturations are on 8-bit. This version shows a 0.1 dB degradation. The limited
-dynamic of 8-bit format together with early saturation inside the decoder are
-responsible for this small performance loss.
+version of the decoder. Compared to the 16-bit version, the fractional part of
+the 8-bit version is represented with 2 bits ($Q_{6,2}$) instead of 3. The
+internal saturations are on 8-bit. This version shows a 0.1 dB degradation. The
+limited dynamic of 8-bit format together with early saturation inside the
+decoder are responsible for this small performance loss.
 
 \section{Sparse Code Multiple Access}
 

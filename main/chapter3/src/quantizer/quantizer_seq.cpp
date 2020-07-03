@@ -6,7 +6,8 @@ void quantize_seq(const std::vector<float > &Y1,
 	assert(s >= 2);
 	const float q_max = (1 << (s-2)) + (1 << (s-2)) -1;
 	const float q_min = -q_max;
-	for (size_t k = 0; k < K; k++) {
+	for (size_t k = 0; k < K; k++)
+	{
 		// q = 2^v * y +- 0.5
 		const float q = std::round(factor * Y1[k]);
 		// saturation

@@ -1,0 +1,228 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ e1_f1/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-1!20}, pattern=grid,             pattern color=black!40!Paired-1!70} }
+    \tikzset{ e2_f1/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-1!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-1!70} }
+    \tikzset{ e3_f1/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-1!20}, pattern=north west lines, pattern color=black!40!Paired-1!70} }
+    \tikzset{ e4_f1/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-1!20}, pattern=horizontal lines, pattern color=black!40!Paired-1!70} }
+    \tikzset{ ex_f1/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-1!20, label={[black!40!Paired-1!70,yshift=-0.65cm]above:\tiny{...}}           } }
+
+    \tikzset{ e1_f2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-3!20}, pattern=grid,             pattern color=black!40!Paired-3!70} }
+    \tikzset{ e2_f2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-3!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-3!70} }
+    \tikzset{ e3_f2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-3!20}, pattern=north west lines, pattern color=black!40!Paired-3!70} }
+    \tikzset{ e4_f2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-3!20}, pattern=horizontal lines, pattern color=black!40!Paired-3!70} }
+    \tikzset{ ex_f2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-3!20, label={[black!40!Paired-3!70,yshift=-0.65cm]above:\tiny{...}}           } }
+
+    \tikzset{ e1_f3/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-5!20}, pattern=grid,             pattern color=black!40!Paired-5!70} }
+    \tikzset{ e2_f3/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-5!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-5!70} }
+    \tikzset{ e3_f3/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-5!20}, pattern=north west lines, pattern color=black!40!Paired-5!70} }
+    \tikzset{ e4_f3/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-5!20}, pattern=horizontal lines, pattern color=black!40!Paired-5!70} }
+    \tikzset{ ex_f3/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20, label={[black!40!Paired-5!70,yshift=-0.65cm]above:\tiny{...}}           } }
+
+    \tikzset{ e1_f4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-7!20}, pattern=grid,             pattern color=black!40!Paired-7!70} }
+    \tikzset{ e2_f4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-7!20}, pattern=crosshatch dots,  pattern color=black!40!Paired-7!70} }
+    \tikzset{ e3_f4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-7!20}, pattern=north west lines, pattern color=black!40!Paired-7!70} }
+    \tikzset{ e4_f4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-7!20}, pattern=horizontal lines, pattern color=black!40!Paired-7!70} }
+    \tikzset{ ex_f4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20, label={[black!40!Paired-7!70,yshift=-0.65cm]above:\tiny{...}}           } }
+
+    \tikzset{ ex_fx/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white, label={[black!40,yshift=-0.65cm]above:\tiny{...}}           } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{intr}=[rounded corners=3pt, fill=white, draw=black]
+
+    \newcommand\vs{2.0}
+
+    \node[ex_f1] (mi_er0)  at ( 0.0, 0.00) {};
+    \node[e1_f1] (mi_er1)  at ( 0.7, 0.00) {};
+    \node[e2_f1] (mi_er2)  at ( 1.4, 0.00) {};
+    \node[e3_f1] (mi_er3)  at ( 2.1, 0.00) {};
+    \node[e4_f1] (mi_er4)  at ( 2.8, 0.00) {};
+    \node[ex_f1] (mi_er5)  at ( 3.5, 0.00) {};
+
+    \node[ex_f2] (mi_er6)  at ( 4.2, 0.00) {};
+    \node[e1_f2] (mi_er7)  at ( 4.9, 0.00) {};
+    \node[e2_f2] (mi_er8)  at ( 5.6, 0.00) {};
+    \node[e3_f2] (mi_er9)  at ( 6.3, 0.00) {};
+    \node[e4_f2] (mi_er10) at ( 7.0, 0.00) {};
+    \node[ex_f2] (mi_er11) at ( 7.7, 0.00) {};
+
+    \node[ex_f3] (mi_er12) at ( 8.4, 0.00) {};
+    \node[e1_f3] (mi_er13) at ( 9.1, 0.00) {};
+    \node[e2_f3] (mi_er14) at ( 9.8, 0.00) {};
+    \node[e3_f3] (mi_er15) at (10.5, 0.00) {};
+    \node[e4_f3] (mi_er16) at (11.2, 0.00) {};
+    \node[ex_f3] (mi_er17) at (11.9, 0.00) {};
+
+    \node[ex_f4] (mi_er18) at (12.6, 0.00) {};
+    \node[e1_f4] (mi_er19) at (13.3, 0.00) {};
+    \node[e2_f4] (mi_er20) at (14.0, 0.00) {};
+    \node[e3_f4] (mi_er21) at (14.7, 0.00) {};
+    \node[e4_f4] (mi_er22) at (15.4, 0.00) {};
+    \node[ex_f4] (mi_er23) at (16.1, 0.00) {};
+
+    \node[text width=4cm, text centered, text=Paired-1] (in_f1) at (01.4+0.35, 0.75) {Frame $1$};
+    \node[text width=4cm, text centered, text=Paired-3] (in_f2) at (05.6+0.35, 0.75) {Frame $2$};
+    \node[text width=4cm, text centered, text=Paired-5] (in_f3) at (09.8+0.35, 0.75) {Frame $3$};
+    \node[text width=4cm, text centered, text=Paired-7] (in_f4) at (14.0+0.35, 0.75) {Frame $4$};
+
+
+    \node[intr] (intr0) at (01.4+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \node[intr] (intr1) at (05.6+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \node[intr] (intr2) at (09.8+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \node[intr] (intr3) at (14.0+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+
+    \draw[lnk] (01.4+0.35,-0.35) -- (intr0);
+    \draw[lnk] (05.6+0.35,-0.35) -- (intr1);
+    \draw[lnk] (09.8+0.35,-0.35) -- (intr2);
+    \draw[lnk] (14.0+0.35,-0.35) -- (intr3);
+
+    \node[e1_f1] (r0_er0) at ( 0.7, -\vs) {};
+    \node[e2_f1] (r0_er1) at ( 1.4, -\vs) {};
+    \node[e3_f1] (r0_er2) at ( 2.1, -\vs) {};
+    \node[e4_f1] (r0_er3) at ( 2.8, -\vs) {};
+
+    \node[e1_f3] (r1_er0) at ( 4.9, -\vs) {};
+    \node[e2_f3] (r1_er1) at ( 5.6, -\vs) {};
+    \node[e3_f3] (r1_er2) at ( 6.3, -\vs) {};
+    \node[e4_f3] (r1_er3) at ( 7.0, -\vs) {};
+
+    \node[e1_f2] (r2_er0) at ( 9.1, -\vs) {};
+    \node[e2_f2] (r2_er1) at ( 9.8, -\vs) {};
+    \node[e3_f2] (r2_er2) at (10.5, -\vs) {};
+    \node[e4_f2] (r2_er3) at (11.2, -\vs) {};
+
+    \node[e1_f4] (r3_er0) at (13.3, -\vs) {};
+    \node[e2_f4] (r3_er1) at (14.0, -\vs) {};
+    \node[e3_f4] (r3_er2) at (14.7, -\vs) {};
+    \node[e4_f4] (r3_er3) at (15.4, -\vs) {};
+
+    \draw[lnk] (intr0.south) -- (01.4+0.35,+0.35-\vs);
+    \draw[lnk] (intr2.south) -- (05.6+0.35,+0.35-\vs);
+    \draw[lnk] (intr1.south) -- (09.8+0.35,+0.35-\vs);
+    \draw[lnk] (intr3.south) -- (14.0+0.35,+0.35-\vs);
+
+    \node[intr] (intr4) at (04.2-0.35, -\vs-\vs+1) {\footnotesize{\texttt{mipp::interleave<T>}}};
+    \node[intr] (intr5) at (12.6-0.35, -\vs-\vs+1) {\footnotesize{\texttt{mipp::interleave<T>}}};
+
+    \draw[lnk] (r0_er1.south east) |- (intr4.west);
+    \draw[lnk] (r1_er2.south west) |- (intr4.east);
+
+    \draw[lnk] (r2_er1.south east) |- (intr5.west);
+    \draw[lnk] (r3_er2.south west) |- (intr5.east);
+
+    \node[e1_f1] (r4_er0) at ( 0.7, -\vs-\vs) {};
+    \node[e1_f3] (r4_er1) at ( 1.4, -\vs-\vs) {};
+    \node[e2_f1] (r4_er2) at ( 2.1, -\vs-\vs) {};
+    \node[e2_f3] (r4_er3) at ( 2.8, -\vs-\vs) {};
+
+    \node[e3_f1] (r5_er0) at ( 9.1, -\vs-\vs) {};
+    \node[e3_f3] (r5_er1) at ( 9.8, -\vs-\vs) {};
+    \node[e4_f1] (r5_er2) at (10.5, -\vs-\vs) {};
+    \node[e4_f3] (r5_er3) at (11.2, -\vs-\vs) {};
+
+    \node[e1_f2] (r6_er0) at ( 4.9, -\vs-\vs) {};
+    \node[e1_f4] (r6_er1) at ( 5.6, -\vs-\vs) {};
+    \node[e2_f2] (r6_er2) at ( 6.3, -\vs-\vs) {};
+    \node[e2_f4] (r6_er3) at ( 7.0, -\vs-\vs) {};
+
+    \node[e3_f2] (r7_er0) at (13.3, -\vs-\vs) {};
+    \node[e3_f4] (r7_er1) at (14.0, -\vs-\vs) {};
+    \node[e4_f2] (r7_er2) at (14.7, -\vs-\vs) {};
+    \node[e4_f4] (r7_er3) at (15.4, -\vs-\vs) {};
+
+    \draw[lnk] (intr4.south) -- (r4_er1.north east);
+    \draw[lnk] (intr4.south) -- (r5_er1.north east);
+
+    \draw[lnk] (intr5.south) -- (r6_er1.north east);
+    \draw[lnk] (intr5.south) -- (r7_er1.north east);
+
+    \node[intr] (intr6) at (04.2-0.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::interleave<T>}}};
+    \node[intr] (intr7) at (12.6-0.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::interleave<T>}}};
+
+    \draw[lnk] (r4_er1.south east) |- (intr6.west);
+    \draw[lnk] (r6_er2.south west) |- (intr6.east);
+
+    \draw[lnk] (r5_er1.south east) |- (intr7.west);
+    \draw[lnk] (r7_er2.south west) |- (intr7.east);
+
+    \node[e1_f1] (r8_er0) at ( 0.7, -\vs-\vs-\vs) {};
+    \node[e1_f2] (r8_er1) at ( 1.4, -\vs-\vs-\vs) {};
+    \node[e1_f3] (r8_er2) at ( 2.1, -\vs-\vs-\vs) {};
+    \node[e1_f4] (r8_er3) at ( 2.8, -\vs-\vs-\vs) {};
+
+    \node[e2_f1] (r9_er0) at ( 4.9, -\vs-\vs-\vs) {};
+    \node[e2_f2] (r9_er1) at ( 5.6, -\vs-\vs-\vs) {};
+    \node[e2_f3] (r9_er2) at ( 6.3, -\vs-\vs-\vs) {};
+    \node[e2_f4] (r9_er3) at ( 7.0, -\vs-\vs-\vs) {};
+
+    \node[e3_f1] (r10_er0) at ( 9.1, -\vs-\vs-\vs) {};
+    \node[e3_f2] (r10_er1) at ( 9.8, -\vs-\vs-\vs) {};
+    \node[e3_f3] (r10_er2) at (10.5, -\vs-\vs-\vs) {};
+    \node[e3_f4] (r10_er3) at (11.2, -\vs-\vs-\vs) {};
+
+    \node[e4_f1] (r11_er0) at (13.3, -\vs-\vs-\vs) {};
+    \node[e4_f2] (r11_er1) at (14.0, -\vs-\vs-\vs) {};
+    \node[e4_f3] (r11_er2) at (14.7, -\vs-\vs-\vs) {};
+    \node[e4_f4] (r11_er3) at (15.4, -\vs-\vs-\vs) {};
+
+    \draw[lnk] (intr6.south) -- (r8_er1.north east);
+    \draw[lnk] (intr6.south) -- (r9_er2.north west);
+
+    \draw[lnk] (intr7.south) -- (r10_er1.north east);
+    \draw[lnk] (intr7.south) -- (r11_er2.north west);
+
+    \node[intr] (intr8)  at (01.4+0.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+    \node[intr] (intr9)  at (05.6+0.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+    \node[intr] (intr10) at (09.8+0.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+    \node[intr] (intr11) at (14.0+0.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+
+    \draw[lnk] (01.4+0.35,-\vs-\vs-\vs-0.35) -- (intr8);
+    \draw[lnk] (05.6+0.35,-\vs-\vs-\vs-0.35) -- (intr9);
+    \draw[lnk] (09.8+0.35,-\vs-\vs-\vs-0.35) -- (intr10);
+    \draw[lnk] (14.0+0.35,-\vs-\vs-\vs-0.35) -- (intr11);
+
+
+    \node[ex_fx] (mo_er0)  at ( 2.1, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e1_f1] (mo_er1)  at ( 2.8, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e1_f2] (mo_er2)  at ( 3.5, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e1_f3] (mo_er3)  at ( 4.2, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e1_f4] (mo_er4)  at ( 4.9, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e2_f1] (mo_er5)  at ( 5.6, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e2_f2] (mo_er6)  at ( 6.3, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e2_f3] (mo_er7)  at ( 7.0, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e2_f4] (mo_er8)  at ( 7.7, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e3_f1] (mo_er9)  at ( 8.4, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e3_f2] (mo_er10) at ( 9.1, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e3_f3] (mo_er11) at ( 9.8, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e3_f4] (mo_er12) at (10.5, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e4_f1] (mo_er13) at (11.2, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e4_f2] (mo_er14) at (11.9, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e4_f3] (mo_er15) at (12.6, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[e4_f4] (mo_er16) at (13.3, -\vs-\vs-\vs-\vs+0.00) {};
+    \node[ex_fx] (mo_er17) at (14.0, -\vs-\vs-\vs-\vs+0.00) {};
+
+    \draw[lnk] (intr8.south)  -- (mo_er2.north east);
+    \draw[lnk] (intr9.south)  -- (mo_er6.north east);
+    \draw[lnk] (intr10.south) -- (mo_er10.north east);
+    \draw[lnk] (intr11.south) -- (mo_er14.north east);
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mi_er0) (mi_er23) (in_f1) (mo_er0)] {};
+
+  \end{tikzpicture}
+\end{document}
