@@ -5,6 +5,20 @@
 \chapter{Optimization Strategies}
 \label{chap:opt}
 
+This chapter focuses on optimization strategies. Our contributions are split in
+two parts: 1) generic strategies and 2) specific optimizations.
+
+The two first sections describe the generic strategies we found to optimize
+the algorithms of digital communication receivers. The vectorization is a
+key of efficient implementations and a specific wrapper as well as a sub-set of
+generic parallelism levels are proposed.
+
+The following sections are dedicated to the efficient implementation of the
+algorithms for digital communication receivers presented in the
+Chapter~\ref{chap:alg}.
+
+In the last section, the proposed contributions are summarized and discussed.
+
 \vspace*{\fill}
 \minitoccustom
 \vspace*{\fill}
@@ -572,14 +586,14 @@ unroll the \verb|mipp::interleave| calls. The generic reversed reordering
 process has also be implemented with \MIPP and the principle is similar to the
 reordering process.
 
-\subsection{Inter/intra-frame SIMD Strategy}
+\subsection{Intra-/inter-frame SIMD Strategy}
 
-The \emph{inter/intra-frame} SIMD strategy is the combination of the two
+The \emph{intra-/inter-frame} SIMD strategy is the combination of the two
 previous strategies. For instance, if we have an hardware parallelism
 $p_\text{SIMD} = 16$ and if the algorithm we want to optimize has only an
 intrinsic parallelism of 8, it is possible to use the intra-frame SIMD strategy
 to absorb the parallelism of the algorithm and to use the inter-frame SIMD
-strategy on two frames. The inter/intra-frame SIMD strategy is also a good
+strategy on two frames. The intra-/inter-frame SIMD strategy is also a good
 candidate to make trade-offs between low latency and high throughput.
 
 \section{Efficient Functional Simulations}
@@ -1781,7 +1795,7 @@ complex numbers are represented as two consecutive floating-point numbers. The
 implementation with AoS uses five \MIPP functions: two \verb|mipp::load|, one
 \verb|mipp::deinterleave|, one \verb|mipp::norm| and one \verb|mipp::store|.
 The \MIPP loads and stores are equivalent to a real SIMD move instructions.
-The \verb|mipp::deinterleave| operation can contain from 2 to 6 real assembly
+The \verb|mipp::deinterleave| operation can contain from 4 to 12 real assembly
 instructions. It depends on the data type \verb|T| ans the SIMD ISA. The
 \verb|mipp::norm| operation performs 2 multiplications and one addition.
 Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the complex
@@ -1869,15 +1883,68 @@ throughput of the various message passing algorithms.
 
 \section{Discussion}
 
-\begin{itemize}
-  \item \xmark~le temps d’exécution d’une tâche peut varier entre quelques
-    microsecondes et quelques milliseconde -> faible latence -> adapté à la
-    vectorisation
-  \item \xmark~rappeller les optimisations clefs (quantification, memory layout
-    adapté, vecto, ...)
-  \item \xmark~inter-/intra vectorisation, point de vue
-  \item \xmark~faiblesses des architectures CPU actuelles, comment on pourrait
-    les améliorer pour ce type d'algos
-  \item \xmark~optimisations non implémentées qui pourraient être bénéfiques
-    (mixed-precision, bit packing à gogo)
-\end{itemize}
+In this chapter, generic strategies for efficient algorithm implementations on
+CPUs are presented first. The vectorization in a main key for performance
+efficiency on current CPUs. Thus, we propose \MIPP: a wrapper for the SIMD
+instructions. The idea is to abstract data types and SIMD ISAs in order to
+propose ``universal'' and efficient implementations of digital communication
+receiver algorithms. We show that \MIPP is almost as efficient as the specific
+intrinsic functions (or assembly code) and it is able to operate on
+the floating-point representation as well as fixed-point ones. Fixed-point
+representations are very interesting as they result in an increased SIMD
+parallelism.
+
+In a second part, two main vectorization strategies are explicitly defined and
+presented. The intra-frame SIMD strategy operates on a single frame relying
+on the algorithm intrinsic parallelism while the inter-frame SIMD strategy
+operates on multiple frames at the same time. The intra-SIMD can increase the
+throughput as well as the latency. On the contrary, the inter-SIMD does not
+improve the latency but comes with a potentially higher SIMD efficiency and can
+lead to very high throughputs.
+
+Then, two time consuming processing blocks of functional simulations are
+studied: the channel and the quantizer. Both algorithms are implemented with
+\MIPP by the mean of the intra-frame SIMD strategy. It results in high
+performance implementations that unlocks fast functional simulations.
+
+The four last sections focus on the efficient implementations of the algorithms
+presented in Chapter~\ref{chap:alg} (LDPC, polar, turbo and SCMA decoders). The
+LDPC BP decoders, the polar SC decoders and the turbo decoder are compatible
+with the inter-frame SIMD strategy while the polar SC/SCL decoders and the SCMA
+decoders are compatible with the intra-frame SIMD strategy. Depending on the
+code families, we focus on different constraints. The LDPC BP decoders have been
+implemented to support many variants and thus to maximize the flexibility at the
+cost of lower throughputs and higher latencies compared to other works. In the
+polar decoders, flexibility as well as very aggressive optimizations are
+considered and opposed. The turbo decoder focuses on achieving the highest
+possible throughputs and some specializations are made for the LTE standard.
+Finally the SCMA decoder implementation tries to propose a compromise between
+high throughputs and low latencies.
+
+The optimizations performed in the proposed implementations are compatible with
+a large set of CPUs, compilers, and data types. This portability is one of our
+main concern and we believe that the proposed implementations will be easily
+extended to future CPUs as long as there is no drastic changes in the
+hardware architectures.
+
+Some optimization strategies have not been considered in the proposed
+implementations and are good candidates to improve them. For each implementation
+the inter- or the intra-frame SIMD strategy has been selected. With the growing
+size of the SIMD registers, it becomes difficult to achieve high efficiency
+using the intra-frame SIMD strategy. However, the reduced latencies are still
+very interesting, especially for the SDR and the Cloud-RAN needs. Then, it could
+be a good idea to combine both the intra- and inter-frame SIMD strategies. The
+intra-SIMD will absorb as much as possible the algorithm intrinsic parallelism
+while the inter-SIMD will fulfill the empty elements in the SIMD registers.
+The inter-SIMD has also its limits, when too many big frames are processed in
+parallel, the amount of required memory linearly increases. This leads to reduce
+throughput efficiency as it will be show in Chapter~\ref{chap:eval}. All the
+more reason to combine intra-/inter-SIMD. Additionally, for some decoding
+algorithms, it is not possible to maintain optimal error-rate performance with
+too aggressive fixed-point representations (8-bit). It could be interesting to
+consider mixed-precision in these specific cases.
+
+In the next chapter, \AFFECT, the toolbox that regroups all the proposed
+implementations, is introduced. This is followed by the Chapter~\ref{chap:eval}
+where the proposed implementations are evaluated and compared with the
+state-of-the-art.
