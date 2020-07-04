@@ -1,0 +1,141 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ erux/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=gray!20}                          } }
+    \tikzset{ er2/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-9!40}                      } }
+    \tikzset{ er2d/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-9!40!gray!70}              } }
+    \tikzset{ er4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40}                     } }
+    \tikzset{ er4d/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40!gray!70}             } }
+    \tikzset{ eu4/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40!Paired-9!40}         } }
+    \tikzset{ eu4d/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, preaction={fill=Paired-11!40!Paired-9!40!gray!70} } }
+    \tikzset{ ept/.style ={            minimum width=0.7cm, minimum height=0.7cm]                                                               } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
+
+    \newcommand\vs{2.0}
+    \newcommand\lft{0.0}
+    \newcommand\ctr{4.9}
+    \newcommand\rth{9.8}
+
+    \node[fill=Paired-9!40             , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. $RES1 \rightarrow UE3$ ($m_x^1$)}}] (m2) at (\rth+0.7+4.10, -1.1-2.7) {};
+    \node[fill=Paired-11!40            , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. $RES3 \rightarrow UE3$ ($m_x^3$)}}] (m4) at (\rth+0.7+4.10, -1.7-2.7) {};
+    \node[fill=Paired-11!40!Paired-9!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Beliefs at $UE3$ ($B_x^3$)}}           ] (g4) at (\rth+0.7+4.10, -2.3-2.7) {};
+
+    \node[ept         ] (mi_e0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[er2 , dotted] (mi_e1)  at ( 1.4, 0.00) {};
+    \node[er2 , dotted] (mi_e2)  at ( 2.1, 0.00) {};
+    \node[er2 , dotted] (mi_e3)  at ( 2.8, 0.00) {};
+    \node[er2 , dotted] (mi_e4)  at ( 3.5, 0.00) {};
+    \node[ept         ] (mi_e5)  at ( 4.9, 0.00) {\tiny{...}};
+    \node[erux, dotted] (mi_e6)  at ( 6.3, 0.00) {};
+    \node[erux, dotted] (mi_e7)  at ( 7.0, 0.00) {};
+    \node[erux, dotted] (mi_e8)  at ( 7.7, 0.00) {};
+    \node[erux, dotted] (mi_e9)  at ( 8.4, 0.00) {};
+    \node[ept         ] (mi_e10) at ( 9.8, 0.00) {\tiny{...}};
+    \node[er4 , dotted] (mi_e11) at (11.2, 0.00) {};
+    \node[er4 , dotted] (mi_e12) at (11.9, 0.00) {};
+    \node[er4 , dotted] (mi_e13) at (12.6, 0.00) {};
+    \node[er4 , dotted] (mi_e14) at (13.3, 0.00) {};
+    \node[ept         ] (mi_e15) at (14.7, 0.00) {\tiny{...}};
+
+    \node[er2 ] (r0_e0) at (\lft+0.0, -\vs) {\tiny{$m_1^1$}};
+    \node[er2 ] (r0_e1) at (\lft+0.7, -\vs) {\tiny{$m_2^1$}};
+    \node[er2 ] (r0_e2) at (\lft+1.4, -\vs) {\tiny{$m_3^1$}};
+    \node[er2 ] (r0_e3) at (\lft+2.1, -\vs) {\tiny{$m_4^1$}};
+    \node[er2d] (r0_e4) at (\lft+2.8, -\vs) {\tiny{}};
+    \node[er2d] (r0_e5) at (\lft+3.5, -\vs) {\tiny{}};
+    \node[er2d] (r0_e6) at (\lft+4.2, -\vs) {\tiny{}};
+    \node[er2d] (r0_e7) at (\lft+4.9, -\vs) {\tiny{}};
+
+    \node[instr] (instr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \draw[lnk] (2.45,-0.35) -- (instr0.north);
+    \draw[lnk] (instr0.south) -- (2.45,-\vs+0.35);
+
+    \node[er4 ] (r1_e0) at (\rth+0.0, -\vs) {\tiny{$m_1^3$}};
+    \node[er4 ] (r1_e1) at (\rth+0.7, -\vs) {\tiny{$m_2^3$}};
+    \node[er4 ] (r1_e2) at (\rth+1.4, -\vs) {\tiny{$m_3^3$}};
+    \node[er4 ] (r1_e3) at (\rth+2.1, -\vs) {\tiny{$m_4^3$}};
+    \node[er4d] (r1_e4) at (\rth+2.8, -\vs) {\tiny{}};
+    \node[er4d] (r1_e5) at (\rth+3.5, -\vs) {\tiny{}};
+    \node[er4d] (r1_e6) at (\rth+4.2, -\vs) {\tiny{}};
+    \node[er4d] (r1_e7) at (\rth+4.9, -\vs) {\tiny{}};
+
+    \node[instr] (instr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \draw[lnk] (\rth+2.45,-0.35) -- (instr1.north);
+    \draw[lnk] (instr1.south) -- (\rth+2.45,-\vs+0.35);
+
+    \node[eu4 ] (r2_e0) at (\ctr+0.0, -\vs-\vs) {\tiny{$B_1^3$}};
+    \node[eu4 ] (r2_e1) at (\ctr+0.7, -\vs-\vs) {\tiny{$B_2^3$}};
+    \node[eu4 ] (r2_e2) at (\ctr+1.4, -\vs-\vs) {\tiny{$B_3^3$}};
+    \node[eu4 ] (r2_e3) at (\ctr+2.1, -\vs-\vs) {\tiny{$B_4^3$}};
+    \node[eu4d] (r2_e4) at (\ctr+2.8, -\vs-\vs) {\tiny{}};
+    \node[eu4d] (r2_e5) at (\ctr+3.5, -\vs-\vs) {\tiny{}};
+    \node[eu4d] (r2_e6) at (\ctr+4.2, -\vs-\vs) {\tiny{}};
+    \node[eu4d] (r2_e7) at (\ctr+4.9, -\vs-\vs) {\tiny{}};
+
+    \draw[shf] (r0_e0.south) -- (r2_e0.north);
+    \draw[shf] (r0_e1.south) -- (r2_e1.north);
+    \draw[shf] (r0_e2.south) -- (r2_e2.north);
+    \draw[shf] (r0_e3.south) -- (r2_e3.north);
+    \draw[shf] (r1_e0.south) -- (r2_e0.north);
+    \draw[shf] (r1_e1.south) -- (r2_e1.north);
+    \draw[shf] (r1_e2.south) -- (r2_e2.north);
+    \draw[shf] (r1_e3.south) -- (r2_e3.north);
+
+    \node[instr] (instr2) at (\ctr+2.45, -\vs-\vs+1) {\footnotesize{\texttt{mipp::mul<T>}}};
+
+    \draw[lnk] (r0_e4.south west) |- (instr2.west);
+    \draw[lnk] (r1_e3.south east) |- (instr2.east);
+    \draw[lnk] (instr2.south)     -- (7.35,-\vs-\vs+0.35);
+
+    \node[instr] (instr3) at (\ctr+2.45, -\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+
+    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (instr3);
+    \draw[lnk] (instr3) -- (7.35,-\vs-\vs-\vs+0.35);
+
+    \node[ept         ] (mo_er0)  at ( 0.0, -\vs-\vs-\vs-0.00) {\tiny{...}};
+    \node[erux, dotted] (mo_er1)  at ( 0.7, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er2)  at ( 1.4, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er3)  at ( 2.1, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er4)  at ( 2.8, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-0.00) {};
+    \node[eu4 , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-0.00) {};
+    \node[eu4d, dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-0.00) {};
+    \node[eu4d, dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-0.00) {};
+    \node[eu4d, dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-0.00) {};
+    \node[eu4d, dotted] (mo_er16) at (11.2, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er17) at (11.9, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er18) at (12.6, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er19) at (13.3, -\vs-\vs-\vs-0.00) {};
+    \node[erux, dotted] (mo_er20) at (14.0, -\vs-\vs-\vs-0.00) {};
+    \node[ept         ] (mo_er21) at (14.7, -\vs-\vs-\vs-0.00) {\tiny{...}};
+
+    \draw[<->,>=latex,black] (-0.35, 0.75)  -- (15.05, 0.75)  node (arrow1) [midway, text=black, fill=white] {\small{Resources to users message}};
+    \draw[<->,>=latex,black] (-0.35, -6.75) -- (15.05, -6.75) node (arrow2) [midway, text=black, fill=white] {\small{Final beliefs}};
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mi_e0) (mo_er21) (arrow1) (arrow2)] {};
+  \end{tikzpicture}
+\end{document}

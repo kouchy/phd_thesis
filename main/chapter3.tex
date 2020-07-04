@@ -1682,9 +1682,7 @@ and branch mispredictions 2) to reorder the data paths in order to help
 exploiting data-level parallelism at each step of the MPA and log-MPA algorithms
 and 3) to exploit approximated modeling of additive white Gaussian noise in
 order to eliminate exponential calculations and to drastically reduce the number
-of instructions for SSE, NEON, AVX and KNCI ISAs. KNCI is an ISA closes to the
-AVX-512 SIMD engine. KNCI ISA has been developed especially for the Intel\R Xeon
-Phi\TM KNights Corner (KNC) architecture.
+of SIMD instructions.
 
 \subsection{Flattening Matrices to Reduce Cache Misses and Branch Misses}
 \label{sec:opt_scma_flattening}
@@ -1714,115 +1712,139 @@ iterations in the \verb|for|-loops and consequently it reduces the number of
 branches. On the other hand, for a vector of sixty four 32-bit floating-point
 numbers, 64 iterations are needed in the scalar mode, while only 16, 8 or 4
 iterations are required in the vectorized modes using respectively SSE (or
-NEON), AVX or KNCI ISAs.
+NEON), AVX or AVX-512 (or KNCI) ISAs.
 
 \subsection{Adapting the Algorithms to Improve Data-Level Parallelism}
 \label{sec:opt_scma_adapting_algorithms}
 
-SSE, NEON, AVX and KNCI ISAs handle SIMD operations. KNCI and AVX use 512-bit
-and 256-bit registers respectively, while SSE and NEON use 128-bit registers.
-For instance, an AVX operation can process eight 32-bit floating-point numbers
-simultaneously. The AVX instructions also provide high-performance loads and
-stores to the cache memory due to data vectorization. Flattening matrices to
-vectors is a prerequisite to enable AVX contiguous accesses to the memory.
-Vectorized instructions such as AVX are accessible in \Cxx through intrinsic
-functions. An intrinsic is a function that directly maps to an assembly
-instructions (for some rare exceptions it can be more than one instruction).
-Nowadays, AVX units use sixteen 256-bit YMM registers and a 32-bit MXCSR control
-register to handle vectors of eight 32-bit or four 64-bit floating-point
-numbers. The AVX ISA allows to perform SSE instructions using the lower 128-bit
-lane of the YMM registers. For MPA, the SIMD instructions are used to 1) compute
-the complex norm $||.||$ in \eqref{eq:alg_scma_5} and \eqref{eq:alg_scma_6},
-2) calculate the exponentials in \eqref{eq:alg_scma_7}, 3) perform users to
-resources messaging and final guesses at each user.
+% SSE, NEON, AVX and KNCI ISAs handle SIMD operations. KNCI and AVX use 512-bit
+% and 256-bit registers respectively, while SSE and NEON use 128-bit registers.
+% For instance, an AVX operation can process eight 32-bit floating-point numbers
+% simultaneously.
+The SIMD instructions provide high-performance loads and stores to the cache
+memory due to data vectorization. Flattening matrices to vectors is a
+prerequisite to enable SIMD contiguous accesses to the memory. In the presented
+work the SIMD operations are made on 32-bit floating-point real numbers
+(\verb|T| = \verb|float|). The proposed implementations are working on
+$F = J = 6$ frames. The $F$ frames are not independent and so we consider that
+the SIMD strategy is similar to the intra-frame SIMD strategy presented in
+Section~\ref{sec:opt_vec_intra}.
+% Vectorized
+% instructions such as AVX are accessible in \Cxx through intrinsic
+% functions. An intrinsic is a function that directly maps to an assembly
+% instructions (for some rare exceptions it can be more than one instruction).
+% Nowadays, AVX units use sixteen 256-bit YMM registers and a 32-bit MXCSR control
+% register to handle vectors of eight 32-bit or four 64-bit floating-point
+% numbers. The AVX ISA allows to perform SSE instructions using the lower 128-bit
+% lane of the YMM registers.
+For the MPA, the SIMD instructions are used to 1) compute the complex norm
+$||.||$ in \eqref{eq:alg_scma_5} and \eqref{eq:alg_scma_6}, 2) calculate the
+exponentials in \eqref{eq:alg_scma_7}, 3) perform users to resources messaging
+and final beliefs at each user in \eqref{eq:alg_scma_10}.
 
 \paragraph{SIMD Computation of Complex Norms}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_aos}
+  \subfloat[][Array of Structures (AoS)]
+  {
+    \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_aos_mipp}
+    \label{fig:opt_scma_simd_norm_aos}
+  }
+  \\
+  \subfloat[][Structure of Arrays (SoA)]
+  {
+    \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_soa_mipp}
+    \label{fig:opt_scma_simd_norm_soa}
+  }
   \caption
-    [MPA AVX complex norm computations using Array of Structures (AoS).]
-    {MPA AVX complex norm computations using Array of Structures (AoS).}
-  \label{fig:opt_scma_simd_norm_aos}
+    [MPA complex norm computations.]
+    {MPA complex norm computations ($p_\text{SIMD} = 8$).}
+  \label{fig:opt_scma_simd_norm}
 \end{figure}
 
-\begin{figure}[htp]
-  \centering
-  \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_soa}
-  \caption
-    [MPA AVX complex norm computations using Structure of Arrays (SoA).]
-    {MPA AVX complex norm computations using Structure of Arrays (SoA).}
-  \label{fig:opt_scma_simd_norm_soa}
-\end{figure}
+% \begin{figure}[htp]
+%   \centering
+%   \includegraphics[scale=0.9]{scma/simd_norm/simd_norm_soa_mipp}
+%   \caption
+%     [MPA AVX complex norm computations using Structure of Arrays (SoA).]
+%     {MPA AVX complex norm computations using Structure of Arrays (SoA).}
+%   \label{fig:opt_scma_simd_norm_soa}
+% \end{figure}
 
 Equations~\eqref{eq:alg_scma_5} and \eqref{eq:alg_scma_6} use a complex norm
 function $||.||$, it can be optimized by using SIMD instructions. There are two
-ways to perform this computation: Fig.~\ref{fig:opt_scma_simd_norm_aos} depicts
-how to implement the norm function using an Array of Structures (AoS) for
-complex numbers. In this method, the complex numbers are represented as two
-consecutive floating-point numbers. The implementation with AoS uses six
-intrinsic functions: one load (\verb|_mm256_loadu_ps|), one store
-(\verb|_mm256_storeu_ps|), one multiplication (\verb|_mm256_mul_ps|), one
-permutation of the lanes (\verb|_mm256_permute2f128_ps|), one horizontal
-addition (\verb|_mm256_hadd_ps|) and one extraction of the highest lane of the
-AVX register (\verb|_mm256_extractf128_ps|).
+ways to perform this computation (depending on the initial data layout):
+Fig.~\ref{fig:opt_scma_simd_norm_aos} depicts how to implement the norm function
+using an Array of Structures (AoS) for complex numbers. In this data layer, the
+complex numbers are represented as two consecutive floating-point numbers. The
+implementation with AoS uses five \MIPP functions: two \verb|mipp::load|, one
+\verb|mipp::deinterleave|, one \verb|mipp::norm| and one \verb|mipp::store|.
+The \MIPP loads and stores are equivalent to a real SIMD move instructions.
+The \verb|mipp::deinterleave| operation can contain from 2 to 6 real assembly
+instructions. It depends on the data type \verb|T| ans the SIMD ISA. The
+\verb|mipp::norm| operation performs 2 multiplications and one addition.
 Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the complex
-norm using a Structure of Array (SoA) data layout. This implementation also uses
-six intrinsic functions: two loads (\verb|_mm256_loadu_ps|), one store
-(\verb|_mm256_storeu_ps|), two standard multiplications (\verb|_mm256_mul_ps|),
-one addition (\verb|_mm256_add_ps|).
+norm using a Structure of Array (SoA) data layout. This implementation does
+not require the \MIPP \verb|mipp::deinterleave| operation anymore. The real
+and imaginary parts of the complex numbers are initially separated in memory.
 
 Our experiments demonstrated that the SoA method leads to higher performance
-than the AoS method. This is mainly due to the higher number of elements
-computed in parallel in the SoA method. For the same number of SIMD
-instructions, the number of read and written elements is doubled compared to the
-AoS method. The SoA method is also 1) easier to port for the ISAs that lack from
-shuffle instructions and 2) trivial to extend for different register lengths.
+than the AoS method. This is due to the economy of the \verb|mipp::deinterleave|
+operation. Depending on the SIMD ISA the deinterleaving can take up to 20\%
+longer. The SoA data layout is used for evaluations.
 
 \paragraph{SIMD Computation of Exponential}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.9]{scma/simd_exp/simd_exp}
-  \caption {MPA vectorized exponentials ($N_0 = 2\sigma^2$).}
+  \includegraphics[scale=0.9]{scma/simd_exp/simd_exp_mipp}
+  \caption
+    [MPA vectorized exponentials.]
+    {MPA vectorized exponentials ($N_0 = 2\sigma^2$, $p_\text{SIMD} = 8$).}
   \label{fig:opt_scma_simd_exp}
 \end{figure}
 
 To speedup the computational time of the exponentials used in
-\eqref{eq:alg_scma_7}, the MIPP wrapper~\cite{Cassagne2018} has been used. The
+\eqref{eq:alg_scma_7}, the \verb|mipp::exp| math function has been used. The
 flattened complex and normalized numbers are calculated as shown in
-Fig.~\ref{fig:opt_scma_simd_norm_aos} and Fig.~\ref{fig:opt_scma_simd_norm_soa}
-to produce the preliminary values used to compute the probabilities.
-Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full process on a vector of
-eight floating-point numbers. First the values are loaded into the YMM
-registers, then they are multiplied by $-1/2\sigma^2$ and finally the
-exponential function is performed according to \eqref{eq:alg_scma_7}.
+Fig.~\ref{fig:opt_scma_simd_norm} to produce the preliminary values used to
+compute the probabilities. Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full
+process on a vector of eight floating-point numbers ($p_\text{SIMD} = 8$). First
+the values are loaded into the SIMD registers, then they are multiplied by
+$-1/2\sigma^2$ and finally the exponential function is performed according to
+\eqref{eq:alg_scma_7}.
 
-\paragraph{Exponential Approximation with the Estimated-MPA (E-MPA) algorithm}
+\paragraph{Exponential Approximation with the Estimated-MPA algorithm}
 
-\eqref{eq:alg_scma_19} can be used as a systematic replacement to the vectorized
-exponential MIPP function used in Fig.~\ref{fig:opt_scma_simd_exp}. It reduces
-the overall number of instructions to three intrinsic functions: two
-multiplications (\verb|_mm256_mul_ps|) and one addition (\verb|_mm256_add_ps|).
+In the proposed E-MAP algorithm approximation, \eqref{eq:alg_scma_19} replaces
+the \verb|mipp::exp| function used in Fig.~\ref{fig:opt_scma_simd_exp}. It
+reduces the overall number of instructions to two multiplications and one
+addition. Knowing that the \verb|mipp::exp| function represents about 30 SIMD
+assembly instructions, the E-MAP algorithm leads to a drastic reduction of the
+computation effort.
 
 \paragraph{SIMD Message Passing}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.9]{scma/simd_final_guess/simd_final_guess}
-  \caption {MPA vectorized computations of final guesses.}
+  \includegraphics[scale=0.9]{scma/simd_final_beliefs/simd_final_beliefs_mipp}
+  \caption
+    [MPA vectorized computations of final beliefs.]
+    {MPA vectorized computations of final beliefs ($p_\text{SIMD} = 8$).}
   \label{fig:opt_scma_simd_final_guess}
 \end{figure}
 
 Some remaining parts of the MPA can be vectorized too. Especially, the guess
-swaps and the computation of the final guesses at each user node can be
-vectorized using SSE instructions. Fig.~\ref{fig:opt_scma_simd_final_guess}
-shows the computation of final guesses for user 4. There are four messages from
-a resource to a user containing the probabilities of four different codewords,
-which are the elements of the SSE vectors. According to
-Fig.~\ref{fig:opt_scma_simd_final_guess} these vectors of probabilities are
-loaded into SSE, NEON or the lowest lane of the AVX registers.
+swaps and the computation of the final beliefs. Each user node can be
+vectorized but the available level of parallelism is limited to 4 elements.
+Fig.~\ref{fig:opt_scma_simd_final_guess} shows the computation of final beliefs
+for user 3 (this is illustrated in Fig.~\ref{fig:alg_scma_dec_alg} (III)).
+There are four messages from a resource to a user containing the probabilities
+of four different codewords. If $p_\text{SIMD} > 4$ then some elements of the
+SIMD register are not used. The memory layout has been adapted and the
+well-known padding technique has been applied. This way the read and written
+extra-elements do not produce segmentation fault errors.
 
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}

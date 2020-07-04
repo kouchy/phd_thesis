@@ -1,0 +1,143 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ er/.style ={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ ei/.style ={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ erd/.style={draw=black , minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ eid/.style={draw=black , minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ ers/.style={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-2!40 } }
+    \tikzset{ eis/.style={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ ex/.style ={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40 } }
+    \tikzset{ ey/.style ={draw=black , minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ exd/.style ={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ ept/.style={             minimum width=0.7cm, minimum height=0.7cm] } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{intr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=black]
+
+    \node[ept        ] (mi_er0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[er , dotted] (mi_er1)  at ( 0.7, 0.00) {};
+    \node[er , dotted] (mi_er2)  at ( 1.4, 0.00) {};
+    \node[er , dotted] (mi_er3)  at ( 2.1, 0.00) {};
+    \node[er , dotted] (mi_er4)  at ( 2.8, 0.00) {};
+    \node[er , dotted] (mi_er5)  at ( 3.5, 0.00) {};
+    \node[er , dotted] (mi_er6)  at ( 4.2, 0.00) {};
+    \node[er , dotted] (mi_er7)  at ( 4.9, 0.00) {};
+    \node[er , dotted] (mi_er8)  at ( 5.6, 0.00) {};
+    \node[ers, dotted] (mi_er9)  at ( 6.3, 0.00) {};
+    \node[ept        ] (mi_er10) at ( 7.0, 0.00) {\tiny{...}};
+    \node[ept        ] (mi_er11) at ( 7.7, 0.00) {\tiny{...}};
+    \node[ei , dotted] (mi_er12) at ( 8.4, 0.00) {};
+    \node[ei , dotted] (mi_er13) at ( 9.1, 0.00) {};
+    \node[ei , dotted] (mi_er14) at ( 9.8, 0.00) {};
+    \node[ei , dotted] (mi_er15) at (10.5, 0.00) {};
+    \node[ei , dotted] (mi_er16) at (11.2, 0.00) {};
+    \node[ei , dotted] (mi_er17) at (11.9, 0.00) {};
+    \node[ei , dotted] (mi_er18) at (12.6, 0.00) {};
+    \node[ei , dotted] (mi_er19) at (13.3, 0.00) {};
+    \node[eis, dotted] (mi_er20) at (14.0, 0.00) {};
+    \node[ept        ] (mi_er21) at (14.7, 0.00) {\tiny{...}};
+
+    \newcommand\vs{2.0}
+    \newcommand\lft{0.0}
+    \newcommand\rth{9.8}
+
+    \node[er] (r0_er0) at (\lft+0.0, -\vs) {\tiny{$a_r$}};
+    \node[er] (r0_er1) at (\lft+0.7, -\vs) {\tiny{$b_r$}};
+    \node[er] (r0_er2) at (\lft+1.4, -\vs) {\tiny{$c_r$}};
+    \node[er] (r0_er3) at (\lft+2.1, -\vs) {\tiny{$d_r$}};
+    \node[er] (r0_er4) at (\lft+2.8, -\vs) {\tiny{$e_r$}};
+    \node[er] (r0_er5) at (\lft+3.5, -\vs) {\tiny{$f_r$}};
+    \node[er] (r0_er6) at (\lft+4.2, -\vs) {\tiny{$g_r$}};
+    \node[er] (r0_er7) at (\lft+4.9, -\vs) {\tiny{$h_r$}};
+
+    \node[ei] (r1_ei0) at (\rth+0.0, -\vs) {\tiny{$a_i$}};
+    \node[ei] (r1_ei1) at (\rth+0.7, -\vs) {\tiny{$b_i$}};
+    \node[ei] (r1_ei2) at (\rth+1.4, -\vs) {\tiny{$c_i$}};
+    \node[ei] (r1_ei3) at (\rth+2.1, -\vs) {\tiny{$d_i$}};
+    \node[ei] (r1_ei4) at (\rth+2.8, -\vs) {\tiny{$e_i$}};
+    \node[ei] (r1_ei5) at (\rth+3.5, -\vs) {\tiny{$f_i$}};
+    \node[ei] (r1_ei6) at (\rth+4.2, -\vs) {\tiny{$g_i$}};
+    \node[ei] (r1_ei7) at (\rth+4.9, -\vs) {\tiny{$h_i$}};
+
+    \node[intr] (intr0) at (     2.45, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \node[intr] (intr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+
+    \draw[lnk] (\lft+2.1+0.35,-0.35) -- (intr0);
+    \draw[lnk] (\rth+2.1+0.35,-0.35) -- (intr1);
+
+    \draw[lnk] (intr0) -- (\lft+2.45,-\vs+0.35);
+    \draw[lnk] (intr1) -- (\rth+2.45,-\vs+0.35);
+
+    \newcommand\ctrd{2.45}
+
+    \node[exd] (r2_er0) at (\ctrd+0.0, -\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r2_er1) at (\ctrd+1.4, -\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+    \node[exd] (r2_er2) at (\ctrd+2.8, -\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r2_er3) at (\ctrd+4.2, -\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r2_er4) at (\ctrd+5.6, -\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r2_er5) at (\ctrd+7.0, -\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r2_er6) at (\ctrd+8.4, -\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r2_er7) at (\ctrd+9.8, -\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+
+    \draw[shf] (r0_er0.south) -- (r2_er0.north);
+    \draw[shf] (r0_er1.south) -- (r2_er1.north);
+    \draw[shf] (r0_er2.south) -- (r2_er2.north);
+    \draw[shf] (r0_er3.south) -- (r2_er3.north);
+    \draw[shf] (r0_er4.south) -- (r2_er4.north);
+    \draw[shf] (r0_er5.south) -- (r2_er5.north);
+    \draw[shf] (r0_er6.south) -- (r2_er6.north);
+    \draw[shf] (r0_er7.south) -- (r2_er7.north);
+    \draw[shf] (r1_ei0.south) -- (r2_er0.north);
+    \draw[shf] (r1_ei1.south) -- (r2_er1.north);
+    \draw[shf] (r1_ei2.south) -- (r2_er2.north);
+    \draw[shf] (r1_ei3.south) -- (r2_er3.north);
+    \draw[shf] (r1_ei4.south) -- (r2_er4.north);
+    \draw[shf] (r1_ei5.south) -- (r2_er5.north);
+    \draw[shf] (r1_ei6.south) -- (r2_er6.north);
+    \draw[shf] (r1_ei7.south) -- (r2_er7.north);
+
+    \node[intr] (intr2) at (7.35, -\vs-\vs+1) {\footnotesize{\texttt{mipp::norm<T>}}};
+
+    \draw[lnk] (r0_er3.south east) |- (intr2);
+    \draw[lnk] (r1_ei4.south west) |- (intr2);
+
+    \draw[lnk] (intr2.south) -- (7.35,-\vs-\vs+0.35);
+
+    \node[ept        ] (mo_er5)  at ( 3.5, -\vs-\vs-\vs) {\tiny{...}};
+    \node[ex , dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er15) at (10.5, -\vs-\vs-\vs) {};
+    \node[ept        ] (mo_er16) at (11.2, -\vs-\vs-\vs) {\tiny{...}};
+
+    \node[intr] (intr3) at (7.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+
+    \draw[lnk] (7.35, -\vs-\vs-0.35) -- (intr3);
+    \draw[lnk] (intr3)               -- (7.35, -\vs-\vs-\vs+0.35);
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mo_er16) (mi_er0) (r0_er0) (r1_ei7)] {};
+  \end{tikzpicture}
+\end{document}

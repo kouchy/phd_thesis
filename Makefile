@@ -343,11 +343,15 @@ chapter3_fig: main/chapter3/src/ldpc/bp_scheduling_hl.cpp \
               main/chapter3/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt \
               main/chapter3/fig/scma/simd_norm/simd_norm_aos.tex \
               main/chapter3/fig/scma/simd_norm/simd_norm_soa.tex \
+              main/chapter3/fig/scma/simd_norm/simd_norm_aos_mipp.tex \
+              main/chapter3/fig/scma/simd_norm/simd_norm_soa_mipp.tex \
               main/chapter3/fig/scma/simd_norm/colors \
               main/chapter3/fig/scma/simd_exp/simd_exp.tex \
+              main/chapter3/fig/scma/simd_exp/simd_exp_mipp.tex \
               main/chapter3/fig/scma/simd_exp/colors \
-              main/chapter3/fig/scma/simd_final_guess/simd_final_guess.tex \
-              main/chapter3/fig/scma/simd_final_guess/colors
+              main/chapter3/fig/scma/simd_final_beliefs/simd_final_beliefs.tex \
+              main/chapter3/fig/scma/simd_final_beliefs/simd_final_beliefs_mipp.tex \
+              main/chapter3/fig/scma/simd_final_beliefs/colors
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_32bit.tex
 	cd main/chapter3/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_64bit.tex
 	cd main/chapter3/fig/vectorization/inter_frame/        && rubber -d inter_frame.tex
@@ -364,7 +368,11 @@ chapter3_fig: main/chapter3/src/ldpc/bp_scheduling_hl.cpp \
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_aos.tex
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_soa.tex
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber -d simd_exp.tex
-	cd main/chapter3/fig/scma/simd_final_guess/            && rubber -d simd_final_guess.tex
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber -d simd_final_beliefs.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_aos_mipp.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber -d simd_norm_soa_mipp.tex
+	cd main/chapter3/fig/scma/simd_exp/                    && rubber -d simd_exp_mipp.tex
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber -d simd_final_beliefs_mipp.tex
 
 chapter4_fig: main/chapter4/src/library/modules_allocation.cpp \
               main/chapter4/src/library/sockets_binding.cpp \
@@ -702,7 +710,11 @@ clean: clean4all
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_aos
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_soa
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean simd_exp
-	cd main/chapter3/fig/scma/simd_final_guess/            && rubber --clean simd_final_guess
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean simd_final_beliefs
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_aos_mipp
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_soa_mipp
+	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean simd_exp_mipp
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean simd_final_beliefs_mipp
 	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber --clean com_chain_task_module
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_w_comp
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_wo_comp
@@ -809,7 +821,11 @@ mrproper: clean4all
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_aos.tex
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_soa.tex
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean -d simd_exp.tex
-	cd main/chapter3/fig/scma/simd_final_guess/            && rubber --clean -d simd_final_guess.tex
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean -d simd_final_beliefs.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_aos_mipp.tex
+	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_soa_mipp.tex
+	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean -d simd_exp_mipp.tex
+	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean -d simd_final_beliefs_mipp.tex
 	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber --clean -d com_chain_task_module.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_total.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_mem.tex

@@ -1,0 +1,200 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.arrows}
+\usetikzlibrary{decorations.pathreplacing}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}[baseline]
+    \tikzset{ er/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ ei/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ erd/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-1!40 } }
+    \tikzset{ eid/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-3!40 } }
+    \tikzset{ ers/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-2!40 } }
+    \tikzset{ eis/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-4!40 } }
+    \tikzset{ ex/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40 } }
+    \tikzset{ ey/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ exd/.style={draw=black, minimum width=1.4cm, minimum height=0.7cm, text=black, fill=Paired-5!40 } }
+    \tikzset{ ept/.style={            minimum width=0.7cm, minimum height=0.7cm]                              } }
+
+    \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+    \tikzstyle{shf}=[black!20]
+    \tikzstyle{intr}=[rounded corners=3pt, fill=white, draw=black]
+
+    \newcommand\vs{2.0}
+    \newcommand\lft{0.0}
+    \newcommand\ctr{4.9}
+    \newcommand\rth{9.8}
+
+    \node[draw=black, dotted             , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{Global memory (RAM)}}] (ram)   at (0.1, -1.1+3.35) {};
+    \node[draw=black,                    , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register}}      ] (simdr) at (0.1, -1.7+3.35) {};
+    \node[draw=black, rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD function}}      ] (simdi) at (0.1, -2.3+3.35) {};
+
+    \node[fill=Paired-1!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex real part $r$}}     ] (cr) at (\rth+0.7+4.10, -1.1+3.35) {};
+    \node[fill=Paired-3!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex imaginary part $i$}}] (ci) at (\rth+0.7+4.10, -1.7+3.35) {};
+    \node[fill=Paired-5!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex norm}}              ] (cn) at (\rth+0.7+4.10, -2.3+3.35) {};
+
+    \node[ept        ] (mi_er0)  at ( 0.0, 0.00) {\tiny{...}};
+    \node[ers, dotted] (mi_er1)  at ( 0.7, 0.00) {};
+    \node[eis, dotted] (mi_er2)  at ( 1.4, 0.00) {};
+    \node[er , dotted] (mi_er3)  at ( 2.1, 0.00) {};
+    \node[ei , dotted] (mi_er4)  at ( 2.8, 0.00) {};
+    \node[er , dotted] (mi_er5)  at ( 3.5, 0.00) {};
+    \node[ei , dotted] (mi_er6)  at ( 4.2, 0.00) {};
+    \node[er , dotted] (mi_er7)  at ( 4.9, 0.00) {};
+    \node[ei , dotted] (mi_er8)  at ( 5.6, 0.00) {};
+    \node[er , dotted] (mi_er9)  at ( 6.3, 0.00) {};
+    \node[ei , dotted] (mi_er10) at ( 7.0, 0.00) {};
+    \node[er , dotted] (mi_er11) at ( 7.7, 0.00) {};
+    \node[ei , dotted] (mi_er12) at ( 8.4, 0.00) {};
+    \node[er , dotted] (mi_er13) at ( 9.1, 0.00) {};
+    \node[ei , dotted] (mi_er14) at ( 9.8, 0.00) {};
+    \node[er , dotted] (mi_er15) at (10.5, 0.00) {};
+    \node[ei , dotted] (mi_er16) at (11.2, 0.00) {};
+    \node[er , dotted] (mi_er17) at (11.9, 0.00) {};
+    \node[ei , dotted] (mi_er18) at (12.6, 0.00) {};
+    \node[ers, dotted] (mi_er19) at (13.3, 0.00) {};
+    \node[eis, dotted] (mi_er20) at (14.0, 0.00) {};
+    \node[ept        ] (mi_er21) at (14.7, 0.00) {\tiny{...}};
+
+    \node[er] (r0_er0) at (\lft+0.0, -\vs) {\tiny{$a_r$}};
+    \node[ei] (r0_er1) at (\lft+0.7, -\vs) {\tiny{$a_i$}};
+    \node[er] (r0_er2) at (\lft+1.4, -\vs) {\tiny{$b_r$}};
+    \node[ei] (r0_er3) at (\lft+2.1, -\vs) {\tiny{$b_i$}};
+    \node[er] (r0_er4) at (\lft+2.8, -\vs) {\tiny{$c_r$}};
+    \node[ei] (r0_er5) at (\lft+3.5, -\vs) {\tiny{$c_i$}};
+    \node[er] (r0_er6) at (\lft+4.2, -\vs) {\tiny{$d_r$}};
+    \node[ei] (r0_er7) at (\lft+4.9, -\vs) {\tiny{$d_i$}};
+
+    \draw[decorate,decoration={brace,raise=0.2cm}] (\lft+ 7.0+0.30,-0.35) -- (\lft+2.1-0.30,-0.35);
+    \draw[decorate,decoration={brace,raise=0.2cm}] (\lft+12.6+0.30,-0.35) -- (\lft+7.7-0.30,-0.35);
+
+    \node[er] (r1_er0) at (\rth+0.0, -\vs) {\tiny{$e_r$}};
+    \node[ei] (r1_er1) at (\rth+0.7, -\vs) {\tiny{$e_i$}};
+    \node[er] (r1_er2) at (\rth+1.4, -\vs) {\tiny{$r_r$}};
+    \node[ei] (r1_er3) at (\rth+2.1, -\vs) {\tiny{$r_i$}};
+    \node[er] (r1_er4) at (\rth+2.8, -\vs) {\tiny{$g_r$}};
+    \node[ei] (r1_er5) at (\rth+3.5, -\vs) {\tiny{$g_i$}};
+    \node[er] (r1_er6) at (\rth+4.2, -\vs) {\tiny{$h_r$}};
+    \node[ei] (r1_er7) at (\rth+4.9, -\vs) {\tiny{$h_i$}};
+
+    \node[intr] (intr0) at (4.2+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+    \node[intr] (intr1) at (9.8+0.35, -\vs+1) {\footnotesize{\texttt{mipp::load<T>}}};
+
+    \node[er] (r2_er0) at (\lft+0.0, -\vs-\vs) {\tiny{$a_r$}};
+    \node[er] (r2_er1) at (\lft+0.7, -\vs-\vs) {\tiny{$b_r$}};
+    \node[er] (r2_er2) at (\lft+1.4, -\vs-\vs) {\tiny{$c_r$}};
+    \node[er] (r2_er3) at (\lft+2.1, -\vs-\vs) {\tiny{$d_r$}};
+    \node[er] (r2_er4) at (\lft+2.8, -\vs-\vs) {\tiny{$e_r$}};
+    \node[er] (r2_er5) at (\lft+3.5, -\vs-\vs) {\tiny{$f_r$}};
+    \node[er] (r2_er6) at (\lft+4.2, -\vs-\vs) {\tiny{$g_r$}};
+    \node[er] (r2_er7) at (\lft+4.9, -\vs-\vs) {\tiny{$h_r$}};
+
+    \node[ei] (r3_er0) at (\rth+0.0, -\vs-\vs) {\tiny{$a_i$}};
+    \node[ei] (r3_er1) at (\rth+0.7, -\vs-\vs) {\tiny{$b_i$}};
+    \node[ei] (r3_er2) at (\rth+1.4, -\vs-\vs) {\tiny{$c_i$}};
+    \node[ei] (r3_er3) at (\rth+2.1, -\vs-\vs) {\tiny{$d_i$}};
+    \node[ei] (r3_er4) at (\rth+2.8, -\vs-\vs) {\tiny{$e_i$}};
+    \node[ei] (r3_er5) at (\rth+3.5, -\vs-\vs) {\tiny{$f_i$}};
+    \node[ei] (r3_er6) at (\rth+4.2, -\vs-\vs) {\tiny{$g_i$}};
+    \node[ei] (r3_er7) at (\rth+4.9, -\vs-\vs) {\tiny{$h_i$}};
+
+    \draw[shf] (r0_er0.south) -- (r2_er0.north);
+    \draw[shf] (r0_er1.south) -- (r3_er0.north);
+    \draw[shf] (r0_er2.south) -- (r2_er1.north);
+    \draw[shf] (r0_er3.south) -- (r3_er1.north);
+    \draw[shf] (r0_er4.south) -- (r2_er2.north);
+    \draw[shf] (r0_er5.south) -- (r3_er2.north);
+    \draw[shf] (r0_er6.south) -- (r2_er3.north);
+    \draw[shf] (r0_er7.south) -- (r3_er3.north);
+
+    \draw[shf] (r1_er0.south) -- (r2_er4.north);
+    \draw[shf] (r1_er1.south) -- (r3_er4.north);
+    \draw[shf] (r1_er2.south) -- (r2_er5.north);
+    \draw[shf] (r1_er3.south) -- (r3_er5.north);
+    \draw[shf] (r1_er4.south) -- (r2_er6.north);
+    \draw[shf] (r1_er5.south) -- (r3_er6.north);
+    \draw[shf] (r1_er6.south) -- (r2_er7.north);
+    \draw[shf] (r1_er7.south) -- (r3_er7.north);
+
+    \draw[lnk] (intr0.west) -| (r0_er3.north east);
+    \draw[lnk] (intr1.east) -| (r1_er4.north west);
+
+    \node[intr] (intr2) at (7.35, -\vs-\vs+1) {\footnotesize{\texttt{mipp::deinterleave<T>}}};
+
+
+    \draw[lnk] (r0_er3.south east) |- (intr2.west);
+    \draw[lnk] (r1_er4.south west) |- (intr2.east);
+
+    \draw[lnk] (intr2) |- (r2_er7.east);
+    \draw[lnk] (intr2) |- (r3_er0.west);
+
+    \newcommand\ctrd{2.45}
+
+    \node[exd] (r6_er0) at (\ctrd+0.0, -\vs-\vs-\vs) {\tiny{$a_r^2+a_i^2$}};
+    \node[exd] (r6_er1) at (\ctrd+1.4, -\vs-\vs-\vs) {\tiny{$b_r^2+b_i^2$}};
+    \node[exd] (r6_er2) at (\ctrd+2.8, -\vs-\vs-\vs) {\tiny{$c_r^2+c_i^2$}};
+    \node[exd] (r6_er3) at (\ctrd+4.2, -\vs-\vs-\vs) {\tiny{$d_r^2+d_i^2$}};
+    \node[exd] (r6_er4) at (\ctrd+5.6, -\vs-\vs-\vs) {\tiny{$e_r^2+e_i^2$}};
+    \node[exd] (r6_er5) at (\ctrd+7.0, -\vs-\vs-\vs) {\tiny{$f_r^2+f_i^2$}};
+    \node[exd] (r6_er6) at (\ctrd+8.4, -\vs-\vs-\vs) {\tiny{$g_r^2+g_i^2$}};
+    \node[exd] (r6_er7) at (\ctrd+9.8, -\vs-\vs-\vs) {\tiny{$h_r^2+h_i^2$}};
+
+    \draw[shf] (r2_er0.south) -- (r6_er0.north);
+    \draw[shf] (r2_er1.south) -- (r6_er1.north);
+    \draw[shf] (r2_er2.south) -- (r6_er2.north);
+    \draw[shf] (r2_er3.south) -- (r6_er3.north);
+    \draw[shf] (r2_er4.south) -- (r6_er4.north);
+    \draw[shf] (r2_er5.south) -- (r6_er5.north);
+    \draw[shf] (r2_er6.south) -- (r6_er6.north);
+    \draw[shf] (r2_er7.south) -- (r6_er7.north);
+    \draw[shf] (r3_er0.south) -- (r6_er0.north);
+    \draw[shf] (r3_er1.south) -- (r6_er1.north);
+    \draw[shf] (r3_er2.south) -- (r6_er2.north);
+    \draw[shf] (r3_er3.south) -- (r6_er3.north);
+    \draw[shf] (r3_er4.south) -- (r6_er4.north);
+    \draw[shf] (r3_er5.south) -- (r6_er5.north);
+    \draw[shf] (r3_er6.south) -- (r6_er6.north);
+    \draw[shf] (r3_er7.south) -- (r6_er7.north);
+
+    \node[intr] (intr3) at (7.35, -\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::norm<T>}}};
+
+    \draw[lnk] (r2_er3.south east) |- (intr3.west);
+    \draw[lnk] (r3_er4.south west) |- (intr3.east);
+
+    \draw[lnk] (intr3) -- (7.35,-\vs-\vs-\vs+0.35);
+
+    \node[ept        ] (mo_er5)  at ( 3.5, -\vs-\vs-\vs-\vs) {\tiny{...}};
+    \node[ex , dotted] (mo_er6)  at ( 4.2, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er7)  at ( 4.9, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er8)  at ( 5.6, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er9)  at ( 6.3, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er10) at ( 7.0, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er11) at ( 7.7, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er12) at ( 8.4, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er13) at ( 9.1, -\vs-\vs-\vs-\vs) {};
+    \node[ey , dotted] (mo_er14) at ( 9.8, -\vs-\vs-\vs-\vs) {};
+    \node[ex , dotted] (mo_er15) at (10.5, -\vs-\vs-\vs-\vs) {};
+    \node[ept        ] (mo_er16) at (11.2, -\vs-\vs-\vs-\vs) {\tiny{...}};
+
+    \node[intr] (intr4) at (7.35, -\vs-\vs-\vs-\vs+1) {\footnotesize{\texttt{mipp::store<T>}}};
+
+    \draw[lnk] (7.35,-\vs-\vs-\vs-0.35) -- (intr4);
+    \draw[lnk] (intr4) -- (7.35,-\vs-\vs-\vs-\vs+0.35);
+
+    \node[draw=black, rounded corners=2pt, dashed, fit=(mo_er14) (mi_er0) (r2_er0) (r3_er7)] {};
+  \end{tikzpicture}
+\end{document}

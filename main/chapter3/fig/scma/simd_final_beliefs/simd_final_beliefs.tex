@@ -31,9 +31,9 @@
     \newcommand\ctr{4.9}
     \newcommand\rth{9.8}
 
-    \node[fill=Paired-9!40             , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES2$ to $UE4$ ($m_x^2$)}}] (m2) at (\rth+0.7+4.10, -1.1-2.7) {};
-    \node[fill=Paired-11!40            , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES4$ to $UE4$ ($m_x^4$)}}] (m4) at (\rth+0.7+4.10, -1.7-2.7) {};
-    \node[fill=Paired-11!40!Paired-9!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Guess at $UE4$ ($g_x^4$)}}           ] (g4) at (\rth+0.7+4.10, -2.3-2.7) {};
+    \node[fill=Paired-9!40             , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES1$ to $UE3$ ($m_x^1$)}}] (m2) at (\rth+0.7+4.10, -1.1-2.7) {};
+    \node[fill=Paired-11!40            , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Msg. from $RES3$ to $UE3$ ($m_x^3$)}}] (m4) at (\rth+0.7+4.10, -1.7-2.7) {};
+    \node[fill=Paired-11!40!Paired-9!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Belief at $UE3$ ($B_x^3$)}}          ] (g4) at (\rth+0.7+4.10, -2.3-2.7) {};
 
     \node[ept         ] (mi_e0)  at ( 0.0, 0.00) {\tiny{...}};
     \node[er2 , dotted] (mi_e1)  at ( 1.4, 0.00) {};
@@ -52,28 +52,28 @@
     \node[er4 , dotted] (mi_e14) at (13.3, 0.00) {};
     \node[ept         ] (mi_e15) at (14.7, 0.00) {\tiny{...}};
 
-    \node[er2] (r0_e0) at (\lft+1.4, -\vs) {\tiny{$m_1^2$}};
-    \node[er2] (r0_e1) at (\lft+2.1, -\vs) {\tiny{$m_2^2$}};
-    \node[er2] (r0_e2) at (\lft+2.8, -\vs) {\tiny{$m_3^2$}};
-    \node[er2] (r0_e3) at (\lft+3.5, -\vs) {\tiny{$m_4^2$}};
+    \node[er2] (r0_e0) at (\lft+1.4, -\vs) {\tiny{$m_1^1$}};
+    \node[er2] (r0_e1) at (\lft+2.1, -\vs) {\tiny{$m_2^1$}};
+    \node[er2] (r0_e2) at (\lft+2.8, -\vs) {\tiny{$m_3^1$}};
+    \node[er2] (r0_e3) at (\lft+3.5, -\vs) {\tiny{$m_4^1$}};
 
     \node[instr] (instr0) at (\lft+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
     \draw[lnk] (2.45,-0.35) -- (instr0.north);
     \draw[lnk] (instr0.south) -- (2.45,-\vs+0.35);
 
-    \node[er4] (r1_e0) at (\rth+1.4, -\vs) {\tiny{$m_1^4$}};
-    \node[er4] (r1_e1) at (\rth+2.1, -\vs) {\tiny{$m_2^4$}};
-    \node[er4] (r1_e2) at (\rth+2.8, -\vs) {\tiny{$m_3^4$}};
-    \node[er4] (r1_e3) at (\rth+3.5, -\vs) {\tiny{$m_4^4$}};
+    \node[er4] (r1_e0) at (\rth+1.4, -\vs) {\tiny{$m_1^3$}};
+    \node[er4] (r1_e1) at (\rth+2.1, -\vs) {\tiny{$m_2^3$}};
+    \node[er4] (r1_e2) at (\rth+2.8, -\vs) {\tiny{$m_3^3$}};
+    \node[er4] (r1_e3) at (\rth+3.5, -\vs) {\tiny{$m_4^3$}};
 
     \node[instr] (instr1) at (\rth+2.45, -\vs+1) {\footnotesize{\texttt{\_mm\_loadu\_ps}}};
     \draw[lnk] (\rth+2.45,-0.35) -- (instr1.north);
     \draw[lnk] (instr1.south) -- (\rth+2.45,-\vs+0.35);
 
-    \node[eu4] (r2_e0) at (\ctr+1.4, -\vs-\vs) {\tiny{$g_1^4$}};
-    \node[eu4] (r2_e1) at (\ctr+2.1, -\vs-\vs) {\tiny{$g_2^4$}};
-    \node[eu4] (r2_e2) at (\ctr+2.8, -\vs-\vs) {\tiny{$g_3^4$}};
-    \node[eu4] (r2_e3) at (\ctr+3.5, -\vs-\vs) {\tiny{$g_4^4$}};
+    \node[eu4] (r2_e0) at (\ctr+1.4, -\vs-\vs) {\tiny{$B_1^3$}};
+    \node[eu4] (r2_e1) at (\ctr+2.1, -\vs-\vs) {\tiny{$B_2^3$}};
+    \node[eu4] (r2_e2) at (\ctr+2.8, -\vs-\vs) {\tiny{$B_3^3$}};
+    \node[eu4] (r2_e3) at (\ctr+3.5, -\vs-\vs) {\tiny{$B_4^3$}};
 
     \draw[shf] (r0_e0.south) -- (r2_e0.north);
     \draw[shf] (r0_e1.south) -- (r2_e1.north);
@@ -119,7 +119,7 @@
     \node[ept         ] (mo_er21) at (14.7, -\vs-\vs-\vs-0.00) {\tiny{...}};
 
     \draw[<->,>=latex,black] (-0.35, 0.75)  -- (15.05, 0.75)  node (arrow1) [midway, text=black, fill=white] {\small{Resources to users message}};
-    \draw[<->,>=latex,black] (-0.35, -6.75) -- (15.05, -6.75) node (arrow2) [midway, text=black, fill=white] {\small{Final guesses}};
+    \draw[<->,>=latex,black] (-0.35, -6.75) -- (15.05, -6.75) node (arrow2) [midway, text=black, fill=white] {\small{Final beliefs}};
 
     \node[draw=black, rounded corners=2pt, dashed, fit=(mi_e0) (mo_er21) (arrow1) (arrow2)] {};
   \end{tikzpicture}
