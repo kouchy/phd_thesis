@@ -1,21 +1,20 @@
 #include <mipp.h>
 
-void quantize_simd(const std::vector<float > &Y1,
-                         std::vector<int8_t> &Y2,
+void quantize_simd(const std::vector<float > &l_float,
+                         std::vector<int8_t> &l_fixed,
                    const uint32_t s, const uint32_t v) {
-	constexpr int32_t N = mipp::N<float>();
-	const size_t K = Y1.size();
+	const size_t N = l_float.size();
 	const float factor = mipp::Reg<float>(1 << v);
 	assert(s >= 2);
 	const float q_max = (1 << (s-2)) + (1 << (s-2)) -1;
 	const float q_min = -q_max;
-	for (size_t k = 0; k < K; k += 4 * N)
+	for (size_t n = 0; n < N; n += 4 * mipp::N<float>())
 	{
 		// implicit loads and q = 2^v * y +- 0.5
-		mipp::Reg<float> q32_0 = mipp::round(factor * &Y1[k + 0*N]);
-		mipp::Reg<float> q32_1 = mipp::round(factor * &Y1[k + 1*N]);
-		mipp::Reg<float> q32_2 = mipp::round(factor * &Y1[k + 2*N]);
-		mipp::Reg<float> q32_3 = mipp::round(factor * &Y1[k + 3*N]);
+		mipp::Reg<float> q32_0 = mipp::round(factor * &l_float[n+0*mipp::N<float>()]);
+		mipp::Reg<float> q32_1 = mipp::round(factor * &l_float[n+1*mipp::N<float>()]);
+		mipp::Reg<float> q32_2 = mipp::round(factor * &l_float[n+2*mipp::N<float>()]);
+		mipp::Reg<float> q32_3 = mipp::round(factor * &l_float[n+3*mipp::N<float>()]);
 		// convert float to int32_t
 		mipp::Reg<int32_t> q32i_0 = mipp::cvt<int32_t>(q32_0);
 		mipp::Reg<int32_t> q32i_1 = mipp::cvt<int32_t>(q32_1);
@@ -28,6 +27,6 @@ void quantize_simd(const std::vector<float > &Y1,
 		mipp::Reg<int8_t> q8i = mipp::pack<int16_t,int8_t>(q16i_0, q16i_1);
 		// saturation
 		mipp::Reg<int8_t> q8is = mipp::sat(q8i, q_min, q_max);
-		q8is.store(&Y2[k]);
+		q8is.store(&l_fixed[k]);
 	}
 }
