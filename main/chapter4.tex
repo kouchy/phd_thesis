@@ -77,7 +77,7 @@ why in most of the other existing projects the focus is made on a single code
 family (c.f. Section~\ref{sec:aff3ct_related_works}). It strongly motivated
 the need of a toolbox like \AFFECT. The objective is to homogenize the use of
 various code families. The \AFFECT source code organization is detailed in
-Section~\ref{sec:aff3ct_orga}.
+Section~\ref{sec:aff3ct_archi}.
 
 \subsection{Portability}
 
@@ -184,10 +184,10 @@ Note that Table~\ref{tab:fec_libraries_comparison} does not aim at comparing
 channel code implementation performances. The implementations of the decoders
 will be compared in Chapter~\ref{chap:eval}.
 
-\section{Software Organization}
-\label{sec:aff3ct_orga}
+\section{Consistent Provision of Digital Communication Algorithms}
 
-\subsection{Architecture}
+\subsection{Software Architecture}
+\label{sec:aff3ct_archi}
 
 \AFFECT is developed in \Cxx in an object-oriented programming style. It
 provides fundamental classes involved in the building of digital communication
@@ -302,7 +302,7 @@ of the \verb|module::Source| class. This object can be a
 \verb|moudle::Source_random| object, a \verb|module::Source_user_binary| object,
 etc.
 
-\subsection{Functionalities}
+\subsection{Software Functionalities}
 \label{sec:aff3ct_features}
 
 The \AFFECT software functionalities can be decomposed in three main parts: the
@@ -462,16 +462,7 @@ vectorization.
 Many additional functional functionalities available are skipped here for
 concision.
 
-\section{Use Cases}
-\label{sec:aff3ct_use_cases}
-
-\subsection{Library}
-
-% \begin{itemize}
-%   \item pleins d'implem autre que les décodeurs
-%   \item outil graphique avec des boîtes, projet Romain
-%   \item wrapper MATLAB (travaux de Kun)
-% \end{itemize}
+\subsection{Example of Library Use}
 
 As a FEC library, \AFFECT can be used programmatically, for instance in
 real-time contexts or to build specific functional simulations. \AFFECT blocks
@@ -561,7 +552,31 @@ errors is updated, \AFFECT starts with a new frame, and so on. The decoding
 performance appears to be equivalent to the performance of the pure software
 simulation which shows that the hardware BCH decoder is correctly implemented.
 
-\subsection{Simulator}
+\subsection{MATLAB Wrapper}
+
+In the signal processing community it is common to use MATLAB to implement and
+to evaluate new algorithms or/and configurations. More specifically, the
+\emph{communications toolbox} is often used. This toolbox contains a large set
+of algorithms of digital communication systems but they often lack of
+efficiency, especially for the channel decoder implementations. Knowing that,
+we developed a wrapper MATLAB to enable calls to the compiled \AFFECT library.
+The wrapper can be seen as a new MATLAB toolbox that proposes faster decoder
+implementations than the traditional MATLAB communications toolbox. \AFFECT
+also comes with channel decoders that are not available in the standard
+communications toolbox.
+
+The proposed MATLAB wrapper is automatically generated for the \AFFECT headers.
+The Clang compiler is used to generate the Abstract Syntax Tree (AST) of the
+\AFFECT source code and a Python script extracts useful classes and methods.
+These data are stored in a JSON database. Then, an other Python script as been
+written to generate \Cxx and MATLAB codes that effectively perform the interface
+between the \AFFECT library and MATLAB.
+At the time of the writing, the MATLAB wrapper has not been released yet.
+
+\section{Validation and Exploration of Digital Communication Algorithms}
+
+\subsection{Example of Simulator Use}
+\label{sec:aff3ct_simulator_example}
 
 The \AFFECT toolbox comes with a dedicated functional
 simulator~\cite{Cassagne2017}. It is based on the \AFFECT library presented
@@ -609,61 +624,59 @@ while \verb|BE| and \verb|FE| are the number of bit and frame errors. The
 simulator output is clear and adapted to post processing: lines starting with a
 hashtag can be skipped.
 
-\section{Impact and Community}
-\label{sec:aff3ct_impact}
+\subsection{Exhaustive Exploration}
 
-\AFFECT is currently used in several industrial contexts for simulation purposes
-(Turbo concept, Airbus, Thales, Huawei) and for specific developments (CNES,
-Schlumberger, Airbus, Thales, Orange), as well as in academic projects (NAND
-French National Agency project, IdEx CPU). The MIT license used in the project
-is very permissive and gives confidence to industrial and academic partners, who
-can then invest themselves and reuse parts of \AFFECT in their own projects
-without any restrictions.
+% TODO: mettre les courbes de BER/FER ici, faire une discussion sur
+%       l'exploration possible
 
-\AFFECT has been cited in scientific publications and this paragraph aims to
-give an overview of its utilization. In~\cite{Leonardon2018a} the \AFFECT fast
-software SC decoders (c.f. Section\ref{sec:opt_polar}) are compared to an
-Application Specific Instruction Set Processor (ASIP). In~\cite{Leonardon2018b}
-the proposed P-EDGE generator (c.f. Section~\ref{sec:opt_polar_pedge}) has been
-enriched to generate Transport Triggered Architecture (TTA $\approx$ VLIW)
-instructions. Then the generated TTA polar decoders are compared to the \AFFECT
-generated software polar decoders. In~\cite{Florian2018}, the cross-platform
-PHYSIM software framework is proposed. This framework encapsulates the \AFFECT
-channel encoders and decoders and combines them to complex modulation schemes.
-In~\cite{Pignoly2018,Ghanaatian2018,Wang2019} high speed hardware decoders are
-proposed and their error-rate performances are validated by using the \AFFECT
-simulator error-rate results as a reference. In~\cite{Poulenard2018}, \AFFECT is
-used to evaluate various channel codes error-rate performances before to propose
-a framework to jointly design interleaving and FEC schemes for free space
-optical link. In~\cite{Cavatassi2019a,Cavatassi2019b} the \AFFECT implementation
-of the Gaussian Approximation (GA) method has been used. This method allows to
-decide the frozen bits location in the polar codes. In~\cite{Cenova2019}, the
-SIMD implementations of the \AFFECT decoders are considered for the High-Level
-Synthesis (HLS) of ASICs. It is shown that, at this time, the HLS tools are not
-able to directly take advantage of the \Cxx SIMD software implementations.
-In~\cite{Guermouche2019}, \AFFECT is considered as one of the benchmark
-applications as it heavily relies on the SIMD units. The performance behavior of
-\AFFECT is studied depending on various SIMD ISAs. In~\cite{Wang2019} a new
-concatenation scheme of BCH-Polar codes is proposed. The \AFFECT simulator has
-been modified to support this new coding scheme and used to validate its
-error-rate performance. In~\cite{Krainyk2019}, the work gives new procedures and
-software models to simplify the development of the turbo product codes. The
-authors find that \AFFECT is not adapted as it is complicated to see the
-evolution inside the TPC decoder. In~\cite{Hsieh2020,Rush2020} a generalization
-of sparse superposition of channel codes is studied. In this context, \AFFECT is
-used to compare the decoding performance of this new method with more
-traditional schemes (LDPC + QAM). In~\cite{Tasdighi2020}, a new LDPC code
-construction method is proposed. The decoding performances are evaluated through
-\AFFECT.
+\subsubsection{BER/FER Comparators} % Pre-simulated Results?
 
-As \AFFECT is open-source, some of the previous works has been integrated inside
-the toolbox. However, it worth mentioning that \AFFECT is more often simply used
-than enriched. But, we believe that the proposed philosophy can lead to a
-growing community of contributors. We also know that bigger open-source
-projects, like GNU Radio, are considering to integrate some of the \AFFECT fast
-decoders.
+% TODO: des chiffres des chiffres à dit Denis
 
-\section{Continuous Integration and Continuous Delivery}
+The \AFFECT output (c.f. Listing~\ref{lst:aff3ct_simulator_output}) is not
+adapted to see the error-rate performance at a glance. And it is even more
+complicated to compare two or more simulation outputs with each other.
+Traditionally the BER and FER decoding performances are presented in a form of
+graphical curves (c.f. Fig.~\ref{fig:ctx_bfer}). It is then much easier to
+compare their performances.
+
+To this purpose, a portable tool named \emph{PyBER} has been developed.
+This tool is a standalone program written in Python. It is capable to read the
+\AFFECT simulator outputs but it can also easily adapt to other formats. PyBER
+extensively uses the \emph{PyQtGraph} library to plot the BER/FER curves. PyBER
+allows to browse the file system and to select one or more text files to
+display. It is also possible to zoom on the curves and the simulation details of
+each curve are presented in a dedicated panel. PyBER can plot in real-time the
+curves that are currently simulated (there is no need to reload the \AFFECT
+output files). Like all the \AFFECT tools, PyBER is open-source and can be used
+without any limitations\footnote{PyBER repository:
+\url{https://github.com/aff3ct/PyBER}}.
+
+Recently, a new BER/FER comparator has been introduced. It is available online
+on the \AFFECT website\footnote{\AFFECT online BER/FER comparator:
+\url{http://aff3ct.github.io/comparator.html}}. This comparator comes with the
+same features as PyBER but it is written in JavaScript. By default, a database
+of \AFFECT simulated results is already available. This database is the same as
+the error-rate reference results used in the regression tests of the CI.
+Then, these references are classified according to different characteristics:
+the code type, the modem type, the channel type, the frame size ($N$) and the
+code rate ($R$). There is also a search bar to facilitate the curves selection
+process. At the time of the writing, approximatively 500 references are
+available. For each reference, it possible to get the corresponding command line
+in the \AFFECT simulator. This way it is very easy to reproduce the reference
+results or to modify the command line parameters. The reference curves that have
+been published are marked with the DOI of the publication. It is then possible
+to search a specific result from its DOI in the search bar. Note that with the
+online BER/FER comparator it is very easy to share the selected curves with
+other people thanks to a permalink. The default proposed database is the
+\AFFECT database (error-rate references) but it is also possible to enable the
+database of the Kaiserslautern University. We wrote a script to automatically
+parse their online database\footnote{Kaiserslautern ML BER/FER database:
+\url{https://www.uni-kl.de/channel-codes/ml-simulation-results/}}. Otherwise it
+is still possible to load BER/FER references from local files. Many text formats
+are supported.
+
+\subsection{Continuous Integration and Continuous Delivery}
 \label{sec:aff3ct_ci_cd}
 
 \AFFECT's development leverages streamlined Continuous Integration (CI) process.
@@ -767,79 +780,60 @@ improvements from the community to \AFFECT. It also helps to keep the code
 review time by the core development team low-enough to swiftly integrate such
 contributions into the master branch.
 
-\section{Derivative Projects}
+\section{Impact and Community}
+\label{sec:aff3ct_impact}
 
-This section describes some of the projects of the \AFFECT toolbox that have
-not been introduced before.
+\AFFECT is currently used in several industrial contexts for simulation purposes
+(Turbo concept, Airbus, Thales, Huawei) and for specific developments (CNES,
+Schlumberger, Airbus, Thales, Orange), as well as in academic projects (NAND
+French National Agency project, IdEx CPU). The MIT license used in the project
+is very permissive and gives confidence to industrial and academic partners, who
+can then invest themselves and reuse parts of \AFFECT in their own projects
+without any restrictions.
 
-\subsection{BER/FER Comparators}
+% TODO: regrouper les citations par thématiques
 
-The \AFFECT output (c.f. Listing~\ref{lst:aff3ct_simulator_output}) is not
-adapted to see the error-rate performance at a glance. And it is even more
-complicated to compare two or more simulation outputs with each other.
-Traditionally the BER and FER decoding performances are presented in a form of
-graphical curves (c.f. Fig.~\ref{fig:ctx_bfer}). It is then much easier to
-compare their performances.
+\AFFECT has been cited in scientific publications and this paragraph aims to
+give an overview of its utilization. In~\cite{Leonardon2018a} the \AFFECT fast
+software SC decoders (c.f. Section\ref{sec:opt_polar}) are compared to an
+Application Specific Instruction Set Processor (ASIP). In~\cite{Leonardon2018b}
+the proposed P-EDGE generator (c.f. Section~\ref{sec:opt_polar_pedge}) has been
+enriched to generate Transport Triggered Architecture (TTA $\approx$ VLIW)
+instructions. Then the generated TTA polar decoders are compared to the \AFFECT
+generated software polar decoders. In~\cite{Florian2018}, the cross-platform
+PHYSIM software framework is proposed. This framework encapsulates the \AFFECT
+channel encoders and decoders and combines them to complex modulation schemes.
+In~\cite{Pignoly2018,Ghanaatian2018,Wang2019} high speed hardware decoders are
+proposed and their error-rate performances are validated by using the \AFFECT
+simulator error-rate results as a reference. In~\cite{Poulenard2018}, \AFFECT is
+used to evaluate various channel codes error-rate performances before to propose
+a framework to jointly design interleaving and FEC schemes for free space
+optical link. In~\cite{Cavatassi2019a,Cavatassi2019b} the \AFFECT implementation
+of the Gaussian Approximation (GA) method has been used. This method allows to
+decide the frozen bits location in the polar codes. In~\cite{Cenova2019}, the
+SIMD implementations of the \AFFECT decoders are considered for the High-Level
+Synthesis (HLS) of ASICs. It is shown that, at this time, the HLS tools are not
+able to directly take advantage of the \Cxx SIMD software implementations.
+In~\cite{Guermouche2019}, \AFFECT is considered as one of the benchmark
+applications as it heavily relies on the SIMD units. The performance behavior of
+\AFFECT is studied depending on various SIMD ISAs. In~\cite{Wang2019} a new
+concatenation scheme of BCH-Polar codes is proposed. The \AFFECT simulator has
+been modified to support this new coding scheme and used to validate its
+error-rate performance. In~\cite{Krainyk2019}, the work gives new procedures and
+software models to simplify the development of the turbo product codes. The
+authors find that \AFFECT is not adapted as it is complicated to see the
+evolution inside the TPC decoder. In~\cite{Hsieh2020,Rush2020} a generalization
+of sparse superposition of channel codes is studied. In this context, \AFFECT is
+used to compare the decoding performance of this new method with more
+traditional schemes (LDPC + QAM). In~\cite{Tasdighi2020}, a new LDPC code
+construction method is proposed. The decoding performances are evaluated through
+\AFFECT.
 
-To this purpose, a portable tool named \emph{PyBER} has been developed.
-This tool is a standalone program written in Python. It is capable to read the
-\AFFECT simulator outputs but it can also easily adapt to other formats. PyBER
-extensively uses the \emph{PyQtGraph} library to plot the BER/FER curves. PyBER
-allows to browse the file system and to select one or more text files to
-display. It is also possible to zoom on the curves and the simulation details of
-each curve are presented in a dedicated panel. PyBER can plot in real-time the
-curves that are currently simulated (there is no need to reload the \AFFECT
-output files). Like all the \AFFECT tools, PyBER is open-source and can be used
-without any limitations\footnote{PyBER repository:
-\url{https://github.com/aff3ct/PyBER}}.
-
-Recently, a new BER/FER comparator has been introduced. It is available online
-on the \AFFECT website\footnote{\AFFECT online BER/FER comparator:
-\url{http://aff3ct.github.io/comparator.html}}. This comparator comes with the
-same features as PyBER but it is written in JavaScript. By default, a database
-of \AFFECT simulated results is already available. This database is the same as
-the error-rate reference results used in the regression tests of the CI.
-Then, these references are classified according to different characteristics:
-the code type, the modem type, the channel type, the frame size ($N$) and the
-code rate ($R$). There is also a search bar to facilitate the curves selection
-process. At the time of the writing, approximatively 500 references are
-available. For each reference, it possible to get the corresponding command line
-in the \AFFECT simulator. This way it is very easy to reproduce the reference
-results or to modify the command line parameters. The reference curves that have
-been published are marked with the DOI of the publication. It is then possible
-to search a specific result from its DOI in the search bar. Note that with the
-online BER/FER comparator it is very easy to share the selected curves with
-other people thanks to a permalink. The default proposed database is the
-\AFFECT database (error-rate references) but it is also possible to enable the
-database of the Kaiserslautern University. We wrote a script to automatically
-parse their online database\footnote{Kaiserslautern ML BER/FER database:
-\url{https://www.uni-kl.de/channel-codes/ml-simulation-results/}}. Otherwise it
-is still possible to load BER/FER references from local files. Many text formats
-are supported.
-
-\subsection{MATLAB Wrapper}
-
-In the signal processing community it is common to use MATLAB to implement and
-to evaluate new algorithms or/and configurations. More specifically, the
-\emph{communications toolbox} is often used. This toolbox contains a large set
-of algorithms of digital communication systems but they often lack of
-efficiency, especially for the channel decoder implementations. Knowing that,
-we developed a wrapper MATLAB to enable calls to the compiled \AFFECT library.
-The wrapper can be seen as a new MATLAB toolbox that proposes faster decoder
-implementations than the traditional MATLAB communications toolbox. \AFFECT
-also comes with channel decoders that are not available in the standard
-communications toolbox.
-
-The proposed MATLAB wrapper is automatically generated for the \AFFECT headers.
-The Clang compiler is used to generate the Abstract Syntax Tree (AST) of the
-\AFFECT source code and a Python script extracts useful classes and methods.
-These data are stored in a JSON database. Then, an other Python script as been
-written to generate \Cxx and MATLAB codes that effectively perform the interface
-between the \AFFECT library and MATLAB.
-At the time of the writing, the MATLAB wrapper has not been released yet.
-
-\subsection{Turbo Reader}
-
-\subsection{Command Line Interface}
+As \AFFECT is open-source, some of the previous works has been integrated inside
+the toolbox. However, it worth mentioning that \AFFECT is more often simply used
+than enriched. But, we believe that the proposed philosophy can lead to a
+growing community of contributors. We also know that bigger open-source
+projects, like GNU Radio, are considering to integrate some of the \AFFECT fast
+decoders.
 
 \section{Discussion}
