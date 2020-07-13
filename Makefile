@@ -374,12 +374,18 @@ chapter3_fig: main/chapter3/src/ldpc/bp_scheduling_hl.cpp \
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber -d simd_exp_mipp.tex
 	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber -d simd_final_beliefs_mipp.tex
 
-chapter4_fig: main/chapter4/src/library/modules_allocation.cpp \
-              main/chapter4/src/library/sockets_binding.cpp \
-              main/chapter4/src/library/tasks_execution.cpp \
-	            main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module.tex \
-              main/chapter4/fig/soft_archi/com_chain_task_module/colors
-	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber -d com_chain_task_module.tex
+chapter4_fig: main/chapter4/src/archi/task_registering.cpp \
+              main/chapter4/src/use_cases/library/modules_allocation.cpp \
+              main/chapter4/src/use_cases/library/sockets_binding.cpp \
+              main/chapter4/src/use_cases/library/tasks_execution.cpp \
+              main/chapter4/src/use_cases/simulator/input.txt \
+              main/chapter4/src/use_cases/simulator/output.txt \
+              main/chapter4/fig/use_cases/library_task_module/library_task_module.tex \
+              main/chapter4/fig/use_cases/library_task_module/colors \
+              main/chapter4/fig/ci_cd/pipeline/pipeline.tex \
+              main/chapter4/fig/ci_cd/pipeline/colors
+	cd main/chapter4/fig/use_cases/library_task_module/ && rubber -d library_task_module.tex
+	cd main/chapter4/fig/ci_cd/pipeline/                && rubber -d pipeline.tex
 
 chapter5_fig: main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total.tex \
               main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem.tex \
@@ -592,7 +598,7 @@ old_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
          main/chapter3/fig/polar/scl_spc/dat/data_snr_diff.txt \
          main/chapter3/fig/polar/scl_spc/dat/data_spc.txt \
          main/chapter3/fig/polar/scl_spc/dat/data_spc_diff.txt \
-         main/chapter4/fig/soft_archi/com_chain_task_module/com_chain_task_module_old.svg \
+         main/chapter4/fig/use_cases/library_task_module/library_task_module_old.svg \
          main/chapter5/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_old.gp \
          main/chapter5/fig/polar/sc_energy_implems_vs/dat/A15_1100MHz_R05_intra_inter_bis.dat \
          main/chapter5/fig/polar/sc_energy_freq/sc_energy_freq_old.gp \
@@ -625,7 +631,7 @@ old_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
 	cd main/chapter3/fig/polar/scl_spc/                    && gnuplot  scl_spc.gp
 	cd main/chapter3/fig/polar/scl_spc/                    && gnuplot  scl_spc_diff_old.gp
 	cd main/chapter3/fig/polar/patterns/                   && fig2mpdf patterns_old.fig
-	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && inkscape com_chain_task_module_old.svg --export-pdf=com_chain_task_module_old.pdf
+	cd main/chapter4/fig/use_cases/library_task_module/    && inkscape library_task_module_old.svg --export-pdf=library_task_module_old.pdf
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && gnuplot  sc_energy_implems_vs_old.gp
 	cd main/chapter5/fig/polar/sc_energy_freq/             && gnuplot  sc_energy_freq_old.gp
 	cd main/chapter5/fig/polar/sc_energy_rate/             && gnuplot  sc_energy_rate_old.gp
@@ -715,7 +721,8 @@ clean: clean4all
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean simd_norm_soa_mipp
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean simd_exp_mipp
 	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean simd_final_beliefs_mipp
-	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber --clean com_chain_task_module
+	cd main/chapter4/fig/use_cases/library_task_module/    && rubber --clean library_task_module
+	cd main/chapter4/fig/ci_cd/pipeline/                   && rubber --clean pipeline
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_w_comp
 	cd main/chapter5/fig/polar/sc_gen_l1i_size/            && rubber --clean sc_gen_l1i_size_wo_comp
 	cd main/chapter5/fig/polar/sc_gen_thr_inter/           && rubber --clean sc_gen_thr_inter_arm
@@ -826,7 +833,8 @@ mrproper: clean4all
 	cd main/chapter3/fig/scma/simd_norm/                   && rubber --clean -d simd_norm_soa_mipp.tex
 	cd main/chapter3/fig/scma/simd_exp/                    && rubber --clean -d simd_exp_mipp.tex
 	cd main/chapter3/fig/scma/simd_final_beliefs/          && rubber --clean -d simd_final_beliefs_mipp.tex
-	cd main/chapter4/fig/soft_archi/com_chain_task_module/ && rubber --clean -d com_chain_task_module.tex
+	cd main/chapter4/fig/use_cases/library_task_module/    && rubber --clean -d library_task_module.tex
+	cd main/chapter4/fig/ci_cd/pipeline/                   && rubber --clean -d pipeline.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_total.tex
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rubber --clean -d sc_energy_implems_vs_mem.tex
 	cd main/chapter5/fig/polar/sc_energy_freq/             && rubber --clean -d sc_energy_freq_a7.tex
@@ -877,7 +885,7 @@ clean_old_fig:
 	cd main/chapter3/fig/polar/scl_spc/                    && rm -f scl_spc.pdf
 	cd main/chapter3/fig/polar/scl_spc/                    && rm -f scl_spc_diff_old.pdf
 	cd main/chapter3/fig/polar/patterns/                   && rm -f patterns_old.pdf
-	cd main/chapter4/fig/soft_archi/                       && rm -f com_chain_task_module_old.pdf
+	cd main/chapter4/fig/soft_archi/                       && rm -f library_task_module_old.pdf
 	cd main/chapter5/fig/polar/sc_energy_implems_vs/       && rm -f sc_energy_implems_vs_old.pdf
 	cd main/chapter5/fig/polar/sc_energy_freq/             && rm -f sc_energy_freq_old.pdf
 	cd main/chapter5/fig/polar/sc_energy_rate/             && rm -f sc_energy_rate_N2048_old.pdf

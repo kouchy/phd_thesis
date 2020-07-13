@@ -35,7 +35,7 @@
     \node[tsk ] (dem) at ( 8, 0) {demodulate};
     \node[sout] (dem_so) at (8-1.25, 0) {};
     \node[sin ] (dem_si) at (8+1.25, 0) {};
-    \node[tsk ] (dec) at ( 4, 0) {decode};
+    \node[tsk ] (dec) at ( 4, 0) {decode\_siho};
     \node[sin ] (dec_so) at (4-1.25, 0) {};
     \node[sout] (dec_si) at (4+1.25, 0) {};
     \node[tsk ] (mnt) at ( 0, 0) {check\_errrors};
@@ -49,12 +49,12 @@
     \node[mdl, label={[Paired-3]above:Decoder}, dashed, fit=(dec) (dec_si) (dec_so)] {};
     \node[mdl, label={[Paired-3]above:Monitor}, dashed, fit=(mnt) (mnt_si1) (mnt_si2)] {};
 
-    \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {};
-    \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {};
-    \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {};
-    \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {};
-    \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {};
-    \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {};
+    \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {$\bm{u}$};
+    \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {$\bm{c}$};
+    \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {$\bm{x}$};
+    \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {$\bm{y}$};
+    \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {$\bm{l}$};
+    \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {$\bm{\hat{u}}$};
     \draw[->,>=latex] (src_so.east) -- (2,4) |- (mnt_si1.east) node [midway, above] {};
 
     \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (-1+0.0, 1.7) {};

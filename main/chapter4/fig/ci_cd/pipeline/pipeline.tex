@@ -1,0 +1,35 @@
+\documentclass{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{eulervm}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{environ}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{patterns}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+
+\input{colors}
+
+\begin{document}
+  \begin{tikzpicture}%[scale=\tikzscale]
+    \tikzset{ stage/.style ={draw=black, rounded corners=4pt, minimum height=0.7cm, text=black} }
+
+    \node[stage                          ] (analysis) at (0,0) {Analysis};
+    \node[stage, right=1.00cm of analysis] (build)             {Build};
+    \node[stage, right=1.00cm of build   ] (check)             {Check};
+    \node[stage, right=1.00cm of check   ] (test)              {Test};
+    \node[stage, right=1.00cm of test    ] (coverage)          {Coverage};
+    \node[stage, right=1.00cm of coverage] (deploy)            {Deploy};
+
+    \draw[->,>=latex] (analysis) -- (build);
+    \draw[->,>=latex] (build)    -- (check);
+    \draw[->,>=latex] (check)    -- (test);
+    \draw[->,>=latex] (test)     -- (coverage);
+    \draw[->,>=latex] (coverage) -- (deploy);
+  \end{tikzpicture}
+\end{document}

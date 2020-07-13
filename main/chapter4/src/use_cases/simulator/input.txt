@@ -1,0 +1,1 @@
+$ aff3ct -C "POLAR" -K 1723 -N 2048 -m 1 -M 4 -s 1 --dec-type "SC"

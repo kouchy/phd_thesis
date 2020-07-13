@@ -38,6 +38,7 @@
 \usepackage{subfig} % multi figures
 \usepackage{adjustbox} % rotate big table 90 degree
 \usepackage[strict]{changepage}
+\usepackage{tipa} % to make the phonetic "ə" for the AFF3CT pronunciation
 
 % Parameters ------------------------------------------------------------------
 \setcounter{secnumdepth}{3} % package 'minitoc'
@@ -103,6 +104,9 @@
 %     backrefpage  = {see p.}, % for single page number
 %     backrefpages = {see pp.} % for multiple page numbers
 % }
+
+% reduce the space between the lstlisting and its caption
+\AtEndEnvironment{listing}{\vspace{-10pt}}
 
 % Math operators --------------------------------------------------------------
 \DeclareMathOperator{\card}{card}
