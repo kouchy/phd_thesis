@@ -1,1498 +1,1004 @@
 %!TEX root = ../my_thesis.tex
 
-\graphicspath{{main/chapter5/fig/}}
+\renewcommand{\curChapter}{main/chapter5}
 
-\chapter{Performance Evaluations and Comparisons}
-\label{chap:eval}
+\chapter{Embedded Domain Specific Language for the Software-Defined Radio}
+\label{chap:sdr}
 
-% \vspace*{\fill}
+This chapter presents a new embedded Domain Specific Language (eDSL) dedicated
+to the Software-Defined Radio (SDR). The first section discusses the existing
+models and solutions. It also motivates the need of a new dedicated language for
+the SDR.
+
+In a second part a description of the proposed eDSL is given and detailed in
+two sub-sections: the elementary components are presented first and then the
+parallel components are described.
+
+The third part is focusing on the implementations of the previously presented
+components. Among others, the sequence duplication technique and the pipeline
+implementation are discussed.
+
+Finally, the last part shows a concrete use case of the proposed eDSL on the
+well-spread DVB-S2 standard. A full digital transceiver has been designed in
+software. The DVB-S2 standard is presented from an applicative point of view
+(transmitter and receiver) and is then evaluated on a specific CPU target.
+
+\vspace*{\fill}
 \minitoccustom
-% \vspace*{\fill}
+\vspace*{\fill}
 
-\section{Polar Decoders}
+\section{Related Works}
 
-\subsection{Generated/Unrolled Successive Cancellation Decoders}
+Digigtal communication systems are traditionally implemented onto dedicated
+hardware (ASIC) targeting high throughputs, low latencies and energy efficiency.
+However, the implementations of such solutions suffer from a long time to
+market, are expensive and are specific by nature~\cite{Palkovic2010,
+Palkovic2012}.
 
-\begin{itemize}
-  \item \xmark~Remplacer P-EDGE par AFF3CT
-\end{itemize}
+The new standards like the 5G are coming with very large specifications and
+multiple possible configurations~\cite{ETSI2018}. Small objects that need to
+communicate very few data at low rates are going to live together with 4K video
+streaming for mobile phone games which will require high throughputs as well as
+low latencies~\cite{Rost2014}.
 
-In this section we first discuss the results of our tree compression technique,
-then we describe the protocol we used. At the end we provide a performance
-comparison between the state-of-the-art and P-EDGE.
+To meet those various specifications the transceivers have to be able to adapt
+quickly to new configurations. There is a growing need for flexible,
+re-configurable and programmable solutions. To match those constraints, there is
+a growing interest for the SDR which consists in processing both the Physical
+(PHY) and Medium Access Control (MAC) layers in software~\cite{Mitola1993}, as
+opposed to the traditionally hardware-based solutions. Short time to market,
+lower development costs, interoperability, readiness to adapt to future updates
+and new protocols are the mains advantages of the SDR~\cite{Akeela2018}.
 
-\subsubsection{Source Code Compression}
+The SDR can be implemented on various targets like Field Programmable Gate
+Arrays (FPGAs)~\cite{Coulton2004,Skey2006,Dutta2010,Shaik2013,Maheshwarappa2015,
+Nivin2016}, Digital Signal Processors (DSPs)~\cite{Kaur2008,Karlsson2013,
+Shaik2013} or General Purpose Processors (GPPs)~\cite{Yoge2012,Bang2014,
+Meshram2019,Grayver2020}. Many elementary blocks of digital communication
+systems have been optimized to run fast on Intel\R and ARM\R
+CPUs~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Cassagne2018,Leonardon2019,
+Ghaffari2019} and have been packaged in AFF3CT~\cite{Cassagne2017a,
+Cassagne2019a}. Even if there is some interesting results in term of throughput
+on GPUs~\cite{Xianjun2013,Li2014,LeGal2014a,Giard2016b,Keskin2017a}, the
+achieved latency on this architecture is still too high to meet real time
+constraints and cannot compete with existing CPU
+implementations~\cite{LeGal2015a,Cassagne2015c,Giard2016b,Cassagne2016a,
+LeGal2017,Leonardon2019,LeGal2019a}. This is mainly due to data transfers
+between the host (CPUs) and the device (GPUs), and to the intrinsic nature of
+the GPU architecture which is not optimized for latency efficiency.
 
-For all the test series, the bandwidth first increases with codeword size, as
-the tree pruning becomes increasingly more effective with larger trees. The
-effect is stronger for Intra-SIMD where pruning also results in removing
-inefficient scalar nodes. However, beyond a codeword size point which depends on
-the architecture and on the selected SIMD version, performance decreases again
-due to L1 cache misses, not only L1D but L1I as well. Indeed, decoders are
-generated as straight-line code (no recursive calls), with all node computations
-put in sequence. This improves performance for small to medium codeword size, up
-to the point where the compiled binary exceeds the L1I cache size.
-% ---- to remove, already explained in chap 3
-We mitigated this issue by reducing decoder binary sizes using two compression
-techniques: 1) in the generated code, we moved the buffer offsets from template
-arguments to function arguments, which enabled the compiler to factorize more
-function calls than before (improvement by a factor of 10), 2) we implemented a
-sub-tree folding algorithm in the generator.
-% ---- to remove, already explained in chap 3
+\subsection{Dataflow Model}
 
-\begin{table}[htp]
-  \centering
-  \caption
-    [Code size (in KB) of the generated SC decoders.]
-    {Code size (in KB) of the generated decoders depending on the number of bits
-    $N$ per frame (code respectively compiled with AVX instructions for the
-    32-bit decoders and with SSE4.1 instructions for the 8-bit decoders). For
-    comparison, code size without compression are shown in parentheses.}
-  \label{tab:eval_polar_sc_gen_l1i_size}
-  \begin{tabular}{r r r r r r r}
-    \textbf{Decoder}         & $\bm{N = 2^6}$ & $\bm{N = 2^8}$ & $\bm{N = 2^{10}}$ & $\bm{N = 2^{12}}$ & $\bm{N = 2^{14}}$ & $\bm{N = 2^{16}}$           \\
-    \hline
-    \hline
-    inter 32-bit, $R = 1/2$  & 1 (7)          & 2 (24)         & 7 (\textbf{77})   & 9 (\textbf{254})  & 19 (\textbf{736}) & \textbf{40} (\textbf{2528}) \\
-    % \hline
-    inter 32-bit, $R = 5/6$  & 1 (4)          & 2 (19)         & 4 (\textbf{53})   & 7 (\textbf{167})  & 16 (\textbf{591}) & 32          (\textbf{1758}) \\
-    % \hline
-    intra 32-bit, $R = 1/2$  & 1 (4)          & 3 (16)         & 9 (\textbf{56})   & 8 (\textbf{182})  & 19 (\textbf{563}) & \textbf{38} (\textbf{1947}) \\
-    % \hline
-    intra 32-bit, $R = 5/6$  & 1 (3)          & 3 (13)         & 6 (\textbf{38})   & 7 (\textbf{126})  & 20 (\textbf{392}) & 27          (\textbf{1365}) \\
-    % \hline
-    inter ~8-bit, $R = 1/2$  & 1 (5)          & 2 (22)         & 7 (\textbf{72})   & 8 (\textbf{252})  & 17 (\textbf{665}) & \textbf{36} (\textbf{2220}) \\
-    % \hline
-    inter ~8-bit, $R = 5/6$  & 1 (4)          & 2 (18)         & 4 (\textbf{51})   & 6 (\textbf{191})  & 14 (\textbf{461}) & 26          (\textbf{1555}) \\
-  \end{tabular}
-\end{table}
+The Shanon's communication model presented in
+Section~\ref{sec:ctx_digital_communication_systems} can be refined in a way
+that the transmitter and the receiver are decomposed into many processing
+blocks. Those blocks are mainly connected to each other in an directed graph.
+This perfectly matches the dataflow model~\cite{Dennis1980,Ackerman1982}: the
+blocks are the filters and the binding links between the blocks represent the
+data exchanges. The dataflow model enables to describe the system from a high
+level point of view and to perform optimizations independently of the system
+designer. In the case of the SDR, simpler models than the generalized dataflow
+can be used like the synchronous dataflow~\cite{Lee1987} or the cyclo-static
+dataflow~\cite{Engels1994,Bilsen1995}. It enables to perform aggressive
+simplifications like a static scheduling of the filters
+execution~\cite{Parks1995}.
+
+\subsection{Dedicated Languages}
+
+Many languages dedicated to streaming applications have been
+introduced~\cite{Buck2004,Amarasinghe2005,Liao2006,Black-Schaffer2010,
+Glitia2010,Thies2010,DeOliveiraCastro2017}. Streaming applications are most of
+the time represented with the dataflow model and the dedicated languages often
+support the general or the cyclo-static dataflow model. They also very often
+come with automatic parallelism mechanisms like pipelining and forks/joins. With
+dedicated languages it is natural to describe a system with the dataflow model.
+The main drawbacks of this type of solution is that the designer has to learn a
+new language. But, when something is not intended by the language it is hard to
+find a workaround.
+
+\subsection{GNU Radio}
+
+There are few solutions targeting specifically the SDR sub-domain yet. The most
+famous is GNU Radio~\cite{GNURadio} which is open source and largely adopted by
+the community. The software is bundled with a large variety of algorithms used
+in real life systems. GNU Radio models digital communication systems at the
+symbol level. This philosophy is very close to the algorithms descriptions that
+can be found in the signal community literature. Thus, it enables quick
+implementation of new digital processing algorithms. Still, this is a limitation
+to meet high throughputs and low latencies constraints on current GPPs
+architectures.
+
+\section{Description of the Proposed Embedded Domain Specific Language}
+
+This section details, through \AFFECT, our proposition of an embedded Domain
+Specific Language (eDSL) working on sets of symbols (aka frames). \AFFECT
+implements a form of the synchronous dataflow (SDF) model dedicated to the
+relevant characteristics of FEC digital communication chains. It performs more
+aggressive optimizations than GNU Radio, at the cost of lower generality.
+
+Many \Cxx eDSLs are based on the template meta-programming technique. It
+performs computations at the compilation time instead of during the program
+execution. In \AFFECT we decided to not use the \Cxx template meta-programming
+for the eDSL. This choice has been made to match the existing internal
+organization of the project and more precisely the \emph{modules}, \emph{tasks}
+and \emph{sockets} components. It was also comforted by one of the main draw
+back of the template-based eDSLs: the errors management and reporting. A
+non-negligible part on the proposed eDSL is dedicated to error verifications and
+clear messages display. Of course the static scheduling implied by the
+synchronous dataflow model could theoretically be resolved at the compilation
+time. Instead of that, the scheduling of the tasks is precomputed at the runtime
+and the execution order is stored in an array of function pointers
+(\verb|std::function|). The cost of the execution of the tasks is very cheap
+(consecutive function calls). It means that the overhead is negligible compared
+to a template-based solution.
+
+\subsection{Elementary Components}
+
+The proposed eDSL comes with a set of elementary components: \emph{sequence},
+\emph{module}, \emph{task} and \emph{socket}. The \emph{module}, \emph{task} and
+\emph{socket} components have been reused and enriched from the \AFFECT library
+(cf. Section~\ref{sec:aff3ct_library_example}).
+
+In the eDSL the \emph{task} is the fundamental component. It is also known as
+the \emph{filter} in the standard dataflow model. A task is an elementary
+component, it can be an encoder, a decoder or a modulator processing for
+instance. A task, unlike a dataflow filter, can have an internal state and a
+private memory to store temporary data. If the lifetime of the private data
+exceeds the task execution then the data is owned by the \emph{module}.
+Additionally a set of tasks can share the same internal/private memory, in that
+case, multiple tasks are regrouped in a single module. This behavior is not
+recommended by the standard dataflow model. It should be avoided in a fully
+dataflow-compliant model. The main problem with internal memory is that the
+tasks cannot be executed safely by many threads in parallel because of data
+races. However, in many situations the writing of a task or a set of tasks can
+be simplified by relieving this constraint. Furthermore, storing private data in
+the module can be, in some cases, a way to avoid to allocate memory for each
+task execution which is expensive.
+
+A task can consume and produce public data. To this purpose, each task exposes
+input and/or output \emph{sockets}. The action of connecting the sockets of
+different tasks is called the \emph{binding} (cf.
+Fig.~\ref{fig:aff3ct_library_task_module}). The binding determines the tasks
+execution order.
+
+Tasks that have been bound together can be regrouped in what we call a
+\emph{sequence} of tasks. The sequence notion reminds us that the tasks are
+executed sequentially in a fixed order (like in the SDF model). To create a
+sequence, the designed has to give the first tasks and the last tasks to
+execute. Then the connected tasks will be analyzed and a sequence object will be
+built. The analysis is a deep traversal of the tasks graph. The order in which
+the tasks have been traversed is memorized in the sequence. When the designer
+calls the \verb|exec| method on a sequence, the tasks constituting it are
+executed one by one in the memorized order (static scheduling).
+
+The proposed eDSL is targeting streaming applications and more precisely signal
+processing and digital communication chains. In this type of applications, the
+processing is repeated indefinitely on batches of frames when the system is on.
+So, a sequence is executed in loop, it means that when the last task is
+executed, the next task is the first one on the next frame. The designed can
+control if the sequence should restart by giving a \emph{condition function}
+when calling the \verb|exec| method on the sequence. The prototype of the
+function is \verb|bool cond_func(void)|: if the function returns \emph{false},
+the sequence is repeated, else, if the function returns \emph{true}, the
+sequence is stopped.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Without compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
-  % \quad
-  \\
-  \subfloat[][With compression]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
-  \caption{Generated SC decoder binary sizes depending on the frame size
-    ($R=1/2$).}
-  \label{plot:eval_polar_sc_gen_l1i_size}
-\end{figure}
-
-Table~\ref{tab:eval_polar_sc_gen_l1i_size} and
-Fig.~\ref{plot:eval_polar_sc_gen_l1i_size} show the binary code size of the
-decoders depending on $N$. The results which exceed the 32KB of the L1I cache
-are highlighted in bold font. Sub-tree folding was enabled starting from
-$N=2^{12}$ because there is an overhead (at run-time) when using this technique.
-P-EDGE decoder code sizes without compression are shown in parentheses: we can
-observe a huge improvement, until $N=2^{14}$ the code size never exceeds the L1I
-cache anymore. In~\cite{Giard2016b}, authors report that they can't compile
-codes longer than $N = 2^{15}$. The proposed compression technique allows to
-exceed that limit.
-
-\subsubsection{Experimentation Protocol}
-
-\begin{table}[htp]
-  \centering
-  \caption{Performance evaluation platforms.}
-  \label{tab:eval_polar_sc_gen_thr_specs}
-  %{\scriptsize
-  \begin{tabular}{c | c c c}
-                                     & \textbf{x86-based}     & \textbf{ARMv7-based} & \textbf{prev. work arch.}\cite{Sarkis2014} \\
-  \hline
-  \hline
-  \multirow{2}{*}{\textbf{CPU}}      & Intel\R Xeon\TM E31225 & ARM\R Cortex-A15     & Intel\R Core\TM i7-2600 \\
-                                     & 3.10Ghz                & MPCore~2.32GHz       & 3.40GHz                 \\
-  \hline
-  \multirow{2}{*}{\textbf{Cache}}    & 32KB L1I/L1D,          & 32KB L1I/L1D,        & 32KB L1I/L1D,           \\
-                                     & 256KB L2, 6MB L3       & 1024KB L2, No L3     & 256KB L2, 8MB L3        \\
-  \hline
-  \multirow{1}{*}{\textbf{Compiler}} & GNU g++~4.8            & GNU g++~4.8          & GNU g++~4.8             \\
-  % \hline
-  % Flags for 32-bit& \verb|-std=c++11 -Ofast -funroll-loops -mavx|\\
-  % Flags for 8-bit & \verb|-std=c++11 -Ofast -funroll-loops -msse4.1|\\
-  \end{tabular}
-  %}
-  % \vspace{-1.5em}
-\end{table}
-
-The platforms used for performance evaluation are shown in
-Table~\ref{tab:eval_polar_sc_gen_thr_specs}. Unless stated otherwise, each
-measure is obtained as the best of ten runs of a 10~second simulation, taking
-into account frame loading and result storing. SNR (Signal Noise Ratio) is set
-to 2.5~dB for tests with 1/5 and 1/2 rates, and to 4.0 dB for the 5/6, 0.84, and
-9/10 rate tests. Colors differentiate the codes rates of the Polar Code, point
-shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
-
-\subsubsection{Comparison between P-EDGE and the State of the Art}
-
-\begin{figure}[htp]
-  \centering
-  \subfloat[][Intel\R Xeon\TM E31225 (SSE4.1 SIMD)]{\includegraphics[width=0.485\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra_x86}\label{plot:eval_polar_sc_gen_thr_intra_x86}}
+  \subfloat[][Simple chain sequence.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_chain}\label{fig:dsl_sequence_chain}}
   \quad
-  % \\
-  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
-  \caption
-    [SC performance comparison between several code rates (intra-frame
-     vectorization).]
-    {Performance comparison between several code rates of 32-bit floating-point
-    decoding stages (intra-frame vectorization). Squares show AFF3CT results.
-    Crosses show the implementation results from~\cite{Sarkis2014}.}
-  \label{plot:eval_polar_sc_gen_thr_intra}
+  \subfloat[][Sequence with multiple first and last tasks.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_generic}\label{fig:dsl_sequence_generic}}
+  \caption{Example of sequences.}
+  \label{fig:dsl_sequence}
 \end{figure}
 
-\begin{table}[htp]
-  \centering
-  \caption
-    [Comparing SC software decoder with the state-of-art (intra-frame SIMD).]
-    {Comparing SC with a state-of-art software polar decoder, for codes of
-    rate 0.84 and rate 0.9, using Intra-SIMD. The two cross marks show
-    state-of-the art performance results reported in~\cite{Sarkis2014}, for
-    comparison.}
-  \label{tab:eval_polar_sc_gen_thr_comparison}
-  \begin{tabular}{r  r  r  r}
-    $\bm{(N, K)}$                   & \textbf{Decoder}     & \textbf{Info T/P} & \textbf{Latency} \\
-                                    &                      &            (Mb/s) &         ($\mu$s) \\
-    \hline
-    \hline
-  %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1024)}   & \cite{Sarkis2014}    & 147                      & 7               \\
-  %                                 & \cite{Cassagne2015c} & 195                      & 5               \\
-  % \hline
-  %%this performance is included in the graphs
-  % \multirow{2}{*}{(2048, 1707)}   & \cite{Sarkis2014}    & 335                      & 5               \\
-  %                                 & \cite{Cassagne2015c} & 402                      & 4               \\
-  % \hline
-    \multirow{2}{*}{(16384, 14746)} & \cite{Sarkis2014}    & 292                      & 50              \\
-                                    & \cite{Cassagne2015c} & 341                      & 43              \\
-    \hline
-    \multirow{2}{*}{(32768, 27568)} & \cite{Sarkis2014}    & 220                      & 125             \\
-                                    & \cite{Cassagne2015c} & 241                      & 114             \\
-    \hline
-    \multirow{2}{*}{(32768, 29492)} & \cite{Sarkis2014}    & 261                      & 113             \\
-                                    & \cite{Cassagne2015c} & 293                      & 101             \\
-  \end{tabular}
-\end{table}
+Fig.~\ref{fig:dsl_sequence} shows two examples of sequence.
+Fig.~\ref{fig:dsl_sequence_chain} is a simple chain of tasks. The designer only
+needs to specify the first task of the chain ($t_1$). The sequence analysis
+automatically follows the binding until the last task ($t_4$).
+Fig.~\ref{fig:dsl_sequence_generic} is more complicated. Indeed there are bound
+tasks before and after the wanted sequence. There are also two \emph{first}
+tasks ($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and $t_6$). In this
+case, the designer needs to explicitly specify that $t_1$ and $t_3$ are first
+tasks. If $t_1$ is given before $t_3$ then $t_1$ will be executed first and
+$t_3$ after. The analysis starts from $t_1$ and continue to traverse new tasks
+if possible. In this example, $t_2$ can be executed directly after $t_1$ but
+$t_4$ cannot because it depends on $t_3$. So the analysis stops after $t_2$ and
+then restarts from $t_3$. The index $i$ of the $t_i$ task represents the
+execution order. The $t_5$ and $t_6$ last tasks have to be given by the designer
+because there are other tasks bound to their output sockets: the analysis cannot
+guess the end of the sequence alone.
+
+In general, all the tasks of a sequence are repeated in the same predefined
+order. But it some particular cases, a task can raise the
+\verb|tools::processing_aborted| exception to restart the sequence (on the next
+frame) before its end. For instance, in Fig.~\ref{fig:dsl_sequence_chain} if the
+$t_3$ task raises the \verb|tools::processing_aborted| exception, then the next
+executed task is $t_1$ instead of $t_4$.
+
+Some digital communication scenarios include repeated schemes. To map a repeated
+scheme, we introduced a specific type of task: the \emph{loop}. This task is
+executed one or more times depending on a \emph{condition}. A loop is bound to
+two sub-sequences of tasks. The first one is executed and repeated while the
+condition is \emph{false} and the second one is taken when the condition is
+\emph{true}.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Intel\R Xeon\TM E31225 (SSE4.1 SIMD)]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter_x86}\label{plot:eval_polar_sc_gen_thr_inter_x86}}
-  % \quad
+  \includegraphics[width=0.90\textwidth]{\curChapter/fig/dsl/loop/loop}
+  \caption
+    [Example of a sequence of tasks with a loop.]
+    {Example of a sequence of tasks with a loop.}
+  \label{fig:dsl_loop}
+\end{figure}
+
+Fig.~\ref{fig:dsl_loop} illustrates a sequence of tasks with a loop. In this
+particular case, the loop condition is based on an input socket. So the
+condition evaluation is dynamic and depends on the runtime values of this input
+socket. In a first place, the sub-sequence 1 is executed; then the loop
+condition is evaluated; if the condition return \emph{false} the sub-sequence 2
+is executed and the loop condition is re-evaluated until it returns \emph{true}.
+At this point the sub-sequence 3 is executed. After the execution on the
+sub-sequence 1, the convention in the loop is to use the input sockets 1 and 3.
+The input socket 1 is only applied for the condition evaluation whereas the
+input socket 3 is simply forwarded to the output socket 1 and 2. If the
+sub-sequence 2 is executed, the input sockets 2 and 4 will be used until the end
+of the loop.
+
+In the example the loop uses an input socket to evaluate the condition. This is
+common in iterative demodulation/decoding schemes when the overall system can
+have an early termination criterion like a CRC detection. Of course, it is also
+possible to override the loop behavior by inheriting from it. The condition
+evaluation process can be modified by the designer. The loop can be a predicate:
+in this case, the condition evaluation does not require any input socket. The
+predicate can be a counter. Each time the condition is evaluated, the counter is
+incremented. When the counter reaches a given value then the condition
+evaluation returns \emph{true} (\emph{for-loop} behavior).
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[scale=0.85]{\curChapter/fig/dsl/nested_loops/nested_loops}
+  \caption
+    [Nested loops.]
+    {Nested loops.}
+  \label{fig:dsl_nested_loops}
+\end{figure}
+
+The overall system also supports nested loops. The idea is to regroup the tasks
+in sub-sequences: one before the loop and two after the loop. This is
+implemented as a binary tree. Each time a loop is encountered, two new paths are
+created. Fig.~\ref{fig:dsl_nested_loops} shows an example with two loops ($L_1$
+and $L_2$). Five sub-sequences of tasks are created ($SS_x$): one before $L_1$
+($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$ and
+$SS_4$). In this example $L_2$ is a nested loop. Indeed, it is an inner loop
+within the body of an outer one ($L_1$).
+
+\subsection{Parallel Components}
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics{\curChapter/fig/dsl/sequence_dup/sequence_dup}
+  \caption
+    [Sequence duplication for multi-threaded execution.]
+    {Sequence duplication for multi-threaded execution.}
+  \label{fig:dsl_sequence_dup}
+\end{figure}
+
+A created sequence can be duplicated. This way many threads can execute the
+sequence in parallel. The $t$ number of duplications (= number of threads) is a
+parameter of its constructor. As shown in Fig.~\ref{fig:dsl_sequence_dup}, one
+thread is affected to one duplicated chain. Thus, a sequence is able to take
+advantage of the multi-core architectures. For instance, the \AFFECT simulator,
+extensively exploits the sequence duplication feature to automatically
+parallelize the processing. The duplication strategy is efficient since no
+synchronization is necessary between the threads. Each threaded sequence can
+be executed on one dedicated core and the public data transfers remain on this
+core for the data reuse in the caches. However this parallelism is only possible
+if the tasks themselves can be duplicated.
+
+In some particular cases like in the signal synchronization processing, the
+tasks can have a dependency on themselves. It is then impossible to duplicate
+the sequence because of the sequential nature of the tasks. To overcome this
+issue the well-known pipelining strategy can be applied to increase the sequence
+throughput up to the slowest task throughput. The proposed eDSL comes with a
+specific \emph{pipeline} component to this purpose. The pipeline takes multiple
+sequences as input. Each sequence of the pipeline is called a \emph{stage}. A
+pipeline stage is run on one thread. For instance, a 4-stage pipeline creates
+4~threads, one thread per stage. A pipeline stage can be combined with the
+sequence duplication strategy. It means that there are nested threads in the
+current stage thread. Be aware that the pipelining strategy comes with an extra
+synchronization cost between the stage threads. The implementation details will
+be discussed in the next section. It worth mentioning that is not possible to
+split a loop in separated pipeline stages.
+
+\section{Implementation Strategies}
+
+\subsection{Implicit Rules}
+
+In the proposed eDSL, an input socket can only be bound to one output socket
+while an output socket can be bound to multiple input sockets. A task can only
+be executed if all its input sockets are bound. In a sequence, the scheduling of
+the tasks is defined by the binding order. The general rule in the sequence
+analysis is to add a task to the array of function pointers when its last input
+socket is discovered in the deep first traversal of the tasks graph. After that,
+the output sockets of the current task are followed to reach new tasks. The new
+tasks are discovered in the order in which they were bound by the designer.
+
+\subsection{Sequence Duplication}
+
+In order to duplicate sequences, a \emph{clone} method is implemented in the
+modules. The \emph{clone} method is polymorphic and defined in the \emph{Module}
+abstract class. It relies on the implicit copy constructors and a \emph{deep
+copy} protected method (overridable). The \emph{clone} method prototype is
+\verb|module::Module* clone() const|. In an implementation (\emph{ModuleImpl})
+of the abstract \emph{Module} class, a covariant return type is used:
+\verb|module::ModuleImpl* clone() const|. The \emph{clone} method implementation
+first calls the implicit copy constructor of the \emph{ModuleImpl} class and
+secondly calls the \emph{deep copy} protected method. It is the responsibility
+of the \emph{ModuleImpl} developer to correctly override the \emph{deep copy}
+method.
+
+In a fully dataflow-compliant model, there is no need to duplicate the sequence
+because a filter (or task) is always thread-safe. In the proposed eDSL, we had
+to introduce the \emph{clone} method because a task can have an internal state
+and use private memory (stored in the module). It means that this task is not
+thread-safe. The \emph{deep copy} method deals with pointer and reference
+members. If the pointer/reference members are read-only (\verb|const|), then the
+implicit copy constructor copies the memory addresses automatically. The problem
+comes when there is writable pointer/reference members. If the current
+\emph{ModuleImpl} class possesses one ore more writable references then it means
+that the module can't be cloned. The tasks of the module are sequential. In
+the particular case of a writable pointer member, the developer can explicitly
+allocate a new pointer in the \emph{deep copy} method. Note that if a task does
+not implement the \emph{clone} method, the eDSL outputs an error message during
+the sequence analysis if the designer tries to make a duplication.
+
+\subsection{Processes}
+
+A sequence encapsulates a set of tasks and gives the opportunity to execute
+these tasks in a predefined order. The designer can also execute tasks
+explicitly, outside sequences. With a sequence, the analysis is able to match
+specific patterns (known configurations of bound tasks) and replace them by a
+more efficient source code. To this purpose the notion of \emph{process} has
+been introduced: in a sequence each task is encapsulated in a \emph{process}
+(this has nothing to do with OS processes). For the majority of the tasks, the
+\emph{process} just executes the task. But for some specific patterns, the task
+execution source code is replaced by a more efficient one. The pattern detection
+is based on a \Cxx introspection feature: during the analysis, for each parsed
+task, we try to cast (\verb|dynamic_cast|) the corresponding module in a
+specific class. In the next section, the processes are applied to improve the
+efficiency of the pipeline.
+
+\subsection{Pipeline}
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Description of a pipeline: tasks creation, tasks binding and
+              sequences/stages definition (with the corresponding number of
+              threads).]{
+    \includegraphics[scale=1]{\curChapter/fig/dsl/pipeline/pipeline_usr}
+    \label{fig:dsl_pipeline_usr}}
   \\
-  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.7\textwidth]{polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
-  \caption
-    [SC performance comparison between several code rates (inter-frame
-     vectorization).]
-    {Performance comparison between several code rates of 8-bit fixed-point
-    decoding stages (inter-frame vectorization). Squares show AFF3CT results.
-    Circles show the ``handwritten'' implementation results
-    from~\cite{LeGal2015a}.}
-  \label{plot:eval_polar_sc_gen_thr_inter}
+  \subfloat[][Automatic parallelization of a pipeline description: sequence
+              duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and
+              binding.]{
+    \includegraphics[width=1\textwidth]{\curChapter/fig/dsl/pipeline/pipeline_adp}
+    \label{fig:dsl_pipeline_adp}}
+  \caption{Example of a pipeline description and the associate transformation
+    with adaptors.}
+  \label{fig:dsl_pipeline}
 \end{figure}
 
-Fig.~\ref{plot:eval_polar_sc_gen_thr_intra} shows P-EDGE intra-frame throughput
-on different architectures. Our generic framework performance outperforms
-previous work decoder results (between 10\% and 25\% higher). This is confirmed
-in Tab.~\ref{tab:eval_polar_sc_gen_thr_comparison} which compares P-EDGE with
-the state-of-the-art result samples for some specific rates reported
-in~\cite{Sarkis2014}. The throughput of the inter-frame implementation is shown
-in Figure~\ref{plot:eval_polar_sc_gen_thr_inter} for different architectures.
-Again, the results confirm that our generic approach overtakes handwritten code
-(also between 10\% and 25\% higher on x86).
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/pipeline/pipeline.cpp}
+  \caption{\AFFECT \Cxx eDSL source code of the pipeline described in
+    Fig.~\ref{fig:dsl_pipeline}.}
+  \label{lst:dsl_pipeline}
+\end{listing}
 
-\subsection{Dynamic/Generic Successive Cancellation Decoders}
+In this section, the pipeline implementation is illustrated through a simple
+example. Fig.~\ref{fig:dsl_pipeline} shows the difference between a pipeline
+description (cf. Fig.~\ref{fig:dsl_pipeline_usr}) and its actual instantiation
+(cf. Fig.~\ref{fig:dsl_pipeline_adp}). In Fig.~\ref{fig:dsl_pipeline} we suppose
+that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated (filled in blue). The
+designer knows that the execution time of the $t_1$ task is higher than the
+cumulate execution time of $t_5$ and $t_6$ tasks. We assume that the cumulate
+execution time of $t_2$, $t_3$ and $t_4$ is approximatively four times higher
+than $t_1$. This knowledge motivates the splitting of the stages 1, 2 and 3.
+There is no need to split the $t_5$ and $t_6$ tasks in two stages because the
+overall throughput is limited by the slowest stage ($t_1$ here). The stage 2 is
+duplicated four times to increase its throughput by four as we know that its
+latency is approximatively four times the sequence 1. In general, a primarily
+profiling phase of the sequential code is required to define the pipeline
+strategy. Listing~\ref{lst:dsl_pipeline} presents the \Cxx eDSL source code
+corresponding to the pipeline description in Fig.~\ref{fig:dsl_pipeline_usr}.
+Each $t_i$ task is contained (as a method) in the $M_i$ module (or class). The
+four main steps are: 1) the creation of the modules; 2) the binding of the
+tasks; 3) the creation of the pipeline; 4) the pipeline execution.
 
-The objective and originality of this study is to explore different software and
-hardware parameters for the execution of a software SC decoder on modern ARM
-architectures. For a software decoder such as AFF3CT, many parameters can be
-explored, influencing performance and energy efficiency. The target rate and
-frame size are applicative parameters. The SIMDization strategies (intra-frame
-or inter-frame) and the features of decoders (generated or dynamic) are software
-parameters. The target architecture, its frequency and its voltage are hardware
-parameters. This study investigates the correlations between these parameters,
-in order to better choose the right implementation for a given applicative
-purpose. The low-power general purpose ARM32 and ARM64 processor testbeds based
-on big.LITTLE architecture are selected as representative of modern multi-core
-and heterogeneous architectures.
+Fig.~\ref{fig:dsl_pipeline_adp} presents the internal structure of the pipeline.
+As we can see, new tasks have been automatically added: \emph{push 1},
+\emph{pull n} shared by a \emph{1 to n adaptor} module and \emph{push n},
+\emph{pull 1} shared by a \emph{n to 1 adaptor} module. The binding as been
+modified to insert the tasks of the adaptors. For instance, in the initial
+pipeline description, $t_1$ is bound to $t_2$. In a parallel pipelined
+execution this is not possible anymore because many threads are running
+concurrently: one for $t_1$, four for $t_2$ and one for $t_3$ in the example. To
+this purpose, the adaptors implement a producer-consumer algorithm. The yellow
+diamonds represent the buffers of the producer-consumer algorithm. The
+\emph{push 1} and \emph{pull 1} tasks can only be executed by a unique thread
+while the \emph{pull n} and \emph{push n} tasks support to be executed by
+multiple threads concurrently. The \emph{push 1} task copies its input socket in
+one buffer each time it is called. There is one buffer per duplicated sequence
+(or thread). To guarantee that the order of the input frames is conserved, a
+round-robin scheduling has been adopted (at the first call, a copy to the first
+buffer is performed, at the second call, a copy to the second buffer is
+performed and so on). On the other side, the \emph{pull 1} task is copying the
+data from the buffers to its output socket, with the same round-robin
+scheduling.
 
-The flexibility of the AFF3CT software allows to alter many parameters and turn
-many optimizations on or off, leading to a large amount of potential
-combinations. For the purpose of this study, computations are performed with
-8-bit fixed-point data types, with all tree pruning optimizations activated. The
-main metric considered is the average amount of energy in Joules to decode one
-bit of information, expressed  as  $E_b = (P \times l) / (K \times n_f)$ where
-$P$ is the average power (Watts), $l$ is the latency (s), $K$ the number of
-information bits and $n_f$ is the number of frames decoded in parallel (in the
-inter-frame implementation $n_f > 1$).
+During the pipeline creation, it is possible to select the size of the
+synchronization buffers in the adaptors. The default buffer size is one (the
+buffers can only contain the data of one \emph{push 1} input sockets). During
+the copy of the input sockets data in one of the buffers, the corresponding
+thread cannot access the data until the copy is finished. The synchronization is
+automatically managed by the framework.
+% When the \emph{push 1} task (producer) finishes the copy, it increments a
+% \emph{head} counter by one then the corresponding \emph{pull n} task (consumer)
+% checks that the \emph{head} counter is higher than the \emph{tail} counter and
+% copies the data from the buffer to its output socket. When this copy is over,
+% the producer increments the \emph{tail} counter by one.
+If the buffer is full, the producer (\emph{push 1 and n} tasks) has to wait.
+It is similar for the consumer (\emph{pull 1 and n} tasks) if the buffer is
+empty. We implemented both active and passing waiting.
 
-\subsubsection{Dynamic versus Generated Approach}
+% The active waiting is a \emph{while-loop} over a condition (empty or full
+% buffer). The active waiting is the most efficient waiting strategy but it
+% requires to actively dedicate one core to the waiting. This is why, depending on
+% the hardware resources and the implemented pipeline, it may be better to use the
+% passive waiting alternative. The implementation of the passive waiting has been
+% achieved with the \Cxy{11} condition variables. In this case, when the current
+% thread is calling the \emph{wait} method over a condition variable, then the
+% core attached to thread is released and can perform other tasks during the
+% waiting. Waking up a waiting thread is made with the \emph{notify} method of the
+% condition variable. Waking up a thread come with an extra cost because of
+% required context switch, this is the main drawback of this method compared to
+% the active waiting. This overhead can be mitigated by using larger
+% synchronization buffers to overlap the thread context switch incompressible
+% time.
 
-By design, generated decoders are still faster than the dynamic decoder
-(up to 20\%). However each generated decoder is optimized for a single
-SNR. For very large frame sizes, the dynamic decoder outperforms generated
-decoders because the heavily unrolled generated decoders exceed Level 1
-instruction cache size capacity.
+In the previously described implementation, the copies from and to the buffers
+can take a non-negligible amount of time. Thus, the process encapsulation
+detailed before replaces the copies by pointer switches. The idea is to
+dynamically re-bind the tasks just before and just after the \emph{push} and
+\emph{pull} tasks. It is also necessary to to bypass the regular execution in
+the \emph{push 1}, \emph{pull n}, \emph{push n} and \emph{pull 1} tasks. The
+processes that encapsulate these tasks dynamically replace the source code of
+the data buffer copy by a simple pointer copy. The pointers are exchanged
+cyclically.
 
-\subsubsection{Experimentation Protocol}
+In Fig.~\ref{fig:dsl_pipeline_adp}, the pipeline threads are pinned to specific
+CPU cores. This is the direct consequence of the lines 38-43 in
+Listing~\ref{lst:dsl_pipeline}. The \emph{hwloc} library~\cite{Broquedis2010}
+has been used and integrated in \AFFECT to pin the software threads to
+processing units (PUs or hardware threads). In the given example, we assume that
+the CPU cores can only execute one hardware thread (SMT off) and so an
+\emph{hwloc} PU is equal to a CPU core. The threads pinning is given by the
+designer. It can improve the multi-threading performance when dealing with NUMA
+architectures.
 
-\begin{table}[htp]
-  \centering
-  \caption{Specifications of the \odr and the \juno boards.}
-  \label{tab:eval_polar_energy_arm_specs}
-  % {\footnotesize
-  \begin{tabular}{c | c c c}
-                                      & \textbf{ODROID-XU+E}      &          \textbf{\juno} &  \textbf{i7-4850HQ} \\
-    \hline
-    \hline
-    \multirow{2}{*}{\textbf{SoC}}     &  Samsung\R Exynos\TM 5410 &               ARM64 \bl &     Intel\R Core\TM \\
-                                      &           (Exynos 5 Octa) &         (dev. platform) &          i7-4850HQ  \\
-    \hline
-    \multirow{1}{*}{\textbf{Arch.}}   &             32-bit, ARMv7 &           64-bit, ARMv8 & 64-bit, x86 Haswell \\
-    \hline
-    \multirow{1}{*}{\textbf{Process}} &                      28nm &  unspecified (32/28 nm) &                22nm \\
+Fig.~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
+complicated task graphs can have more than two tasks to synchronize between two
+pipeline stages. The adaptor implementation can manage multiple socket
+synchronization. The key idea is to deal with a 2-dimensional array of buffers.
+Another difficult case is when a task $t_1$ is in stage 1 and possesses an
+output socket bound to an other task $t_{x}$ which is located in the stage 4.
+To work, the pipeline adaptors between the stages 1 and 2 and the stages 2 and 3
+automatically synchronize the data of the $t_1$ output socket.
 
-    \hline
-    \multirow{4}{*}{\textbf{\bigARM}} &       4xCortex-A15 MPCore &     2xCortex-A57 MPCore &  4 cores (with SMT) \\
-                                      &        freq. [0.8-1.6GHz] &     freq. [0.45-1.1GHz] &  freq. [2.3-3.5GHz] \\
-                                      &        L1I 32KB, L1D 32KB &      L1I 48KB, L1D 32KB &  L1I 32KB, L1D 32KB \\
-                                      &                    L2 2MB &                  L2 2MB &    L2 256KB, L3 6MB \\
-    \hline
-    \multirow{4}{*}{\textbf{\little}} &        4xCortex-A7 MPCore &     4xCortex-A53 MPCore &  \multirow{4}{*}{-} \\
-                                      &        freq. [250-600MHz] &      freq. [450-850MHz] &                     \\
-                                      &        L1I 32KB, L1D 32KB &      L1I 32KB, L1D 32KB &                     \\
-                                      &                  L2 512KB &                  L2 1MB &                     \\
-  \end{tabular}
-  % }
-\end{table}
+\section{Application on the DVB-S2 Standard}
 
-The experiments are conducted on two ARM~\bl platforms, an \odrx board using a
-32-bit Samsung Exynos 5410 CPU and the reference 64-bit \juno Development
-Platform from ARM running a Linux operating system, detailed in
-Table~\ref{tab:eval_polar_energy_arm_specs}.
+The second generation of Digital Video Broadcasting standard for Satellite
+(DVB-S2)~\cite{ETSI2005} is a flexible standard designed for broadcast
+applications. DVB-S2 is typically used for the digital television (HDTV with
+H.264 source coding). In this section, a concrete use case of the \AFFECT eDSL
+is detailed. The full DVB-S2 transmitter and receiver are implemented in a
+SDR-compliant system. Two Universal Software Radio Peripherals (USRPs)
+N320\footnote{USRP N320: \url{https://www.ettus.com/all-products/usrp-n320/}.}
+have been used for the analogical signal transmission and reception where all
+the digital treatments of the system have been implemented under \AFFECT. The
+purpose of this section is not to detail precisely all the implemented tasks
+but to expose the system as a whole. Some specific focuses are given to describe
+the main encountered problems and the adopted solutions.
 
-The \bigARM and the \little clusters of cores on the \odr board are on/off in a
-mutually exclusive way. The active cluster is selected through the Linux
-\verb|cpufreq| mechanism. Both clusters can be activated together or separately
-on the \juno board. Both platforms report details on supply voltage, current
-amperage, power consumption for each cluster. Only the \odr platform reports
-details for the RAM. Consequently, most experiments have been primarily
-conducted on the \odr platform to benefit from the additional insight provided
-by the RAM metrics.
-
-\subsubsection{Experiments and Measurements}
-
-\begin{table}[htp]
-  \centering
-  \caption
-    [Throughput, latency and \emph{energy-per-bit} of the dyn. SC decoders.]
-    {Characteristics for each cluster ($T_i$ is the information throughput), for
-    dyn. decoder. $N = 4096$, rate $R = 1/2$. The RAM
-    consumption is not included in $E_b$ and in $P$.}
-  \label{tab:eval_polar_energy_results}
-  %{\footnotesize
-  \begin{tabular}{r r r r r r r}
-    \textbf{Cluster} & \textbf{Freq.} & \textbf{Impl.} & $\bm{T_i}$ &  $\bm{l}$ & $\boldsymbol{E_b}$ & $\bm{P}$ \\
-                     &          (MHz) &                &     (Mb/s) & ($\mu$s)  &               (nJ) &      (W) \\
-    \hline
-    \hline
-    \multirow{3}{*}{A7}        & \multirow{3}{*}{ 450} & seq.  &  3.1 &  655.0 &  37.8 & 0.117 \\
-                               &                       & intra & 13.0 &  158.0 &   9.5 & 0.123 \\
-                               &                       & inter & 21.8 & 1506.0 &   6.0 & 0.131 \\
-    \hline
-    \multirow{3}{*}{A53}       & \multirow{3}{*}{ 450} & seq.  &  2.1 &  966.0 &  29.0 & 0.062 \\
-                               &                       & intra & 10.1 &  203.0 &   7.0 & 0.070 \\
-                               &                       & inter & 17.2 & 1902.0 &   5.1 & 0.088 \\
-    \hline
-    \multirow{3}{*}{A15}       & \multirow{3}{*}{1100} & seq.  &  7.5 &  274.0 & 122.0 & 0.913 \\
-                               &                       & intra & 35.2 &   58.0 &  28.2 & 0.991 \\
-                               &                       & inter & 62.8 &  522.0 &  17.4 & 1.093 \\
-    \hline
-    \multirow{3}{*}{A57}       & \multirow{3}{*}{1100} & seq.  &  9.2 &  222.0 &  78.9 & 0.730 \\
-                               &                       & intra & 39.2 &   52.0 &  21.1 & 0.826 \\
-                               &                       & inter & 65.1 &  503.0 &  14.2 & 0.923 \\
-    \hline
-    \multirow{3}{*}{i7-4850HQ} & \multirow{3}{*}{3300} & seq.  &  36.3 &   56.5 & 235.4 & 8.532 \\
-                               &                       & intra & 221.8 &    9.2 &  40.5 & 9.017 \\
-                               &                       & inter & 632.2 &   51.8 &  15.8 & 9.997 \\
-  \end{tabular}
-  %}
-\end{table}
-
-Table~\ref{tab:eval_polar_energy_results} gives an overview of the decoder
-behavior on different clusters and for various implementations. The code is
-always single threaded and only the 8-bit fixed-point decoders are considered,
-since 32-bit floating-point versions  are 4 times more energy consuming, on
-average. The sequential version is mentioned for reference only, as the
-throughput $T_i$ is much higher on vectorized versions. Generally the
-inter-frame SIMD strategy delivers better performance at the cost of a higher
-latency $l$. Table~\ref{tab:eval_polar_energy_results} also compares the energy
-consumption of \little and \bigARM clusters. The A53 consumes less energy than
-the A7 and the A57 consumes less energy than the A15, respectively. This can be
-explained by architectural improvements brought by the more recent ARM64
-platform. Despite the fact that the ARM64 is a development board, the ARM64
-outperforms the ARM32 architecture. Finally we observe that the power
-consumption is higher for the inter-frame version than for the intra-frame one
-because it fills the SIMD units more intensively, and the SIMD units consume
-more than the scalar pipeline.
-
-For comparison, the results for the Intel\R Core\TM i7-4850HQ, using SSE4.1
-instructions (same vector length as ARM\R NEON vectors) are also included. Even
-if the i7 is competitive with the ARM\R big cores in term of
-\textit{energy-per-bit} ($E_b$), these results show it is not well suited for
-the low power SDR systems because of its high power requirements.
-
-\begin{table}[htp]
-  \centering
-  \caption
-    [Comparison of 8-bit fixed-point SC decoders (intra-frame SIMD).]
-    {Comparison of 8-bit fixed-point decoders (intra-frame SIMD). $N = 32768$
-    and $R = 5/6$.}
-  \label{tab:eval_polar_energy_comparison}
-  %{\footnotesize
-  \begin{tabular}{r r r r r r}
-    \textbf{Decoder} & \textbf{Platform} & \textbf{Freq.} & \textbf{SIMD} & $\bm{T_i}$ & $\bm{l}$ \\
-                     &                   &          (GHz) &               &     (Mb/s) & ($\mu$s) \\
-    \hline
-    \hline
-    \cite{Giard2014}     & i7-2600   & 3.4 & SSE4.1 &         204  &  135 \\ % \hline
-    \cite{Cassagne2016b} & i7-4850HQ & 3.3 & SSE4.1 & \textbf{580} &   47 \\ % \hline
-    \cite{Cassagne2016b} & A15       & 1.1 & NEON   &          70  &  391 \\ % \hline
-    \cite{Cassagne2016b} & A57       & 1.1 & NEON   &          73  &  374 \\
-  \end{tabular}
-  %}
-\end{table}
-
-Table~\ref{tab:eval_polar_energy_comparison} shows a performance comparison
-(throughput, latency) with the dynamic intra-frame decoder of~\cite{Giard2014}.
-On a x86 CPU, our dynamic decoder is 2.8 times faster than the state-of-the-art
-decoder. Even if we used a more recent CPU, we also used the same set of
-instructions (SSE4.1) and the frequencies are comparable.
+\subsection{Transmitter Software Implementation}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Total (cluster + memory)]{\includegraphics[height=7cm]{polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
-  \quad
-  % \\
-  \subfloat[][Memory only]{\includegraphics[height=7cm]{polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
+  \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/transmitter/transmitter}
   \caption
-    [SC variation of the \emph{energy-per-bit} for different frame sizes and
-    implementations.]
-    {Variation of the \emph{energy-per-bit} for different frame sizes and
-    implementations: intra-/inter-frame, dyn. code on/off, on A15 @ 1.1GHz.
-    Fixed rate $R = 1/2$.}
-  \label{plot:eval_polar_sc_energy_implems_vs}
+    [DVB-S2 transmitter software implementation.]
+    {DVB-S2 transmitter software implementation.}
+  \label{fig:dvbs2_transmitter}
 \end{figure}
 
-Figure~\ref{plot:eval_polar_sc_energy_implems_vs} shows the
-\emph{energy-per-bit} consumption depending on the frame size $N$ for the fixed
-rate $R = 1/2$. In general, the energy consumption increases with the frame
-size. For small frame sizes ($N$ from $2^{8}$ to $2^{14}$), the inter-frame SIMD
-outperforms the intra-frame SIMD. This is especially true for $N = 2^8$ which
-has a low ratio of SIMD computations over scalar computations in the intra-frame
-version. As the frame size increases, the ratio of SIMD vs scalar computations
-increases as well. At some point around $N = 2^{16}$ the intra-frame
-implementation begins to outperform the inter-frame one, because the data for
-the intra-frame decoder still fits in the CPU cache, whereas the data of the
-inter-frame decoder does not fit the cache anymore. In our case (8-bit fixed
-point numbers and 128-bit vector registers) the inter-frame decoders require
-16~times more memory than the intra-frame decoders. Then, for the frame size
-$N = 2^{20}$, both intra and inter-frame decoders now exceed the cache capacity
-and the RAM power consumption becomes more significant due to the increased
-number of cache misses causing RAM transactions. In general the code generation
-is effective on the intra-frame strategy whereas it is negligible on the
-inter-frame version of the code.
-
-Considering those previous observations, it is more energy efficient to use
-inter-frame strategy for small frame sizes, whereas it is better to apply
-intra-frame strategy for larger frame sizes (comparable energy consumption with
-much lower latency).
-
-\begin{figure}[htp]
-  \centering
-  \subfloat[][ARM\R Cortex-A7]{\includegraphics[width=0.485\textwidth]{polar/sc_energy_freq/sc_energy_freq_a7}\label{plot:eval_polar_sc_energy_freq_a7}}
-  \quad
-  % \\
-  \subfloat[][ARM\R Cortex-A15]{\includegraphics[width=0.485\textwidth]{polar/sc_energy_freq/sc_energy_freq_a15}\label{plot:eval_polar_sc_energy_freq_a15}}
-  \caption
-    [SC variation of the \emph{energy-per-bit} depending on the cluster
-    frequency.]
-    {Variation of the \emph{energy-per-bit} ($E_b$) depending on the cluster
-    frequency (dynamic code, intra-, inter-frame). $N = 4096$ and $R = 1/2$.
-    Dark colors and light colors stand for CPU cluster and RAM energy
-    consumption, resp.}
-  \label{plot:eval_polar_sc_energy_freq}
-\end{figure}
-
-Figure~\ref{plot:eval_polar_sc_energy_freq} shows the impact of the frequency on
-the energy, for a given value of frame size $N=4096$ and code rate $R=1/2$. On
-both A7 and A15 clusters, the supply voltage increases with the frequency from
-0.946V to 1.170V. The A7 \little cluster shows that the energy consumed by the
-system RAM is significant: At 250MHz it accounts for half of the energy cost.
-Indeed, at low frequency, the long execution time due to the low throughput
-causes a high dynamic RAM refreshing bill. It is therefore more interesting to
-use frequencies higher than 250MHz. For this problem size and configuration, and
-from an energy-only point of view, the best choice is to run the decoder at
-350MHz. On the A15 \bigARM cluster, the energy cost is mainly driven by the CPU
-frequency, while the RAM energy bill is limited compared to the CPU.
-
-Thus, the bottom line about energy vs frequency relationship is: On the \little
-cluster it is more interesting to clock the CPU at high frequency (higher
-throughput and smaller latency for a small additional energy cost); On the
-\bigARM cluster, where the RAM consumption is less significant, it is better to
-clock the CPU at a low frequency.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.70\textwidth]{polar/sc_energy_rate/sc_energy_rate_N32768}
-  \caption
-    [SC variation of the \emph{energy-per-bit} depending on the code rate.]
-    {Variation of the \emph{energy-per-bit} ($E_b$) for $N = 32768$ depending on
-    the rate $R = K / N$ (various impl.: intra-, inter-frame, code gen. on).
-    Running on A7, A53 and A57 @ 450MHz.}
-  \label{plot:eval_polar_sc_energy_rate}
-\end{figure}
-
-In Figure~\ref{plot:eval_polar_sc_energy_rate} the \emph{energy-per-bit} cost
-decreases when the code rate increases. This is expected because there are many
-more information bits in the frame when $R$ is high, making the decoder more
-energy efficient. With high rates, the SC decoding tree can be pruned more
-effectively, making the decoding process even more energy efficient.
-Figure~\ref{plot:eval_polar_sc_energy_rate} also compares the ARM\R A7, A53 and
-A57 clusters for the same 450MHz frequency (note: this frequency is not
-available on the A15). The \little A7 is more energy efficient than the \bigARM
-A57, and the \little A53 is itself more energy efficient than the \little A7
-($E_{b_{A53}} < E_{b_{A7}} < E_{b_{A57}}$).
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics{polar/sc_colgate/sc_colgate}
-  \label{fig:eval_polar_sc_colgate}
-  \caption
-    [SC ranking of intra-/inter-frame SIMD approaches along 5 metrics.]
-    {Ranking of the different approaches along
-    5 metrics. In red, inter-frame vectorization performance and in blue,
-    intra-frame performance. Solid color is for the dynamic versions, dotted is
-    for the generated versions. Each version is sorted along each of the 5 axes
-    and the best version for one axe is placed further from the center.}
-\end{figure}
-
-Figure~\ref{fig:eval_polar_sc_colgate} presents a qualitative summary of the
-characteristics of the different code versions, for intra-/inter-frame
-vectorization, generated or dynamic code. For instance, if the size of
-the memory footprint is an essential criterion, the dynamic intra-frame
-code exhibits the best performance.
-
-To sum up, the dynamic implementations provides efficient trade-off between
-throughput, latency and energy depending on code length. It was demonstrated by
-previous benchmarks. Both implementations provide low-energy and low-power
-characteristics compared to previous works in the field on x86 processors
-\cite{Sarkis2014,Giard2014,Sarkis2014a,LeGal2014,LeGal2015a,Cassagne2015c}.
-Whereas the throughput on a single processor core is reduced compared to x86
-implementations, ARM\R implementations must fulfil a large set of SDR
-applications with limited throughputs and where the power consumption matters.
-Finally, it is important to notice that multi-core implementations of the
-proposed ARM\R decoders is still possible on these ARM\R targets to improve the
-decoding throughputs.
-
-\subsection{Dynamic/Generic Successive Cancellation List Decoders}
-
-Throughput and latency measurements are detailed in this section. The proposed
-decoder implementation is compared with the previous software decoders. Despite
-the additional levels of genericity and flexibility, the proposed implementation
-is very competitive with its counterparts. Note that all the results presented
-in the following can be reproduced with the \AFFECT tool.
-
-\subsubsection{Experimentation Protocol}
-
-During our investigations, all the throughput and latency measurements have been
-obtained on a single core of an Intel\R Core\TM i5-6600K CPU (Skylake
-architecture with AVX2 SIMD) with a base clock frequency of 3.6 GHz and a
-maximum turbo frequency of 3.9 GHz. The description has been compiled on Linux
-with the C++ GNU compiler (version 5.4.0) and with the following options:
-\verb|-Ofast -march=native -funroll-loops|.
-
-\subsubsection{Fully Adaptive SCL}
-
-\begin{itemize}
-  \item \xmark~ajouter des perfs sur ARM
-  \item \xmark~ajouter des mesures de consommation énergétique ?
-\end{itemize}
-
-\begin{table}[htp]
-  %\renewcommand{\arraystretch}{1.1}
-  \centering
-  \caption
-    [Throughput comparisons between floating-point and fixed-point A-SSCL
-     decoders.]
-    {Throughput and latency comparisons between floating-point (32-bit) and
-    fixed-point (16-bit and 8-bit) Adaptive SSCL decoders. Code (2048,1723),
-    $L = 32$ and 32-bit CRC (Gzip).}
-  \label{tab:eval_polar_scl_perfs_fixed}
-  %{\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{r  r  r  r  r |  r  r | r  r}
-    \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{$\bm{\mathcal{L}_{worst}}$} & \multicolumn{2}{c|}{\textbf{3.5 dB}} & \multicolumn{2}{c|}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
-    \cline{4-9}
-    & & & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ & $\bm{\mathcal{L}_{avg}}$ & $\bm{\mathcal{T}_i}$ \\
-    % \hline
-    \hline
-    \hline
-    \multirow{3}{*}{PA-SSCL} & 32-bit &  635 & 232.3 &   7.6 & 41.7 &  42.1 & 7.4 & 237.6 \\
-    %\cline{3-9}
-                             & 16-bit &  622 & 219.6 &   8.0 & 40.1 &  43.8 & 6.6 & 267.5 \\
-    %\cline{3-9}
-                             &  8-bit &  651 & 232.4 &   7.6 & 41.2 &  42.6 & 6.5 & 268.3 \\
-    \hline
-    \multirow{3}{*}{FA-SSCL} & 32-bit & 1201 &  67.2 &  26.1 &  8.5 & 207.8 & 5.1 & 345.5 \\
-    %\cline{3-9}
-                             & 16-bit & 1198 &  68.7 &  25.6 &  7.7 & 225.7 & 4.3 & 408.7 \\
-    %\cline{3-9}
-                             &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
-  \end{tabular}
-  %}}
-\end{table}
-
-Being able to easily change the list size of the SCL decoders enables the use of
-the FA-SSCL algorithm. With an unrolled decoder as proposed
-in~\cite{Sarkis2016}, the fully adaptive decoder would imply to generate a fully
-unrolled decoder for each value of the list depth. In our work, only one source
-code gives the designer the possibility to run each variation of the SCL
-decoders. FA-SSCL algorithm is the key to achieve the highest possible
-throughput. In Table~\ref{tab:eval_polar_scl_perfs_fixed}, maximum latency
-($\mathcal{L}_{worst}$ in $\mu s$), average latency ($\mathcal{L}_{avg}$ in
-$\mu s$) and information throughput ($\mathcal{T}_i$ in Mb/s) are given. Note
-that in 8-bit configuration only the \texttt{REP}$_{\texttt{8-}}$ nodes are
-used. The fixed-point implementation reduces, on average, the latency. In the
-high SNR region, the frame errors are less frequent. Therefore, the SCL
-algorithm is less necessary than in low SNR regions for Adaptive SCL algorithms.
-As the gain of fixed-point implementation benefits more to the SC algorithm than
-to the SCL algorithm, the throughput is higher in high SNR regions. With an
-8-bit fixed point representation of the decoder inner values, the achieved
-throughput in the case of the ($2048$,$1723$) polar code is about $425$ Mb/s on
-the i5-6600K for an $E_b/N_0$ value of $4.5$ dB. It corresponds to a FER of
-$5\times10^{-8}$. This throughput is almost 2 times higher than the throughput
-of the PA-SSCL algorithm. The highest throughput increase from PA-SSCL to
-FA-SSCL, of about $380\%$, is in the domain where the FER is between $10^{-3}$
-and $10^{-5}$. It is the targeted domain for wireless communications like LTE or
-5G. In these conditions, the throughput of FA-SSCL algorithm is about $227$ Mb/s
-compared to $42$ Mb/s for the PA-SSCL algorithm.
-
-In Adaptive SCL algorithms, the worst case latency is the sum of the latency of
-each triggered algorithm. In the case of PA-SSCL with $L_{max}=32$, it is just
-the sum of the latency of the SC algorithm, plus the latency of the SCL
-algorithm with $L=32$. In the case of the FA-SSCL algorithm, it is the sum of
-the decoding latency of the SC algorithm and all the decoding latencies of the
-SCL algorithm for $L={2,4,8,16,32}$. This is the reason why the worst latency of
-the PA-SSCL algorithm is lower while the average latency and consequently the
-average throughput is better with the FA-SSCL algorithm.
-
-\subsubsection{Comparison With State-Of-The-Art SCL Decoders}
+Fig.~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
+tasks. The tasks filled in blue are intrinsically sequential and cannot be
+duplicated. The initial information bits are read from a binary file
+($t^\text{Tx}_1$). Then, the DVB-S2 coding scheme rests upon the serial
+concatenation of a BCH ($t^\text{Tx}_3$) and a LDPC code ($t^\text{Tx}_4$). The
+selected modulation ($t^\text{Tx}_6$) is a Phase-Shift Keying (PSK). The
+scrambler tasks ($t^\text{Tx}_2$ and $t^\text{Tx}_8$) apply predefined repeated
+sequences of \emph{xor} to the frame in order to avoid too long sequences of the
+same bit or symbol in the frames sent by the radio ($t^\text{Tx}_{10}$).
+Depending on the DVB-S2 configuration (MODCOD), the frame can be interleaved
+($t^\text{Tx}_5$) after the encoding process. If there is no interleaver, then
+the frame is just copied. After the modulation, Pay Load Header (PLH) and
+pilots are inserted ($t^\text{Tx}_7$). These extra data are used by the
+synchronization tasks in the receiver side. Before the radio transmission
+($t^\text{Tx}_{10}$), the signal bandwidth is rescaled by a shaping filter
+($t^\text{Tx}_9$).
 
 \begin{table}[htp]
   \centering
   \caption
-    [Throughput and latency comparison with state-of-the-art SCL decoders.]
-    {Throughput and latency comparison with state-of-the-art SCL decoders.
-    32-bit floating-point representation. Code (2048,1723), $L = 32$, 32-bit
-    CRC.}
-  \label{tab:eval_polar_scl_perfs_comparison}
-  %{\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{r r r r r r r}
-    \multirow{2}{*}{\textbf{Target}} & \multirow{2}{*}{\textbf{Ref.}}        & \multirow{2}{*}{\textbf{Decoder}} & \multirow{1}{*}{\textbf{$\bm{\mathcal{L}_{worst}}$}} & \multicolumn{3}{c}{$\bm{\mathcal{T}_i}$ (Mb/s)} \\
-    \cline{5-7}
-                                     &                                       &                                   & ($\mu s$)                         & \textbf{3.5 dB} & \textbf{4.0 dB} & \textbf{4.5 dB} \\
-    \hline
-    \hline
-    \multirow{3}{*}{i7-2600}         & \multirow{3}{*}{\cite{Sarkis2014b}}   & CA-SCL                            & 23000                             &  0.07           &  0.07           &   0.07          \\
-                                     &                                       & CA-SSCL                           &  3300                             &  0.52           &  0.52           &   0.52          \\
-                                     &                                       & PA-SSCL                           & $\approx$ 3300                    &  0.90           &  4.90           &  54.00          \\
-    \hline
-    \multirow{1}{*}{i7-4790K}        & \cite{Shen2016}                       & CA-SCL                            &  1572                             &  1.10           &  1.10           &   1.10          \\
-    \hline
-    \multirow{3}{*}{i7-2600}         & \multirow{3}{*}{\cite{Sarkis2016}}    & CA-SCL                            &  2294                             &  0.76           &  0.76           &   0.76          \\
-                                     &                                       & CA-SSCL                           &   433                             &  4.00           &  4.00           &   4.00          \\
-                                     &                                       & PA-SSCL                           & $\approx$ 433                     &  8.60           & 33.00           & 196.00          \\
-    \hline
-%   original data
-%   \multirow{4}{*}{E5-2650}         & \multirow{4}{*}{\cite{Leonardon2019}} & CA-SCL                            &  6554                             &  0.27           &   0.27          &   0.27          \\
-%                                    &                                       & CA-SSCL                           &  1048                             &  1.67           &   1.67          &   1.67          \\
-%                                    &                                       & PA-SSCL                           & $\approx$ 1048                    &  4.07           &  22.90          & 124.10          \\
-%                                    &                                       & FA-SSCL                           & $\approx$ 2096                    & 14.30           & 109.80          & 180.00          \\
-%   \hline
-%   rescaled data from E5-2650
-    \multirow{4}{*}{i7-2600}         & \multirow{4}{*}{\cite{Leonardon2019}} & CA-SCL                            &  4819                             &  0.37           &   0.37          &   0.37          \\
-                                     &                                       & CA-SSCL                           &   770                             &  2.30           &   2.30          &   2.30          \\
-                                     &                                       & PA-SSCL                           &   847                             &  5.50           &  31.10          & 168.40          \\
-                                     &                                       & FA-SSCL                           &  1602                             & 19.40           & 149.00          & 244.30          \\
-    \hline
-    \multirow{4}{*}{i5-6600K}        & \multirow{4}{*}{\cite{Leonardon2019}} & CA-SCL                            &  3635                             &  0.48           &   0.48          &   0.48          \\
-                                     &                                       & CA-SSCL                           &   577                             &  3.00           &   3.00          &   3.00          \\
-                                     &                                       & PA-SSCL                           &   635                             &  7.60           &  42.10          & 237.60          \\
-                                     &                                       & FA-SSCL                           &  1201                             & 26.10           & 207.80          & 345.50          \\
-  \end{tabular}
-  %}}
-\end{table}
-
-The throughput and latency of the proposed decoder compared to other reported
-implementations are detailed in Table~\ref{tab:eval_polar_scl_perfs_comparison}.
-For all the decoders, all the available tree pruning optimizations are applied
-excluding the $\texttt{SPC}_\texttt{4+}$ nodes because of the performance
-degradation. Each decoder is based on a 32-bit floating-point representation.
-The polar code parameters are $N=2048$, $K=1723$ and the 32-bit GZip CRC is
-used. The list size is $L=32$.
-
-The latency given in Table~\ref{tab:eval_polar_scl_perfs_comparison} is the
-worst case latency and the throughput is the average information throughput. The
-first version, CA-SCL, is the implementation of the CA-SCL algorithm without any
-tree pruning. As mentioned before the throughput of the proposed CA-SSCL decoder
-($2.3$ Mb/s) is only halved compared to the specific unrolled CA-SSCL decoder
-described in~\cite{Sarkis2016} (4.0 Mb/s). The proposed CA-SSCL decoder is
-approximately 4 times faster than the generic implementation
-in~\cite{Sarkis2014b} ($0.52$ Mb/s) and 2 times faster than the CA-SCL
-implementation in~\cite{Shen2016} ($1.1$ Mb/s) thanks to the implementation
-improvements detailed in Section~\ref{sec:opt_polar_scl}. Furthermore, the
-proposed decoder exhibits a much deeper level of genericity and flexibility than
-the ones proposed in~\cite{Sarkis2014,Shen2016}. Indeed, the following features
-were not enabled: the customization of the tree pruning, the 8-bit and 16-bit
-fixed-point representations of the LLRs, the puncturing patterns and the FA-SSCL
-algorithm.
-
-When implemented on the same target (i7-2600), the proposed PA-SSCL is
-competitive with the unrolled PA-SSCL in~\cite{Sarkis2016}, being only two times
-slower. This can be explained by the improvements concerning the CRC that are
-described in Section \ref{sec:opt_polar_scl_crc}, especially the information
-bits extraction in the SC decoder. Finally, as mentioned before, the throughput
-of the proposed FA-SSCL significantly outperforms all the other SCL decoders (up
-to 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
-
-\section{Turbo Decoders}
-\label{sec:eval_turbo}
-
-\begin{itemize}
-  \item \xmark~ajouter des perfs sur ARM (il doit falloir prendre des petites
-    trames pour que ça marche)
-  \item \xmark~perf version vectorisée inter/intra-frame, expliquer pourquoi
-    c'est intéressant
-  \item \xmark~se comparer au décodeur intra-frame de Bertrand, justifier les
-    moins bonnes performances globales par une plus grande généricité
-\end{itemize}
-
-\begin{table}[htp]
-  \centering
-  \caption{Specifications of the target processors.}
-  % {\scriptsize
-  % {\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{c | c  c  c}
-    \textbf{CPU}           & \textbf{P1} : Xeon\TM E5-2650 & \textbf{P2}: Core\TM i7-4960HQ & \textbf{P3}: Xeon\TM E5-2680v3 \\
-    \hline
-    \hline
-    \textbf{Intel\R Arch.} & \textit{Ivy Bridge} Q1'12     & \textit{Haswell} Q4'13         & \textit{Haswell} Q3'14      \\
-    % \hline
-    \textbf{Cores/Freq.}   & 8 cores, 2--2.8 GHz           & 4 cores, 2.6--3.8 GHz          & 12 cores,  2.5--3.3 GHz     \\
-    % \hline
-    \textbf{LLC}           & 20MB L3                       & 6MB L3                         & 30MB L3                     \\
-    % \hline
-    \textbf{TDP}           & 95 W                          & 47 W                           & 120 W                       \\
-  \end{tabular}
-  % }
-  % }}
-  \label{tab:eval_turbo_specs}
-\end{table}
-
-The experiments have been conducted on three different x86-based processors
-detailed in Table~\ref{tab:eval_turbo_specs}. A mid-range processor (P2) is used
-for comparison with similar CPU targets in the literature~\cite{Huang2011,
-Zhang2012,Wu2013} while the two high-end processors (P1 and P3) are used for
-comparison with GPU-based turbo-decoder implementations. Indeed, P1 and P3 have
-a number of cores that is similar to the number of \emph{Streaming
-Multiprocessors} (SM) inside a GPU. Moreover, the code has been compiled on
-Linux (Ubuntu 14.04 LTS) with the GNU compiler (version 4.8) and with the
-\verb|-Ofast -funroll-loops -msse4.1/-mavx2| flags.
-
-\subsection{Throughput performance}
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=1.00\textwidth]{turbo/thr/thr}
-  \caption
-    [Information throughput of the turbo decoder depending on $K$.]
-    {Information throughput depending on $K$ for various number of cores and
-    SIMD instruction types. 6 iterations, 8-bit fixed-point.}
-  \label{plot:eval_turbo_thr}
-\end{figure}
-
-Fig.~\ref{plot:eval_turbo_thr} shows the evolution of the information throughput
-depending on the code dimension $K$. This experiment was conducted on P2 and P3
-(both have \emph{ Haswell} architectures). The throughput tends to increase
-linearly with the number of cores (up to 24 cores) except in AVX mode where a
-performance drop can be observed when $K > 4096$. The reason is that the AVX
-instructions use vectors $2\times$ wider than those used by SSE instructions and
-the inter-frame strategy loads twice the number of frames to fill these vectors.
-Thus, for $K > 4096$, in AVX, the memory footprint exceeds the L3 cache optimal
-occupancy and the performance is driven by the RAM bandwidth. Then, as $K$
-increases the number of RAM accesses increases and there is not enough memory
-bandwidth to feed all the cores. This explains the decreasing throughput for
-$K > 4096$, in AVX mode. Nonetheless, on P3 target, the throughput exceeds 1Gbps
-for all codes with $K<4096$.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.7\textwidth]{turbo/energy/energy}
-  \caption
-    [Turbo decoder \emph{energy-per-bit} depending on the number of cores.]
-    {\emph{Energy-per-bit} ($E_d$) depending on the number of cores and the
-    instruction types. 6 iterations, 8-bit fixed-point. The throughput and power
-    measurements were conducted on P2 with the
-    \emph{Intel\R Power Gadget} tool.}
-  \label{plot:eval_turbo_energy}
-\end{figure}
-
-Fig.~\ref{plot:eval_turbo_energy} shows the energy consumed by the processor to
-decode one information bit ($E_d$) of the codes using SSE and AVX instructions,
-on the P2 CPU target. For small codewords ($K=1024$) it is more energy efficient
-to resort to AVX. But this is not so clear on larger codewords ($K=6144$) since
-with 3/4 cores, the code using SSE outperforms the AVX one.
-
-Table~\ref{tab:eval_turbo_hof} shows a performance comparison with related
-works\footnote{To be as fair as possible with the other works, we assume that
-the \emph{Intel\R Turbo Boost} (ITB) technology was disabled on their CPUs. For
-our experiments, the ITB technology was on and the real frequency is picked up.
-Moreover, for GPU works there is an asterisk when it is unclear if the CPU/GPU
-data transfer times have been taken into account.}. The variety of CPU/GPU
-targets and algorithmic parameters allows to show some global emerging trends.
-When comparing to similar CPU targets~\cite{Zhang2012,Wu2013}, the proposed
-implementation reaches similar or higher throughput (from 88.9 Mbps to 138.6
-Mbps on P2 target) at the price of an increased latency (from 2212 $\mu$s to
-2837 $\mu$s) and memory footprint. The proposed high-end CPU processor (P3)
-implementation outperforms all GPU-based works in terms of throughput (from
-443.7 Mbps to 716.4 Mbps) while consuming noticeably less power (from 56 nJ to
-90 nJ for each iteration). This leads to the conclusion that high-end multi-core
-CPUs is a more energy-efficient solution than GPUs while ensuring similar or
-higher throughputs. Considering this, high-end multi-core CPU appear as an
-alternative to GPU in future channel coding functions in cloud-based RAN.
-
-\section{LDPC Decoders}
-\label{sec:eval_ldpc}
-
-\begin{figure}[htp]
-  \centering
-  \subfloat[][Throughput.]{\includegraphics[width=0.7\textwidth]{ldpc/WiMAX_thr_lat/WiMAX_thr}\label{plot:eval_ldpc_WiMAX_thr}}
-  % \quad
-  \\
-  \subfloat[][Latency.]{\includegraphics[width=0.7\textwidth]{ldpc/WiMAX_thr_lat/WiMAX_lat}\label{plot:eval_ldpc_WiMAX_lat}}
-  \caption
-    [LDPC decoder throughput and latency depending on the number of cores (WiMAX).]
-    {LDPC decoder throughput and latency depending on the number of cores.
-    (2304, 1152) IEEE 802.16e WiMAX code. BP-HL scheduling 50 iterations and NMS updates rules
-    ($\alpha = 0.875$). 16-bit fixed-point.}
-  \label{plot:eval_ldpc_WiMAX_thr_lat}
-\end{figure}
-
-\begin{figure}[htp]
-  \centering
-  \subfloat[][Throughput.]{\includegraphics[width=0.7\textwidth]{ldpc/DVB-S2_thr_lat/DVB-S2_thr}\label{plot:eval_ldpc_DVB-S2_thr}}
-  % \quad
-  \\
-  \subfloat[][Latency.]{\includegraphics[width=0.7\textwidth]{ldpc/DVB-S2_thr_lat/DVB-S2_lat}\label{plot:eval_ldpc_DVB-S2_lat}}
-  \caption
-    [LDPC decoder throughput and latency depending on the number of cores (DVB-S2).]
-    {LDPC decoder throughput and latency depending on the number of cores.
-    (16200, 14400) DVB-S2 code. BP-HL scheduling 50 iterations and NMS updates rules
-    ($\alpha = 0.875$). 16-bit fixed-point.}
-  \label{plot:eval_ldpc_DVB-S2_thr_lat}
-\end{figure}
-
-\section{FEC Software Decoders Hall of Fame}
-\label{sec:eval_hof}
-
-\begin{table}[htp]
-  \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
-  \centering
-  \caption{LDPC Software Decoders Hall of Fame.}
-  \label{tab:eval_ldpc_hof}
-  \checkoddpage
-  \ifthenelse{\boolean{twosidedoc}}
-  {\begin{adjustbox}{angle=\ifoddpage 90\else -90\fi}}
-  {\begin{adjustbox}{angle=90}}
-  {\resizebox{0.95\textheight}{!}{
-  \begin{tabular}{|r|r r|r r r r r r|r r r|r r r r r r|r r|r r r|}
-  \hline
-  \multicolumn{3}{|c|}{\multirow{2}{*}{}} & \multicolumn{6}{c|}{\multirow{2}{*}{\textbf{Hardware specifications}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Code}}} & \multicolumn{6}{c|}{\multirow{2}{*}{\textbf{Decoder parameters}}} & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Decoding perf.}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
-  \multicolumn{3}{|c|}{}                  & \multicolumn{6}{c|}{}                                                  & \multicolumn{3}{c|}{}                               & \multicolumn{6}{c|}{}                                             & \multicolumn{2}{c|}{}                                         & \multicolumn{3}{c|}{}                                  \\
-  \hline
-  \multicolumn{2}{|r}{\textbf{Work}}                                                   & \textbf{Year} & \textbf{Platform} & \textbf{Arch.}     & \textbf{TDP} & \textbf{Cores}      & \textbf{SIMD} & \textbf{Freq.} & $\bm{(N,K)}$       & \textbf{Std.}     & \textbf{\# of} & \textbf{Sche-}  & \textbf{Early} & \textbf{Up.}   & \textbf{Pre.} & \textbf{Inter} & $\bm{i}$ & \textbf{Lat.}            & \textbf{Thr.}            & \textbf{NThr.} & \textbf{TNDC} & $\boldsymbol{E_d}$ \\
-  \multicolumn{2}{|r}{}                                                                &               &                   &                    & Watts        & or SM               & length        & GHz            &                    &                   & \textbf{Edges} & \textbf{duling} & \textbf{T.}    & \textbf{Nodes} & bit           & level          &          & $\mu$s                   & Mbps                     & Mbps           &               & nJ                 \\
-  \hline
-  \hline
-  \multirow{21}{*}{\rotatebox[origin=c]{90}{\textbf{GPU-based}}} & \cite{Wang2008}     & 2008          & 8800 GT           & \textit{Tesla}     &          105 &                  7  &  16           & 1.50           & $(  4096,   2048)$ &                 - &   6144         & BP-F            & yes            &  SPA           & 32            &     1          &   6      &                  467000  &                    0.01  &    0.001       & 0.000006      &  105000000         \\
-                                                                 & \cite{Falcao2009}   & 2009          & 8800 GTX          & \textit{Tesla}     &          176 &                  8  &  16           & 1.35           & $(  1908,   1696)$ &                 - &   7632         & BP-F            &  no            &  SPA           & 32            &     -          &  50      &                       -  &                    0.08  &    0.080       & 0.000500      &    2200000         \\
-                                                                 & \cite{Falcao2011a}  & 2011          & 8800 GTX          & \textit{Tesla}     &          176 &                  8  &  16           & 1.35           & $(  8000,   4000)$ &                 - &  24000         & BP-F            &  no            &  SPA           &  8            &     -          &  50      &                       -  &                   10.10  &   10.100       & 0.058000      &      17426         \\
-                                                                 & \cite{Falcao2011}   & 2011          & Tesla C2050       & \textit{Fermi}     &          247 &                 14  &  32           & 1.15           & $( 64800,  21600)$ &            DVB-S2 & 216000         & BP-F            &  no            &   MS           &  8            &    16          &  30      &                   13275  &                   78.10  &   46.860       & 0.091000      &       5271         \\
-                                                                 & \cite{Wang2011}     & 2011          & GTX 470           & \textit{Fermi}     &          215 &                 14  &  32           & 1.22           & $(  1944,    972)$ &           802.11n &   6804         & BP-F            & yes            & LSPA           & 32            &   300          &  50      &                   57743  &                   10.10  &   10.100       & 0.018000      &      21287         \\
-                                                                 & \cite{Ji2011}       & 2011          & GTX 285           & \textit{Tesla}     &          204 &                 15  &  16           & 1.48           & $(  2304,   1152)$ &           802.16e &   7296         & BP-F            & yes            &  SPA           & 32            &     1          &  15      &                    1097  &                    2.10  &    0.630       & 0.001800      &     323810         \\
-                                                                 & \cite{Chang2011}    & 2011          & Tesla C1060       & \textit{Tesla}     &          200 &                 15  &  16           & 1.30           & $(  8000,   4000)$ &                 - &  32000         & BP-F            &  no            & LSPA           & 32            &     1          &  50      &                    8638  &                    0.92  &    0.920       & 0.002900      &     217391         \\
-                                                                 & \cite{Wang2011a}    & 2011          & GTX 470           & \textit{Fermi}     &          215 &                 14  &  32           & 1.22           & $(  2304,   1152)$ &           802.16e &   7296         & BP-F            &  no            & LSPA           & 32            &   224          &  10      &                   10533  &                   49.00  &    9.800       & 0.018000      &      21939         \\
-                                                                 & \cite{Kang2012}     & 2012          & GTX 480           & \textit{Fermi}     &          250 &                 15  &  32           & 1.40           & $(  2048,   1723)$ &           802.3an &  12288         & BP-F            & yes            &  SPA           & 32            &     1          &  50      &                     426  &                    4.80  &    4.800       & 0.007100      &      52083         \\
-                                                                 & \cite{Falcao2012}   & 2012          & HD 5870           & \textit{Cypress}   &          188 &                 20  &  20           & 1.20           & $(  8000,   4000)$ &                 - &      -         & BP-F            &  no            &   MS           &  8            &   500          &  10      &                   22222  &                  180.00  &   36.000       & 0.075000      &       5222         \\
-                                                                 & \cite{Falcao2012}   & 2012          & Tesla C2050       & \textit{Fermi}     &          247 &                 14  &  32           & 1.15           & $(  8000,   4000)$ &                 - &      -         & BP-F            &  no            &   MS           &  8            &   500          &  10      &                   20000  &                  200.00  &   40.000       & 0.078000      &       6175         \\
-                                                                 & \cite{Gronroos2012} & 2012          & Tesla C2050       & \textit{Fermi}     &          247 &                 14  &  32           & 1.15           & $( 16200,   8100)$ &            DVB-T2 &  48599         & BP-F            &  no            &   MS           &  8            &   128          &  50      &                   26083  &                   79.50  &   79.500       & 0.154000      &       3107         \\
-                                                                 & \cite{Li2013}       & 2013          & GTX 580           & \textit{Fermi}     &          244 &                 16  &  32           & 1.54           & $(  2304,   1152)$ &           802.16e &   7296         & BP-CL           &  no            &   MS           &  8            &  1024          &   5      &                    3322  &                  710.20  &  142.000       & 0.180000      &       1718         \\
-                                                                 & \cite{Wang2013}     & 2013          & GTX TITAN         & \textit{Kepler}    &          250 &                 14  & 192           & 0.84           & $(  2304,   1152)$ &           802.16e &   7296         & BP-F            & yes            &  NMS           & 32            &    50          &  10      &                    1266  & {\color{Paired-7}304.20} &   60.800       & 0.027000      &       4112         \\
-                                                                 & \cite{Wang2013}     & 2013          & GTX TITAN         & \textit{Kepler}    &          250 &                 14  & 192           & 0.84           & $(  2304,   1152)$ &           802.16e &   7296         & BP-F            & yes            &  NMS           & 32            &     6          &  10      &                     207  &                   66.80  &   13.400       & 0.006000      &      18657         \\
-                                                                 & \cite{Lin2014a}     & 2014          & GTX 660 Ti        & \textit{Kepler}    &          150 &                  7  & 192           & 0.92           & $(  8000,   4000)$ &                 - &  24000         & BP-F            &  no            &  SPA           &  8            & 12544          &  50      & {\color{Paired-3}954100} &                  105.20  &  105.200       & 0.085000      &       1426         \\
-                                                                 & \cite{LeGal2014a}   & 2014          & GTX 660           & \textit{Kepler}    &          140 &                  5  & 192           & 0.98           & $(  1944,    972)$ &           802.11n &   6804         & BP-HL           &  no            &  OMS           &  8            & 16384          &  10      & {\color{Paired-3} 34362} &                  926.90  &  185.400       & 0.049000      &        755         \\
-                                                                 & \cite{Lai2016}      & 2016          & GTX 470           & \textit{Fermi}     &          215 &                 14  &  32           & 1.22           & $(  1944,    972)$ &           802.11n &   6804         & BP-PL           &  no            &   MS           & 32            &   256          &  10      & {\color{Paired-3}  9739} &                   51.10  &   10.200       & 0.019000      &      21078         \\
-                                                                 & \cite{Keskin2017b}  & 2017          & GTX TITAN X       & \textit{Pascal}    &          250 &                 28  & 128           & 1.42           & $(  1944,    972)$ &           802.11n &   6804         & BP-F            &  no            &   MS           & 32            &     1          &  10      & {\color{Paired-3}     2} &                  913.00  &  182.600       & 0.036000      &       1369         \\
-                                                                 & \cite{Keskin2017a}  & 2017          & GTX TITAN X       & \textit{Pascal}    &          250 &                 28  & 128           & 1.42           & $(  1944,    972)$ &           802.11n &   6804         & BP-F            &  no            &   MS           & 32            &    28          &  10      & {\color{Paired-3}    33} &                 1660.00  &  332.000       & 0.065000      &        753         \\
-                                                                 & \cite{Kun2018}      & 2018          & GTX TITAN Xp      & \textit{Pascal}    &          250 &                 30  & 128           & 1.58           & $( 64800,  21600)$ &            DVB-S2 & 216000         & BP-F            & yes            &  OMS           & 32            &     1          &  50      & {\color{Paired-3}   405} &                  160.00  &  160.000       & 0.026000      &       1563         \\
-  \hline
-  \hline
-  \multirow{14}{*}{\rotatebox[origin=c]{90}{\textbf{CPU-based}}} & \cite{Falcao2008}   & 2008          & CELL/BE           & \textit{CELL}      &          200 &                  6  &  16           & 3.30           & $(  1248,    624)$ &           802.16e &      -         & BP-F            &  no            &   MS           &  8            &    96          &  25      &                    3653  &                   32.80  &   16.400       & 0.052000      &       6098         \\
-                                                                 & \cite{Falcao2011a}  & 2011          & CELL/BE           & \textit{CELL}      &          200 &                  6  &   4           & 3.30           & $(  1024,    512)$ &                 - &   3072         & BP-F            &  no            &  SPA           & 32            &    24          &  50      &                    1719  &                   14.30  &   14.300       & 0.181000      &      13986         \\
-                                                                 & \cite{Falcao2011a}  & 2011          & 2xE5530           & \textit{Nehalem}   &          160 &                  8  &   4           & 2.40           & $(  8000,   4000)$ &                 - &  24000         & BP-F            &  no            &  SPA           & 32            &     1          &  50      &                   13115  &                    0.61  &    0.610       & 0.007900      &     262295         \\
-                                                                 & \cite{Zhao2011}     & 2011          & CELL/BE           & \textit{CELL}      &          200 &                  8  &  16           & 3.20           & $(   960,    480)$ &           802.16e &      -         & BP-F            &  no            &  OMS           &  8            &     1          &  15      &                      74  &                   13.00  &    3.900       & 0.009500      &      51282         \\
-                                                                 & \cite{Gronroos2012} & 2012          & i7-950            & \textit{Nehalem}   &          130 &                  4  &  16           & 3.06           & $( 16200,   8100)$ &            DVB-T2 &  48599         & BP-F            &  no            &   MS           &  8            &   128          &  50      &                  113934  &                   18.20  &   18.200       & 0.093000      &       7143         \\
-                                                                 & \cite{Pan2013}      & 2013          & i7-3960X          & \textit{S. Bridge} &          130 &                  6  &  16           & 3.30           & $(  9216,   4608)$ &              CMMB &  27648         & BP-F            & yes            &  NMS           &  8            &    12          &  10      &                    1202  &                   92.00  &   18.400       & 0.058000      &       7065         \\
-                                                                 & \cite{Han2013}      & 2013          & i7-2600K          & \textit{S. Bridge} &          130 & {\color{Paired-1}4} &  16           & 3.40           & $(524280, 262140)$ &           802.11n &      -         & BP-L            &  no            &  OMS           &  8            &     1          &   5      &                   17420  &                   30.10  &    3.000       & 0.055000      &      31667         \\
-                                                                 & \cite{Gronroos2013} & 2013          & Cortex-A9         & \textit{ARMv7}     &  $\approx~$4 &                  4  &  16           & 1.60           & $( 16200,   8100)$ &            DVB-T2 &  48599         & BP-F            &  no            &   MS           &  8            &   128          &  20      &                  592457  &                    3.50  &    1.400       & 0.014000      &       2857         \\
-                                                                 & \cite{Debbabi2016}  & 2016          & i7-4960HQ         & \textit{Haswell}   &           47 &                  4  &   8           & 3.40           & $(  2304,   1152)$ &           802.16e &   7296         & LP-F            &  no            & ADMM           & 32            &     4          &   8      &                    1511  &                    6.10  &    0.980       & 0.009000      &      47959         \\
-                                                                 & \cite{Debbabi2016a} & 2016          & i7-4960HQ         & \textit{Haswell}   &           47 &                  4  &   8           & 3.40           & $(  2304,   1152)$ &           802.16e &   7296         & LP-HL           &  no            & ADMM           & 32            &    32          & 100      &                   13755  &                    5.40  &   10.800       & 0.099000      &       4352         \\
-                                                                 & \cite{LeGal2016}    & 2016          & i7-4960HQ         & \textit{Haswell}   &           47 &                  4  &  32           & 3.40           & $(  2304,   1152)$ &           802.16e &   7296         & BP-HL           & yes            &  NMS           &  8            &   128          &  50      &                    1359  &                  217.00  &  217.000       & 0.500000      &        217         \\
-                                                                 & \cite{LeGal2017}    & 2017          & i7-5650U          & \textit{Broadwell} & $\approx~$10 &                  2  &  32           & 3.00           & $(  2304,   1152)$ &           802.16e &   7296         & BP-HL           & yes            &  OMS           &  8            &     2          &  10      &                      12  &                  385.00  &   77.000       & 0.401000      &        123         \\
-                                                                 & \cite{Grayver2019}  & 2019          & 2xEPYC 7351       & \textit{Zen}       &          340 &                 32  &  16           & 2.40           & $( 64800,  32400)$ &            DVB-S2 & 226799         & BP-HL           & yes            &  OMS           &  8            &   512          &  20      &                   18432  &                 1800.00  &  720.000       & 0.586000      &        472         \\
-                                                                 & \cite{Xu2019}       & 2019          & Gold 6154         & \textit{Skylake}   &          200 &                 18  &  64           & 3.00           & $(  9126,   8448)$ &                5G &      -         & BP-HL           & yes            &  OMS           &  8            &    18          &  10      &                      31  &                 4892.40  &  978.500       & 0.283000      &        204         \\
-  \hline
-  \end{tabular}
-  }}
-  \end{adjustbox}
-\end{table}
-
-\begin{table}[htp]
-  \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
-  \centering
-  \caption{Turbo Software Decoders Hall of Fame.}
-  \label{tab:eval_turbo_hof}
-  \checkoddpage
-  \ifthenelse{\boolean{twosidedoc}}
-  {\begin{adjustbox}{angle=\ifoddpage 90\else -90\fi}}
-  {\begin{adjustbox}{angle=90}}
-  {\resizebox{0.95\textheight}{!}{
-  \begin{tabular}{|r|r r|r r r r r r|r r r|r r r r|r r r r|r r r|}
-  \hline
-  \multicolumn{3}{|c|}{\multirow{2}{*}{}} & \multicolumn{6}{c|}{\multirow{2}{*}{\textbf{Hardware specifications}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Code}}} & \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{Decoder parameters}}} & \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{Decoding performances}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
-  \multicolumn{3}{|c|}{}                  & \multicolumn{6}{c|}{}                                                  & \multicolumn{3}{c|}{}                               & \multicolumn{4}{c|}{}                                             & \multicolumn{4}{c|}{}                                                & \multicolumn{3}{c|}{}                                  \\
-  \hline
-  \multicolumn{2}{|r}{\textbf{Work}}                                                    & \textbf{Year} & \textbf{Platform}  & \textbf{Arch.}     & \textbf{TDP} & \textbf{Cores} & \textbf{SIMD} & \textbf{Freq.} & $\bm{K}$ & $\bm{R}$ & $\textbf{Std.}$ & \textbf{Algorithm} & \textbf{Pre.} & \textbf{Inter} & $\bm{i}$ & \textbf{BER} & \textbf{FER}   & \textbf{Lat.}         & \textbf{Thr.}          & \textbf{NThr.} & \textbf{TNDC} & $\boldsymbol{E_d}$ \\
-  \multicolumn{2}{|r}{}                                                                 &               &                    &                    & Watts        & or SM          & length        & GHz            &          &          &                 &                    & bit           & level          &          & \multicolumn{2}{c}{at 0.7 dB} & $\mu$s                & Mbps                   & Mbps           &               & nJ                 \\
-  \hline
-  \hline
-  \multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{GPU-based}}} & \cite{Wu2010}        & 2010          & Tesla C1060        & \textit{Tesla}     & 200          & 15             & 16            & 1.30           & 6144     & 1/3      & LTE             &  ML-MAP            & 32            & 100            & 5        & 1e-04        &     -          &                76800  &                   8.0  &   6.7          & 0.021         &  29851             \\
-                                                                 & \cite{Wu2011}        & 2011          & GTX 470            & \textit{Fermi}     & 215          & 14             & 32            & 1.22           & 6144     & 1/3      & LTE             &  ML-MAP            & 32            & 100            & 5        & 4e-05        &     -          &                20827  &                  29.5  &  24.6          & 0.045         &   8740             \\
-                                                                 & \cite{Chinnici2012}  & 2012          & Tesla C2050        & \textit{Fermi}     & 247          & 14             & 32            & 1.15           & 11918    & 1/3      &   -             &   L-MAP            & 32            & 32             & 5        &     -        &     -          &               108965  &                   3.5  &   2.9          & 0.0057        &  85172             \\
-                                                                 & \cite{Yoge2012}      & 2012          & 9800 GX2           & \textit{Tesla}     & 197          & 16             & 16            & 1.50           & 6144     & 1/3      & LTE             &  ML-MAP            & 32            & 1              & 5        & 1e-02        &     -          &                 3072  &                   2.0  &   1.7          & 0.0043        & 115882             \\
-                                                                 & \cite{Liu2013}       & 2013          & GTX 550 Ti         & \textit{Fermi}     & 116          & 6              & 32            & 1.80           & 6144     & 1/3      & LTE             & EML-MAP            & 32            & 1              & 6        & 1e-02        &     -          & {\color{Paired-3} 72} &                  85.3  &  85.3          & 0.247         &   1360             \\
-                                                                 & \cite{Chen2013}      & 2013          & GTX 580            & \textit{Fermi}     & 244          & 16             & 32            & 1.54           & 6144     & 1/3      & LTE             &  ML-MAP            & 32            & 1              & 6        & 3e-04        &     -          &                 1660  &                   3.7  &   3.7          & 0.0047        &  63946             \\
-                                                                 & \cite{Xianjun2013}   & 2013          & GTX 480            & \textit{Fermi}     & 250          & 15             & 32            & 1.40           & 6144     & 1/3      & LTE             & EML-MAP            & 32            & 1              & 6        &     -        &     -          & {\color{Paired-3} 50} &                 122.8  & 122.8          & 0.183         &   2036             \\
-                                                                 & \cite{Wu2013}        & 2013          & GTX 680            & \textit{Kepler}    & 195          & 8              & 192           & 1.01           & 6144     & 1/3      & LTE             & EML-MAP            & 32            & 16             & 6        &     -        & 1e-02          &                 2657  &                  37.0  &  37.0          & 0.024         &   5270             \\
-                                                                 & \cite{Zhang2014}     & 2014          & Tesla K20c         & \textit{Kepler}    & 225          & 13             & 192           & 0.71           & 6144     & 1/3      & LTE             &  ML-MAP            & 32            & 1              & 5        & 1e-04        &     -          &                 1097  &                   5.6  &   4.7          & 0.0026        &  47872             \\
-                                                                 & \cite{Li2014}        & 2014          & GTX 580            & \textit{Fermi}     & 244          & 16             & 32            & 1.54           & 6144     & 1/3      & LTE             & BR-SOVA            & 8             & 4              & 5        & 2e-02        &     -          & {\color{Paired-3}192} &                 127.8  & 106.5          & 0.135         &   2291             \\
-                                                                 & \cite{Li2016a}       & 2016          & GTX 680            & \textit{Kepler}    & 195          & 8              & 192           & 1.01           & 6144     & 1/3      & LTE             & EML-MAP            & 32            & 1              & 7        & 9e-03        &     -          &                  817  & {\color{Paired-7} 8.2} &   9.6          & 0.0062        &  20313             \\
-                                                                 & \cite{Li2016a}       & 2016          & GTX 680            & \textit{Kepler}    & 195          & 8              & 192           & 1.01           & 6144     & 1/3      & LTE             &    FPTD            & 32            & 1              & 36       & 9e-03        &     -          &                  403  & {\color{Paired-7}18.7} &   -            & -             &      -             \\
-  \hline
-  \hline
-  \multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{CPU-based}}} & \cite{Huang2011}     & 2011          & i7-960             & \textit{Nehalem}   & 130          & 1              &  8            & 3.20           & 1008     & 1/3      & LTE             &  ML-MAP            & 16           & 1               & 8        & 3e-03        & 7e-02          &                  138  &                   7.3  &    9.7         & 0.380         &  13402             \\
-                                                                 & \cite{Zhang2012}     & 2012          & X5670              & \textit{Westmere}  & 95           & 6              & 16            & 2.93           & 5824     & 1/3      & LTE             & EML-MAP            &  8           & 6               & 3        & 6e-02        &     -          &                  157  &                 222.6  &  111.3         & 0.396         &    854             \\
-                                                                 & \cite{Wu2013}        & 2013          & i7-3770K           & \textit{I. Bridge} & 77           & 4              &  8            & 3.50           & 6144     & 1/3      & LTE             & EML-MAP            & 16           & 4               & 6        &     -        & 1e-01          &                  323  &                  76.2  &   76.2         & 0.680         &   1011             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & E5-2650            & \textit{I. Bridge} & 95           & 8              &  8            & 2.50           & 6144     & 1/3      & LTE             & EML-MAP            & 16           & 64              & 6        & 6e-06        & 6e-03          &                 3665  &                 107.3  &  107.3         & 0.669         &    885             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & i7-4960HQ          & \textit{Haswell}   & 47           & 4              &  8            & 3.20           & 6144     & 1/3      & LTE             & EML-MAP            & 16           & 32              & 6        & 6e-06        & 6e-03          &                 2212  &                  88.9  &   88.9         & 0.868         &    527             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & $2\times$E5-2680v3 & \textit{Haswell}   & 240          & 24             &  8            & 2.50           & 6144     & 1/3      & LTE             & EML-MAP            & 16           & 192             & 6        & 6e-06        & 6e-03          &                 2657  &                 443.7  &  443.7         & 0.924         &    541             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & E5-2650            & \textit{I. Bridge} & 95           & 8              & 16            & 2.50           & 6144     & 1/3      & LTE             & EML-MAP            &  8           & 128             & 6        & 8e-05        & 5e-02          &                 3492  &                 225.2  &  225.2         & 0.704         &    422             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & i7-4960HQ          & \textit{Haswell}   & 47           & 4              & 16            & 3.20           & 6144     & 1/3      & LTE             & EML-MAP            &  8           & 64              & 6        & 8e-05        & 5e-02          &                 2837  &                 138.6  &  138.6         & 0.677         &    339             \\
-                                                                 & \cite{Cassagne2016a} & 2016          & $2\times$E5-2680v3 & \textit{Haswell}   & 240          & 24             & 16            & 2.50           & 6144     & 1/3      & LTE             & EML-MAP            &  8           & 384             & 6        & 8e-05        & 5e-02          &                 3293  &                 716.4  &  716.4         & 0.746         &    335             \\
-                                                                 & \cite{LeGal2019a}    & 2019          & $2\times$E5-2680v3 & \textit{Haswell}   & 240          & 24             & 32            & 2.50           & 6144     & 1/3      & LTE             & EML-MAP            &  8           & 24              & 6        & 1e-03        & 3e-01          &                   84  &                1735.0  & 1735.0         & 0.904         &    138             \\
-  \hline
-  \end{tabular}
-  }}
-  \end{adjustbox}
-\end{table}
-
-\begin{table}[htp]
-  \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
-  \centering
-  \caption{Polar Software Decoders Hall of Fame.}
-  \label{tab:eval_polar_hof}
-  \checkoddpage
-  \ifthenelse{\boolean{twosidedoc}}
-  {\begin{adjustbox}{angle=\ifoddpage 90\else -90\fi}}
-  {\begin{adjustbox}{angle=90}}
-  {\resizebox{0.95\textheight}{!}{
-  \begin{tabular}{|r|r r|r r r r r r|r r|r r r r|r r|r r r|}
-  \hline
-  \multicolumn{3}{|c|}{\multirow{2}{*}{}} & \multicolumn{6}{c|}{\multirow{2}{*}{\textbf{Hardware specifications}}} & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Code}}} & \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{Decoder parameters}}} & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Decoding perf.}}} & \multicolumn{3}{c|}{\multirow{2}{*}{\textbf{Metrics}}} \\
-  \multicolumn{3}{|c|}{}                  & \multicolumn{6}{c|}{}                                                  & \multicolumn{2}{c|}{}                               & \multicolumn{4}{c|}{}                                             & \multicolumn{2}{c|}{}                                         & \multicolumn{3}{c|}{}                                  \\
-  \hline
-  \multicolumn{2}{|r}{\textbf{Work}}                                                    & \textbf{Year} & \textbf{Platform}  & \textbf{Arch.}     & \textbf{TDP} & \textbf{Cores}      & \textbf{SIMD} & \textbf{Freq.} & $\bm{N}$ & $\bm{R}$ & \textbf{Algorithm} & \textbf{Pre.} & \textbf{Inter}         & $\bm{i}$/$\bm{L}$ & \textbf{Lat.}            & \textbf{Thr.}            & \textbf{NThr.} & \textbf{TNDC} & $\boldsymbol{E_d}$ \\
-  \multicolumn{2}{|r}{}                                                                 &               &                    &                    & Watts        & or SM               & length        & GHz            &          &          &                    & bit           & level                  &                   & $\mu$s                   & Mbps                     & Mbps           &               & nJ                 \\
-  \hline
-  \hline
-  \multirow{ 5}{*}{\rotatebox[origin=c]{90}{\textbf{GPU-based}}} & \cite{Giard2016b}    & 2016          & Tesla K20c         & \textit{Kepler}    &         225  & 13                  & 192           & 0.71           &  4096    & 0.90     &      SSC           & 32            &                   832  &  1                &                    9400  & {\color{Paired-7}1043.00} & 1043.00       &  0.5890        &    216             \\
-                                                                 & \cite{Li2016b}       & 2016          & Tesla K20c         & \textit{Kepler}    &         225  & 13                  & 192           & 0.71           &   256    & 0.50     &      SSC           & 32            &                     -  &  1                &                       -  &                   395.00  &  395.00       &  0.2230        &    570             \\
-                                                                 & \cite{Cammerer2017}  & 2017          & GTX 980 Ti         & \textit{Maxwell}   &         250  & 22                  & 128           & 1.00           &  4096    & 0.50     & BP+CA-SCL          & 32            &    {\color{Paired-9}5} & 32                &                 1000000  &                     0.01  &    0.32       &  0.0001        & 781250             \\
-                                                                 & \cite{Han2017}       & 2017          & GTX 980            & \textit{Maxwell}   &         165  & 16                  & 128           & 1.17           &  4096    & 0.50     &       SCL          & 32/16         & {\color{Paired-9}1310} & 32                & {\color{Paired-3}111900} &                    24.00  &  768.00       &  0.3205        &    215             \\
-                                                                 & \cite{Han2017}       & 2017          & GTX TITAN X        & \textit{Maxwell}   &         250  & 24                  & 128           & 1.00           &  4096    & 0.50     &       SCL          & 32/16         & {\color{Paired-9}1918} & 32                & {\color{Paired-3}126700} &                    31.00  &  992.00       &  0.3229        &    252             \\
-  \hline
-  \hline
-  \multirow{17}{*}{\rotatebox[origin=c]{90}{\textbf{CPU-based}}} & \cite{Giard2014}     & 2014          & i7-2600            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &   8           & 3.40           & 32768    & 0.84     &      SSC           & 32            &                     1  &  1                &                     223  &                   123.70  &  123.70       &  4.5480        &    768             \\
-                                                                 & \cite{Giard2014}     & 2014          & i7-2600            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &  16           & 3.40           & 32768    & 0.84     &      SSC           &  8            &                     1  &  1                &                     135  &                   203.60  &  203.60       &  3.7430        &    467             \\
-                                                                 & \cite{LeGal2014}     & 2014          & Cortex-A9          & \textit{ARMv7}     & $\approx~$3  & {\color{Paired-1}4} &  16           & 1.30           & 32768    & 0.90     &      SSC           &  8            &                    16  &  1                &                   16852  &                    28.00  &   28.00       &  1.3460        &    107             \\
-                                                                 & \cite{Sarkis2014b}   & 2014          & i7-2600            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &   8           & 3.40           &  2048    & 0.84     &   CA-SSCL          & 32            &                     1  & 32                &                    3300  &                     0.52  &   16.64       &  0.5882        &   5709             \\
-                                                                 & \cite{Sarkis2014}    & 2014          & i7-2600            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &   8           & 3.40           & 32768    & 0.84     &      SSC           & 32            &                     1  &  1                &                     125  &                   219.80  &  219.80       &  8.0810        &    432             \\
-                                                                 & \cite{LeGal2015a}    & 2015          & i7-4960HQ          & \textit{Haswell}   &          47  & {\color{Paired-1}4} &  16           & 3.60           & 32768    & 0.90     &      SSC           &  8            &                    16  &  1                &                     337  &                  1400.00  & 1400.00       & 24.3060        &     34             \\
-                                                                 & \cite{Cassagne2015c} & 2015          & E3-1225            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &   8           & 3.10           & 32768    & 0.84     &      SSC           & 32            &                     1  &  1                &                     114  &                   241.00  &  241.00       &  9.7180        &    394             \\
-                                                                 & \cite{Cassagne2015c} & 2015          & E3-1225            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &  16           & 3.10           & 32768    & 0.83     &      SSC           &  8            &                    16  &  1                &                     370  &                  1180.00  & 1180.00       & 23.7900        &     81             \\
-                                                                 & \cite{Sarkis2016}    & 2016          & i7-2600            & \textit{S. Bridge} &          95  & {\color{Paired-1}4} &   8           & 3.40           &  2048    & 0.84     &   CA-SSCL          & 32            &                     1  & 32                &                     433  &                     4.00  &  128.00       &  4.7059        &    742             \\
-                                                                 & \cite{Giard2016b}    & 2016          & i7-4770S           & \textit{Haswell}   &          64  & {\color{Paired-1}4} &  32           & 3.10           & 32768    & 0.84     &      SSC           &  8            &                     1  &  1                &                      31  &                   886.00  &  886.00       &  8.9310        &     73             \\
-                                                                 & \cite{Giard2016b}    & 2016          & Cortex-A9          & \textit{ARMv7}     & $\approx~$3  & {\color{Paired-1}4} &  16           & 1.70           & 32768    & 0.90     &      SSC           &  8            &                     1  &  1                &                     361  &                    81.70  &   81.70       &  3.0030        &     37             \\
-                                                                 & \cite{Cassagne2016b} & 2016          & i7-4850HQ          & \textit{Haswell}   &          47  & {\color{Paired-1}4} &  16           & 3.30           & 32768    & 0.83     &      SSC           &  8            &                     1  &  1                &                      47  &                   580.00  &  580.00       & 10.9840        &     81             \\
-                                                                 & \cite{Cassagne2016b} & 2016          & Cortex-A57         & \textit{ARMv8}     & $\approx~$2  & {\color{Paired-1}2} &  16           & 1.10           & 32768    & 0.83     &      SSC           &  8            &                     1  &  1                &                     374  &                    73.00  &   73.00       &  4.1480        &     27             \\
-                                                                 & \cite{Shen2016}      & 2016          & i7-4790K           & \textit{Haswell}   &          88  & {\color{Paired-1}4} &   8           & 4.00           &  2048    & 0.84     &       SCL          & 32            &                     1  &  1                &                    1573  &                     1.10  &   35.10       &  1.0938        &   2514             \\
-                                                                 & \cite{LeGal2017a}    & 2018          & i7-4960HQ          & \textit{Haswell}   &          47  & {\color{Paired-1}4} &  32           & 3.60           & 32768    & 0.84     &      SSCAN         & 32            &                     1  &  1                &                      56  &                   490.00  &  490.00       &  4.2535        &     96             \\
-                                                                 & \cite{LeGal2017a}    & 2018          & i7-4960HQ          & \textit{Haswell}   &          47  & {\color{Paired-1}4} &  32           & 3.60           & 32768    & 0.84     &      SSCAN         & 32            &                    32  &  1                &                    1601  &                   550.00  &  550.00       &  4.7743        &     85             \\
-                                                                 & \cite{Leonardon2019} & 2019          & i5-6600K           & \textit{Skylake}   &          91  & {\color{Paired-1}4} &  32           & 3.90           &  2048    & 0.84     &   CA-SSCL          &  8            &                     1  & 32                &                     577  &                     3.00  &   96.00       &  0.7692        &    948             \\
-
-  \hline
-  \end{tabular}
-  }}
-  \end{adjustbox}
-\end{table}
-
-On the \AFFECT website, an overview of software channel decoders
-state-of-the-art is provided for the mains channel codes. In this section, a
-snapshot of the LDPC Hall of Fame (HoF) is provided in
-Table~\ref{tab:eval_ldpc_hof} as well as the turbo HoF in
-Table~\ref{tab:eval_turbo_hof} and the polar HoF in
-Table~\ref{tab:eval_polar_hof}. The purpose of these HoFs is to see at a glance
-what has been achieved, what can be expected from today software decoders, and
-easily compare their respective characteristics. All the presented results,
-collected from the state-of-the-art research papers published in the field,
-consider a BPSK (Bit Phase-Shift Keying) modulation/demodulation and an AWGN
-(Additive White Gaussian Noise) channel. This Hall of Fame strives to present
-results as fairly as possible: for example, early termination (\emph{Early T.})
-criteria are not taken into consideration while computing throughput, in order
-to compare raw performances using a consistent method. It remains possible,
-however, for typos/glitches/mistakes to have inadvertently made it to the
-scoreboard.
-
-All the entries are sorted by platform type (GPU and CPU) and chronologically.
-For each HoF table a column is dedicated to the \emph{Hardware specifications},
-it can have a huge impact on the decoding performance depending on if you are
-using a low power ARM\R CPU or a high end HPC GPU for instance. Then the next
-column aims to give some insights on the \emph{Code} used in the decoding
-process, again decoding a short code will generally result in low latencies
-performance when decoding a big code will generally lead to higher latencies.
-The \emph{Decoder parameters} are given in a dedicated column, those parameters
-characterize the decoding process used in the experiments. The \emph{Decoding
-performances} (or \emph{Decoding perf.}) column shows the reported performances
-in term of latency and throughput (and exceptionally the BER and FER in the
-turbo HoF). For the LDPC HoF the throughput considers the codeword size (coded
-throughput, $N$ bits) whereas in the turbo and polar HoFs the information
-throughput is presented (considering $K$ bits). Generally speaking, the
-throughput (\emph{Thr.}) can be deduced from the number of bits $B$ in the
-codeword ($B$ can be $K$ or $R$ depending on if we are considering information
-or coded throughput), the inter-frame level (\emph{Inter}) and the latency
-(\emph{Lat.}):
-\begin{equation}
-  Thr. = (B \times Inter) / Lat.
-\end{equation}
-In many cases, the raw performances are hard to compare directly because the
-number of iterations ($i$) or the number of lists ($L$) can vary from a work to
-an other. This is why we proposed some \emph{Metrics} in the last column. Those
-metrics aim to facilitate the comparison between the results. The
-\emph{normalized throughput} (NThr.) is different for each HoF but the idea is
-to normalize the throughput with a representative number of iterations/lists
-($I$). Here is the normalized throughput:
-\begin{equation}
-  NThr. = (Thr. \times i) / I,
-\end{equation}
-for the LDPC HoF $I = 50$, for the turbo HoF $I = 6$ and for the polar HoF
-$I = 1$.
-The \emph{throughput under normalized decoding cost} (TNDC) is a metric proposed
-in~\cite{Ying2012}, the general idea is to see how much the hardware components
-are stressed (higher TNDC is better). In the initial paper the $TNDC$ was only
-taking care of the frequency and the number of cores. In this thesis we refined
-the model by adding the SIMD length as this is a key for performance in channel
-decoding algorithms:
-\begin{equation}
-  TNDC = NThr. / (Freq. \times Cores \times SIMD).
-\end{equation}
-The last metric is the \emph{decoding energy} ($E_d$), this is the energy cost
-of the proposed implementation (lower is better):
-\begin{equation}
-  E_d = (TDP / NThr.) \times 10^3.
-\end{equation}
-For the TNDC and the decoding energy we used the normalized throughput instead
-of the raw throughput in the formulas, is so you can compare metrics with each
-other. You will notice that there is additional information given by the colors
-in the different tables, here is the meaning of these colors:
-\begin{itemize}
-  \item {\color{Paired-1}blue}: only one core of the CPU is used, in the TNDC
-    computation one core is considered, in $E_d$ the entire TDP is used,
-  \item {\color{Paired-3}green}: not including the memory data transfers time
-    between the CPU and the GPU, in real life those transfers occur and the
-    impact on the real latency is significant,
-  \item {\color{Paired-7}orange}: following the formula, the throughput should
-    be lower but the authors performed a specific data transfers overlapping
-    with CUDA streams allowing to reach higher throughput,
-  \item {\color{Paired-9}purple}: the inter-frame level has been deduced from
-    the throughput and the latency.
-\end{itemize}
-
-\section{SCMA Demodulators}
-\label{sec:eval_scma}
-
-In this section, the effects of the various optimizations considered in
-Section~\ref{sec:opt_scma} are investigated. A key concern is to ensure that the
-decoding error performance is not affected by the execution time improvements,
-particularly when approximations are involved. Energy efficiency and power
-consumption, throughput, memory access efficiency, hardware complexity analysis
-are all important aspects that must be considered.
-
-\subsection{Characterizing Throughput Gains, Energy Efficiency and Power Consumption}
-\label{sec:eval_scma_throughput}
-
-Energy efficiency is of interest in the design of C-RAN servers. It is
-determined by the rate of computation that can be delivered by a processor.
-Joint optimization of the throughput and energy consumption is a main goal of
-system designers. Energy optimization can reduce the cost of cloud services
-significantly while it can contribute to decrease the emission of greenhouse
-gases. Power utilization is also important because improved performance per Watt
-is useful to limit power demands. This section explores the power, energy
-efficiency and throughput of the various message passing algorithms suggested in
-this work. Tests have been conducted on three platforms running the Ubuntu Linux
-operating system. The three systems are : 1) an Intel\R Core\TM i7-6700HQ
-processor with AVX instructions (256-bit SIMD) and four physical cores using
-2-way Simultaneous Multi-Threading (SMT or Intel\R Hyper-Threading technology)
-running at nominal frequency of 2.6 GHz, 2) an ARM\R Cortex-A57 with NEON
-instructions (128-bit SIMD) and four cores (no SMT) running at 2.0 GHz and 3) an
-Intel\R Xeon Phi\TM Knight-Corner 7120P with KNCI instructions (512-bit SIMD)
-and 61 cores using 4-way SMT and running at 1.2 GHz.
-
-\begin{table}[htp]
-  \centering
-  \caption
-    [MPA throughput, latency, power and energy characteristics.]
-    {Throughput, latency, power and energy characteristics~\cite{Ghaffari2019}.}
-  \label{tab:eval_scma_thr}
-  % {\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{c | c | r r r r r}
-  & \multirow{3}{*}{\textbf{Algorithm}} & \multirow{3}{*}{\shortstack[r]{\textbf{Throughput}\\\textbf{per Core}\\(Mbps)}} & \multirow{3}{*}{\shortstack[r]{\textbf{Throughput}\\\textbf{per Socket}\\(Mbps)}} & \multirow{3}{*}{\shortstack[r]{\textbf{Latency}\\\textbf{per Core}\\(ns)}} & \multirow{3}{*}{\shortstack[r]{\textbf{Power}\\(W)}} & \multirow{3}{*}{\shortstack[r]{\textbf{Energy}\\\textbf{per Bit}\\($\mu$J)}} \\
-  & & & & & & \\
-  & & & & & & \\
-  \hline
-  \hline
-  \multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{Intel\R Core\TM i7-6700HQ}}}
-  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
-  & \multirow{2}{*}{\shortstack[c]{E-MPA+AVX \\(\texttt{-Ofast})}} & \multirow{2}{*}{17.46} & \multirow{2}{*}{ 75.46} & \multirow{2}{*}{  57.2} & \multirow{2}{*}{ 40.02} & \multirow{2}{*}{ 0.66} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA+AVX   \\(\texttt{-Ofast})}} & \multirow{2}{*}{15.06} & \multirow{2}{*}{ 67.83} & \multirow{2}{*}{  66.4} & \multirow{2}{*}{ 40.53} & \multirow{2}{*}{ 0.73} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 2.51} & \multirow{2}{*}{ 10.31} & \multirow{2}{*}{ 398.4} & \multirow{2}{*}{ 35.11} & \multirow{2}{*}{ 3.53} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O3})   }} & \multirow{2}{*}{ 1.11} & \multirow{2}{*}{  6.37} & \multirow{2}{*}{ 900.9} & \multirow{2}{*}{ 33.11} & \multirow{2}{*}{ 6.02} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.58} & \multirow{2}{*}{ 14.85} & \multirow{2}{*}{ 279.3} & \multirow{2}{*}{ 33.01} & \multirow{2}{*}{ 2.49} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.55} & \multirow{2}{*}{  3.51} & \multirow{2}{*}{1818.1} & \multirow{2}{*}{ 35.00} & \multirow{2}{*}{10.25} \\ & & & & & & \\ \hline
-  \hline
-  \multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{ARM\R Cortex-A57}}}
-  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
-  & \multirow{2}{*}{\shortstack[c]{E-MPA+NEON\\(\texttt{-Ofast})}} & \multirow{2}{*}{ 3.79} & \multirow{2}{*}{ 15.30} & \multirow{2}{*}{ 263.8} & \multirow{2}{*}{  7.93} & \multirow{2}{*}{ 0.52} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA+NEON  \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 2.09} & \multirow{2}{*}{  8.40} & \multirow{2}{*}{ 478.4} & \multirow{2}{*}{  7.56} & \multirow{2}{*}{ 0.90} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 1.20} & \multirow{2}{*}{  4.70} & \multirow{2}{*}{ 833.7} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 1.46} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.75} & \multirow{2}{*}{  3.01} & \multirow{2}{*}{1333.3} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 2.33} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-Ofast})}} & \multirow{2}{*}{ 1.03} & \multirow{2}{*}{  4.07} & \multirow{2}{*}{ 970.8} & \multirow{2}{*}{  7.18} & \multirow{2}{*}{ 1.76} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O3})   }} & \multirow{2}{*}{ 0.41} & \multirow{2}{*}{  1.60} & \multirow{2}{*}{2439.0} & \multirow{2}{*}{  6.99} & \multirow{2}{*}{ 4.21} \\ & & & & & & \\ \hline
-  \hline
-  \multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Xeon Phi\TM 7120P}}}
-  %& Algorithm                                                     & Througput per Core     & Througput per Socket    & Latency                 & Power per Bit           & Energy                                \\
-  & \multirow{2}{*}{\shortstack[c]{E-MPA+KNCI\\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.90} & \multirow{2}{*}{114.60} & \multirow{2}{*}{1111.1} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 1.73} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA+KNCI  \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.67} & \multirow{2}{*}{ 82.32} & \multirow{2}{*}{1492.5} & \multirow{2}{*}{198.00} & \multirow{2}{*}{ 2.41} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{Log-MPA   \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.36} & \multirow{2}{*}{ 53.38} & \multirow{2}{*}{2777.7} & \multirow{2}{*}{184.00} & \multirow{2}{*}{ 3.45} \\ & & & & & & \\ \cline{2-7}
-  & \multirow{2}{*}{\shortstack[c]{MPA       \\(\texttt{-O2})   }} & \multirow{2}{*}{ 0.28} & \multirow{2}{*}{ 36.09} & \multirow{2}{*}{3571.4} & \multirow{2}{*}{196.00} & \multirow{2}{*}{ 5.44} \\ & & & & & & \\
-  \end{tabular}
-  % }}
-\end{table}
-
-Table~\ref{tab:eval_scma_thr} shows the comparison of throughput, latency, power
-consumption and energy of different decoding algorithms that are executed on the
-three platforms to decode 768 Million bits. The average power and energy
-consumption measured on the Core\TM i7 processor were obtained with the turbostat
-software\footnote{turbostat: \url{https://github.com/torvalds/linux/tree/master/tools/power/x86/turbostat}}
-which exploits the Intel\R performance counters in Machine Specific Registers
-(MSRs) to monitor CPU and RAM utilizations. However, in the case of ARM\R and
-Xeon Phi\TM platforms, external current sensors were used to measure the energy
-and power consumptions.
-
-\subsubsection{Intel\R Core\TM i7-6700HQ}
-
-The baseline implementation of MPA with level 3 (\verb|-O3|) optimization of the
-GNU compiler reaches 3.51 Mbps utilizing all four physical cores of the
-processor (SMT on). Log-MPA improves the performance to 6.37 Mbps benefiting
-from elimination of the exponential calculations, still in \verb|-O3|. However,
-using the fast math libraries (\verb|-Ofast|) and the loop optimizations from
-Section~\ref{sec:opt_scma_float} increases the throughput to 14.85 Mbps for MPA
-and to 10.31 Mbps for log-MPA. It is important to observe that MPA outperforms
-the log-MPA with the fast math libraries and more aggressive optimizations,
-without compromising on the bit error rate performance. This is because log-MPA
-induces inefficient data accesses due to the messages passed from resources to
-users. This phenomenon will be investigated further in
-Section~\ref{sec:eval_scma}. Using the AVX and SSE SIMD ISAs reduces the branch
-mispredictions and the cache misses (cf.
-Section~\ref{sec:opt_scma_flattening}). Consequently, the throughput is
-increased to 67.83 Mbps in MPA and to 75.46 Mbps for the E-MPA where the $\Psi'$
-estimated exponentials from \eqref{eq:alg_scma_19} are performed. These results
-confirm significant throughput gains for the proposed implementations, while the
-energy consumption is reduced. Utilizing AVX increases the average power
-consumption of MPA and log-MPA from 35 to 40 Watts but throughput and latency
-are improved by much larger factors. It means that the overall energy
-consumption have been decreased with AVX.
-
-\subsubsection{ARM\R Cortex-A57}
-
-On the \emph{Nvidia\R Jetson TX1} platform, the throughput difference caused by
-the fast math libraries of the GNU compiler is still visible for MPA and log-MPA
-algorithms. With level three optimization (\verb|-O3|), MPA and log-MPA run at
-1.60 Mbps and 3.01 Mbps respectively. When using fast math libraries
-(\verb|-Ofast|) the throughputs increased to 4.07 and 4.70 Mbps. It should be
-noted that the four physical cores of the ARM\R platform were  utilized for
-those tests. Power consumption and energy used per decoded bit is lower on the
-ARM\R platform than on the Intel\R processors. The low power consumption of the
-ARM\R platform notably comes at the cost of less powerful floating-point
-arithmetic units (cf. MPA+NEON and E-MPA+NEON in Table~\ref{tab:eval_scma_thr}).
-Eliminating the exponential computations almost doubled the performance in E-MPA
-(15.30 Mbps) as compared to MPA+NEON (8.40 Mbps), which shows the limits of low
-power processors when calculating many exponentials. Nevertheless, by using
-E-MPA, the ARM\R low power processors can be a good candidate for implementation
-of SCMA decoders on C-RAN servers as it allows significant energy savings.
-
-\subsubsection{Intel\R Xeon Phi\TM 7120P}
-
-The Xeon Phi\TM Knights Corner~\cite{Chrysos2012} benefits from the ability to
-execute four hardware threads per core, while having 61~cores and 512-bit SIMD
-registers. In this case, 244 threads can be run to handle the MPA decoding task.
-Despite these benefits, the Xeon Phi\TM Knight Corners suffers from two main
-disadvantages: 1) the KNC instructions diversity is reduced compared to AVX or
-AVX-512 ISAs and 2) the cores frequency is relatively low in order to keep
-reasonable power consumption and limits the heat dissipation. As an example of
-missing instruction, the KNCI ISA does not offer coalesced division
-(\verb|_mm512_div_ps|) for floating-point numbers. Beside those limitations,
-the E-MPA+KNCI exhibits the highest throughput among the three mentioned
-platforms (up to 114.60 Mbps). However, it consumes almost three times more
-energy per bit compared to the ARM\R-based implementations. The MPA decoding
-algorithm exhibits its best performance on this platform when cross compiled
-using \verb|-O2 -mmic| flags by an Intel\R icpc compiler. Using fast math
-options such as \verb|-no-prec-div| \verb|-no-prec-sqrt|
-\verb|-fp-speculation=fast| \verb|-fp-model-fast=2| do not change the results
-significantly with the Intel\R compiler.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.70\linewidth]{scma/energy/energy}
-  \caption
-    [MPA graphical comparison of the energy consumed per decoded bit.]
-    {Graphical comparison of the energy consumed per decoded bit for
-    three different platforms.}
-  \label{plot:eval_scma_energy}
-\end{figure}
-
-Fig.~\ref{plot:eval_scma_energy} focuses on the energy consumed per decoded bit
-(also mentioned in Table~\ref{tab:eval_scma_thr}). In summary, the SIMD
-algorithms have a higher energy efficiency per decoded bit. The processor
-resources are well stressed and the power does not increase too much. Among the
-obtained results, the Xeon Phi\TM obtains the best throughput while the
-Cortex-A57 has the lowest energy consumption. In the case where the number of
-users in the cloud is increased, the results presented in this section are
-scalable up to the number of processing units dedicated to them.
-
-\subsection{Memory (Cache) Access Efficiency}
-\label{sec:eval_scma_memory}
-
-\begin{table}[htp]
-  \centering
-  \caption
-    [MPA cache performance characterization.]
-    {Cache performance characterization.}
-  \label{tab:eval_scma_cache}
-  % {\small\resizebox{\linewidth}{!}{
-  \begin{tabular}{c r r r r r}
-  \multirow{4}{*}{\textbf{Algorithm}} & \multirow{4}{*}{\shortstack[r]{\textbf{\# of}\\\textbf{Branches}\\(Million)}} & \multirow{4}{*}{\shortstack[r]{\textbf{\# of}\\\textbf{Branch}\\\textbf{Misses}\\(Million)}} & \multirow{4}{*}{\shortstack[r]{\textbf{\# of }\\\textbf{Cache}\\\textbf{Ref.}\\(Million)}} & \multirow{4}{*}{\shortstack[r]{\textbf{\# of}\\\textbf{Cache}\\\textbf{Misses}\\(Million)}} & \multirow{4}{*}{\shortstack[r]{\textbf{Instruction}\\\textbf{per Cycle}}} \\
-  & & & & & \\
-  & & & & & \\
-  & & & & & \\
-  \hline
-  \hline
-  %& Algorithm                                                  & # branches              & # branche misses       & # cache ref          & # cache misses         & intr. per cycle
-  \multirow{2}{*}{               E-MPA+AVX                    } & \multirow{2}{*}{12267}  & \multirow{2}{*}{422}   & \multirow{2}{*}{275} & \multirow{2}{*}{70.83} & \multirow{2}{*}{1.23} \\ & & & & & \\ \hline
-  \multirow{2}{*}{               MPA+AVX                      } & \multirow{2}{*}{12845}  & \multirow{2}{*}{401}   & \multirow{2}{*}{244} & \multirow{2}{*}{70.32} & \multirow{2}{*}{1.19} \\ & & & & & \\ \hline
-  \multirow{2}{*}{\shortstack[c]{Log-MPA  \\(\texttt{-Ofast})}} & \multirow{2}{*}{148867} & \multirow{2}{*}{17584} & \multirow{2}{*}{484} & \multirow{2}{*}{73.02} & \multirow{2}{*}{0.67} \\ & & & & & \\ \hline
-  \multirow{2}{*}{\shortstack[c]{Log-MPA  \\(\texttt{-O3})   }} & \multirow{2}{*}{359967} & \multirow{2}{*}{18039} & \multirow{2}{*}{635} & \multirow{2}{*}{77.75} & \multirow{2}{*}{0.69} \\ & & & & & \\ \hline
-  \multirow{2}{*}{\shortstack[c]{MPA      \\(\texttt{-Ofast})}} & \multirow{2}{*}{126578} & \multirow{2}{*}{7093}  & \multirow{2}{*}{397} & \multirow{2}{*}{72.58} & \multirow{2}{*}{1.12} \\ & & & & & \\ \hline
-  \multirow{2}{*}{\shortstack[c]{MPA      \\(\texttt{-O3})   }} & \multirow{2}{*}{527075} & \multirow{2}{*}{9454}  & \multirow{2}{*}{833} & \multirow{2}{*}{79.73} & \multirow{2}{*}{0.57} \\ & & & & & \\
-  \end{tabular}
-  % }}
-\end{table}
-
-Apart from SIMD operations and parallelization, cache access efficiency plays an
-important role in the high-performance implementation of algorithms on GPP.
-Table~\ref{tab:eval_scma_cache} shows the performance characterization of
-different MPA algorithms on the Core\TM i7-6700HQ processor for decoding 768
-Million bits. As reported in Table~\ref{tab:eval_scma_cache}, contiguous
-accesses to the memory using AVX instructions reduces the total number of
-branches and references to the cache. Reducing the number of branches and
-references to the cache increases the throughput of the algorithm.
-
-According to Table~\ref{tab:eval_scma_cache}, MPA+AVX shows almost ten times
-fewer branches (12845 Million) versus MPA \verb|-Ofast| (126578 Million) and
-consequently it offers better performance. For MPA+AVX, 401 Million branches
-have been mispredicted by the processors, compared to 7093 Millions for MPA. For
-cache misses MPA+AVX produced two Millions fewer cache misses when compared to
-MPA and the total number of cache references are also significantly (122
-Millions) less than with MPA. The total number of cache misses for various
-algorithms in Table~\ref{tab:eval_scma_cache} are between 70 to 79 Millions,
-while the total number of branch mispredictions varies between 422 Millions to
-6454 Millions. This high dynamic range of branch mispredictions shows that
-reducing the total number of branches and branch mispredictions have more impact
-on increasing throughput of the MPA algorithm in comparison to reducing cache
-misses. This phenomenon also shows that using optimization methods such as
-log-MPA which produces large number of branches due to the $\max(.)$ function is
-not ideal for multi-processor servers in C-RAN. These reported significant
-improvements have been brought by SIMD instructions. Improving data locality,
-contiguous access to memory and parallelizing loops are the main reasons that
-made SIMD algorithms exhibit better performance when it comes to cache
-interface.
-
-Table~\ref{tab:eval_scma_cache} also reports the number of Instructions per
-Cycle (IPC) of each implementation. It is obvious that the number of IPC was
-reduced in MPA \verb|-O3| and log-MPA due to poorer memory access efficiency.
-This reduces the throughput of those algorithms. On the other hand, without
-using contiguous access to memory, the processor spends more time for scalar
-load and stores. This can cause a bottleneck in interfacing memory while other
-resources of the processor are waiting to receive data and consequently it
-decreases the IPC. By contrast, in the case of contiguous access to memory (or
-cache) the processor can fetch sufficient data all at once to support sustained
-processing thus reducing the memory bottleneck and improving internal processing
-as reflected by better IPC indices.
-
-\subsection{Profiling and Hardware Complexity}
-\label{sec:eval_scma_profiling}
-
-Previous sections explored how processor parallel resources, efficient and
-contiguous memory access, and compiler optimizations play an important role in
-getting efficient implementation of the SCMA algorithms. In~\cite{Zhang2014a,
-Liu2016,Jia2018,Du2016a}, computational complexity, measured as operation
-counts, was used to represent the complexity of the MPA. Operation counts can be
-misleading metrics when characterizing algorithmic complexity of algorithms
-executing on general purpose processors. Indeed, it misses significant factors
-such as cache misses, memory efficiency and precision of floating-point
-calculations. In this section, the time complexity of the various forms of SCMA
-decoders are investigated using the Intel\R VTune\TM profiler\footnote{Intel\R
-VTune\TM Profiler: \url{https://software.intel.com/en-us/vtune}}.
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=1.00\linewidth]{scma/profiling/profiling}
-  \caption
-    [Profiling results of different MPA algorithms using Intel\R VTune\TM
-    Profiler.]
-    {Profiling results of different MPA algorithms using Intel\R VTune\TM
-    Profiler on Core\TM i7-6700HQ platform for decoding 768 Million bits.}
-  \label{plot:eval_scma_profiling}
-\end{figure}
-
-Fig.~\ref{plot:eval_scma_profiling} reports profiling results obtained with
-different SCMA decoders variations when applied to the decoding of 768 Million
-bits. Results were organized to show the existence of five bottlenecks i.e.
-logarithms in \eqref{eq:alg_scma_11}, exponentials in \eqref{eq:alg_scma_7},
-complex norm and complex subtraction in \eqref{eq:alg_scma_5} and messages
-passed from resources to users in \eqref{eq:alg_scma_8}.
-
-Observing MPA and MPA (\verb|-Ofast|) reveals the overhead of exponentials and
-complex norms in the algorithm. For example, the decoder spent more than 62
-percent of its time (32.35 seconds) to calculate exponentials and norms in MPA
-(\verb|-Ofast|). This led us to explore SIMD calculation of these two steps.
-Comparing E-MPA+SIMD and MPA+SIMD implementations to others such as MPA
-(\verb|-O3| or \verb|-Ofast|) shows a clear gain in throughput for calculation
-of the exponentials and norms. In more details, E-MPA+SIMD spends 1.68 seconds
-computing exponentials and norms which is more than 19 times faster than the
-initial computation of norms and exponentials in MPA (\verb|-Ofast|). On the
-other hand, exponentials and norms computations are performing as fast as
-complex subtract. This profiling results show the efficiency of the proposed
-SIMD implementation methods. By contrast, log-MPA has not shown good performance
-using fast math library when compared to MPA. Inefficient memory access, cache
-misses and high number of branches are among the reasons that made log-MPA
-exhibits lower throughput than expected. Those phenomena are induced by
-comparison operations embedded in the $\max(.)$ function in
-\eqref{eq:alg_scma_13}. Nevertheless, without using fast math libraries, log-MPA
-still offers performance gains over MPA.
-
-\section{Analysis of the Simulator Throughput on a Selection of CPUs}
-\label{sec:eval_simu}
-
-\begin{itemize}
-  \item \cmark~faire un petit schéma qui montre les boîtes simulés (AWGN -> Demod -> Qnt -> Dec -> CRC extract -> Monitor)
-  \item \cmark~ajouter un AMD Ryzen (voir PlaFRIM)
-  \item \xmark~AMD c'est intéressant parcequ'ils ont fait le choix de rester sur de l'AVX2 et on pourrait s'attendre à ce que ça les pénalise et en fait non pas trop
-  \item \xmark~Table~\ref{tab:simu_taks_thr_lat}, identifier quelques chiffres à retenir dans la table, avec un code couleur ou un style
-  \item \xmark~Situer le niveau de perf qu'on obtient avec une version matérielle
-\end{itemize}
-
-\begin{table}[htp]
-  \centering
-  \caption{Specifications of the target processors.}
-  \label{tab:simu_cpus_specs}
-  {\resizebox{\linewidth}{!}{
-  \begin{tabular}{l  l | l | l | c | c | c | c | c}
-  \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
-          &                                           & \textbf{Name} & \textbf{Size}              &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
-  \hline
-  \hline
-  ARM\R   & ThunderX2\R CN9975                        & NEON          & 128-bit                    & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
-  Intel\R & Xeon Phi\TM 7230                          & AVX-512F      & 512-bit                    & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
-  Intel\R & Xeon\TM E5-2680 v3                        & AVX2          & 256-bit                    & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
-  Intel\R & Xeon\TM Gold 6140                         & AVX-512BW     & 512-bit                    & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
-% Intel\R & Xeon\TM Gold 6142                         & AVX-512BW     & 512-bit                    & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
-  Intel\R & Xeon\TM Gold 6240                         & AVX-512BW     & 512-bit                    & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
-% AMD\R   & EPYC\TM 7452                              & AVX2          & 256-bit                    & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
-  AMD\R   & EPYC\TM 7702                              & AVX2          & 256-bit                    & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
-
-  \end{tabular}
-  }}
-\end{table}
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=1.0\textwidth]{simu/chain/chain}
-  \caption
-    [\AFFECT simulator chain.]
-    {\AFFECT simulator chain.}
-  \label{plot:simu_chain}
-\end{figure}
-
-\begin{table}[htp]
-  \centering
-  \caption{Average throughput and latency performance per simulated task (single-threaded).}
-  \label{tab:simu_taks_thr_lat}
+    [Selected DVB-S2 configurations (MODCOD).]
+    {Selected DVB-S2 configurations (MODCOD).}
+  \label{tab:dvbs2_modcod}
   % {\resizebox{\linewidth}{!}{
-  {\small
-  \begin{tabular}{c | l | r r r r r r | r}
-  & \textbf{CPU}       & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
-  \hline \hline
-  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Thr.} (Mb/s)}}
-  & Xeon Phi\TM 7230   & 100.2          &  1862.1         &    -            &  49.8         &  2073.2           &   921.4       &  29.0          \\
-  & ThunderX2\R CN9975 &  53.7          &   672.9         &   748.3         & 112.1         &  6338.4           &  2386.3       &  28.4          \\
-  & Xeon\TM E5-2680 v3 & 159.7          &  7427.1         &  4586.2         & 247.5         & 20832.6           &  8234.5       &  82.3          \\
-  & Xeon\TM Gold 6140  & 421.7          & 14131.7         & 12931.5         & 376.5         & 31749.5           & 11093.0       & 171.8          \\
-% & Xeon\TM Gold 6142  &   -            &     -           &     -           &   -           &     -             &     -         &   -            \\
-  & Xeon\TM Gold 6240  & 314.6          & 10518.3         &  9915.8         & 277.4         & 23118.3           &  7953.5       & 127.3          \\
-% & EPYC\TM 7452       & 217.5          & 14443.7         &  9096.3         & 357.9         & 28365.2           & 13571.1       & 115.8          \\
-  & EPYC\TM 7702       & 215.4          & 14919.5         &  9234.5         & 359.5         & 28404.0           & 13562.0       & 115.4          \\
-  \hline \hline
-  \multirow{6}{*}{\rotatebox[origin=c]{90}{\textbf{Lat.} ($\mu$s)}}
-  & Xeon Phi\TM 7230   & 20.45          & 1.10            & -               & 35.23         & 0.83              & 1.87          & 59.48          \\
-  & ThunderX2\R CN9975 & 38.15          & 3.04            & 2.74            & 15.65         & 0.27              & 0.72          & 60.58          \\
-  & Xeon\TM E5-2680 v3 & 12.82          & 0.28            & 0.45            &  7.09         & 0.08              & 0.21          & 20.93          \\
-  & Xeon\TM Gold 6140  &  4.86          & 0.14            & 0.16            &  4.66         & 0.05              & 0.16          & 10.03          \\
-% & Xeon\TM Gold 6142  &  -             & -               & -               &  -            & -                 & -             &  -             \\
-  & Xeon\TM Gold 6240  &  6.51          & 0.19            & 0.21            &  6.33         & 0.07              & 0.22          & 13.53          \\
-% & EPYC\TM 7452       &  9.42          & 0.14            & 0.23            &  4.90         & 0.06              & 0.13          & 14.88          \\
-  & EPYC\TM 7702       &  9.51          & 0.14            & 0.22            &  4.88         & 0.06              & 0.13          & 14.94          \\
+  \begin{tabular}{c c c c c c c c}
+    \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{PLH}}}$ & \textbf{Interleaver}\\
+    \hline \hline
+    MODCOD 1 &  QPSK & 3/5 &  9552 &  9720 & 16200 & 16740 & no\\
+    MODCOD 2 &  QPSK & 8/9 & 14232 & 14400 & 16200 & 16740 & no\\
+    MODCOD 3 & 8-PSK & 8/9 & 14232 & 14400 & 16200 & 16740 & column/row\\
   \end{tabular}
   % }}
-  }
 \end{table}
+
+The DVB-S2 defines 32 different configurations or \emph{MODCODs}. This work
+focuses on the 3~MODCODs given in Table.~\ref{tab:dvbs2_modcod}. Depending on
+the MODCOD, the PSK modulation and the LDPC code rate $R$ vary. In the MODCOD 1
+and 2 there is no interleaver and the MODCOD 3 uses a column/row interleaver.
+$K_\text{BCH}$ or $K$ is the number of information bits and the input size of
+the BCH encoder. $N_\text{BCH}$ or $K_\text{LDPC}$ is the output size of the
+BCH encoder and the input size of the LDPC encoder. $N_\text{LDPC}$ is the
+output size of the LDPC encoder. $N_\text{PLH}$ or $N$ is the frame size
+containing $N_\text{LDPC}$ bits plus the PLH and pilots bits.
+
+The DVB-S2 transmitter software implementation has been split into 3 pipeline
+stages, the stages 1 and 3 are sequential and the stage 2 is parallel. The
+transmitter is not the most resources consuming part. An Intel\R Core\TM i7 CPU
+with 4 cores (SMT was switched on) has been used. One core has been assigned for
+the radio thread (stage 3), one hardware thread for the \emph{source} (stage 1)
+and the five remaining hardware threads have been dedicated to the stage 2.
+
+\subsection{Receiver Software Implementation}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Simulator speedups.]{\includegraphics[width=1.00\textwidth]{simu/speedup/speedup}\label{plot:simu_speedup}}
-  % \quad
+  \subfloat[][Waiting phase and learning phase 1 \& 2.]{
+    \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_learning}
+    \label{fig:dvbs2_receiver_learning}}
   \\
-  \subfloat[][Simulator throughputs.]{\includegraphics[width=0.70\textwidth]{simu/throughput/throughput}\label{plot:simu_throughput}}
+  \subfloat[][Learning phase 3 \& transmission phase.]{
+    \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_transmission}
+    \label{fig:dvbs2_receiver_transmission}}
   \caption
-    [\AFFECT simulation of a (2048,1723) Polar code, FA-SCL decoder $L=32$.]
-    {\AFFECT simulation of a (2048,1723) Polar code, FA-SCL decoder $L=32$, BPSK
-    modulation, AWGN channel, $E_b/N_0$ = 4.5~dB (BER = 4.34e-10, FER =
-    5.17e-08).}
-  \label{plot:simu_speedup_throughput}
+    [DVB-S2 receiver software implementation.]
+    {DVB-S2 receiver software implementation.}
+  \label{fig:dvbs2_receiver}
 \end{figure}
 
-Figure~\ref{plot:simu_speedup} depicts the speedups achieved on various modern
-CPU architectures detailed in Table~\ref{tab:simu_cpus_specs}, while
-Figure~\ref{plot:simu_throughput} exposes the corresponding simulation
-information throughputs. In Figure~\ref{plot:simu_speedup}, the speedups on each
-architecture are computed with respect to the single thread simulation time on
-the same architecture. Each run assigns at most one \AFFECT thread to each
-hardware thread, thus, since the architectures have different number of hardware
-threads, the presented speedups do not all have the same number of measurement
-points. In Figure~\ref{plot:simu_speedup_throughput}, an $N=2048$ and $K=1723$
-Polar code (FA-SCL decoder, $L=32$, 32-bit GZip \verb|0x04C11DB7| CRC) is
-simulated with a BPSK modulation and over an AWGN channel ($E_b/N_0 = 4.5$~dB,
-last SNR point of the blue curve in Figure~\ref{fig:ctx_bfer_polar}). The
-frozen bits of the polar code have been generated with the Gaussian
-Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
-vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with
-\Cxy{11} threads. The vectorization is applied at the tasks level (c.f.
-Section~\ref{sec:soft_archi}) to take advantage of the algorithms intrinsic
-level of parallelism, when the multi-threaded parallelism is used, to reduce the
-simulation time by multiplicating the number of concurrent communication chains,
-thanks to the independence property of Monte Carlo simulations. In order to
-achieve highest possible throughputs, the receiver part of the simulator is
-configured to work with 8-bit fixed-point representation for real numbers. It
-has been shown that this representation does not degrade the decoding
-performances of the FA-SCL decoder~\cite{Leonardon2019}. However \AFFECT
-algorithms implementations can also be run on other representations like
-64/32-bit floating-point and 16-bit fixed-point. For all the CPU targets, the
-code has been compiled with the \Cxx GNU compiler version 8.2.0 on Linux, with
-the following optimization flags: \verb|-O3 -funroll-loops -march=native|. Note
-that \AFFECT also works on Windows and macOS at the same level of performance.
-The simulation scales rather well on the tested architectures. The data remains
-in the CPU caches because of the moderate frame size ($N = 2048$). Scaling on
-the Xeon\TM Gold 6142 is not as good as the other targets, because the
-\textit{Intel\R Turbo Boost} technology is enabled on this platform: the CPU
-runs at higher frequencies when the number of active cores is low. \AFFECT
-effectively leverages the simultaneous multi-threading (SMT) technology. This is
-especially true for the ThunderX2\R CN9975 and Xeon\TM Gold 6140 targets. The
-SMT technology helps to improve the usage of the available instruction-level
-parallelism.
+Fig.~\ref{fig:dvbs2_receiver} presents the task decomposition of the DVB-S2
+receiver software implementation with the five distinct phases. The first one is
+called the \emph{waiting phase} (cf. Fig.~\ref{fig:dvbs2_receiver_learning}). It
+consists in waiting until a transmitter starts to transmit. The
+\emph{Synchronizer Frame} task ($t^\text{Rx}_8$) possesses a frame detection
+criterion. When a signal is detected, the \emph{learning phase 1} (cf.
+Fig.~\ref{fig:dvbs2_receiver_learning}) is executed during 150 frames. After
+that the \emph{learning phase 2} (cf. Fig.~\ref{fig:dvbs2_receiver_learning}) is
+also executed during 150 frames. After the \emph{learning phase 1 and 2}, the
+tasks have to be re-bound for the \emph{learning phase 3} (cf.
+Fig.~\ref{fig:dvbs2_receiver_transmission}). This last learning phase is
+applied over 200 frames. After 500 frames for all the learning phases, the final
+\emph{transmission phase} is established (cf.
+Fig~\ref{fig:dvbs2_receiver_transmission}).
+
+In a real life communication systems, the internal clocks of the radios can
+diverge slightly. A specific processing has to be added in order to be
+resilient. This is achieved by the \emph{Synchronizer Timing} tasks
+($t^\text{Rx}_5$ and $t^\text{Rx}_6$). Similarly, the radio transmitter
+frequency is not exactly the same as the receiver frequency, the
+\emph{Synchronizer Frequency} tasks ($t^\text{Rx}_3$, $t^\text{Rx}_{10}$ and
+$t^\text{Rx}_{11}$) recalibrate the signal to recover the transmitted symbols.
+Finally the LDPC is a block coding scheme that requires to know precisely the
+first and last bits of the codeword. The \emph{Synchronizer Frame} task
+($t^\text{Rxt}_8$) uses the \emph{Pay Load Headers} (PLH) and pilots bits
+inserted by the transmitter \emph{Framer PLH} task ($t^\text{Tx}_8$) to recover
+the first and last symbols. One can notice that the \emph{Synchronizer Timing}
+module is composed by two separated tasks (\emph{synchronize} or $t^\text{Rx}_5$
+and \emph{extract} or $t^\text{Rx}_6$). This behavior is different from the
+other \emph{Synchronizer} modules. The \emph{synchronize} task ($t^\text{Rx}_5$
+or $t^\text{Rx}_{3,4,5}$) has two output sockets, one for the regular data and
+another one for a mask. The regular data and the mask are then used by the
+\emph{extract} task ($t^\text{Rx}_5$) to filter which data that is selected or
+not for the next task. This specific implementation has been retained for two
+reasons: 1) the \emph{Synchronizer Timing} tasks ($t^\text{Rx}_5$ and
+$t^\text{Rx}_6$) have a high latency compared to the others tasks and splitting
+the treatment in two tasks is a way to increase the throughput of the pipeline
+(this will be discussed more precisely after) and 2) the \emph{extract} task
+($t^\text{Rx}_6$) introduces a new possible behavior: in some case the task does
+not have enough samples to produce a frame. In this particular case, the
+\emph{extract} task raises the \verb|tools::processing_aborted| exception. The
+exception is caught and the sequence restarts from the first task
+($t^\text{Rx}_1$). This implies to manage a buffer of samples in the
+\emph{extract} task ($t^\text{Rx}_6$). If the buffer contains more than one
+frame then the next task ($t^\text{Rx}_7$ ) can be executed, else the sequence
+has to be restarted.
+
+During the waiting and learning phases 1 and 2, the \emph{Synchronizer Freq.
+Coarse}, the \emph{Filter Matched} and a part of the \emph{Synchronizer Timing}
+have to work symbol by symbol. They have been grouped in the \emph{Synchronizer
+Pilot Feedback} task ($t^\text{Rx}_{3,4,5}$). $t^\text{Rx}_{3,4,5}$ also
+requires a feedback input from the \emph{Synchronizer Frame} task
+($t^\text{Rx}_8$). This behavior is no longer required in the next phases and so
+the $t^\text{Rx}_{3,4,5}$ task has been split in $t^\text{Rx}_3$,
+$t^\text{Rx}_4$ and $t^\text{Rx}_5$. Moreover, the feedback from the
+$t^\text{Rx}_8$ second output socket is left unbound.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/bfer/bfer}
+  \caption
+    [DVB-S2 BER and FER decoding performance.]
+    {DVB-S2 BER/FER decoding performance (LDPC BP h-layered, min-sum, 10 ite.).}
+  \label{fig:dvbs2_bfer}
+\end{figure}
+
+Fig.~\ref{fig:dvbs2_bfer} contains the BER and FER decoding performance of the
+3 selected MODCODs. The forms represent the channel conditions: the squares
+stand for a standard simulated AWGN channel, the triangles are also a simulated
+AWGN channel in which frequency shift, phase shift and symbol delay have been
+taken into account and the circles are the real conditions measured performances
+with the USRPs. One can notice a 0.2 dB inaccuracy in the noise estimated by the
+$t^\text{Rx}_{13}$ task. It is symbolized by the extra horizontal bars over
+the circles. The {\color{Paired-1} MODCOD 1} is represented by dashed lines; the
+{\color{Paired-3} MODCOD 2} is represented by dotted lines; the
+{\color{Paired-5} MODCOD 3} is represented by solid lines. For each MODCOD, the
+LDPC decoder is based on the belief propagation algorithm with horizontal
+layered scheduling (10 iterations) and with the min-sum node update rules. Each
+DVB-S2 configuration has a well-separated SNR predilection zone.
+
+\subsection{Evaluation}
+
+This section evaluates the receiver part of the system. We did not bench
+the transmitter part as it is not the most compute intensive part and high
+throughputs are much more easier to reach. All the presented results have been
+obtained by running the code on a high-end machine composed by two Intel\R
+Xeon\TM Platinum 8168 CPUs and 128 GB of RAM. The frequency of the CPUs is 2.70
+GHz and the \emph{Turbo Boost} mode has been disabled for the reproducibility of
+the results. Each CPU is composed by 24 cores. They support the SMT technology
+but we disabled it in our tests to get the lowest possible tasks latency per
+core. 48 cores (or hardware threads) are available for the DVB-S2 receiver. All
+input and output data are represented by 32-bit floating-point or integer
+numbers. Knowing that the Platinum 8168 CPU supports the AVX-512 ISA. Sixteen
+32-bit elements can be processed in one SIMD instruction. Most of the receiver
+tasks have been accelerated with \MIPP SIMD functions. By this way, \MIPP has
+even been enriched with new functions to improve the complex numbers support.
+
+Knowing that the LDPC decoding is one of the most compute intensive task of the
+receiver, we decided to use the efficient inter-frame SIMD implementation
+presented before in the document (the early termination criterion has been
+switched on). This choice has the effect of computing sixteen frames at once in
+each task of the receiver. As discussed before, it negatively affects the
+overall latency of the system (by a factor of sixteen). But it is not important
+in the video streaming targeted application. The \emph{Decoder LDPC} task
+($t^\text{Rx}_{16}$) is the only one in the receiver to take advantage of the
+inter-frame SIMD technique. The other tasks simply process sixteen frames
+sequentially.
+
+Table~\ref{tab:dvbs2_tasks_thr_lat} presents the tasks throughputs and latencies
+measured for a sequential execution of the MODCOD 2 in the transmission phase.
+The tasks have been regrouped per stage in order to introduce the future
+decomposition when the parallelism is applied. The throughput is given in mega
+samples per second (MS/s). Indeed, some of the tasks are not working on bits but
+on samples and a bit is the smallest possible sample. The average (Avg),
+minimum (Min.) and maximum (Max.) throughputs are calculated with the number of
+output samples. Depending on the task, the number of output samples can
+drastically vary. Consequently, it is not possible to directly compare the task
+throughputs with each others. This is the normalized average throughput
+($\mathcal{N}_\text{Avg}$) has been introduced. It is the average throughput
+considering the $K$ information bits independently of the task output socket
+size. In a first observation, one may notice that the latencies of the tasks are
+very high compared to the ones presented in the simulator evaluation (cf.
+Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
+$N = 16740$ and to the inter-frame level. Indeed, each task processes
+approximatively $16740 \times 16$ samples when in the simulator evaluation each
+task processes approximatively $2048$ bits (there is a factor of $\approx 130$).
+The applicative context is very different and it is directly observable from the
+resulting latencies.
 
 \begin{table}[htp]
   \centering
-  \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
-  \label{tab:simu_speedup_mpi}
-% {\footnotesize%\resizebox{\linewidth}{!}{
-  \begin{tabular}{r  r  r  r}
-  \textbf{Nodes} & \textbf{Cores} & \textbf{Info. T/P} & \textbf{Speedup} \\
-                 &                & (Mb/s)             &           \\
-  \hline
-  \hline
-   1             &  24            &  1950              &  1.00     \\
-   2             &  48            &  3901              &  1.95     \\
-%  3             &  72            &  5826              &  2.99     \\
-   4             &  96            &  7793              &  4.00     \\
-%  5             & 120            &  9731              &  4.99     \\
-%  6             & 144            & 11691              &  5.99     \\
-%  7             & 168            & 13644              &  7.00     \\
-   8             & 192            & 15829              &  8.12     \\
-%  9             & 216            & 17755              &  9.10     \\
-% 10             & 240            & 19582              & 10.04     \\
-  16             & 384            & 31640              & 16.22     \\
-  32             & 768            & 63075              & 32.34     \\
+  \caption
+    [Tasks sequential throughputs and latencies of the DVB-S2 receiver.]
+    {Tasks sequential throughputs and latencies of the DVB-S2 receiver
+    (transmission phase, 16288 frames, inter-frame level = 16, MODCOD 2,
+    error-free SNR zone).
+    The sequential tasks are represented by \colorbox{Paired-7!15}{orange} rows.
+    The slowest \emph{sequential} stage is in \colorbox{Paired-5!15}{red}. The
+    slowest of all stages is in \colorbox{Paired-1!15}{blue}.}
+  \label{tab:dvbs2_tasks_thr_lat}
+  {\resizebox{\linewidth}{!}{
+  \begin{tabular}{r | r r r r  | r r r | r}
+    \multicolumn{1}{r |}{\textbf{Stages and Tasks}}  & \multicolumn{4}{c |}{\textbf{Throughput} (MS/s)} & \multicolumn{3}{c |}{\textbf{Latency} ($\mu$s)} & \textbf{Time} \\
+                                                                              &     \textbf{Avg} &     \textbf{Min.} &     \textbf{Max.} & $ \bm{\mathcal{N}}_\text{\textbf{Avg}}$ &      \textbf{Avg} &     \textbf{Min.} &     \textbf{Max.} & (\%)           \\ \hline \hline
+    \rowcolor{Paired-7!15}
+                            Radio -       \emph{receive} ($t^\text{Rx}_{1}$)  &         1015.86  &           234.20  &          1093.98  &                                 431.83  &           527.32  &           489.66  &          2287.24  &          0.94  \\ \hline
+                                                             \textbf{Stage 1} & \textbf{1015.86} &   \textbf{234.20} &  \textbf{1093.98} &                         \textbf{431.83} &   \textbf{527.32} &   \textbf{489.66} &  \textbf{2287.24} &  \textbf{0.94} \\ % T = 16*33480/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+                   Multiplier AGC -     \emph{imultiply} ($t^\text{Rx}_{2}$)  &          864.41  &           420.05  &           935.71  &                                 367.45  &           619.71  &           572.49  &          1275.28  &          1.11  \\
+    \rowcolor{Paired-7!15}
+              Synch. Freq. Coarse -   \emph{synchronize} ($t^\text{Rx}_{3}$)  &         1979.17  &           665.98  &          2237.38  &                                 841.32  &           270.66  &           239.42  &           804.35  &          0.48  \\
+    \rowcolor{Paired-7!15}
+                   Filter Matched -        \emph{filter} ($t^\text{Rx}_{4}$)  &          273.85  &           121.60  &           275.25  &                                 116.41  &          1956.08  &          1946.13  &          4405.09  &          3.49  \\ \hline
+                                                             \textbf{Stage 2} &  \textbf{188.19} &    \textbf{82.61} &   \textbf{194.22} &                          \textbf{80.00} &  \textbf{2846.45} &  \textbf{2758.04} &  \textbf{6484.72} & \textbf{5.08}  \\ % T = 16*33480/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+    \rowcolor{Paired-7!15}
+                   Synch. Timing  -   \emph{synchronize} ($t^\text{Rx}_{5}$)  &          130.38  &            58.97  &           131.31  &                                  55.42  &          4108.52  &          4079.39  &          9084.64  &          7.34  \\ \hline
+    \rowcolor{Paired-5!15}                                   \textbf{Stage 3} &  \textbf{130.38} &    \textbf{58.97} &   \textbf{131.31} &                          \textbf{55.42} &  \textbf{4108.52} &  \textbf{4079.39} &  \textbf{9084.64} &  \textbf{7.34} \\ % T = 16*33480/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+    \rowcolor{Paired-7!15}
+                    Synch. Timing -       \emph{extract} ($t^\text{Rx}_{6}$)  &          331.50  &           151.54  &           354.62  &                                 281.83  &           807.97  &           755.28  &          1767.48  &          1.44  \\
+                   Multiplier AGC -     \emph{imultiply} ($t^\text{Rx}_{7}$)  &          806.31  &           442.69  &           877.19  &                                 685.51  &           332.18  &           305.34  &           605.02  &          0.59  \\
+    \rowcolor{Paired-7!15}
+                     Synch. Frame -   \emph{synchronize} ($t^\text{Rx}_{8}$)  &          187.50  &           120.17  &           193.25  &                                 159.41  &          1428.51  &          1386.01  &          2228.76  &          2.55  \\ \hline
+                                                             \textbf{Stage 4} &  \textbf{104.27} &    \textbf{58.21} &   \textbf{109.47} &                          \textbf{88.65} &  \textbf{2568.66} &  \textbf{2446.63} &  \textbf{4601.26} &  \textbf{4.58} \\ % T = 16*16740/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+                 Scrambler Symbol -    \emph{descramble} ($t^\text{Rx}_{9}$)  &         1979.41  &           668.85  &          2649.55  &                                 1682.89 &           135.31  &           101.09  &           400.45  &          0.24  \\
+    \rowcolor{Paired-7!15}
+           Synch. Freq. Fine L\&R -   \emph{synchronize} ($t^\text{Rx}_{10}$) &         1466.55  &           596.19  &          1741.72  &                                 1246.85 &           182.63  &           153.78  &           449.25  &          0.33  \\
+            Synch. Freq. Fine P/F -   \emph{synchronize} ($t^\text{Rx}_{11}$) &          132.40  &            62.59  &           140.88  &                                  112.56 &          2022.98  &          1901.24  &          4279.30  &          3.61  \\ \hline
+                                                             \textbf{Stage 5} &  \textbf{114.42} &    \textbf{52.22} &   \textbf{124.22} &                          \textbf{97.27} &  \textbf{2340.92} &  \textbf{2156.11} &  \textbf{5129.00} &  \textbf{4.18} \\ % T = 16*16740/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+                       Framer PLH -        \emph{remove} ($t^\text{Rx}_{12}$) &         1148.07  &           427.71  &          1180.59  &                                1008.60  &           225.77  &           219.55  &           606.02  &          0.40  \\
+                  Noise Estimator -      \emph{estimate} ($t^\text{Rx}_{13}$) &          626.12  &           151.24  &           656.09  &                                 550.06  &           413.98  &           395.07  &          1713.87  &          0.74  \\ \hline
+                                                             \textbf{Stage 6} &  \textbf{405.16} &   \textbf{111.73} &   \textbf{421.72} &                         \textbf{355.94} &   \textbf{639.75} &   \textbf{614.62} &  \textbf{2319.89} &  \textbf{1.14} \\ % T = 16*16200/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+                        Modem PSK -    \emph{demodulate} ($t^\text{Rx}_{14}$) &           46.07  &            42.12  &            46.28  &                                  40.47  &          5626.34  &          5600.83  &          6153.50  &         10.05  \\
+                      Interleaver -  \emph{deinterleave} ($t^\text{Rx}_{15}$) &         1533.54  &           518.95  &          1582.97  &                                1347.25  &           169.02  &           163.74  &           499.47  &          0.30  \\
+                     Decoder LDPC -   \emph{decode SIHO} ($t^\text{Rx}_{16}$) &          166.15  &            69.12  &           171.59  &                                 164.21  &          1386.74  &          1342.74  &          3333.34  &          2.48  \\
+                      Decoder BCH -   \emph{decode HIHO} ($t^\text{Rx}_{17}$) &            6.92  &             6.15  &             6.96  &                                   6.92  &         32905.37  &         32705.15  &         36998.15  &         58.79  \\
+                 Scrambler Binary -    \emph{descramble} ($t^\text{Rx}_{18}$) &           91.11  &            47.74  &            91.73  &                                  91.11  &          2499.41  &          2482.41  &          4770.24  &          4.47  \\ \hline
+    \rowcolor{Paired-1!15}                                   \textbf{Stage 7} &    \textbf{5.35} &     \textbf{4.40} &     \textbf{5.38} &                           \textbf{5.35} & \textbf{42586.88} & \textbf{42294.87} & \textbf{51754.70} & \textbf{76.09} \\ % T = 16*14232/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\
+    \rowcolor{Paired-7!15}
+                 Sink Binary File -          \emph{send} ($t^\text{Rx}_{19}$) &         1838.31  &            25.30  &          2100.47  &                                1838.31  &           123.87  &           108.41  &          9001.34  &          0.22  \\ \hline
+                                                             \textbf{Stage 8} & \textbf{1838.31} &    \textbf{25.30} &  \textbf{2100.47} &                        \textbf{1838.31} &   \textbf{123.87} &   \textbf{108.41} &  \textbf{9001.34} &  \textbf{0.22} \\ % T = 16*14232/L
+                                                                              &                  &                   &                   &                                         &                   &                   &                   &                \\ \hline \hline
+                                                               \textbf{Total} &    \textbf{4.09} &     \textbf{2.51} &     \textbf{4.14} &                           \textbf{4.09} & \textbf{55742.37} & \textbf{54947.73} & \textbf{90662.79} & \textbf{99.57} \\ % T = 16*14232/L
   \end{tabular}
-% }%}
+  }}
 \end{table}
 
-Table~\ref{tab:simu_speedup_mpi} shows the multi-node scaling with the OpenMPI
-library (version 3.1.2). The information throughput (T/P) and the speedup are
-almost linear with the number of nodes: This is expected because there are very
-few communications between the various MPI processes. Note that the super-linear
-scaling is due to the measurements imprecision.
+The stage 7 takes 76\% of the time with especially the \emph{Decoder BCH} task
+($t^\text{Rx}_{17}$) that takes 59\% of the time. $t^\text{Rx}_{17}$ should not
+take so many time compared to the other tasks. Indeed, we chose to not spend
+too much time in optimizing the BCH decoding process as the stage 7 throughput
+can easily be increased with the sequence duplication technique.
+% Theoretically, with an infinite number of cores and memory bandwidth, the
+% throughput of the stage 7 could be infinite too.
+The second slower stage in the stage 3. This stage is the main hotspot of the
+implemented receiver. The stage 3 contains only one synchronization task
+($t^\text{Rx}_{5}$). In the current implementation this task cannot be
+duplicated (or parallelized) because there is an internal data dependency with
+the previous frame (state-full task). The stage 3 is the real limiting factor of
+the receiver. If a machine with an infinite number of cores is considered, the
+maximum reachable information throughput is 55.42 Mb/s.
 
-\textbf{Those aforementioned results demonstrate the high throughput
-capabilities of \AFFECT.} For instance, when using 32 MPI nodes on the given
-(2048,1723) polar code, it takes about one minute to estimate the $E_b/N_0=4.5$
-dB SNR point (BER = 4.34e-10, FER = 5.17e-08).
+We did not try to parallelize the waiting and the learning phases. We measured
+that the whole learning phase (1, 2 and 3) takes about one second. During the
+learning phase, the receiver is not fast enough to process the received samples
+in real time. To fix this problem, the samples are buffered in the \emph{Radio -
+receive} task ($t^\text{Rx}_{1}$). Once the learning phase is done, the
+transmission phase is parallelized. Thus, the receiver becomes fast enough to
+absorb the radio buffer and samples in real time. During the transmission phase,
+the receiver is split into 8 stages as presented in
+Fig.~\ref{fig:dvbs2_receiver_transmission}. This decomposition has been
+motivated by the nature of the tasks (sequential or parallel) and by the
+sequential measured throughput. The number of stages has been minimized in order
+to limit the pipeline overhead. Consequently, sequential and parallel tasks
+have been regrouped in common stages. The slowest sequential task
+($t^\text{Rx}_{5}$) has been isolated in the dedicated stage 3. The other
+sequential stages have been formed to always have a higher normalized throughput
+than the stage 3. The sequential throughput of the stage 7 (5.35 Mb/s) is lower
+than the throughput of the stage 3 (55.42 Mb/s). This is why the sequence
+duplication has been applied. The stage 7 has been parallelized over 28 threads.
+This looks overkill but the machine was dedicated to the DVB-S2 receiver
+and the throughput of the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) varies
+depending on the SNR. One can notice that a early termination criterion was
+enabled. When the signal quality is very good, the \emph{Decoder LDPC} task runs
+fast and the threads can spend a lot of time in waiting. With the passive
+waiting version of the adaptor \emph{push} and \emph{pull} tasks, the CPU
+dynamically adapt the cores charge and energy can be saved. In
+Table~\ref{tab:dvbs2_tasks_thr_lat}, the presented \emph{Decoder LDPC} task
+throughputs and latencies are optimistic because we are in a SNR error-free
+zone. All the threads are pinned to a single core with the \emph{hwloc} library.
+The 28 threads of the stage 7 are pinned in round-robin between the CPU sockets.
+By this way, the memory bandwidth is maximized thanks to the two NUMA memory
+banks. The strategy of the stage 7 parallelism is to maximize the throughput.
+During the duplication process (modules clones), the thread pinning is known and
+the memory is copied into the right memory bank (first touch policy). All the
+other pipeline stages (1, 2, 3, 4, 5, 6 and 8) are running on a single thread.
+Because of the synchronizations between the pipeline stages (adaptor pushes and
+pulls), the threads have been pinned on the same socket. The idea is to minimize
+the pipeline stage latencies in maximizing the CPU cache performance. It avoids
+the extra-cost of moving the cache data between the sockets.
+
+The receiver program needs around 1.3 GB of the global memory when running in
+sequential while it needs around 30 GB in parallel. The memory usage increases
+because of the sequence duplications in the stage 7. The duplication operation
+takes about 20 seconds. It is made at the very beginning of the program. It
+worth mentioning that the amount of memory was not a critical resource. So, we
+did not try to reduce its overall occupancy.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_dat}\label{plot:dvbs2_pipeline_copy_dat}}
+  \quad
+  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:dvbs2_pipeline_copy_ptr}}
+  \caption
+    [Comparison of the two pipeline implementations in the receiver.]
+    {Comparison of the two pipeline implementations in the receiver (MODCOD 2).}
+  \label{plot:dvbs2_pipeline}
+\end{figure}
+
+Fig.~\ref{plot:dvbs2_pipeline} presents the repartition of the time in the
+pipeline stages (MODCOD 2). The receiver is running over 35 threads.
+Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows the pipeline implementation with
+data copies. Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} shows the pipeline
+implementation with pointer copies. \emph{Push wait} and \emph{Pull wait} are
+the percentage of time spent in passive or active waiting. \emph{Push copy} and
+\emph{Pull copy} are the percentage of time spent in copying the data to and
+from the adaptors buffers. \emph{Standard tasks} is the cumulative percentage of
+time spent by the tasks presented in Fig.~\ref{fig:dvbs2_receiver_transmission}.
+In both implementations the pipeline stage throughput is constraint by the
+slowest one. In Fig.~\ref{plot:dvbs2_pipeline_copy_dat} the measured throughput
+per stage is 40 Mb/s whereas in Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} the
+measured throughput is 55 Mb/s. The pointer copy implementation throughput is
+$\approx$ 27\% higher than the data copy implementation.
+Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows that the copy overhead is
+non-negligible. A 27\% slowdown is directly due to these copies in the stage 3.
+It largely justifies the pointer copy implementation. In
+Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time is
+taken by the $t^\text{Rx}_{5}$ task. This is also confirmed by the measured
+throughput (55 Mb/s) which is very close the sequential throughput (55.42
+Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
+
+\begin{table}[htp]
+  \centering
+  \caption
+    [Throughput performance depending of the selected DVB-S2 configuration.]
+    {Throughput performance depending of the selected DVB-S2 configuration.}
+  \label{tab:dvbs2_thr_modcod}
+  \begin{tabular}{c | c c | c c}
+    \multirow{3}{*}{\textbf{Config.}} & \multicolumn{4}{c }{\textbf{Throughput} (Mb/s)} \\
+                                      & \multicolumn{2}{c |}{\textbf{Sequential}} & \multicolumn{2}{c }{\textbf{Parallel}} \\
+                                      & \textbf{Info.} & \textbf{Coded} & \textbf{Info.} & \textbf{Coded} \\
+    \hline \hline
+    MODCOD 1 &  3.4 & 5.7 & 37 & 62 \\
+    MODCOD 2 &  4.1 & 4.6 & 55 & 62 \\
+    MODCOD 3 &  4.0 & 4.5 & 80 & 90 \\
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:dvbs2_thr_modcod} summarizes the obtained throughputs for the 3
+MODCODs presented in Table~\ref{tab:dvbs2_modcod}. Each time, sequential and
+parallel throughput are given. To measure to maximum achievable throughput, the
+USRP modules has been removed and replaced by the read of samples pre-registered
+in a binary file. This is because the pipeline stages are naturally adapting to
+the slowest one. It means that in a real communication, the throughput of the
+radio is always configured to be just a little bit slower than the slowest
+stage. Indeed, it is necessary for real time communication otherwise the radio
+task has to indefinitely bufferize the samples while the amount of available
+memory in the machine is clearly not infinite. The information throughput ($K$
+bits) is the final useful throughput for the user while the coded ($N$)
+throughput is here for observations. Between the MODCOD 1 and 2, only the LDPC
+code rate varies ($R=3/5$ and $R=8/9$ resp.). In the parallel implementation, it
+has a direct impact on the information throughput while the coded throughput is
+unchanged. Indeed, the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) is
+parallelized in the stage 7. This stage is capable to adapt to the charge
+automatically. In the sequential implementation, the coded throughput is
+negatively impacted when $R=8/9$. Between the MODCOD 2 and 3, the modulation
+varies (QPSK and 8-PSK resp.) and the frames have to be deinterleaved
+(column/row interleaver). High order modulation reduces the amount of samples
+processed by in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$): this
+results in higher throughput (80 Mb/s for the 8-PSK) in the slowest stage~3. In
+the parallel implementation, the pipeline stage throughputs are adapting to the
+slowest stage 3. It results in an important speedup. In the sequential
+implementation, it results in a little slowdown. Indeed, the additional time
+spent in the  \emph{deinterleave} task ($t^\text{Rx}_{15}$) is higher than
+the time saved in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$).
+
+These results demonstrate the benefit of the parallelized implementation of the
+proposed receiver. The throughput speedup rangs from 10 to 20 compared to the
+sequential implementation. It is also important to note that the selected
+configurations are efficient in different SNR zones (as shown in
+Fig.~\ref{fig:dvbs2_bfer}). Depending on the signal quality, different MODCOD
+can be selected. A direct impact in observed on the system throughput. For
+instance, MODCOD~1 is adapted for noisy environments (3 dB). However the
+information throughput is limited to 37 Mb/s while MODCOD~3 is more adapted to
+clearer  signal conditions (7.5 dB) and the information throughput reaches
+80 Mb/s. MODCOD~2 is in-between.
+
+\subsection{Related Works}
+
+% \begin{itemize}
+%   \item \xmark~donner un point de comparaison avec un récepteur DVB-S2 matériel.
+% \end{itemize}
+
+Some other works are focusing on the SDR implementation of a DVB-S2 transceiver.
+To the best of our knowledge, here is a list of the existing projects:
+\begin{itemize}
+  \item \textbf{gr-dvbs2rx}~\cite{gr-dvbs2rx} is an open source extension to GNU
+    Radio. The project sounds promising but lacks efficiency. Its main
+    maintainer affirms that the receiver is not yet able to meet the satellite
+    real time constraints (30 to 50 Mb/s) on a Xeon\TM Gold/Platinum series
+    processor\footnote{\url{https://lists.gnu.org/archive/html/discuss-gnuradio/2019-01/msg00196.html}.}.
+    It advises to use a dedicated GPU or FPGA for the LDPC decoding.
+  \item \textbf{leansdr}~\cite{leansdr} is a standalone open source project. The
+    project creation was motivated to reach higher receiver throughput than GNU
+    Radio even if it results in decoding performance degradations. For instance,
+    a low complexity LDPC bit-flipping decoder~\cite{Ryan2009} is chosen. At the
+    time of the writing, the project does not support multi-threading and SIMD
+    instructions.
+  \item \textbf{Grayver and Utter} recently published a paper~\cite{Grayver2020}
+    in which they succeed to build a 10 Gb/s DVB-S2 receiver on a cluster of
+    server-class CPUs. On a comparable CPU, their work is able to double or even
+    triple the throughput of our implementation. This is mainly due to the use
+    of a high speed SIMD LDPC decoder~\cite{LeGal2016,Grayver2019} and to new
+    algorithmic improvements in the synchronization tasks. For instance, they
+    were able to express more parallelism than us in the \emph{Synchronizer
+    Timing} task ($t^\text{Rx}_{5}$). It is very promising. However, we also
+    tried some aggressive optimizations in the \emph{Synchronizer Timing} task
+    but we never succeeded to keep the same level of BER/FER decoding
+    performance. It could be interesting to check if the Grayver and Utter work
+    comes with no penalty in terms of decoding performance and to combine their
+    optimizations with the \AFFECT eDSL. Unlike our work, Grayver and Utter are
+    focusing on a single DVB-S2 MODCOD (8-PSK, $N = 64800$ and $R = 1/2$).
+\end{itemize}
+
+\section{Conclusion}
+
+In this chapter, a new eDSL dedicated to the SDR has been presented. Main
+components have been designed to satisfy the SDR needs in terms of 1)
+expressiveness with sequences, tasks and loops; 2) performance with the sequence
+duplication technique and the pipelining strategy. We evaluated the proposed
+eDSL in an applicative context: the software implementation of the DVB-S2
+standard. The results demonstrate the efficiency of the \AFFECT eDSL. Indeed,
+the proposed solution matches satellite real time constraints (30 $\thicksim$
+50 Mb/s). This is the consequence of two main factors: 1) the task level
+optimizations, for instance a fast LDPC decoder has been applied (cf.
+Chapter~\ref{chap:opt}); 2) the quasi zero overhead eDSL, with among others, an
+efficient implementation of the pipeline technique.
+
+In future works, it could be interesting to combine the parallel features of the
+\AFFECT eDSL with high level languages like Python or MATLAB. The signal
+processing community is often not familiar with the \Cxx language. They could
+use the existing high-speed \Cxx tasks and develop their own in the high level
+language. Linking with the \AFFECT library, it would be convenient if the tasks written
+in the high level language could be inserted in the \AFFECT sequences. This way
+the whole system would automatically be parallelized. This is technically
+possible in our model. As the static scheduling is evaluated at the runtime, it
+is possible to encapsulate a function from a high level language in \AFFECT task
+(with a callback) and to start the sequence analysis (= perform the static
+scheduling resolution) after that. In comparison, it would be more complicated
+to make the languages interfacing with GNU Radio as the static scheduling is
+resolved at the compilation time and flatten in the Python language. When the
+generated Python code is executed, it performs calls to the tasks written and
+compiled in a \Cxx library. Moreover, it could be very useful to propose a
+graphical user interface like \emph{GNU Radio Companion} to facilitate the tasks
+creation and binding as well as the parallelism definition (sequence
+duplication, pipeline stages). The graphical user interface would then generate
+a ready to compile \Cxx code similar to the one presented in
+Listing~\ref{lst:dsl_pipeline}.
