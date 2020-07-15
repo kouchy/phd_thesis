@@ -1,6 +1,6 @@
 %!TEX root = ../my_thesis.tex
 
-\documentclass[a4paper,11pt,fleqn,oneside]{book} % 'twoside' document for print, 'onside' document for digital version
+\documentclass[a4paper,11pt,fleqn,oneside]{book} % 'twoside' document for print, 'oneside' document for digital version
 
 % boolean 'twosidedoc' contain true if the document is two-sided, false else
 \usepackage{ifthen}
@@ -92,18 +92,24 @@
     {\begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-6cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=bleuUni,bleuUni] (0,0) rectangle(28.5mm,15mm);
-        \node[anchor=north east,yshift=-5.2cm,xshift=27mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
+        \ifthenelse{\boolean{twosidedoc}}
+        {\draw[fill=bleuUni,bleuUni] (0,0) rectangle(28.5mm,15mm);}
+        {\draw[fill=bleuUni,bleuUni] (0,0) rectangle(23.5mm,15mm);}
+        \ifthenelse{\boolean{twosidedoc}}
+        {\node[anchor=north east,yshift=-5.2cm,xshift=27mm,minimum height=30mm,inner sep=0mm] at (current page.north west)}
+        {\node[anchor=north east,yshift=-5.2cm,xshift=22mm,minimum height=30mm,inner sep=0mm] at (current page.north west)}
         {\parbox[top][30mm][t]{15mm}{\raggedleft $\phantom{\textrm{l}}$\color{white}\chapterlabel}};  %the black l is just to get better base-line alingement
-        \node[anchor=north west,yshift=-5.2cm,xshift=30mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
-              {\parbox[top][30mm][t]{\textwidth}{\color{black}#1}};
+        \ifthenelse{\boolean{twosidedoc}}
+        {\node[anchor=north west,yshift=-5.2cm,xshift=30mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)}
+        {\node[anchor=north west,yshift=-5.2cm,xshift=25mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)}
+        {\parbox[top][30mm][t]{\textwidth}{\color{black}#1}};
        \end{tikzpicture}
       };
    \end{tikzpicture}
    \gdef\chapterlabel{}
   } % code before the title body
 
-\titlespacing*{\chapter}{0pt}{55pt}{10pt}
+\titlespacing*{\chapter}{0pt}{35pt}{10pt}
 \titlespacing*{\section}{0pt}{13.2pt}{*0}  % 13.2pt is line spacing for a text with 11pt font size
 \titlespacing*{\subsection}{0pt}{13.2pt}{*0}
 \titlespacing*{\subsubsection}{0pt}{13.2pt}{*0}
