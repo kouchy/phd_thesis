@@ -11,23 +11,28 @@ manuscript. It also gives a general view and defines the main
 objectives of this thesis.
 
 The first section presents the principle of the digital communication systems
-with the different parts: transmitter, channel and receiver. The most common
-metrics used in digital communications are also introduced.
+with the different parts: transmitter, channel and receiver.
+%The most common metrics used in digital communications are also introduced.
 
 In the second section, the channel model and the digital modulation used all
 along the manuscript are detailed. A characterization of the signal-to-noise
 ratio is given as well as the notion of probability at the output of the channel
-and the demodulator. The third section introduces the channel codes considered
-in this manuscript.
+and the demodulator.
 
-In the forth and fifth sections, two use cases are presented: the functional
-simulation and the software-defined radio. The functional simulation enables the
-design, the validation and the comparison of a coding scheme while the
-software-defined radio is a radio communication system where components that
-have been traditionally implemented in hardware architectures are instead
-implemented by means of software.
+The third section introduces the channel codes considered in this manuscript:
+namely the LDPC, the polar and the turbo codes. The corresponding encoding and
+decoding processing are detailed for each channel code family.
 
-The last section gives the main objectives of the thesis.
+In the forth section, three applicative contexts are detailed for the considered
+channel codes. The functional simulation enables the design and the
+validation of a coding scheme while the software-defined radio is a radio
+communication system where components are implemented by means of software.
+Then, the sparse code multiple access mechanism is presented as it is a
+promising solution for massive connectivity in future mobile networks.
+
+The fifth section gives the main problematics of the thesis. Finally, the last
+section details the manuscript organization and gives an overview of the
+proposed contributions.
 
 \vspace*{\fill}
 \minitoccustom
@@ -1437,6 +1442,12 @@ algorithm~\cite{Vogt2000,Studer2011}.
 
 \section{Applicative Contexts}
 
+In the previous section 3 channel code families have been presented. In this
+thesis we focus on software implementations of the previously introduced channel
+decoders. These decoders can be used in different applicative contexts like for
+simulations or in real-time systems for instance. This section describes the
+different applicative contexts that will be considered all along the manuscript.
+
 \subsection{Functional Simulation}
 \label{sec:ctx_simulation}
 
@@ -1620,7 +1631,10 @@ intelligent industrial controls, Internet of Things (IoT) or Internet of Mission
 Critical Things (IoMCT). Unfortunately, the massive connectivity and spectral
 efficiency of SCMA come at the cost of high complexity in the decoder, making
 the design of high throughput and low complexity decoders a
-challenge~\cite{Lu2015}.
+challenge~\cite{Lu2015}. In this thesis, we propose to study the SCMA system
+as it is usually combined with the channel code families presented before.
+It is introduced in this section and revised later in light of the needs of
+Cloud Radio Access Networks (Cloud-RANs).
 
 % Exploiting sparsity of the codebooks, Belief Propagation (BP) or Message Passing
 % Algorithm (MPA) decoders were introduced to achieve near Maximum Likelihood
@@ -1725,7 +1739,7 @@ challenge~\cite{Lu2015}.
 % % suggested techniques on block error rate after channel coding. Finally, the main
 % % findings of this research are summarized in Section~\ref{sec:scma_conclusion}.
 
-\subsubsection{Overview of the SCMA System Model}
+\subsubsection{Overview of the System Model}
 \label{sec:ctx_scma_overview}
 
 In this section, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
@@ -1789,7 +1803,7 @@ and the SCMA decoder can be seen as a digital demodulator.
   \label{fig:ctx_scma}
 \end{figure}
 
-\subsubsection{SCMA Message Passing Algorithm Decoding Scheme}
+\subsubsection{Message Passing Algorithm Decoding Scheme}
 \label{sec:ctx_scma_detection}
 
 % \paragraph{Maximum Likelihood}
@@ -1824,6 +1838,9 @@ and the SCMA decoder can be seen as a digital demodulator.
 % \paragraph{Message Passing Algorithm}
 % \label{sec:ctx_scma_mpa}
 
+Exploiting sparsity of the codebooks, Belief Propagation (BP) or Message Passing
+Algorithm (MPA) decoders were introduced to achieve very good decoding
+performance with lower complexity~\cite{Zhang2014a}.
 Fig.~\ref{fig:ctx_scma_dec_graph} shows a Bayesian factor graph representation
 of an MPA decoder with six users and four physical resources. Thanks to the
 sparsity of the codebooks, exactly three users collide in each physical
@@ -2090,7 +2107,7 @@ can be used as a systematic replacement to the exponential calculations.
 % algorithm has a cost in terms of decoding performance. This trade-off should be
 % considered in order to meet the system constraints.
 
-\section{Objectives}
+\section{Problematics}
 
 On the eve of the 5G mobile communication generation, the challenge is now to
 design communication systems able to transmit huge amounts of data in a short
@@ -2139,7 +2156,7 @@ problems:
 
 Moreover, new paradigms like the Cloud Radio Access Network (Cloud-RAN) and the
 Software-Defined Radio (SDR) are now considered in real communication systems.
-To match the real time constraints, here are the main challenges:
+To match the real-time constraints, here are the main challenges:
 
 \begin{enumerate}
   \item \textbf{High throughput:} New applications, like the video streaming,
@@ -2154,6 +2171,8 @@ To match the real time constraints, here are the main challenges:
     the code rate $R$ of the decoder can be switched on the fly.
 \end{enumerate}
 
+\section{Organization and Contributions}
+
 In this thesis we propose to study the most time consuming algorithms of digital
 communication systems, to adapt and optimize them on General Purpose Processors
 (GPPs) like the CPUs. The long simulation times and the real world application
@@ -2162,18 +2181,64 @@ implementations}. The algorithmic heterogeneity requires \textbf{flexible,
 modular software}. The reproducibility issue pushes towards a \textbf{portable}
 and \textbf{open-source software}.
 
-The manuscript is organized as follow: Chapter~\ref{chap:opt} explains the
-optimizations made to meet the high throughputs and low latencies constraints on
-CPU; in Chapter~\ref{chap:aff3ct} we propose \AFFECT, our open-source toolbox in
-which the efficient software implementations have been packaged, the project is
-detailed from different angles: philosophy, code organization and reuse,
-testing, accessibility and portability, use cases and impact;
-Chapter~\ref{chap:eval} gives a detailed evaluation of the proposed
-implementations with complete comparisons with the state-of-the-art and
-Chapter~\ref{chap:sdr} explores a new use case of \AFFECT by introducing a
-domain specific language for the SDR. The high performance blocks from \AFFECT
-are enriched with new tools dedicated to the support of real time digital
-communication systems on parallel CPU architectures.
+In Chapter~\ref{chap:opt}, new efficient implementations of the LDPC, polar and
+turbo decoders are proposed as well as an efficient implementation of the SCMA
+demodulator. First, an overall methodology is detailed to meet the high
+throughput constraint required by both the simulations and the real-time
+systems. This methodology is based on the Single Instruction Multiple Data
+(SIMD) model implemented in most of the current CPUs. Depending on how the CPU
+SIMD instructions are used, it is possible to maximize the throughput or the
+latency of the implemented algorithms. Then, specific optimized implementations
+are detailed for each decoder/demodulator. These implementations focus on
+maximizing the flexibility, high throughput and low latency. Depending on the
+implementations, some compromises have to be made and some of these
+characteristics can be maximized unbeknownst to others.
+
+In Chapter~\ref{chap:aff3ct}, \AFFECT, our toolbox dedicated to the forward
+error correction algorithms is presented. \AFFECT is unique in the domain and it
+is composed by many various algorithm implementations (including those presented
+in Chapter~\ref{chap:opt}). \AFFECT is the software that enables the signal
+processing algorithms heterogeneity thanks to a robust software architecture
+based on well-defined and coherent interfaces. It allows reproducibility of the
+results as it is open-source and extensively tested. \AFFECT also contains a
+parallel functional simulator and enables extensive exploration/validation of
+existing or new algorithms on a large combination of parameters.
+
+In Chapter~\ref{chap:eval}, the efficient algorithm implementations proposed
+in Chapter~\ref{chap:opt} are evaluated and compared with the state-of-the-art.
+The FEC software decoders hall of fame is introduced to summarize and to compare
+the proposed contributions and the other works in the literature. Some metrics
+are defined for ease of comparison. These metrics focus on normalized
+throughput, proper use of hardware and energy efficiency. Finally, the \AFFECT
+simulator efficiency is demonstrated on various multi-cores CPUs and on
+a multi-node cluster.
+
+In Chapter~\ref{chap:sdr}, a new embedded Domain Specific Language (eDSL) for
+the SDR is presented. The AFFECT software suite is enriched with new blocks
+dedicated to the efficient implementation of real time digital communication
+systems on multi-core CPUs. These blocks enable automatic parallelism. As an
+example of use, a full DVB-S2 transceiver has been implemented. All the digital
+processing is performed with \AFFECT while the analogical communications have
+been achieved with Universal Software Radio Peripherals (USRPs). The results
+matches the satellite real time constraints.
+
+These various contributions have been the topic of scientific publications. They
+are given at the end of the manuscript. As a convention in the document, the
+numeric citations are contributions of this thesis while the alphabetic
+citations concern the other works in the literature.
+
+% The manuscript is organized as follow: Chapter~\ref{chap:opt} explains the
+% optimizations made to meet the high throughputs and low latencies constraints on
+% CPU; in Chapter~\ref{chap:aff3ct} we propose \AFFECT, our open-source toolbox in
+% which the efficient software implementations have been packaged, the project is
+% detailed from different angles: philosophy, code organization and reuse,
+% testing, accessibility and portability, use cases and impact;
+% Chapter~\ref{chap:eval} gives a detailed evaluation of the proposed
+% implementations with complete comparisons with the state-of-the-art and
+% Chapter~\ref{chap:sdr} explores a new use case of \AFFECT by introducing a
+% domain specific language for the SDR. The high performance blocks from \AFFECT
+% are enriched with new tools dedicated to the support of real time digital
+% communication systems on parallel CPU architectures.
 
 % OLD CHAPTER 2
 % -------------
