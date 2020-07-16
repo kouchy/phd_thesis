@@ -684,9 +684,10 @@ necessary after the reception of the noisy channel information representing
 reduction of the LLRs precision (from 32 bits floating-point to 16 or 8 bits
 fixed-point) does not significantly affect error correction performance and
 provides more SIMD parallelism. The quantizer computes:
-\begin{equation*}
+\begin{equation}
+\label{eq:opt_simu_quantizer}
 l_{s,v}^n = \min(\max(2^v . l^n \pm 0.5, -2^{s-1} +1), 2^{s-1} -1),
-\end{equation*}
+\end{equation}
 with $l^n$ the current floating-point value, $s$ the number of bits of the
 quantized number, including $v$ bits for the fractional part.
 
