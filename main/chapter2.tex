@@ -749,6 +749,7 @@ this work is to propose a generic implementation with a clear separation of
 concerns between the scheduling and the updates rules.
 
 \subsection{Generic Belief Propagation Implementation}
+\label{sec:opt_ldpc_gen}
 
 The intra- and inter-frame SIMD strategies have been considered and the
 inter-frame strategy has been adopted. The reason of this choice is that
@@ -826,6 +827,7 @@ performance of the new algorithm and to combine it with all the previously
 implemented strategies.
 
 \subsection{Specialized Belief Propagation Implementation}
+\label{sec:opt_ldpc_spe_bphlnms}
 
 Unfortunately, even if we observed that the function calls in the
 \verb|decode_single_ite| method are effectively inlined by the compiler, we were
@@ -1083,6 +1085,7 @@ context, the building blocks of the polar API automatically switch from SIMD to
 sequential implementations.
 
 \subsection{Successive Cancellation Decoders}
+\label{sec:opt_polar_sc}
 
 \subsubsection{Dynamic implementation}
 
@@ -1189,6 +1192,7 @@ use an API implementation that uses the template parameter to fully unroll the
 loops at compile time.
 
 \paragraph{Source Code Compression}
+\label{sec:opt_polar_sc_compression}
 
 \begin{figure}[htp]
   \centering
