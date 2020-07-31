@@ -5,6 +5,26 @@
 \chapter{Performance Evaluations and Comparisons}
 \label{chap:eval}
 
+This chapter proposes to evaluate the various contributions exposed in the
+previous chapters. The three first sections focus on the efficient
+implementations of the LDPC, polar and turbo decoders. The throughput, the
+latency and the energy efficiency are studied and compared with other works.
+
+The forth section summarizes the best software decoder implementations we
+found in the literature. Three hall of fames are proposed: one for the LDPC
+decoders, one for the polar decoders and one for the turbo decoders. Some
+metrics are defined to facilitate the comparison with the different works.
+
+The fifth section is the evaluation of the proposed SCMA demodulator
+implementations. The throughput, the latency and the energy efficiency are
+explored over various platforms.
+
+The sixth section is a performance analysis of the proposed \AFFECT simulator.
+A representative digital communication chain is defined and evaluated at
+two different levels. The first level is the mono-threaded per task performance
+and the second level is the multi-threaded global performance of the simulator.
+The last section concludes this chapter.
+
 \vspace*{\fill}
 \minitoccustom
 \vspace*{\fill}
@@ -286,7 +306,7 @@ Table~\ref{tab:eval_polar_sc_specs_x86} shows the x86/Intel\R targets used for
 the polar SC decoders evaluation while Table~\ref{tab:eval_polar_sc_specs_arm}
 summarizes the ARM\R platforms. There is two platforms with Cortex-A15 cores and
 we decided to identify the ones from the Nvidia\R Jetson TK1 board as the
-\emph{A15-J} and the ones from the Hardkernel\R ODROID-XU as the \emp{A15-O}.
+\emph{A15-J} and the ones from the Hardkernel\R ODROID-XU as the \emph{A15-O}.
 
 In this section, all the binaries have been compiled with the GNU compiler
 version 5.4 and with the following optimization flags:
@@ -1465,15 +1485,44 @@ processing units dedicated to them.
   \caption
     [\AFFECT simulator chain.]
     {\AFFECT simulator chain.}
-  \label{plot:simu_chain}
+  \label{fig:simu_chain}
 \end{figure}
+
+In this section we propose to evaluate the simulator performance over a
+representative simulation chain. This chain is illustrated in
+Fig.~\ref{fig:simu_chain}. The transmitter is simplified and only all-zero
+codewords are generated. This technique allows to bench only the AWGN channel
+and the receiver tasks. The AWGN channel is presented in
+Section~\ref{sec:ctx_awgn} and the vectorized implementation from the
+Section~\ref{sec:opt_simu_awgn} is used. The SNR is set to $E_b/N_0 = 4.5$~dB.
+The BPSK demodulator implementation is also vectorized and its implementation
+has not been detailed in the manuscript as it is trivial and can be resumed to
+the multiplication of the AWGN channel output by a constant factor ($\bm{l} =
+\bm{y} \times \frac{2}{\sigma^2}$). Then, the demodulator 32-bit floating-point
+output data is converted in a 8-bit fixed-point representation thanks to the
+quantizer task (see Section~\ref{sec:opt_simu_quantizer}). The decoder is the
+8-bit polar FA-SSCL presented in Section~\ref{sec:ctx_polar_ascl} an in
+Section~\ref{sec:opt_polar_scl}. A $N = 2048$ and $K_1 = 1755$ polar code with
+$L = 32$ and a 32-bit CRC (GZip \verb|0x04C11DB7|) is simulated (see
+Fig.~\ref{plot:aff3ct_polar_scl_adaptive} for the FER decoding performance).
+After the decoding process, the 32 CRC bits are extracted from the polar
+codeword and $K_2 = 1723$ bits are returned. This operation consists in copying
+the $K_2$ first bits of the $K_1$ decoder output bits. Finally, the monitor
+checks if all the bits are equal to zero, if not, errors are counted. All the
+tasks of the proposed communication chain are fully vectorized with the \MIPP
+wrapper and the intra-frame SIMD strategy is used.
+
+This section is decomposed in three sub-sections. The first one details the
+selected experimentation platforms. Then, the mono-threaded performances
+are given for each task. Finally, the full potential of the simulator is
+demonstrated over multi-threaded and multi-node executions.
 
 \subsection{Experimentation Platforms}
 
 \begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
-  \label{tab:simu_cpus_specs}
+  \label{tab:eval_simu_cpus_specs}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{l  l | l | l | c | c | c | c | c}
   \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
@@ -1493,131 +1542,239 @@ processing units dedicated to them.
   }}
 \end{table}
 
+Table~\ref{tab:eval_simu_cpus_specs} summarizes the 6 server-class selected
+CPUs. These CPUs have been chosen because they have a lot of cores and are good
+candidates for a multi-threading scaling evaluation. All these CPUs are 8-bit
+SIMD fixed-point capable except for the Xeon Phi\TM 7230. In this specific case
+the computations are made on 32-bit everywhere and the quantizer task is
+skipped. Also, Intel\R, AMD\R and ARM\R CPUs are representative of the today
+market. It demonstrates the flexibility and the portability capacities of the
+proposed simulator. \AFFECT can adapt to various CPU architectures.
+
+For all the CPU targets, the code has been compiled with the \Cxx GNU compiler
+version 8.2.0 on Linux, with the following optimization flags:
+\verb|-O3 -funroll-loops -march=native|. Note that \AFFECT also works on Windows
+and macOS at the same level of performance.
+
 \subsection{Mono-threaded Performances}
+
+\newcommand{\CB}{\cellcolor{Paired-1!15}}
+\newcommand{\CR}{\cellcolor{Paired-5!15}}
+\newcommand{\BF}[1]{\textbf{#1}}
 
 \begin{table}[htp]
   \centering
-  \caption{Average throughput and latency performance per simulated task (single-threaded).}
-  \label{tab:simu_taks_thr_lat}
+  \caption
+    [Average throughput and latency performance per simulated task
+     (single-threaded).]
+    {Average throughput and latency performance per simulated task
+     (single-threaded). In \textbf{bold} the best performance by task. In
+     \colorbox{Paired-1!15}{blue} the best
+     total simulation performance and in \colorbox{Paired-5!15}{red} the worst
+     total simulation performance.}
+  \label{tab:eval_simu_taks_thr_lat}
   % {\resizebox{\linewidth}{!}{
   {\small
   \begin{tabular}{c | l | r r r r r r | r}
-  & \textbf{CPU}       & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
+  & \textbf{CPU}           & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
   \hline \hline
   \multirow{6}{*}{\rotatebox[origin=c]{90}{$\bm{\mathcal{T}}$ (Mb/s)}}
-  & Xeon Phi\TM 7230   & 100.2          &  1862.1         &    -            &  49.8         &  2073.2           &   921.4       &  29.0          \\
-  & ThunderX2\R CN9975 &  53.7          &   672.9         &   748.3         & 112.1         &  6338.4           &  2386.3       &  28.4          \\
-  & Xeon\TM E5-2680 v3 & 159.7          &  7427.1         &  4586.2         & 247.5         & 20832.6           &  8234.5       &  82.3          \\
-  & Xeon\TM Gold 6140  & 421.7          & 14131.7         & 12931.5         & 376.5         & 31749.5           & 11093.0       & 171.8          \\
-% & Xeon\TM Gold 6142  &   -            &     -           &     -           &   -           &     -             &     -         &   -            \\
-  & Xeon\TM Gold 6240  & 314.6          & 10518.3         &  9915.8         & 277.4         & 23118.3           &  7953.5       & 127.3          \\
-% & EPYC\TM 7452       & 217.5          & 14443.7         &  9096.3         & 357.9         & 28365.2           & 13571.1       & 115.8          \\
-  & EPYC\TM 7702       & 215.4          & 14919.5         &  9234.5         & 359.5         & 28404.0           & 13562.0       & 115.4          \\
+  &     Xeon Phi\TM 7230   &         100.2  &         1862.1  &            -    &         49.8  &           2073.2  &        921.4  &          29.0  \\
+  & \CR ThunderX2\R CN9975 & \CR      53.7  & \CR      672.9  & \CR      748.3  & \CR    112.1  & \CR       6338.4  & \CR   2386.3  & \CR      28.4  \\
+  &     Xeon\TM E5-2680 v3 &         159.7  &         7427.1  &         4586.2  &        247.5  &          20832.6  &       8234.5  &          82.3  \\
+  & \CB Xeon\TM Gold 6140  & \CB \BF{421.7} & \CB    14131.7  & \CB\BF{12931.5} & \CB\BF{376.5} & \CB  \BF{31749.5} & \CB  11093.0  & \CB     171.8  \\
+% &     Xeon\TM Gold 6142  &           -    &            -    &            -    &          -    &              -    &          -    &           -    \\
+  &     Xeon\TM Gold 6240  &         314.6  &        10518.3  &         9915.8  &        277.4  &          23118.3  &       7953.5  &         127.3  \\
+% &     EPYC\TM 7452       &         217.5  &        14443.7  &         9096.3  &        357.9  &          28365.2  &      13571.1  &         115.8  \\
+  &     EPYC\TM 7702       &         215.4  &    \BF{14919.5} &         9234.5  &        359.5  &          28404.0  &  \BF{13562.0} &         115.4  \\
   \hline \hline
   \multirow{6}{*}{\rotatebox[origin=c]{90}{$\bm{\mathcal{L}}$ ($\mu$s)}}
-  & Xeon Phi\TM 7230   & 20.45          & 1.10            & -               & 35.23         & 0.83              & 1.87          & 59.48          \\
-  & ThunderX2\R CN9975 & 38.15          & 3.04            & 2.74            & 15.65         & 0.27              & 0.72          & 60.58          \\
-  & Xeon\TM E5-2680 v3 & 12.82          & 0.28            & 0.45            &  7.09         & 0.08              & 0.21          & 20.93          \\
-  & Xeon\TM Gold 6140  &  4.86          & 0.14            & 0.16            &  4.66         & 0.05              & 0.16          & 10.03          \\
-% & Xeon\TM Gold 6142  &  -             & -               & -               &  -            & -                 & -             &  -             \\
-  & Xeon\TM Gold 6240  &  6.51          & 0.19            & 0.21            &  6.33         & 0.07              & 0.22          & 13.53          \\
-% & EPYC\TM 7452       &  9.42          & 0.14            & 0.23            &  4.90         & 0.06              & 0.13          & 14.88          \\
-  & EPYC\TM 7702       &  9.51          & 0.14            & 0.22            &  4.88         & 0.06              & 0.13          & 14.94          \\
+  &     Xeon Phi\TM 7230   &         20.45  &           1.10  &           -     &        35.23  &             0.83  &         1.87  &         59.48  \\
+  & \CR ThunderX2\R CN9975 & \CR     38.15  & \CR       3.04  & \CR       2.74  & \CR    15.65  & \CR         0.27  & \CR     0.72  & \CR     60.58  \\
+  &     Xeon\TM E5-2680 v3 &         12.82  &           0.28  &           0.45  &         7.09  &             0.08  &         0.21  &         20.93  \\
+  & \CB Xeon\TM Gold 6140  & \CB  \BF{4.86} & \CB       0.14  & \CB   \BF{0.16} & \CB \BF{4.66} & \CB     \BF{0.05} & \CB     0.16  & \CB     10.03  \\
+% &     Xeon\TM Gold 6142  &          -     &           -     &           -     &         -     &             -     &         -     &          -     \\
+  &     Xeon\TM Gold 6240  &          6.51  &           0.19  &           0.21  &         6.33  &             0.07  &         0.22  &         13.53  \\
+% &     EPYC\TM 7452       &          9.42  &           0.14  &           0.23  &         4.90  &             0.06  &         0.13  &         14.88  \\
+  &     EPYC\TM 7702       &          9.51  &       \BF{0.14} &           0.22  &         4.88  &             0.06  &     \BF{0.13} &         14.94  \\
   \end{tabular}
   % }}
   }
 \end{table}
 
+Table~\ref{tab:eval_simu_taks_thr_lat} presents the mono-threaded
+throughput ($\mathcal{T}$) and the latency ($\mathcal{L}$) of the simulated
+tasks. The throughput is calculated depending on the number of output samples in
+the task. For instance, the throughput of the channel is estimated with $N$ bits
+while the throughput of the decoder is computed with $K_1$ bits. The latency is
+the average latency. The \emph{Total} column corresponds to the global
+throughput and latency. The total latency is the cumulative latencies of each
+task while the total throughput is deduced from the total latency and $K_2$
+bits.
+
+In general, the most time consuming tasks are the AWGN channel and the decoder.
+The other tasks are mainly negligible thanks to the fast SIMD implementations.
+The Intel\R Gold 6140 CPU has the best throughputs and latencies in general.
+This is due to the Turbo Boost that enables the CPU to reach very high
+frequencies on a single thread but not only. The main difference with the AMD\R
+CPU comes from the best performance of the Gold 6140 CPU when simulating the
+AWGN channel. Indeed, the Gold 6140 CPU takes advantage of its doubled SIMD
+length (AVX-512) compared to the AMD\R EPYC CPU (AVX2). The ARM\R ThunderX2
+CPU comes with the worst single threaded general performance. The Intel\R Xeon
+Phi\R is also very close to the ARM\R CPU performance. This is not surprising as
+these processors have not been designed for the single core performance but for
+multi-core performance.
+
 \subsection{Multi-threaded and Multi-node Performances}
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Simulator speedups.]{\includegraphics[width=1.00\textwidth]{\curChapter/fig/simu/speedup/speedup}\label{plot:simu_speedup}}
+  \subfloat[][Simulator speedups.]{\includegraphics[width=1.00\textwidth]{\curChapter/fig/simu/speedup/speedup}\label{plot:eval_simu_speedup}}
   % \quad
   \\
-  \subfloat[][Simulator throughputs.]{\includegraphics[width=0.70\textwidth]{\curChapter/fig/simu/throughput/throughput}\label{plot:simu_throughput}}
+  \subfloat[][Simulator throughputs.]{\includegraphics[width=0.70\textwidth]{\curChapter/fig/simu/throughput/throughput}\label{plot:eval_simu_throughput}}
   \caption
-    [\AFFECT simulation of a (2048,1723) Polar code, FA-SCL decoder $L=32$.]
-    {\AFFECT simulation of a (2048,1723) Polar code, FA-SCL decoder $L=32$, BPSK
-    modulation, AWGN channel, $E_b/N_0$ = 4.5~dB (BER = 4.34e-10, FER =
+    [\AFFECT simulation of a (2048,1723) Polar code, FA-SSCL decoder $L=32$.]
+    {\AFFECT simulation of a (2048,1723) Polar code, FA-SSCL decoder $L=32$,
+    BPSK modulation, AWGN channel, $E_b/N_0$ = 4.5~dB (BER = 4.34e-10, FER =
     5.17e-08).}
-  \label{plot:simu_speedup_throughput}
+  \label{plot:eval_simu_speedup_throughput}
 \end{figure}
 
-Figure~\ref{plot:simu_speedup} depicts the speedups achieved on various modern
-CPU architectures detailed in Table~\ref{tab:simu_cpus_specs}, while
-Figure~\ref{plot:simu_throughput} exposes the corresponding simulation
-information throughputs. In Figure~\ref{plot:simu_speedup}, the speedups on each
-architecture are computed with respect to the single thread simulation time on
-the same architecture. Each run assigns at most one \AFFECT thread to each
-hardware thread, thus, since the architectures have different number of hardware
-threads, the presented speedups do not all have the same number of measurement
-points. In Figure~\ref{plot:simu_speedup_throughput}, an $N=2048$ and $K=1723$
-Polar code (FA-SCL decoder, $L=32$, 32-bit GZip \verb|0x04C11DB7| CRC) is
-simulated with a BPSK modulation and over an AWGN channel ($E_b/N_0 = 4.5$~dB,
-last SNR point of the blue curve in Figure~\ref{fig:ctx_bfer_polar}). The
-frozen bits of the polar code have been generated with the Gaussian
-Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
-vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with
-\Cxy{11} threads. The intra-frame vectorization is applied (c.f.
-Section~\ref{sec:opt_vec_intra}) to take advantage of the algorithms intrinsic
-level of parallelism, when the multi-threaded parallelism is used, to reduce the
-simulation time by multiplicating the number of concurrent communication chains,
-thanks to the independence property of Monte Carlo simulations. In order to
-achieve highest possible throughputs, the receiver part of the simulator is
-configured to work with 8-bit fixed-point representation for real numbers. It
-has been shown that this representation does not degrade the decoding
-performances of the FA-SCL decoder~\cite{Leonardon2019}. However \AFFECT
-algorithms implementations can also be run on other representations like
-64/32-bit floating-point and 16-bit fixed-point. For all the CPU targets, the
-code has been compiled with the \Cxx GNU compiler version 8.2.0 on Linux, with
-the following optimization flags: \verb|-O3 -funroll-loops -march=native|. Note
-that \AFFECT also works on Windows and macOS at the same level of performance.
+Figure~\ref{plot:eval_simu_speedup} depicts the speedups achieved on the various
+modern CPU architectures, while Figure~\ref{plot:eval_simu_throughput} exposes
+the corresponding simulation information throughputs. In
+Figure~\ref{plot:eval_simu_speedup}, the speedups on each architecture are computed
+with respect to the single thread simulation time on the same architecture. Each
+run assigns at most one \AFFECT thread to each hardware thread, thus, since the
+architectures have different number of hardware threads, the presented speedups
+do not all have the same number of measurement points.
+% In Figure~\ref{plot:simu_speedup_throughput}, an $N=2048$ and $K=1723$
+% Polar code (FA-SCL decoder, $L=32$, 32-bit GZip \verb|0x04C11DB7| CRC) is
+% simulated with a BPSK modulation and over an AWGN channel ($E_b/N_0 = 4.5$~dB,
+% last SNR point of the blue curve in Figure~\ref{fig:ctx_bfer_polar}). The
+% frozen bits of the polar code have been generated with the Gaussian
+% Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
+% vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with
+% \Cxy{11} threads. The intra-frame vectorization is applied (c.f.
+% Section~\ref{sec:opt_vec_intra}) to take advantage of the algorithms intrinsic
+% level of parallelism, when the multi-threaded parallelism is used,
+To reduce the simulation time by multiplying the number of concurrent
+communication chains, thanks to the independence property of Monte Carlo
+simulations.
+% In order to achieve highest possible throughputs, the receiver part of the simulator is
+% configured to work with 8-bit fixed-point representation for real numbers. It
+% has been shown that this representation does not degrade the decoding
+% performances of the FA-SCL decoder~\cite{Leonardon2019}. However \AFFECT
+% algorithms implementations can also be run on other representations like
+% 64/32-bit floating-point and 16-bit fixed-point.
 The simulation scales rather well on the tested architectures. The data remains
-in the CPU caches because of the moderate frame size ($N = 2048$). Scaling on
-the Xeon\TM Gold 6142 is not as good as the other targets, because the
-\textit{Intel\R Turbo Boost} technology is enabled on this platform: the CPU
-runs at higher frequencies when the number of active cores is low. \AFFECT
-effectively leverages the simultaneous multi-threading (SMT) technology. This is
-especially true for the ThunderX2\R CN9975 and Xeon\TM Gold 6140 targets. The
-SMT technology helps to improve the usage of the available instruction-level
-parallelism.
+in the CPU caches because of the moderate frame size ($N = 2048$) and SIMD
+intra-frame strategy. Scaling on the Xeon\TM Gold 6140 is not as good as the
+other targets, because the \textit{Intel\R Turbo Boost} technology is enabled on
+this platform: the CPU runs at higher frequencies when the number of active
+cores is low. \AFFECT effectively leverages the simultaneous multi-threading
+(SMT) technology. This is especially true for the ThunderX2\R CN9975 and Xeon\TM
+Gold 6140 targets. The SMT technology helps to improve the usage of the
+available instruction-level parallelism.
+
+The best multi-threaded throughput performance is achieved on the AMD\R EPYC
+platform and its 128 cores. 11 Gb/s are reached on the two AMD\R EPYC 7702 CPUs.
+The best Intel\R target (Xeon\TM Gold 6140) can only get half of the AMD\R CPU
+performance. The ARM\R target and the Xeon Phi\TM are not competitive in term of
+throughput even when all the hardware threads are used. It is possible that
+these targets are more adapted for SDR uses (like for the Cloud-RAN) when power
+consumption matter more. However, for simulation purpose, it is clear that the
+AMD\R EPYC CPUs are more interesting. Those results also demonstrate the
+interest to enable the frequency boost as well as the SMT technology. Indeed,
+the Xeon\TM Gold 6240 CPU should be faster than the Xeon\TM Gold 6140 CPU. But,
+the frequency boost and the SMT technology have been disabled on this server: it
+results in worst multi-threaded performance. We could not try to enable the
+frequency boost and the SMT techniques on the AMD\R CPU but there is a good
+chance that it would have increased the throughput even more.
 
 \begin{table}[htp]
   \centering
   \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
-  \label{tab:simu_speedup_mpi}
+  \label{tab:eval_simu_speedup_mpi}
 % {\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{r  r  r  r}
   \textbf{Nodes} & \textbf{Cores} & \textbf{Info. T/P} & \textbf{Speedup} \\
-                 &                & (Mb/s)             &           \\
+                 &                & (Mb/s)             &                  \\
   \hline
   \hline
-   1             &  24            &  1950              &  1.00     \\
-   2             &  48            &  3901              &  1.95     \\
-%  3             &  72            &  5826              &  2.99     \\
-   4             &  96            &  7793              &  4.00     \\
-%  5             & 120            &  9731              &  4.99     \\
-%  6             & 144            & 11691              &  5.99     \\
-%  7             & 168            & 13644              &  7.00     \\
-   8             & 192            & 15829              &  8.12     \\
-%  9             & 216            & 17755              &  9.10     \\
-% 10             & 240            & 19582              & 10.04     \\
-  16             & 384            & 31640              & 16.22     \\
-  32             & 768            & 63075              & 32.34     \\
+   1             &  24            &  1,950             &  1.00            \\
+   2             &  48            &  3,901             &  1.95            \\
+%  3             &  72            &  5,826             &  2.99            \\
+   4             &  96            &  7,793             &  4.00            \\
+%  5             & 120            &  9,731             &  4.99            \\
+%  6             & 144            & 11,691             &  5.99            \\
+%  7             & 168            & 13,644             &  7.00            \\
+   8             & 192            & 15,829             &  8.12            \\
+%  9             & 216            & 17,755             &  9.10            \\
+% 10             & 240            & 19,582             & 10.04            \\
+  16             & 384            & 31,640             & 16.22            \\
+  32             & 768            & 63,075             & 32.34            \\
   \end{tabular}
 % }%}
 \end{table}
 
-Table~\ref{tab:simu_speedup_mpi} shows the multi-node scaling with the OpenMPI
-library (version 3.1.2). The information throughput (T/P) and the speedup are
-almost linear with the number of nodes: This is expected because there are very
-few communications between the various MPI processes. Note that the super-linear
-scaling is due to the measurements imprecision.
+Table~\ref{tab:eval_simu_speedup_mpi} shows the multi-node scaling with the
+OpenMPI library (version 3.1.2). The information throughput (T/P) and the
+speedup are almost linear with the number of nodes: This is expected because
+there are very few communications between the various MPI processes. Note that
+the super-linear scaling is due to the measurements imprecision.
 
-\textbf{Those aforementioned results demonstrate the high throughput
-capabilities of \AFFECT.} For instance, when using 32 MPI nodes on the given
-(2048,1723) polar code, it takes about one minute to estimate the $E_b/N_0=4.5$
-dB SNR point (BER = 4.34e-10, FER = 5.17e-08).
+Those aforementioned results demonstrate the high throughput
+capabilities of the \AFFECT simulator. For instance, when using 32 MPI nodes on
+the given (2048,1723) polar code, it takes about one minute to estimate the
+$E_b/N_0=4.5$ dB SNR point (BER = 4.34e-10, FER = 5.17e-08).
 
 \section{Conclusion}
+
+In this chapter we evaluated the implementations of the LDPC, polar and turbo
+decoders proposed in this thesis. The throughput, the latency and the energy
+efficiency have been studied and compared with other works. For the LDPC and the
+turbo decoders, the inter-frame strategy has been used and leads to throughputs
+comparable with the state-of-the-art performance. However, the latencies are not
+competitive with the intra-frame implementations we found in the literature, as
+expected. These implementations are then more oriented for simulation purpose or
+for real-time applications that do not require low latency like the video
+streaming for instance. For the polar decoders, both the inter-frame and
+intra-frame strategies has been implemented. It results in a complete framework
+that can adapt to a lot of applicative contexts. The proposed decoders are
+ones of the fastest in the literature. There are also able to be very flexible
+with the dynamic implementations or specialized for highest possible performance
+with the source code generation technique. For all the proposed decoders (LDPC,
+polar and turbo), the level of genericity is one of our main contribution. The
+implementations are able to adapt to various CPUs architectures as well as to
+support many variants. Moreover, each of the presented implementations are able
+to work close to the reference decoding performance.
+
+The software decoder Hall of Fames (HoFs) are introduced. These HoFs are
+exhaustive surveys of the software decoders we found in the literature. The
+proposed decoders are reported as well as the other state-of-the-art works.
+These HoFs allows to compare CPU and GPU implementations. Some metrics like the
+normalized throughput, the TNDC and the energy consumption are defined. The
+results show that these last years, the CPU implementations are more efficient
+than the GPU works in terms of throughput, latency and energy. One of the main
+issue of the GPU-based implementations is the required transfer time between the
+CPU and the GPU. An other main issue comes from the intrinsic architecture of
+the GPU that requires a lot of parallelism to be efficient. This is not always
+possible to take advantage of this high level of parallelism in the channel
+decoding algorithm. As a consequence, in general, the CPUs are more adapted to
+low latency implementations than the GPUs.
+
+The last section of this chapter focuses on the \AFFECT simulator performance.
+A fully vectorized digital communication chain is proposed for the evaluation.
+First the mono-threaded performances are reported. As a result, \AFFECT runs
+fast on the last Intel\R Gold CPUs that support the AVX-512 SIMD engine.
+Then the multi-threaded performances are benched and the AMD\R EPYC CPUs comes
+with the best throughout performance, up to 11 Gb/s. Even if the AMD\R EPYC CPUs
+only supports the AVX instructions, it looks like the Zen 2 architecture is well
+balanced between computational power and memory speed. Finally, the multi-node
+capacity of the \AFFECT simulator is tested and a linear speedup is observed
+over 32 nodes. The peak throughput performance in multi-node is 32 Gb/s. These
+high throughputs enable the exploration of many combinations at very low
+error-rate level. To the best of our knowledge, \AFFECT is one of the fastest
+FEC simulator.
