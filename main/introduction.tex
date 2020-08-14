@@ -5,3 +5,65 @@
 \chapter*{Introduction}
 \markboth{Introduction}{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
+
+From time immemorial, man has sought to communicate. It started with the
+development of the spoken language. However, one of the main limitation with
+speech is that it only works at close range. To overcome this issue, the writing
+has been invented. Man has always been seeking for more efficient ways to extend
+his communication possibilities. Nowadays, with the advent of the Internet, the
+digital communications represent the last technology advances to communicate
+world-wide. Digital communications allow both live video transmission and the
+use of a messaging system for instance. With the growing number of users and
+needs, the digital communication systems are the subject of an important area of
+research. New digital communication systems have to be able to match high
+throughput and low latency constraints as well as acceptable energy consumption
+levels.
+
+Traditionally, the digital communication systems are implemented in hardware, on
+dedicated chips. The required signal processing algorithms are often very
+specific and repetitive. Thus, they are good candidates for specialized
+architectures. However, with the growing number of use cases and standards,
+these algorithms are evolving and are becoming more and more complex. In this
+context, it becomes interesting to consider more generic processing units.
+For instance, this type of programmable processing units is available in the
+computers and is commonly referred as the Central Process Unit (CPU). The CPUs
+are General Purpose Processors (GPP) that can adapt to various types of
+algorithms. Improving the computational and the energy efficiency of these
+processors is one of the main concern in computer science. As they are largely
+adopted for many use cases, the CPUs take advantage of the best manufacturing
+processes (up to 7 nm). Thanks to their pipelined architecture they are able to
+reach very high frequencies ranging from 1 to 4 GHz. They also come with
+dedicated memory caches that enable efficient spatial and temporal reuse of
+data. The computational efficiency of the CPUs relies on the multi-core
+architecture as well as the vectorized instructions. These type of instructions
+are able to perform the same operation on a chunk of data. This is also known as
+the Single Instruction Multiple Data (SIMD) model.
+
+From an energy point of view, it is clear that the CPUs are not directly
+competitive with the dedicated architectures. Their large number of instructions
+are the key of their adaptability capacity but this is also a limitation when
+targeting specific implementations as many transistors are unused while they
+consume a non-negligible amount of energy. On the other hand, the main strength
+on the GPP architectures comes from their ability to be used programmatically.
+Consequently, the algorithms implementations are much faster on GPPs than on
+dedicated hardwares. However, it is still challenging to develop algorithms that
+can take advantage of the CPUs parallelism levels. To this purpose, specific
+parallel languages are a important research area in computer science. As a
+consequence, it is largely adopted to rely on software implementations for
+the evaluation and the validation of signal processing algorithms. The software
+implementation are also considered for real time uses. Their flexibility and
+reduced time to market are becoming more and more attractive.
+
+A parallel can be made with the deep learning domain and the signal processing
+algorithms to help to understand the main challenges. Like for the deep
+learning, the signal processing algorithms are based on a sub-set of predefined
+operators and the communication between those algorithms rest upon regular
+workflows. Thus, they are good candidates for dedicated languages. First, like
+for the neural networks, there is a preliminary phase where the digital
+communication system is calibrated. This phase is generally made in software
+and requires non-negligible computational power (it is close to the learning
+phase in machine learning). Then, once the characteristics of the system has
+been chosen, the calibrated algorithms can be implemented in hardware or in
+software. Depending on the targeted throughput and latency, the real-time
+implementations can be challenging as some of the processing are made of compute
+intensive operations.
