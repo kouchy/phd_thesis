@@ -12,6 +12,7 @@
 \usepackage{array}
 \usepackage{longtable} % pour la liste des notations
 \usepackage[toc,page]{appendix}
+\usepackage{listings}
 \usepackage[english,onelanguage,ruled,linesnumbered,vlined]{algorithm2e}
 \usepackage[
   labelnumber  = true,
@@ -47,6 +48,7 @@
 \setminted{fontsize=\small,framesep=2mm,tabsize=4} % package 'minted'
 \usemintedstyle{friendly} % package 'minted'
 \counterwithin{listing}{chapter} % package 'chngcntr'
+\counterwithin{algocf}{chapter} % package 'chngcntr'
 \SetKwComment{Comment}{$\triangleright$\ }{} % package 'algorithm2e'
 \newcommand\mycommfont[1]{\small\ttfamily\textcolor{Comment}{#1}} % package 'algorithm2e'
 \SetCommentSty{mycommfont} % package 'algorithm2e'
@@ -108,6 +110,19 @@
 % reduce the space between the lstlisting and its caption
 \AtEndEnvironment{listing}{\vspace{-10pt}}
 
+% add vertical spaces between chapters in the list of listings
+\let\Chapter\chapter
+\def\chapter{\addtocontents{lol}{\protect\addvspace{10pt}}\Chapter}
+
+% combine the list of algorithms with the list of listings
+\makeatletter
+\AtBeginDocument{%
+ \let\c@algocf\c@lstlisting
+}
+\renewcommand{\algocf@list}{lol}%
+\renewcommand*\l@algocf{\@dottedtocline{1}{1.5em}{2.3em}}
+\makeatother
+
 % Math operators --------------------------------------------------------------
 \DeclareMathOperator{\card}{card}
 \DeclareMathOperator{\diag}{diag}
@@ -153,7 +168,7 @@
   \noalign{\global\setlength{\Oldarrayrulewidth}{\arrayrulewidth}}
   \noalign{\global\setlength{\arrayrulewidth}{#1}}\cline{#2}
   \noalign{\global\setlength{\arrayrulewidth}{\Oldarrayrulewidth}}}
-\renewcommand\listoflistingscaption{List of Source Codes}
+\renewcommand\listoflistingscaption{List of Algorithms and Source Codes}
 \def\bl{big.\textsc{LITTLE}\xspace}
 \def\bigARM{big\xspace}
 \def\little{\textsc{LITTLE}\xspace}
