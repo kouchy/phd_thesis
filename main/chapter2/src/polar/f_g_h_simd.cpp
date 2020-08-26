@@ -23,7 +23,7 @@ class API_polar_SIMD : public API_polar
 		for (auto n = 0; n < n_elmts; n += mipp::N<R>())
 		{   // sc = h(sa,sb) = sa XOR sb
 			auto r = mipp::R<B>(&sa[n]) ^ mipp::R<B>(&sb[n]);
-			r.store(&sc[n])
+			r.store(&sc[n]);
 		}
 	}
 };

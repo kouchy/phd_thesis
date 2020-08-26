@@ -1023,7 +1023,7 @@ of wider SIMD instructions for the selected code. It mainly explains the
 throughput performance difference between the proposed implementation and the
 implementation from~\cite{LeGal2019a}. Also, the decoder has been specialized
 for the LTE interleaver. However, in the LTE standard the EML-MAP turbo decoder
-comes with a limited intrinsic parallelism of 8 (corresponding to the 8 trellis
+comes with a limited inherent parallelism of 8 (corresponding to the 8 trellis
 states). To fill the SIMD registers, the intra-frame implementations require to
 modify the algorithm to expose more parallelism. This modification leads to
 non-negligible decoding performance losses. At 0.7 dB, none of the
@@ -1657,7 +1657,7 @@ do not all have the same number of measurement points.
 % Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
 % vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with
 % \Cxy{11} threads. The intra-frame vectorization is applied (c.f.
-% Section~\ref{sec:opt_vec_intra}) to take advantage of the algorithms intrinsic
+% Section~\ref{sec:opt_vec_intra}) to take advantage of the algorithms inherent
 % level of parallelism, when the multi-threaded parallelism is used,
 To reduce the simulation time by multiplying the number of concurrent
 communication chains, thanks to the independence property of Monte Carlo

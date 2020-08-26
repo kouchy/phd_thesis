@@ -33,9 +33,9 @@
     \newcommand\ctr{4.9}
     \newcommand\rth{9.8}
 
-    \node[draw=black, dotted                     , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{Global memory}}   ] (ram)   at (0.1, -1.1-3) {};
-    \node[draw=black,                            , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register}}   ] (simdr) at (0.1, -1.7-3) {};
-    \node[draw=black,         rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD function}}   ] (simdi) at (0.1, -2.3-3) {};
+    \node[draw=black, dotted                     , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{memory}}       ] (ram)   at (0.1, -1.1-3) {};
+    \node[draw=black,                            , minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD register}}] (simdr) at (0.1, -1.7-3) {};
+    \node[draw=black,         rounded corners=3pt, minimum width=0.8cm, minimum height=0.4cm, label={[black]right:\footnotesize{SIMD function}}] (simdi) at (0.1, -2.3-3) {};
 
     \node[fill=Paired-5!40, minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Complex norm $d_x$}}] (cn) at (\rth+0.7+4.10, -1.1-3) {};
     \node[fill=gray!40    , minimum width=0.8cm, minimum height=0.4cm, label={[black]left:\footnotesize{Noise $n_x = -N_0$}}] (n0) at (\rth+0.7+4.10, -1.7-3) {};

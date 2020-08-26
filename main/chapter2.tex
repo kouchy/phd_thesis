@@ -10,11 +10,11 @@ communication algorithms. Our contributions are split in two parts: 1) generic
 strategies and 2) specific optimizations.
 
 The two first sections describe the generic strategies we proposed to optimize
-the algorithms of digital communication receivers. The vectorization is a
-key of efficient software implementations. A specific wrapper as well as a
+the algorithms of digital communication receivers. Vectorization is a key of
+efficient software implementations. A specific wrapper library as well as a
 sub-set of generic parallelism levels are proposed.
 
-The following sections are dedicated to the efficient software implementation of
+The sections afterward are dedicated to the efficient software implementation of
 the algorithms for digital communication receivers presented in the
 Chapter~\ref{chap:ctx}.
 
@@ -29,13 +29,13 @@ In the last section, the proposed contributions are summarized and discussed.
 \label{sec:opt_mipp}
 
 Recent articles have proposed several optimized software decoders, corresponding
-to different channel codes : LDPC codes~\cite{LeGal2015,LeGal2016,LeGal2017a},
+to different channel codes: LDPC codes~\cite{LeGal2015,LeGal2016,LeGal2017a},
 polar codes~\cite{Giard2016b,Sarkis2016,Cassagne2015c,Cassagne2016b,
 Leonardon2019}, turbo codes~\cite{Zhang2012,Wu2013,Cassagne2016a,LeGal2019a}.
 All of these works show the possibility to reach a good level of
-\textit{performance} by making extensive use of SIMD (Single Instruction
-Multiple Data) units. This is often achieved at the price of a reduced
-\textit{flexibility}, by resorting to specific intrinsics, or by making
+\textit{computing performance} by making extensive use of SIMD (Single
+Instruction Multiple Data) units. This is often achieved at the price of a
+reduced \textit{flexibility}, by resorting to specific intrinsics, or by making
 assumptions on the data types. However, these decoders should be implemented in
 a single source code, in which the following parameters could be changed at
 runtime: the channel code type, the decoding algorithm, the number of decoding
@@ -47,37 +47,41 @@ portability) push towards the use of a SIMD library that helps in the
 abstraction of the SIMD instruction sets, while still allowing a fine grain
 tuning of performance.
 
-In this thesis, we propose a new \Cxx SIMD wrapper, covering the needs in terms
-of expressiveness and of performance for the algorithms dedicated to channel
-codes. Our contributions are:
+As a foundation of the thesis work, we propose a new \Cxx SIMD library, covering
+the needs in terms of expressiveness and of performance for the algorithms
+dedicated to channel codes. Our contributions are:
 \begin{itemize}
-  \item A portable and high performance  \Cxx SIMD wrapper called \MIPP, for
+  \item A portable and high performance  \Cxx SIMD library called \MIPP, for
     SSE, AVX, AVX-512 and NEON instruction sets;
   % \item An implementation of several channel codes with this wrapper. We
   %   present the main advantages of \MIPP in this context;
-  \item A comparison with other state-of-the-art SIMD wrappers on a Mandelbrot
+  \item A comparison with other state-of-the-art SIMD libraries on a Mandelbrot
     code, demonstrating that the code based on \MIPP has similar performance as
     hand-written intrinsics.
 \end{itemize}
-\MIPP programming model is not too far from intrinsics, enabling a good control
-on performance, but still provides an abstraction on the basic types used in
-vectors (ranging from double to byte) and complex operations (parametric
+In order to let the compiler inline library calls, which is critical for the
+intended SIMD programming model purpose, such library are usually header-only.
+Thus, we refer to them as \textit{wrappers} instead of \textit{libraries}.
+The \MIPP programming model is built on top of intrinsics, enabling a good
+control on performance, but still provides an abstraction on the basic types
+used in vectors (ranging from double to byte) and complex operations (parametric
 reductions, log, exponential, ...).
 
 The \longMIPP library (\MIPP) is a portable wrapper for SIMD intrinsics written
 in the \Cxx language. It relies on \Cxx compile-time template specialization
 techniques to replace supported generic functions with inline calls to their
 intrinsics counterpart, for a given instruction set. While \MIPP is mostly
-written in \Cxy{98}, it still requires \Cxy{11}-compliant compiler due to the
-use of convenient features such as the \verb|auto| and \verb|using| keywords.
-\MIPP is also Open-source (under the MIT license) and the full code is available
-on GitHub\footnote{\MIPP repository: \url{https://github.com/aff3ct/MIPP}}.
+written in \Cxy{98}, it requires \Cxy{11}-compliant compiler due to the use of
+convenient features such as the \verb|auto| and \verb|using| keywords. \MIPP is
+also open-source (under the MIT license) and the full code is available on
+GitHub\footnote{\MIPP repository: \url{https://github.com/aff3ct/MIPP}}.
 
 \MIPP provides two application programming interface levels. The
-\emph{Low Level Interface} (low) implements a basic thin abstraction layer on
-top of the intrinsics. The \emph{Medium Level Interface} (med.), built on top of
-\MIPP low, abstracts away more details to lessen the effort from the application
-programmer by relying on object encapsulation and operator overloading.
+\emph{Low Level Interface} (low) implements a basic thin abstraction layer
+directly on top of the intrinsics. The \emph{Medium Level Interface} (med.),
+built on top of \MIPP low, abstracts away more details to lessen the effort from
+the application programmer by relying on object encapsulation and operator
+overloading.
 
 \subsection{Low Level Interface}
 
@@ -124,12 +128,12 @@ to the programmer. \verb|mipp::reg| and \verb|mipp::msk| basic types are
 encapsulated in \verb|mipp::Reg<T>| and \verb|mipp::Msk<N>| objects,
 respectively. The \verb|T| and \verb|N| template parameters correspond to the
 type and the number of elements inside the vector register and the mask
-register, respectively. One can notice that in these register objects are typed,
-unlike the \MIPP low register basic type. It avoids to write the type when a
-\MIPP function is called. The function type can then be directly selected from
-the parameter type. Listing~\ref{lst:opt_mipp_mli} illustrates the
-template-based encapsulation, which enables \MIPP to override common arithmetic
-and comparison operators.
+register, respectively. In these registers, objects are typed, unlike in the
+\MIPP low register basic type. It avoids to write the type when a \MIPP function
+is called. The function type can then be directly selected from the parameter
+type. Listing~\ref{lst:opt_mipp_mli} illustrates the template-based
+encapsulation, which enables \MIPP to override common arithmetic and comparison
+operators.
 
 \MIPP med. also simplifies register loading and initialization operations. The
 constructor of the \verb|mipp::Reg| object calls the \verb|mipp::load| function
@@ -152,9 +156,9 @@ Likewise, a scalar assigned to a vector set all elements to this value.
 \label{sec:opt_mipp_implem}
 
 \MIPP targets SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2, FMA3, KNCI, AVX-512F
-and AVX-512BW instruction sets on x86 and related architectures, as well as
-NEON, NEONv2, NEON64 and NEON64v2 on ARM\R. It can easily be extended to other
-instruction sets.
+and AVX-512BW instruction sets on Intel x86 and related architectures, as well
+as NEON, NEONv2, NEON64 and NEON64v2 on ARM\R. It can easily be extended to
+other instruction sets.
 
 \MIPP selects the most recent instruction set available at compile time. For
 instance, a code compiled with the \verb|-march=avx| flag of the GNU GCC
@@ -220,8 +224,8 @@ feature: \verb|hadd|, \verb|hsub|, \verb|hmul| and \verb|hdiv|.
 
 \subsection{Related Works}
 
-Many SIMD programming solutions have been surveyed in~\cite{Pohl2016} to take
-advantage of conventional instruction sets. The existing alternatives can be
+Many SIMD programming solutions to take advantage of conventional instruction
+sets have been surveyed in~\cite{Pohl2016}. The existing alternatives can be
 decomposed into three main models: 1)~intrinsics or assembly code; 2)~dedicated
 language; 3)~dedicated library. The intrinsics or assembly approaches are
 non-portable. Low-level solutions target specific architectures. They offer
@@ -237,10 +241,7 @@ vectorization performance. More specialized languages, such as
 OpenCL~\cite{Howes2015}, enable the programmer to retain more control, as the
 counterpart of writing some more specific code. In our study, the focus is given
 to the library approach since the main objectives are to to maximize
-performance, maximize portability and deal with existing \Cxx codes. In order to
-let the compiler inline library calls, which is critical for the intended SIMD
-programming model purpose, such library are usually header-only. Thus, we refer
-to them as \textit{wrappers} instead of \textit{libraries}.
+performance, maximize portability and deal with existing \Cxx codes.
 
 \subsubsection{\Cxx SIMD Wrappers}
 
@@ -279,7 +280,7 @@ Table~\ref{tab:opt_mipp_comparison_general} and
 Table~\ref{tab:opt_mipp_comparison_isa_data} compare various SIMD wrappers.
 Table~\ref{tab:opt_mipp_comparison_general} is focusing on the general features
 while Table~\ref{tab:opt_mipp_comparison_isa_data} is targeting the supported
-instruction sets and data types. They aims to present an overview of some
+instruction sets and data types. They aim to present an overview of some
 prominent solutions, though them is by no means exhaustive due to the richness
 of the SIMD wrapper landscape. Some of the wrappers presented, such as \MIPP,
 \Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic research
@@ -288,7 +289,7 @@ context.
   % \renewcommand{\arraystretch}{0.95}
   % \tabcolsep=6pt
   \centering
-  \caption{Comparison of various SIMD wrappers : Supported ISA and Data Type.}
+  \caption{Comparison of various SIMD wrappers: Supported ISA and Data Type.}
   \label{tab:opt_mipp_comparison_isa_data}
   % \begin{adjustbox}{angle=90}
   % {\resizebox{\linewidth}{!}{
@@ -445,9 +446,8 @@ likely to improve once the full AVX-512 support is release in a subsequent
 stable version.
 
 \textbf{\TSIMD} is a wrapper primarily designed for image processing purpose.
-It performs well in 32-bit NEON, SSE and AVX. But, it lacks from AVX-512.
-Support of the 64-bit types is not planed since it is not useful in traditional
-image computations.
+It performs well in 32-bit NEON, SSE and AVX. But, it lacks AVX-512. Support of
+the 64-bit types is not planned since it is not useful for image computations.
 
 \textbf{\simdpp} supports an impressive number of instruction
 sets. This may explain why it does not support mathematical functions so far. It
@@ -470,14 +470,14 @@ some adaptations to architectures. Still, a high performance code requires that
 the developer knows how to decompose efficiently some computation with the SIMD
 instructions. Between AVX-512 and SSE or NEON for instance, several
 implementations of the same code are possible. \MIPP offers to the programmer
-the control on the intrinsics taken and ensures portability.
+the control on the intrinsics selected and ensures portability.
 
 \section{Vectorization Strategies}
 \label{sec:opt_vec}
 
-The vectorization is a key feature to develop high performance implementations
-of signal processing algorithms. One of the main constraint of these algorithms
-is their low latency requirement. A typical signal processing latency ranges
+Vectorization is a key feature to develop high performance implementations of
+signal processing algorithms. One of the main constraint of these algorithms is
+their low latency requirement. A typical signal processing latency ranges
 between one microsecond to a few nanoseconds. Therefore, the famous
 multi-threading parallelism is not well-suited to speedup a single signal
 processing algorithm. Indeed, the thread creation time and the extra cost of the
@@ -491,7 +491,7 @@ Consequently, these algorithms have been refined to take advantage of the
 fixed-point arithmetic. It enables software implementations working on 16-bit
 and 8-bit integers. Combining the vectorization and the fixed-point arithmetic
 leads to a high level of SIMD parallelism. For instance, if we consider the
-AVX-512 ISA, there is 512-bit in the registers. If the computations are made on
+AVX-512 ISA, there are 512 bits in the registers. If computations are made on
 8-bit integers, the available parallelism is $p^\text{8-bit}_\text{SIMD} = 512 /
 8 = 64$. This is more than the number of cores that is available in most of the
 current CPUs. The next subsections detail the vectorization strategies that we
@@ -500,37 +500,38 @@ have identified to effectively implement signal processing algorithms on CPUs.
 \subsection{Intra-frame SIMD Strategy}
 \label{sec:opt_vec_intra}
 
-The \emph{intra-frame} SIMD strategy consists in using the vectorization to
-process a single frame. With this strategy, the available level of parallelism
-depends on the characteristics of the signal processing algorithm. It is up to
-the developer to clearly identify the intrinsic parallelism of the algorithm and
-to map the latter on the SIMD instructions. One of the main advantages of this
+The \emph{intra-frame} SIMD strategy consists in using vectorization to process
+a single frame. With this strategy, the available level of parallelism depends
+on the characteristics of the signal processing algorithm. It is up to the
+developer to clearly identify the inherent parallelism of the algorithm and to
+map the latter on the SIMD instructions. One of the main advantages of this
 method is that the latency of the processing can be divided, at best, by the
 parallelism factor $p_\text{SIMD}$. Thus, the intra-frame SIMD strategy is a key
 of very low latency signal processing implementations on CPUs. Note that the
 throughput can also be increased by a factor of $p_\text{SIMD}$. However, a
-limitation of the \emph{intra-frame} strategy is when the algorithm intrinsic
-parallelism is lower than $p_\text{SIMD}$. In this specific case, the SIMD
-instructions cannot be used at 100\% and some efficiency is loss. Even if the
-intrinsic parallelism is higher than $p_\text{SIMD}$ the targeted algorithm can
-require data movements inside the SIMD registers and some shuffle and
-permutation extra-instructions have to be added. These extra-instructions are
-generally a limiting factor in the efficiency of the intra-frame SIMD strategy.
+limitation of the \emph{intra-frame} strategy is when the algorithm inherent
+parallelism is lower than $p_\text{SIMD}$. In this specific case, SIMD
+instructions cannot be used on full vector registers and some efficiency is
+loss. Even if the inherent parallelism is higher than $p_\text{SIMD}$ the
+targeted algorithm can require data movements inside the SIMD registers and
+cause some shuffle and permutation extra-instructions have to be added. These
+extra instructions are generally a limiting factor in the efficiency of the
+intra-frame SIMD strategy.
 
 \subsection{Inter-frame SIMD Strategy}
 \label{sec:opt_vec_inter}
 
 Unlike the intra-frame SIMD strategy, the \emph{inter-frame} SIMD strategy
-processes many frames in parallel. The idea is to fill the SIMD registers with
-data coming from different frames. If there is a $p_\text{SIMD}$ parallelism,
-then $F = p_\text{SIMD}$ frames are used to fulfill the SIMD registers. The
-main advantage of this strategy is that the available level of parallelism does
-not depend on the algorithm. In other words, it is always possible to use 100\%
-of the SIMD registers. Thus, the inter-frame SIMD strategy is a key of very high
-throughput signal processing implementations on CPUs. However, this technique
-does not reduce the overall latency of the processing as it computes $F =
-p_\text{SIMD}$ in parallel, the throughput can be increased by a factor
-$p_\text{SIMD}$ but the latency of a single frame is unchanged.
+processes several frames in parallel. The idea is to fill the SIMD registers
+with data coming from multiple frames. If there is a $p_\text{SIMD}$
+parallelism, then $F = p_\text{SIMD}$ frames are used to fill the SIMD
+registers. The main advantage of this strategy is that the effective level of
+parallelism does not depend on the algorithm. In other words, it is always
+possible to use 100\% of the SIMD registers. Thus, the inter-frame SIMD strategy
+is a key of very high throughput signal processing implementations on CPUs.
+However, this technique does not reduce the overall latency of the processing as
+it computes $F = p_\text{SIMD}$ in parallel, the throughput can be increased by
+a factor $p_\text{SIMD}$ but the latency of a single frame is mainly unchanged.
 
 \begin{figure}[htp]
   \centering
@@ -554,9 +555,9 @@ operations are the main key to reach high throughputs in the inter-frame SIMD
 strategy. They enable efficient load and store instructions. These reordering
 and reversed reordering operations could be replaced by gather and scatter
 instructions each time a load and store instructions are required. But this
-solution has achieved poorer performance on current CPU architectures. The
-selected version with the reordering operations comes with a much better data
-locality at the cost of extra operations before and after the SIMD computations.
+solution delivers poorer performance on current CPU architectures. The selected
+version with reordering operations comes with a much better data locality at the
+cost of extra operations before and after the SIMD computations.
 
 \begin{figure}[htp]
   \centering
@@ -591,7 +592,7 @@ reordering process.
 
 The \emph{intra-/inter-frame} SIMD strategy is the combination of the two
 previous strategies. For instance, if we have an hardware parallelism
-$p_\text{SIMD} = 16$ and if the algorithm has only an intrinsic parallelism of
+$p_\text{SIMD} = 16$ and if the algorithm has only an inherent parallelism of
 8, then it is possible to use the intra-frame SIMD strategy to absorb the
 parallelism of the algorithm and to use the inter-frame SIMD strategy on two
 frames. The intra-/inter-frame SIMD strategy is also a good candidate to make
@@ -606,9 +607,9 @@ the channel model can take a non negligible amount of time. This is why we
 first propose a vectorized version of the AWGN channel. Additionally when
 fixed-point decoders are benched, the output LLRs of the demodulator have to be
 converted from a floating-point representation to a fixed-point representation.
-This process can also take an important amount of time and it has been
-optimized. The proposed implementations are briefly evaluated with the protocol
-defined in Section~\ref{sec:opt_mipp_protocol}.
+This process can also take an important amount of time and has been optimized.
+The proposed implementations are briefly evaluated with the protocol defined in
+Section~\ref{sec:opt_mipp_protocol}.
 
 \subsection{Box-Muller Transform}
 \label{sec:opt_simu_awgn}
@@ -627,7 +628,7 @@ numbers.
 Suppose $U_1$ and $U_2$ are independent random variables uniformly distributed
 in $]0, 1]$:
 \begin{equation*}
-  z_1 = \sqrt{-2 \log{U_1}}.\cos(2\pi.U_2)),~z_2 = \sqrt{-2 \log{U_1}}.\sin(2\pi.U_2)).
+  z_1 = \sqrt{-2 \log{U_1}}.\cos(2\pi.U_2),~z_2 = \sqrt{-2 \log{U_1}}.\sin(2\pi.U_2).
 \end{equation*}
 Then, $z_1$ and $z_2$ are independent and normally distributed samples.
 
@@ -643,7 +644,7 @@ independent and uniformly distributed random numbers. For instance, it can be
 generated with the MT19937 PRNG. \verb|norRand| is a vector of independent and
 normally distributed random numbers. The code stresses SIMD units with
 multiplications, \verb|mipp::sqrt| and \verb|mipp::sincos| calls. The $U_1$ and
-$U_2$ are independent variables. So the algorithm intrinsic parallelism directly
+$U_2$ are independent variables. So the algorithm inherent parallelism directly
 depends on the frame size $N$. Generally $N > p_\text{SIMD}$, this is why the
 proposed implementation is based on the intra-frame SIMD strategy.
 
@@ -760,8 +761,8 @@ $\mathcal{H}$ parity matrices are \emph{Quasi-Cyclic} (QC). QC $\mathcal{H}$
 parity matrices are matrices that are composed of an array of $Z \times Z$
 circulant identity sub-matrices. $Z$ is the order that defines the parallelism
 level. So, the intra-frame SIMD parallelism directly depends on the
-$\mathcal{H}$ parity matrix and if the parity matrix is QC or not. Even if the
-selected $\mathcal{H}$ matrix is QC, the $Z$ intrinsic parallelism can be
+$\mathcal{H}$ parity matrix and whether the parity matrix is QC or not. Even if
+the selected $\mathcal{H}$ matrix is QC, the $Z$ inherent parallelism can be
 smaller than $p_\text{SIMD}$ or higher but not a multiple of $p_\text{SIMD}$. At
 the end we conclude that the intra-frame SIMD strategy is not a good candidate
 for a generic software implementation.
@@ -804,7 +805,7 @@ The implementation of the MS update rules is given in
 Listing~\ref{lst:opt_ldpc_bp_update_rule_ms}. For the sake of conciseness, the
 \verb|begin_chk_node_out| and \verb|end_chk_node_out| methods are not shown.
 These methods are empty in the MS update rules. Each operation in the methods of
-the \verb|Update_rules_MS| class is vectorized thanks to \MIPP. It results a
+the \verb|Update_rules_MS| class is vectorized thanks to \MIPP. It results in a
 readable source code close to a traditional \Cxx code where the \verb|std|
 namespace has been replaced by the \verb|mipp| namespace.
 
@@ -822,7 +823,7 @@ performed to recover the natural order of the frames.
 We implemented the flooding, the horizontal layered and the vertical layered
 scheduling as well as the SPA, log-SPA, MS, OMS, NMS and AMS update rules.
 The main advantage of the proposed methodology is to ease the creation of new
-scheduling strategies and update rules without scarifying too much the
+scheduling strategies and update rules without sacrificing too much the
 throughput performance. It is then possible to quickly evaluate the error-rate
 performance of a new algorithm and to combine it with all the previously
 implemented strategies.
@@ -851,18 +852,18 @@ number of characteristics of interest for its optimization:
     elements of the LLR and bits in the nodes and their children. As there is no
     dependence between computations involving different elements of the same
     node, these node computations can be parallelized or vectorized (cf. the
-    intra-frame SIMD strategy introduced in~\cite{Giard2014}),
+    intra-frame SIMD strategy introduced in~\cite{Giard2014});
   \item Frozen bits fully define their leaf values. Hence some parts of the
     traversal can be cut and its computation avoided, depending on the
     location of the frozen bits as introduced in
-    Section~\ref{sec:ctx_polar_simplified_decoders},
+    Section~\ref{sec:ctx_polar_simplified_decoders};
   \item The decoder software implementation can be specialized for a particular
     configuration of frozen bits, as frozen bit locations do not change for many
     frames,
   \item Similarly, multiple frames can be decoded concurrently, with parallel or
     vector code. Such inter-frame optimizations can increase the decoding
     throughput. However these optimizations are obtained at the expense of
-    latency, which is also one important metric of the application
+    latency, which is also an important metric of the application
     (cf.~\cite{LeGal2015a}).
 \end{itemize}
 
@@ -870,10 +871,9 @@ Beside optimizations coming from the computations in the tree, several
 representations of LLR may lead to different error correction performance. A LLR
 for instance can be represented by floats or integers (fixed point
 representation). Moreover, LLRs from different frames can be packed together.
-
 Finally, usual code optimizations, such as unrolling or inlining can also be
 explored. For instance, the recursive structure of the tree computation can be
-fully flatten, depending on the size of the code length.
+fully flattened, depending on the size of the code length.
 
 \subsection{Tree Pruning Strategy}
 \label{sec:opt_polar_tree_pruning}
@@ -914,7 +914,7 @@ even more specialized versions.
 
 Patterns on the first two rows result in cutting away both children. For
 instance, the first rule, cuts the two frozen bit leaf children of the parent
-node, and tag it as \verb|R0| (blue node). Processing is completely skipped on
+node, and tags it as \verb|R0| (blue node). Processing is completely skipped on
 this node since the values of the bits are unconditionally known. The \verb|REP|
 rules match subtrees where only the rightmost leaf is black, the others being
 frozen bits. In this case, the whole subtree is cut and replaced by a more
@@ -959,7 +959,7 @@ $N = 2048$ and multiple code rates, for intra-frame and inter-frame
 vectorization, respectively. The purpose of the plots is to show that no single
 rewriting rule dominates for each code rate. They also show that the respective
 impact of each rule may vary a lot from rate to rate, making the case for the
-flexible, extensible proposed architecture. Indeed, the rewriting rule set can
+flexible, extensible architecture proposed. Indeed, the rewriting rule set can
 also be enriched with rules for specific ranges of code rate. For instance, the
 rule \emph{Single Parity Check} (\verb|SPC|) has been applied with different
 level limits for 9/10 code rate, where it has a significant impact and may
@@ -1027,7 +1027,7 @@ If $L=32$, the SNR losses are more substantial (up to $0.5$ dB), whereas
 throughput improvements are approximately the same. Besides this observation,
 Figure~\ref{plot:opt_polar_scl_spc} shows how the proposed decoder flexibility
 enables to optimize easily the decoder tree pruning, both for software
-implementations or for hardware implementations in which tree pruning can also
+implementations and for hardware implementations in which tree pruning can also
 be applied~\cite{Lin2014}.
 
 \subsection{Polar Application Programming Interface}
@@ -1048,7 +1048,7 @@ functions.
 Reducing the decoding time with SIMD instructions is a classical technique in
 former software polar decoder implementations. The proposed polar decoders are
 based on specific building blocks included from the Polar
-API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast and optimized
+API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast optimized
 implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
 functions. Listing~\ref{lst:opt_polar_api} details the SIMD implementation of
 these functions. These implementations are based on \MIPP. Consequently, the
@@ -1081,8 +1081,8 @@ intra-frame strategy exploits SIMD units without increasing the decoder latency.
 Since it still processes frames one at a time, it preserves fine grain
 frame pipelining. However, at leaf nodes and nearby, too few elements remain to
 fill SIMD units. For instance, 4-way SIMD registers are fully filled only at
-level 2 and above. Thus, intra-frame strategy is only effective on trees that
-can be heavily pruned from these numerous scalar nodes. Even if the tree is
+level 2 and above. Thus, the intra-frame strategy is only effective on trees
+that can be heavily pruned from these numerous scalar nodes. Even if the tree is
 heavily pruned some nodes can't be fully vectorized in the lower layers. In this
 context, the building blocks of the polar API enable to automatically switch
 from SIMD to sequential implementations.
@@ -1090,11 +1090,11 @@ from SIMD to sequential implementations.
 \subsection{Successive Cancellation Decoders}
 \label{sec:opt_polar_sc}
 
-\subsubsection{Dynamic implementation}
+\subsubsection{Dynamic Implementation}
 
 The concept of generic and flexible decoder is defined in
 Section~\ref{sec:ctx_polar_generic_flexible}. In this section, if a decoder is
-generic and flexible, it is called \emph{dynamic} (as opposed as
+generic and flexible, it is called \emph{dynamic} (as opposed to
 \emph{generated} or \emph{unrolled} decoders). The proposed dynamic SSC decoder
 directly uses the polar API introduced in Section~\ref{sec:opt_polar_api}. The
 same source code is able to accommodate with different frozen bit layouts and
@@ -1105,9 +1105,9 @@ the best of our knowledge) to support both multi-precisions (32-bit, 16-bit and
 The main challenge of the dynamic SSC decoder is to maintain a good performance
 level at the bottom of the tree. Near the leaves, the decoder spends a
 non-negligible part of the time in recursive function calls and short loop
-executions. In Listing~\ref{lst:opt_polar_api}, the loops lines 6,15,23 cannot
+executions. In Listing~\ref{lst:opt_polar_api}, the loops lines 6, 15, 23 cannot
 be unrolled by the compiler because \verb|n_elmts| is a runtime parameter. Thus,
-a useless overhead is due to the loop condition evaluation. To overcome this
+an useless overhead is due to the loop condition evaluation. To overcome this
 problem, we wrote a SSC sub-decoder with the template meta-programming
 technique. The idea is to fully unroll the recursive calls and to statically
 give the number of elements in the loops lines 6,15,23. To this purpose, a
@@ -1117,8 +1117,8 @@ is that the \verb|n_elmts| parameter has been replaced by the static
 \verb|N_ELMTS| parameter in the loops. Then, the compiler is able to unroll
 the loops. The size of the unrolled sub-tree can be adjusted from a static
 parameter in the source code. We found that a sub-tree with a depth of 6 gives
-a good level of performance. Increasing the size of the sub-tree more than 6 did
-not give any performance gains in our tests. As a consequence, the proposed
+a good level of performance. Increasing the size of the sub-tree to more than 6
+did not give any performance gains in our tests. As a consequence, the proposed
 flexible decoder cannot decode polar codes smaller than $N = 2^6 = 64$. This is
 acceptable knowing that the error-rate performance of the SSC decoder is good
 for large frame sizes.
@@ -1133,8 +1133,8 @@ the next section proposes to fully unroll/generate the SSC decoder.
 
 The tree structure at the heart of SC decoders is fully determined by the
 parameters of a given polar code instance: the code size, the code rate ($R = K
-/ N$), position of the frozen bits. All these parameters are  statically known
-at compile time. Thus, the recursive tree traversal code structure and the
+/ N$), the position of the frozen bits. All these parameters are  statically
+known at compile time. Thus, the recursive tree traversal code structure and the
 corresponding tree data structure are challenging to vectorize and to optimize
 for a compiler. Our Polar ECC Decoder Generation Environment (P-EDGE) builds on
 this property to provide a general framework for polar decoder design,
@@ -1155,13 +1155,13 @@ description thus results from two distinct parts:
     Starting from the naive, recursive expression of the computational tree, we
     apply successively cuts and specializations on the tree. They are described
     through a set of rewriting rules, that can be customized according to the
-    specificities of the decoder and to the constraints in term of code size for
-    instance (c.f. Section~\ref{sec:opt_polar_pattern_matching}).
+    specificities of the decoder and to the constraints in terms of code size
+    for instance (c.f. Section~\ref{sec:opt_polar_pattern_matching}).
   \item A library of architecture dependent \emph{elementary computation
     building blocks}, corresponding to the implementation variants of the $f$,
     $g$ and $h$ functions (fixed- or floating-point versions, scalar or vector
     versions, ...). These blocks do not depend on the frozen bits location and
-    can therefore be used by any specialized skeleton (c.f.
+    can therefore be used by any specialized skeleton (see
     Section~\ref{sec:opt_polar_api}).
 \end{itemize}
 
@@ -1181,7 +1181,7 @@ highly optimized routines.
 
 The decoder generator first builds the binary tree structure from the pattern
 matching algorithm presented in Section~\ref{sec:opt_polar_pattern_matching}.
-Then, once the tree has been fully specialized, the P-EDGE generator perform a
+Then, once the tree has been fully specialized, the P-EDGE generator performs a
 second tree traversal pass to output the resulting decoder. An example of such a
 tree specialization process together with the generator output is shown in
 Fig.~\ref{fig:ctx_polar_tree_pruning_example} and in
@@ -1221,7 +1221,7 @@ loops at compile time.
 
 Decoders are generated as straight-line code (no recursive calls), with all node
 computations put in sequence. This improves performance for small to medium
-codeword size, up to the point where the compiled binary exceeds the L1I cache
+codeword sizes, up to the point where the compiled binary exceeds the L1I cache
 size (this is also reported in~\cite{Giard2016b}). We mitigated this issue by
 reducing decoder binary sizes using two compression techniques: 1) in the
 generated code, we moved the buffer offsets from template arguments to function
@@ -1342,7 +1342,7 @@ thanks to SIMD instructions in the way described in~\cite{Furtak2007}. According
 to our experimentations, Schreier's algorithm is the most efficient compared to
 parallelized Batcher's merge exchange, partial quick-sort or heap-sort
 implemented in the \Cxx standard library in the case of \verb|R1| nodes. At the
-end, we chose not to apply the SIMD implementation of the Schreier's algorithm
+end, we chose not to apply the SIMD implementation of Schreier's algorithm
 because: 1) the speedup was negligible, 2) in 8-bit fixed-point, only
 $N \leq 256$ codewords can be considered.
 
@@ -1379,7 +1379,7 @@ sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
 advantage of pointers is that when a path is duplicated, in the
 ``$\updatePaths()$'' sub-routine of Alg.~\ref{alg:ctx_polar_scl_decoder}, the
 partial sums are not copied. Actually, they can be shared between paths thanks
-to the use of pointers. This method limits the number of memory transactions.
+to the use of pointers. This method limits the number of memory operations.
 Unfortunately, it is not possible to take advantage of the memory space
 reduction. Indeed, the partial sums have to be stored on $L(2N -1)$ bits. There
 is an alternative to this mechanism. If a logical path is statically assigned to
@@ -1403,31 +1403,30 @@ extra memory space requirement cause the SSCL$_{\texttt{cpy}}$ to be more
 efficient than the SSCL$_{\texttt{ptr}}$ for short and medium code lengths, as
 shown in Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr}. The 32-bit version uses
 floating-point LLRs, whereas 16-bit and 8-bit versions are in fixed-point.
-Notice that in this work, each bit of the partial sums is stored on an 8-bit,
+Notice that in this work, each bit of the partial sums is stored as an 8-bit,
 16-bit or 32-bit number accordingly to the LLR data type. The code rate $R$ is
 equal to $1/2$. The throughput of the SSCL$_{\texttt{cpy}}$ version is higher
 for $N \leq 8192$ whereas the SSCL$_{\texttt{ptr}}$ version is more efficient
-for higher values of $N$. Although it does not appear in
+for higher values of $N$. Although this does not appear in
 Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr}, experiments showed that the lower
 $L$ is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
 SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr} also
 illustrates the impact of the representation of partial sums. For very high
-values of $N$, 8-bit fixed point representation takes advantage of fewer cache
-misses. As the decoding performance improvements of the SCL algorithm are not
-very significant compared to the SC algorithm for long polar codes,
+values of $N$, the 8-bit fixed point representation takes advantage of fewer
+cache misses. As the decoding performance improvements of the SCL algorithm are
+not very significant compared to the SC algorithm for long polar codes,
 SSCL$_{\texttt{cpy}}$ is the appropriate solution in most practical cases.
 
 In our decoder description, LLRs are managed with pointers, as it is the case in
-other software implementations of the
-literature~\cite{Sarkis2014b,Sarkis2016,Shen2016}. We tried to remove the
-pointer handling as for the partial sums, but it appeared that it was not
-beneficial in any use case.
+other software implementations of the literature~\cite{Sarkis2014b,Sarkis2016,
+Shen2016}. We tried to remove the pointer handling as for the partial sums, but
+this was not beneficial in any use case.
 
 \subsubsection{Memory Footprint}
 
 \begin{table}[htp]
   \centering
-  \caption{Polar decoders memory footprint (in bytes).}
+  \caption{Polar decoders memory complexity.}
   \label{tab:opt_polar_scl_memory_footprint}
   %{\small
    \begin{tabular}{r r}
@@ -1442,7 +1441,7 @@ beneficial in any use case.
   %}
 \end{table}
 
-The exact memory footprint of the SSCl decoders is hard to estimate as there are
+The exact memory footprint of the SSCL decoders is hard to estimate as there are
 many small buffers related to the implementation. However, the memory footprint
 is mainly driven by the LLRs ($\bm{\lambda}$) and the partial sums
 ($\bm{\hat{s}}$) as they linearly depend on $LN$. The buffers related to the
@@ -1465,21 +1464,11 @@ a part of the flexibility for higher throughput and lower latency performance.
 
 \section{Turbo Decoders}
 
-% \begin{itemize}
-%   \item \cmark~Virer la Figure~\ref{fig:turbo_reordering_process_inter_simd},
-%     elle doit aller dans la Section~\ref{sec:opt_vec_inter} à terme
-%   \item \xmark~montrer un peu de code du Turbo avec le déroulage du treillis LTE
-%   \item \xmark~introduire la version version vectorisée inter/intra-frame,
-%     expliquer pourquoi c'est intéressant
-% \end{itemize}
-
-% \subsection{Intra-frame versus Inter-frame Parallelism}
-
 A Turbo decoder is in charge of decoding a large set of frames. Two strategies
 are then possible to speedup the decoding process. i)
-\textit{Intra-frame parallelism} : the decoder exploits the parallelism within
+\textit{intra-frame parallelism}: the decoder exploits the parallelism within
 the turbo-decoding process by executing concurrent tasks during
-the decoding of one frame. ii) \textit{inter-frame parallelism} : several frames
+the decoding of one frame. ii) \textit{inter-frame parallelism}: several frames
 are decoded simultaneously.
 
 In the perspective of a hardware implementation, the intra-frame approach is
@@ -1523,7 +1512,7 @@ The contribution of this work is to propose an efficient mapping of multiple
 frames on the CPU SIMD units (inter-frame strategy): the decoding of $F$ frames
 is vectorized. Before the decoding process can be launched, this new approach
 requires to: (a) buffer a set of $F$ frames and (b) reorder the input LLRs in
-order to make the SIMDization efficient with memory aligned transactions (see
+order to make the SIMDization efficient with memory aligned operations (see
 Section~\ref{sec:opt_vec_inter}). Similarly, a reversed-reordering step
 has to be performed at the end of the turbo decoding. These reordering
 operations are expensive but they make the complete decoding process very
@@ -1531,7 +1520,7 @@ regular and efficient for SIMD parallelization. Moreover, reordering is applied
 only once, independently of the number of decoding iterations.
 
 \begin{algorithm}
-  \caption{Loop fusion BCJR implementation}
+  \caption{Loop fusion BCJR implementation.}
   \label{alg:opt_turbo_bcjr_loop_fusion}
 
   % \small
@@ -1574,22 +1563,21 @@ optimization. This makes possible the scalar promotion of $\beta_j$ (no longer
 an array). Indeed, it can be directly reused from the CPU registers. In this
 version, the SIMD are always stressed.
 
-On a multicore processor, each core decodes $F$ frames using its own SIMD unit.
+On a multi-core processor, each core decodes $F$ frames using its own SIMD unit.
 As $T$ threads are activated, a total of $F\times T$ frames are therefore
 decoded simultaneously with the inter-frame strategy. Theoretically, this SPMD
-parallelization strategy provides an acceleration up to a factor $T$, with $T$
+parallelization strategy provides an acceleration up to a factor~$T$, with $T$
 cores. Large memory footprint, exceeding L3 cache capacity may reduce the
 effective speedup, as shown in Section~\ref{sec:eval_turbo}.
 
 \subsection{Software Implementation of the Turbo Decoder}
 \label{sec:opt_turbo_implem}
 
-%The presented decoder implementation is available in the \AFFECT software.
-The use of \Cxx templates associated to our generic SIMD library (\MIPP) enables
-the same source code to be compiled using different formats (32-bit
-\verb|float|, 16-bit \verb|short|, and 8-bit \verb|char|) and different SIMD
-instructions (SSE, AVX and NEON). It provides possible trade-offs between
-SIMDization, throughput and error-correction performance.
+% The use of \Cxx templates associated to our generic SIMD library (\MIPP) enables
+% the same source code to be compiled using different formats (32-bit
+% \verb|float|, 16-bit \verb|short|, and 8-bit \verb|char|) and different SIMD
+% instructions (SSE, AVX and NEON). It provides possible trade-offs between
+% SIMDization, throughput and error-correction performance.
 
 \subsubsection{Fixed-point Representation}
 
@@ -1597,12 +1585,12 @@ Nowadays on x86 CPUs, there are large SIMD registers: SSE/NEON are 128 bits
 wide and AVX are 256 bits wide. The number of elements that can be vectorized
 depends on the SIMD length and on the data format:
 $p_\text{SIMD} = \sizeof(\text{SIMD}) / \sizeof(\text{data})$. So, the key for a
-large parallelism is to work on short data.
+wide parallelism is to work on short data.
 
 During the turbo-decoding process, the extrinsic values grow at each iteration.
 It is then necessary for internal LLRs to have a larger dynamic than the channel
-information. Depending on data format, 16-bit or 8-bit, the quantization used in
-the decoder is $Q_{16,3}$ or $Q_{8,2}$, respectively.
+information. Depending on the data format, 16-bit or 8-bit, the quantization
+used in the decoder is $Q_{16,3}$ or $Q_{8,2}$, respectively.
 
 \subsubsection{Memory Allocations}
 
@@ -1615,26 +1603,25 @@ $\bm{L_{a:1 \rightarrow 2}}$ in $\mathcal{I}$ and
 $\bm{L_{a:2 \rightarrow 1}}$ in $\mathcal{N}$. Inside the BCJR decoding and per
 trellis section, two $\gamma_{i}$ and eight $\alpha_{j}$ metrics are stored.
 Thanks to the loop fusion optimization, the eight $\beta_j$ metrics are not
-stored in the global memory. In the proposed implementation $i \in \{0,1\}$ and
-$j \in \{0,1,2,3,4,5,6,7\}$. Notice that all those previously-mentioned vectors
-are $K$-bit wide and are duplicated $F\times T$ times because of the inter-frame
-strategy. The memory footprint in bytes is approximatively equal to:
-$18 \times K \times \sizeof(\text{data}) \times F \times T$ (where
-$F = p_\text{SIMD}$). The interleaving and deinterleaving lookup tables have
-been neglected in this model.
+stored in memory. In the proposed implementation $i \in \{0,1\}$ and $j \in
+\{0,1,2,3,4,5,6,7\}$. Notice that all those previously-mentioned vectors are
+$K$-bit wide and are duplicated $F\times T$ times because of the inter-frame
+strategy. The memory footprint in bytes is approximately: $18 \times K \times
+\sizeof(\text{data}) \times F \times T$ (where $F = p_\text{SIMD}$). The
+interleaving and deinterleaving lookup tables have been neglected in this model.
 %We did not consider the 2 lookup tables (interleaving and deinterleaving) in
 %this model as they are not duplicated $M\times T$ times.
 
 \subsubsection{Forward Trellis Traversal}
 
-The objective is to reduce the number of loads/stores, performing the arithmetic
-computations (\verb|add| and \verb|max|) inside registers. The max-log-MAP
-(ML-MAP) algorithm only stresses the integer pipeline of the CPU. This kind of
-operations takes only one cycle to execute when the latency is also very small
-(1 cycle too). In contrast, a load/store can take a larger number of cycles
-depending on where the current value is loaded/stored in the memory hierarchy.
-Using data directly from the registers is cost-free but loading/storing it from
-the L1/L2/L3 cache can take up to 30 cycles (at worst).
+The objective is to reduce the number of loads/stores by performing the
+arithmetic computations (\verb|add| and \verb|max|) inside registers. The
+max-log-MAP (ML-MAP) algorithm only stresses the integer pipeline of the CPU.
+This kind of operations takes only one cycle to execute when the latency is also
+very small (1 cycle too). In contrast, a load/store can take a larger number of
+cycles depending on where the current value is loaded/stored in the memory
+hierarchy. Using data directly from the registers is cost-free but
+loading/storing it from the L1/L2/L3 cache can take up to 30 cycles (at worst).
 
 Per trellis section $k$, the two $\gamma_i^k$ metrics are computed from the
 systematic and the parity information. These two $\gamma_i^k$ are directly
@@ -1661,8 +1648,7 @@ metrics are loaded from the memory. The $\alpha_j^k$, $\beta_j^k$ and
 $\gamma_i^k$ metrics are used to determine the \textit{a posteriori} and the
 extrinsic LLRs. In the next trellis section ($k-1$) the previous $\beta_j^k$
 metrics are directly reused from registers in order to compute the next
-$\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are then never stored in the
-memory.
+$\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are never stored in memory.
 
 \subsubsection{Loop Unrolling}
 
@@ -1681,15 +1667,15 @@ memory.
 The computations of the eight $\alpha^k_j$ states can be implemented with
 a generic \verb|trellis| structure as shown in
 Listing~\ref{lst:opt_turbo_alpha_generic}. The main problem is that the loop
-line 1 can't be unrolled by the compiler and there is extra memory accesses (or
+line 1 cannot be unrolled by the compiler and there is extra memory accesses (or
 indirections) due to the \verb|trellis| vector. Knowing precisely the structure
 of the trellis in the LTE standard (c.f. Fig.~\ref{fig:ctx_turbo_encoder_lte}),
 it is possible to fully unroll the loop. The unrolled description is shown in
 Listing~\ref{lst:opt_turbo_alpha_unrolled}. This version is adopted in
-the evaluation section as it leads to significant throughput improvements.
-The same optimization is also applied to the computation of the $\beta^k_j$
-states. One can note that the source code examples are simplified: \verb|gamma|
-represents the good $\gamma^k_i$.
+the Section~\ref{sec:eval_turbo} as it leads to significant throughput
+improvements. The same optimization is also applied to the computation of the
+$\beta^k_j$ states. One can note that the source code examples are simplified:
+\verb|gamma| represents the corresponding $\gamma^k_i$.
 
 In this section, we presented an high throughput implementation of the turbo
 decoding algorithm. This implementation largely relies on the inter-frame SIMD
@@ -1732,7 +1718,7 @@ a stride of a single floating-point number in each element makes it easier for
 the processor to have aligned and contiguous accesses to the memory through SIMD
 ISA. SIMD instructions help to reduce the total number of mispredicted branches
 in the algorithm. Contiguous accesses to the L1 cache are performed by chunks of
-128-bit, 256-bit or 512-bit. It reduces the number of iterations in the
+128-bit, 256-bit or 512-bit. This reduces the number of iterations in the
 \verb|for|-loops and consequently it reduces the number of branches. On the
 other hand, for a vector of sixty four 32-bit floating-point numbers, 64
 iterations are necessary in the scalar mode, while only 16, 8 or 4 iterations
@@ -1748,11 +1734,11 @@ AVX-512 (or KNCI) ISAs, respectively.
 % simultaneously.
 The SIMD instructions provide high-performance loads and stores to the cache
 memory due to data vectorization. Flattening matrices to vectors is a
-prerequisite to enable SIMD contiguous accesses to the memory. In the presented
-work the SIMD operations are made on 32-bit floating-point real numbers
-(\verb|T| = \verb|float|). The proposed implementations are working on
-$F = J = 6$ frames. The $F$ frames are not independent and so we consider that
-the SIMD strategy is similar to the intra-frame SIMD strategy presented in
+prerequisite to enable SIMD contiguous accesses to memory. In the presented work
+the SIMD operations are made on 32-bit floating-point real numbers (\verb|T| =
+\verb|float|). The proposed implementations are working on $F = J = 6$ frames.
+The $F$ frames are not independent so we consider that the SIMD strategy is
+similar to the intra-frame SIMD strategy presented in
 Section~\ref{sec:opt_vec_intra}.
 % Vectorized
 % instructions such as AVX are accessible in \Cxx through intrinsic
@@ -1790,19 +1776,19 @@ beliefs at each user in \eqref{eq:ctx_scma_10}.
 
 Equations~\eqref{eq:ctx_scma_5} use a complex norm function $||.||$. It can be
 optimized by using SIMD instructions. There are two ways to perform this
-computation (depending on the initial data layout).
+computation depending on the initial data layout.
 Fig.~\ref{fig:opt_scma_simd_norm_aos} depicts how to implement the norm function
-with an Array of Structures (AoS) for complex numbers. In this data layer, the
-complex numbers are represented as two consecutive floating-point numbers. The
-implementation with AoS uses five \MIPP functions: two \verb|mipp::load|, one
-\verb|mipp::deinterleave|, one \verb|mipp::norm| and one \verb|mipp::store|.
-The \MIPP loads and stores are equivalent to a real SIMD move instructions.
-The \verb|mipp::deinterleave| operation can contain from 4 to 12 real assembly
-instructions. It depends on the data type \verb|T| and the SIMD ISA. The
-\verb|mipp::norm| operation performs 2 multiplications and one addition.
-Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the complex
-norm using a Structure of Array (SoA) data layout. This implementation does
-not require the \MIPP \verb|mipp::deinterleave| operation anymore. The real
+with an Array of Structures (AoS) layout for complex numbers. In this data
+layer, the complex numbers are represented as two consecutive floating-point
+numbers. The implementation with AoS uses five \MIPP functions: two
+\verb|mipp::load|, one \verb|mipp::deinterleave|, one \verb|mipp::norm| and one
+\verb|mipp::store|. The \MIPP loads and stores are equivalent to real SIMD
+move instructions. The \verb|mipp::deinterleave| operation can contain from 4 to
+12 real assembly instructions. It depends on the data type \verb|T| and the SIMD
+ISA. The \verb|mipp::norm| operation performs two multiplications and one
+addition. Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the
+complex norm using a Structure of Array (SoA) data layout. This implementation
+does not require the \MIPP \verb|mipp::deinterleave| operation. The real
 and imaginary parts of the complex numbers are initially separated in memory.
 
 Our experiments demonstrated that the SoA method leads to higher performance
@@ -1821,15 +1807,14 @@ longer. The SoA data layout is used for evaluations.
   \label{fig:opt_scma_simd_exp}
 \end{figure}
 
-To speedup the computational time of the exponentials used in
-\eqref{eq:ctx_scma_7}, the \verb|mipp::exp| math function has been used. The
-flattened complex and normalized numbers are calculated as shown in
-Fig.~\ref{fig:opt_scma_simd_norm} to produce the preliminary values used to
-compute the probabilities. Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full
-process on a vector of eight floating-point numbers ($p_\text{SIMD} = 8$). First
-the values are loaded into the SIMD registers. Then they are multiplied by
-$-1/2\sigma^2$. Finally the exponential function is performed according to
-\eqref{eq:ctx_scma_7}.
+To speedup the computation of the exponentials used in \eqref{eq:ctx_scma_7},
+the \verb|mipp::exp| math function is used. The flattened complex and normalized
+numbers are calculated as shown in Fig.~\ref{fig:opt_scma_simd_norm} to produce
+the preliminary values used to compute the probabilities.
+Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full process on a vector of
+eight floating-point numbers ($p_\text{SIMD} = 8$). First the values are loaded
+into SIMD registers. Then they are multiplied by $-1/2\sigma^2$. Finally the
+exponential function is performed according to \eqref{eq:ctx_scma_7}.
 
 \paragraph{Exponential Approximation with the Estimated-MPA algorithm}
 
@@ -1858,9 +1843,9 @@ Fig.~\ref{fig:opt_scma_simd_final_guess} shows the computation of final beliefs
 for user 3 (this is illustrated in Fig.~\ref{fig:ctx_scma_dec_alg} (III)).
 There are four messages from a resource to a user containing the probabilities
 of four different codewords. If $p_\text{SIMD} > 4$ then some elements of the
-SIMD register are not used. The memory layout has been adapted and the
-well-known padding technique has been applied. By this way, the read and written
-extra-elements do not produce segmentation fault errors.
+SIMD register are not used. The data layout has been adapted and the memory
+allocation is padded. By this way, the read and written extra-elements do not
+produce segmentation fault errors.
 
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}
@@ -1868,15 +1853,15 @@ extra-elements do not produce segmentation fault errors.
 The finite precision of floating-point calculations induces losses in the
 results. Thus, technical standards such as IEEE 754 define rounding rules,
 precision of calculations, exception handling and underflow behavior. However,
-the MPA delivers approaching bit error rate results with less precise
+the MPA delivers the same bit error rate results with less precise
 floating-point models. For instance, in the GNU compiler, \verb|-Ofast| is a
 high-level compiler option which includes fast math libraries to handle
 floating-point calculations (\verb|-ffast-math|). The compiler uses various
 mathematical simplifications as explained in~\cite{Gccfp2018}. It also uses
-approximated libraries for the division and the square root functions. The
-compiler also forces the value to zero in the case of an underflow. Using
-\verb|-Ofast| can improve the throughput of the MPA algorithm as will be shown
-in Section~\ref{sec:eval_scma}.
+approximated tables for the division and the square root functions. The compiler
+also forces the value to zero in the case of an underflow. Using \verb|-Ofast|
+can improve the throughput of the MPA algorithm as will be shown in
+Section~\ref{sec:eval_scma}.
 
 In this section, we proposed a generic intra-frame SIMD software implementation
 of the SCMA MPA class of algorithms. The vectorized sub-parts of the algorithms
@@ -1888,43 +1873,46 @@ the various message passing algorithms.
 \section{Discussion}
 
 In this chapter, generic strategies for efficient algorithm implementations on
-CPUs are presented first. The vectorization in a main key for performance
+CPUs are presented first. The vectorization is a main key for performance
 efficiency on current CPUs. Thus, a main contribution in this chapter is the
 proposition of \MIPP: a wrapper for the SIMD instructions. The idea is to
 abstract data types and SIMD ISAs in order to propose ``universal'' and
 efficient implementations of digital communication receiver algorithms. We show
-that \MIPP is almost as efficient as the specific intrinsic functions (or
-assembly code) and it is able to operate on the floating-point representation as
+that \MIPP introduces little overhead over specific intrinsic functions (or
+assembly code) and is able to operate on floating-point representations as
 well as fixed-point ones. For digital communication receiver algorithms,
-fixed-point representations are very interesting as they result in an increased
-SIMD parallelism.
+fixed-point representations are very interesting for channel coding algorithms
+because they offer increased SIMD widths, with moderate impact on the decoding
+performance.
 
 In a second part, two main vectorization strategies are explicitly defined and
 presented. The intra-frame SIMD strategy operates on a single frame relying
-on the algorithm intrinsic parallelism while the inter-frame SIMD strategy
+on the algorithm inherent parallelism while the inter-frame SIMD strategy
 operates on multiple frames at the same time. The intra-SIMD can increase the
 throughput as well as the latency. On the contrary, the inter-SIMD does not
 improve the latency but comes with a potentially higher SIMD efficiency and can
 lead to very high throughputs.
 
-Then, two time consuming processing blocks of functional simulations are
-studied: the channel and the quantizer. Both algorithms are implemented with
-\MIPP by the mean of the intra-frame SIMD strategy. It results in high
-performance implementations that unlocks fast functional simulations.
+Then, two expensive blocks of functional simulations are studied: the channel
+and the quantizer. Both algorithms are implemented with \MIPP by the mean of the
+intra-frame SIMD strategy. It results in high performance implementations to
+deliver fast functional simulations.
 
-The four last sections focus on the efficient software implementations of the
-algorithms presented in Chapter~\ref{chap:ctx} (LDPC, polar, turbo and SCMA
-decoders). The LDPC BP decoders, the polar SC decoders and the turbo decoder are
-compatible with the inter-frame SIMD strategy while the polar SC/SCL decoders
-and the SCMA decoders are compatible with the intra-frame SIMD strategy.
-Depending on the code families, we focus on different constraints. The LDPC BP
-decoders have been implemented to support many variants and thus to maximize the
-flexibility at the cost of lower throughputs and higher latencies compared to
-other works. In the polar decoders, flexibility as well as very aggressive
-optimizations are considered, combined and opposed. The turbo decoder focuses on
-achieving the highest possible throughputs and some specializations are made for
-the LTE standard. Finally the SCMA decoder implementation tries to propose a
-compromise between high throughputs and low latencies.
+The four last sections focus on the design of efficient software implementations
+of the algorithms presented in Chapter~\ref{chap:ctx} (LDPC, polar, turbo and
+SCMA decoders). The LDPC BP decoders, the polar SC decoders and the turbo
+decoder are compatible with the inter-frame SIMD strategy while the polar SC/SCL
+decoders and the SCMA decoders are compatible with the intra-frame SIMD
+strategy. Depending on the code families, we focus on different constraints. The
+LDPC BP decoders have been implemented to support many variants and thus to
+maximize the flexibility at the cost of lower throughputs and higher latencies
+compared to other works. This choice enables to evaluate the decoding
+performance of many algorithmic combinations. In the polar decoders, flexibility
+as well as very aggressive optimizations are considered, combined and compared.
+The turbo decoder focuses on achieving the highest possible throughputs and some
+specializations are made for the LTE standard. Finally the SCMA decoder
+implementation tries to propose a compromise between high throughputs and low
+latencies.
 
 The optimizations performed in the proposed implementations are compatible with
 a large set of CPUs, compilers, and data types. This portability is one of our
@@ -1939,17 +1927,21 @@ size of the SIMD registers, it becomes difficult to achieve high efficiency
 using the intra-frame SIMD strategy. However, the reduced latencies are still
 very interesting, especially for the SDR and the Cloud-RAN needs. Then, it could
 be a good idea to combine both the intra- and inter-frame SIMD strategies. The
-intra-SIMD will absorb as much as possible the algorithm intrinsic parallelism
-while the inter-SIMD will fulfill the empty elements in the SIMD registers.
-The inter-SIMD has also its limits, when too many big frames are processed in
-parallel, the amount of required memory linearly increases. This leads to reduce
-throughput efficiency as it will be show in Chapter~\ref{chap:eval}. All the
-more reason to combine intra-/inter-SIMD. Additionally, for some decoding
-algorithms, it is not possible to maintain optimal error-rate performance with
-too aggressive fixed-point representations (8-bit). It could be interesting to
-consider mixed-precision in these specific cases.
+intra-SIMD will absorb as much as possible the algorithm inherent parallelism
+while the inter-SIMD will fill the empty elements in the SIMD registers. The
+inter-SIMD also has its limits, when large frames are processed in parallel, the
+amount of required memory linearly increases with the frame size. This leads to
+reduced throughput efficiency as it will be shown in Chapter~\ref{chap:eval}.
+Additionally, for some decoding algorithms, it is not possible to maintain
+optimal error-rate performance with too short fixed-point representations
+(8-bit). It could be interesting to consider mixed-precision in these specific
+cases.
 
-In the next chapter, \AFFECT, the toolbox that regroups all the proposed
-implementations, is introduced. This is followed by the Chapter~\ref{chap:eval}
-where the proposed implementations are evaluated and compared with the
-state-of-the-art.
+% In the next chapter, \AFFECT, the toolbox that regroups all the proposed
+% implementations, is introduced. This is followed by the Chapter~\ref{chap:eval}
+% where the proposed implementations are evaluated and compared with the
+% state-of-the-art.
+
+The next chapter introduces \AFFECT, the toolbox we designed to integrate all
+the proposed implementations in a consistent, modular and extensible forward
+error correction framework.
