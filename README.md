@@ -1,4 +1,4 @@
-# Adrien Cassagne Ph.D. Thesis
+# Adrien CASSAGNE's Ph.D. Thesis
 
 ## Prerequisites
 
