@@ -69,22 +69,24 @@ noise and distortions ($\bm{y}$). On the receiver side, the components perform
 the inverse operations to retrieve the message $\bm{\hat{u}}$ produced by the
 source.
 
-In channel coding, also known as \emph{forward error correction} (FEC), $K$
-information bits  are encoded in the transmitter. It results in a codeword
-$\bm{c}$ of $N$ bits. $P = N - K$ is the number of redundancy bits added as
-additional information and $R = K/N$ is the code rate. The higher the code rate
-$R$ is, the lower the number of bits $P$ is. The performance of this scheme is
-measured by estimating the residual error rate at the sink. It is possible to
-observe two different rates: 1) the Bit Error Rate (BER); 2) the Frame Error
-Rate (FER). The BER is calculated considering the $K$ information bits
-independently, for instance a $10^{-3}$ BER means that there is an average of
-one binary error per thousand message bits transmitted. The FER is computed
-considering the entire frame, if there is one, two or more wrong bits in the
-current frame, it will be counted as one error frame. A $10^{-2}$ FER means that
-there is an average of one frame error per hundred frame transmitted. These
-rates depend on many factors: the noise of the channel, the modulation
-type, the code type, the code rate $R$, etc. The lower the bit and frame error
-rates are, the higher the correction power of the system is.
+In the next sections and chapters, we will focus on channel coding because it
+comes with algorithms that have the highest computational complexity in the
+digital communication systems. In channel coding, also known as \emph{forward
+error correction} (FEC), $K$ information bits  are encoded in the transmitter.
+It results in a codeword $\bm{c}$ of $N$ bits. $P = N - K$ is the number of
+redundancy bits added as additional information and $R = K/N$ is the code rate.
+The higher the code rate $R$ is, the lower the number of bits $P$ is. The
+performance of this scheme is measured by estimating the residual error rate at
+the sink. It is possible to observe two different rates: 1) the Bit Error Rate
+(BER); 2) the Frame Error Rate (FER). The BER is calculated considering the $K$
+information bits independently, for instance a $10^{-3}$ BER means that there is
+an average of one binary error per thousand information bits transmitted. The
+FER is computed considering the entire frame, if there is one, two or more wrong
+bits in the current frame, it will be counted as one erroneous frame. A
+$10^{-2}$ FER means that there is an average of one frame error per hundred
+frame transmitted. These rates depend on many factors: the noise of the channel,
+the modulation type, the code type, the code rate $R$, etc. The lower the bit
+and frame error rates are, the higher the correction power of the system is.
 
 \section{Channel Model}
 \label{sec:ctx_awgn}
@@ -109,7 +111,7 @@ and of variance $\sigma^2 = N_0 / 2$. So, we have $N_{chn} \simeq \mathcal{N}(0,
 P(y_i|x_i) = \frac{1}{\sqrt{2\pi}\sigma}\exp{\Big(-\frac{(y_i-x_i)^2}{2\sigma^2}\Big)}.
 \end{equation}
 
-To estimate the correction power of a system it is very common to vary the
+To estimate the correction power of a channel code it is very common to vary the
 Signal-to-Noise Ratio (SNR). On the AWGN channel the SNR is generally given by
 $E_b/N_0$ (in dB). $E_b$ corresponds to the average energy per information bit.
 It can also be given by $E_s/N_0$ (in dB) where $E_s$ corresponds to the average
@@ -133,7 +135,7 @@ transports more information than the channel capacity. From this capacity it is
 possible to deduce Shannon's limit. This limit is the asymptotic SNR in
 $E_b/N_0$ (dB) which cannot be improved with any channel code. When $R$ tends
 towards zero it can be shown that Shannon's limit is $-1.59$ dB. This means
-that, for an AWGN channel, no system can reliably transmit information at a SNR
+that, for an AWGN channel, no system can reliably transmit information at an SNR
 of less than $-1.59$ dB.
 
 In the next chapters of the manuscript, the AWGN channel will mainly be
@@ -158,7 +160,7 @@ limit. These codes are already integrated in current communication systems. They
 are usually classified in two main families: block codes and convolutional
 codes. The block codes generate the redundancy by packets of data while the
 convolutional codes compute the redundancy bit by bit on the data stream. The
-purpose of this section is to introduce to most famous channel code families.
+purpose of this section is to introduce to most used channel code families.
 
 The convolutional codes have been introduced by Peter Elias in
 1955~\cite{Elias1955}. The objective was to propose an alternative to the block
@@ -180,8 +182,8 @@ The Irving S. \textbf{R}eed and Gustave \textbf{S}olomon (RS) codes have been
 proposed in 1960~\cite{Reed1960}. Like the BCH codes they are algebraic codes.
 But unlike the BCH codes, the RS codes are based on symbols instead of bits
 (non-binary codes). The RS codes are used in many standards (CD, DVD, Blu-ray,
-ADSL, DVB-T, etc.). If the number of bits per symbol is one then the RS codes
-are equivalent to the BCH codes.
+ADSL, DVB-T, etc.). % If the number of bits per symbol is one then the RS codes
+% are equivalent to the BCH codes.
 
 The Low-Density Parity-Check (LDPC) codes are linear block codes, they have been
 discovered by Robert G. Gallager in 1962~\cite{Gallager1962}. Unfortunately, at
@@ -205,7 +207,7 @@ one code can be read from the columns and the other one from the rows. The TPC
 are notably used in the WiMAX standard and also in some optical communication
 systems.
 
-The polar codes are linear block codes like the LDPC. They have been discovered
+The polar codes are linear block codes like the LDPC. They have been invented
 by \Arikan in 2009~\cite{Arikan2009}. For the first time, they are present in
 the 5G standard (control channels). The particularity of these codes is that
 they are the only ones for which it has been mathematically demonstrated that
@@ -218,7 +220,8 @@ exhaustive but to give a representative overview of the FEC domain. This thesis
 will focuses on a subset of these codes, namely the LDPC codes, the polar codes
 and the turbo codes. These codes have been selected because they are known to
 be channel capacity-approaching and well-spread in the current digital
-communication standards.
+communication standards. Moreover, these code families lead to high
+computational complexity decoders that are challenging to implement.
 
 \subsection{Prerequisites}
 
@@ -252,8 +255,8 @@ information. This means that the decoding input is a vector of $N$ likelihoods
 in the form of LLRs. Each LLR is a real value. Depending on the implementation
 it can be a floating-point or a fixed-point number. It results in more complex
 operations than for the encoding process. On the decoding side and in the
-logarithmic domain, the $\oplus$ operator becomes the $\boxplus$ operator, it is
-defined as follow:
+logarithmic domain, the $\oplus$ operator can become the $\boxplus$ operator, it
+is defined as follow:
 \begin{equation}
   l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)}.
 \end{equation}
@@ -433,9 +436,9 @@ updated, it is then possible to update the check nodes and so on.
 % called the syndrome verification.
 
 There are many variants of the BP algorithm. In the previous explanation, during
-an iteration, all the check nodes are computed first. Then all the variable
-nodes are updated. This is what we call a \emph{flooding} (BP-F) scheduling of
-the computations~\cite{MacKay1995}. However it is possible to schedule the
+an iteration, all the check nodes are computed first. Then, all the variable
+nodes are updated. This is called \emph{flooding} (BP-F) scheduling of the
+computations~\cite{MacKay1995}. However it is possible to schedule the
 computations differently. In the \emph{horizontal layered} (BP-HL)
 scheduling~\cite{Yeo2001}, when a check node is evaluated, all the connected
 variable nodes are updated without waiting the computation of all the check
@@ -479,9 +482,9 @@ l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}
 This variant is called the \emph{Min-Sum} (MS)~\cite{Fossorier1999}.
 The costly $\tanh$ functions are replaced by efficient $\sign$ and $\min$
 operations. However, MS computations negatively affect the correction
-performance. To solve this issue, the optimized \emph{Offset Min-Sum} (OMS) and
-\emph{Normalized Min-Sum} (NMS) approximations have been proposed
-in~\cite{Chen2002}:
+performance. To compensate the performance loss, the optimized \emph{Offset
+Min-Sum} (OMS) and \emph{Normalized Min-Sum} (NMS) approximations have been
+proposed in~\cite{Chen2002}:
 \begin{equation}
 \label{eq:ctx_ldpc_onms}
 l_a \boxplus l_b = 2\tanh^{-1}{\big(\tanh{(\frac{l_a}{2}).\tanh{(\frac{l_b}{2})}}\big)} \approx \alpha \times \big( \sign(l_a.l_b).\min(|l_a|, |l_b|) + \lambda \big),
@@ -531,7 +534,7 @@ $
 composed by $N$ rows and $N$ columns. Unlike for the LDPC codes, the $\bm{u}$
 input message cannot be directly multiplied by $\bm{\mathcal{G}}$. Indeed,
 $\bm{\mathcal{G}}$ is a square matrix of dimension $N$. So, the polar coding
-scheme defines a $\mathcal{F}$ function that adds zeros in $\bm{u}$ until its
+scheme defines an $\mathcal{F}$ function that adds zeros in $\bm{u}$ until its
 size reaches $N$ bits ($\bm{v} = \mathcal{F}(\bm{u})$). If we suppose a $(8,4)$
 polar code, $\bm{u} = [u_0, u_1, u_2, u_3]$ is composed of 4 information bits.
 Lets apply the $\mathcal{F}$ function on $\bm{u}$: $\mathcal{F}(\bm{u}) =
@@ -593,7 +596,7 @@ not directed.
 
 It is also possible to represent the polar encoding process with a binary tree
 structure. Fig.~\ref{fig:ctx_polar_tree} shows the binary tree representation of
-a $(8,4)$ polar encoder. The leaf nodes represent the initial bits from the
+an $(8,4)$ polar encoder. The leaf nodes represent the initial bits from the
 $\bm{v}$ vector. The bits in black are the information bits $\bm{u}$ and the
 white bits are the frozen bits. Two by two the initial bits are bound to a
 father node $n_x^2$ where $x$ is the index of the node in the layer 2. In
@@ -639,8 +642,8 @@ are:
 The $f$ and $g$ functions both generate a single LLR. The $h$ function provides
 a couple of partial sums. The $f$ function is the Min-Sum approximation of the
 $\boxplus$ operation described in Eq.~\ref{eq:ctx_ldpc_ms}. In Polar decoding
-using a MS approximation does not significantly impact the decoding performance.
-Thus, the MS approximation is widely applied.
+using an MS approximation does not significantly impact the decoding
+performance. Thus, the MS approximation is widely applied.
 
 Before recursively calling itself on the left node, the algorithm applies the
 $f$ function, respectively. Before calling itself on the right node the $g$
@@ -662,8 +665,8 @@ directions, the algorithm eventually updates partial sums in the root node and
 the decoding process is terminated. If the polar code is not systematic, the
 decoded bits $\bm{\hat{u}}$ are the leaf bits in the tree. Otherwise, if the
 polar code is systematic, the decoded bits $\bm{\hat{u}}$ can be directly
-extracted from the root node of the polar tree in the form of a $N$-bit partial
-sum vectors. In this Ph. D., only the systematic polar encoding scheme is
+extracted from the root node of the polar tree in the form of an $N$-bit partial
+sum vectors. In this work, only the systematic polar encoding scheme is
 considered. This construction leads to an improved BER while the decoding
 computational complexity remains unchanged.
 
@@ -1188,23 +1191,23 @@ starting from $\nu +1$ time units, the trellis pattern is repeated.
 \end{figure}
 
 As mentioned before, a turbo code is built from two convolutional codes.
-Fig.~\ref{fig:ctx_turbo_encoder} shows a generic view of the turbo code process.
-In the example, the code rate of the turbo code is $R = 1/3$. This rate is
-obtained from two convolutional sub-encoders of rate $R = 1/2$ (like the one
+Fig.~\ref{fig:ctx_turbo_encoder} shows a generic view of the turbo coding
+process. In the example, the code rate of the turbo code is $R = 1/3$. This rate
+is obtained from two convolutional sub-encoders of rate $R = 1/2$ (like the one
 shown in Fig.~\ref{fig:ctx_turbo_sub_encoder}). The two parity bits $p$ and $p'$
 are obtained from the $c_2$ outputs of the convolutional codes while the
 systematic $c_1$ outputs are ignored. The first sub-encoder encodes the $u$
 input bit while the second one encode the $u'$ bit. The $u'$~bit is determined
 from $u$ after a $\Pi$ interleaving process. For each $u_k$ bit there is a
 single $u_k'$ associated bit in the $K$ input information bits. The interleaving
-process is a key point for the efficiency of a turbo code. Its main purpose is
-to fight against bursts of errors. During the interleaving process the sequence
-of information bits is in the \emph{natural order}, then these information bits
-are permuted. The interleaver outputs is a sequence of information bits in the
-\emph{interleaved order}. The permutation function defines the interleaver type.
-The $K$ information bits in the natural order are given to the sub-encoder 1
-while the $K$ information bits in the interleaved order are given
-to the sub-encoder 2.
+process is a key point for the efficiency of a turbo code.
+%Its main purpose is to fight against bursts of errors.
+During the interleaving process the sequence of information bits is in the
+\emph{natural order}, then these information bits are permuted. The interleaver
+outputs is a sequence of information bits in the \emph{interleaved order}. The
+permutation function defines the interleaver type. The $K$ information bits in
+the natural order are given to the sub-encoder 1 while the $K$ information bits
+in the interleaved order are given to the sub-encoder 2.
 
 \subsubsection{Turbo Decoding Algorithm}
 \label{sec:turbo_overview}
@@ -1479,9 +1482,9 @@ most of common standards. Before they were standardized, these codes have been
 evaluated and compared. The codes can be applied in a infinity of different
 ways. For each coding scheme, many different decoding algorithms can be
 implemented. It is then mandatory to be able to evaluate and compare the BER/FER
-decoding performance of selected codes with each others before implementing it
-in real systems. To this purpose, the channel coding designers use functional
-simulation. On an AWGN channel, depending on the channel code it is possible to
+decoding performance of selected decoders with each others before implementing
+it in real systems. To this purpose, the channel coding designers use functional
+simulation. On an AWGN channel, depending on the channel code, it is possible to
 predict with varying degrees of ease (in term of computational effort) the
 BER/FER decoding performance of a digital communication system. For simple
 channel codes like BCH, RS and convolutional codes it is possible to evaluate
@@ -1491,15 +1494,16 @@ then to resort to a compute intensive Monte Carlo simulation of the digital
 communication system. The idea is to evaluate the performance of the system by
 generating many random frames and applying random noise samples on these frames,
 the noisy frames are decoded and the output sequence of bit $\bm{\hat{u}}$ is
-compared with the initial information bits $\bm{u}$.
+compared with the initial information bits $\bm{u}$. The error count is then
+used to update the BER/FER value until they reach a stable value.
 
 Fig.~\ref{fig:ctx_simu_com_chain_specs} describes a simulation sequence similar
 to the digital communication chain presented in Fig.~\ref{fig:ctx_com_chain}.
 The only difference is that the \emph{sink} block has been replaced by what we
 call a \emph{monitor}. The \emph{monitor}, unlike the \emph{sink}, knows the $K$
 output information bits from the \emph{source} ($\bm{u}$). The $C$, $K$ and $N$
-parameters are the type of the code, the number of information bits and the
-codeword size, respectively. These parameters have a direct impact on the
+parameters are the type of the code/decoder, the number of information bits and
+the codeword size, respectively. These parameters have a direct impact on the
 selection of the \emph{channel encoder} and the \emph{channel decoder} blocks
 in the simulation. Fig.~\ref{fig:ctx_simu_com_chain_in_out} shows the BER output
 of the resulting simulation. The $m$, $M$ and $s$ parameters enable to control
@@ -1530,14 +1534,14 @@ therefore fewer errors. For instance, in Fig.~\ref{fig:ctx_bfer_ldpc}, on
 the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the
 configuration 2 of the decoder achieves better decoding performance than the
 configuration 1 because the {\color{Paired-3} green} curve is below the
-{\color{Paired-7} orange} curve. In other terms, lower is better. Each time
-there is two decoder configurations, the second one gives better BER/FER
-decoding performance. This is achieved at the cost of a higher computational
-effort duing the decoding process compared to the first configuration. The
-purpose of Fig.~\ref{fig:ctx_bfer} is not to compare the codes with each
-others but to introduce the typical BER/FER curves that will be used in the next
-chapters. It shows that there is a large set of possible combinations of codes
-and decoding configurations.
+{\color{Paired-7} orange} curve. In other terms, lower is better. In the plotted
+examples, there is two decoder configurations, the second one gives better
+BER/FER decoding performance. This is achieved at the cost of a higher
+computational effort during the decoding process compared to the first
+configuration. The purpose of Fig.~\ref{fig:ctx_bfer} is not to compare the
+codes with each others but to introduce the typical BER/FER curves that will be
+used in the next chapters. It shows that there is a large set of possible
+combinations of codes and decoding configurations.
 
 \newpage
 \subsection{Software-Defined Radio}
@@ -1563,7 +1567,7 @@ terminals.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Traditional base station.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_1G_2G} \label{fig:ctx_sdr_base_station_1G_2G}}
+  \subfloat[][Early base station.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_1G_2G} \label{fig:ctx_sdr_base_station_1G_2G}}
   \quad{}
   \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
   \quad{}
@@ -2120,6 +2124,8 @@ time, at a small energy cost, in a wide variety of environments. Researchers
 work at refining existing coding schemes further, to get low residual error
 rates with fast, flexible, low complexity decoding processes.
 
+\paragraph{Functional Simulation}
+
 The validation of a coding scheme requires to estimate its error rate
 performance. Usually, no simple mathematical model exists to predict such
 performance. The only practical solution is to perform a Monte Carlo simulation
@@ -2159,9 +2165,11 @@ problems:
     state-of-the-art results.
 \end{enumerate}
 
-Moreover, new paradigms like the Cloud Radio Access Network (Cloud-RAN) and the
-Software-Defined Radio (SDR) are now considered in real communication systems.
-To match the real-time constraints, here are the main challenges:
+\paragraph{Software-Defined Radio}
+
+Moreover, the Software-Defined Radio (SDR) paradigm is now considered in real
+communication systems. To match the real-time constraints, here are the main
+challenges:
 
 \begin{enumerate}
   \item \textbf{High throughput:} New applications, like the video streaming,
@@ -2173,22 +2181,37 @@ To match the real-time constraints, here are the main challenges:
     uncomfortable to perceive a delay when people are speaking.
   \item \textbf{Flexibility:} The software implementations have to be able to
     adapt to various configurations. For instance, when the SNR is changing,
-    the code rate $R$ of the decoder can be switched on the fly.
+    the code rate $R$ of the decoder can be switched on the fly,
+  \item \textbf{Portability:} The proposed solutions can be deployed on high-end
+    servers as well as on embedded low power systems. Moreover, many operating
+    systems coexist, and it is important to be able to support the most famous
+    ones like Windows, macOS and Linux.
 \end{enumerate}
 
 \section{Organization and Contributions}
 
+% In this thesis we propose to study the most time consuming algorithms of digital
+% communication systems, to adapt and optimize them on General Purpose Processors
+% (GPPs) like the CPUs. The long simulation times and the real world application
+% requirements make it desirable to have \textbf{high throughput and low latency
+% implementations}. The algorithmic heterogeneity requires \textbf{flexible,
+% modular software}. The reproducibility issue pushes towards a \textbf{portable}
+% and \textbf{open-source software}.
+
 In this thesis we propose to study the most time consuming algorithms of digital
 communication systems, to adapt and optimize them on General Purpose Processors
-(GPPs) like the CPUs. The long simulation times and the real world application
-requirements make it desirable to have \textbf{high throughput and low latency
-implementations}. The algorithmic heterogeneity requires \textbf{flexible,
-modular software}. The reproducibility issue pushes towards a \textbf{portable}
-and \textbf{open-source software}.
+(GPPs) like the CPUs. The long simulation times and the real-world application
+requirements make it desirable to have portable, flexible, high throughput and
+low latency implementations. The latter are presented in Chapter~\ref{chap:opt}
+and evaluated in Chapter~\ref{chap:eval}. The algorithmic heterogeneity requires
+modular software while the reproducibility issue pushes towards an open-source
+software: this is discussed in Chapter~\ref{chap:aff3ct}. In real-time contexts,
+maintaining a good level of performance can be challenging. Solutions to help in
+this direction have been proposed in Chapter~\ref{chap:sdr}.
 
 In Chapter~\ref{chap:opt}, new efficient implementations of the LDPC, polar and
 turbo decoders are proposed as well as an efficient implementation of the SCMA
-demodulator. First, an overall methodology is detailed to meet the high
+demodulator. First, an overall portable methodology is detailed to meet the high
 throughput constraint required by both the simulations and the real-time
 systems. This methodology is based on the Single Instruction Multiple Data
 (SIMD) model implemented in most of the current CPUs. Depending on how the CPU
