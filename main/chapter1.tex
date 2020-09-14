@@ -5,27 +5,26 @@
 \chapter{Context and Objectives}
 \label{chap:ctx}
 
-This chapter introduces the context of the digital communication systems. Its
-main purpose is to define notions that will be reused after in all the
-manuscript. It also gives a general view and defines the main
-objectives of this thesis.
+This chapter introduces the context of digital communication systems. Its
+purpose is to define notions that will be reused in the manuscript and to give
+a general view and defines the main objectives of this thesis.
 
 The first section presents the principle of the digital communication systems
-with the different parts: transmitter, channel and receiver.
+with its different parts: transmitter, channel and receiver.
 The most common metrics used in digital communications are also introduced.
 
-In the second section, the channel model and the digital modulation used all
-along the manuscript are detailed. A characterization of the signal-to-noise
-ratio is given as well as the notion of probability at the output of the channel
-and the demodulator.
+The second section details the channel model and the digital modulation used all
+along the manuscript. A characterization of the signal-to-noise ratio is given
+as well as the notion of probability at the output of the channel and the
+demodulator.
 
 The third section introduces the channel codes considered in this manuscript:
 namely the LDPC, the polar and the turbo codes. The corresponding encoding and
 decoding processing are detailed for each channel code family.
 
-In the forth section, three applicative contexts are detailed for the considered
-channel codes. The functional simulation enables the design and the
-validation of a coding scheme while the software-defined radio is a radio
+In the fourth section, three applicative contexts are detailed for the
+considered channel codes. The functional simulation enables the design and the
+validation of a coding scheme. The software-defined radio is a radio
 communication system where components are implemented by means of software.
 Then, the sparse code multiple access mechanism is presented as it is a
 promising solution for massive connectivity in future mobile networks.
@@ -52,7 +51,7 @@ It is now commonplace to state that Humanity has entered the era of
 communication. By 2025, there should be more than 5 billion smart-phones in
 circulation worldwide. Moreover, all kinds of objects will increasingly use
 communication technology, to exchange information in the \emph{Internet of
-Things} (IoT) for instance. Despite their heterogeneity, all communication
+Things} (IoT), for instance. Despite their heterogeneity, all communication
 systems are based on a common abstract model proposed by Claude Shannon. In his
 seminal paper~\cite{Shannon1948}, he proposed to model a communication system
 with five major components: an information source, a transmitter, a channel, a
@@ -66,13 +65,14 @@ must be represented by a high-frequency signal in order to be transmitted by a
 reasonably sized antenna. This is the role of the digital modulator which
 produces a vector of symbols $\bm{x}$. The channel alters the signal with some
 noise and distortions ($\bm{y}$). On the receiver side, the components perform
-the inverse operations to retrieve the message $\bm{\hat{u}}$ produced by the
-source.
+the inverse operations to retrieve the decoded message $\bm{\hat{u}}$. If no
+errors occurred during the transmission or if there is errors but they have been
+corrected, $\bm{\hat{u}} = \bm{u}$.
 
 In the next sections and chapters, we will focus on channel coding because it
 comes with algorithms that have the highest computational complexity in the
 digital communication systems. In channel coding, also known as \emph{forward
-error correction} (FEC), $K$ information bits  are encoded in the transmitter.
+error correction} (FEC), $K$~information bits  are encoded in the transmitter.
 It results in a codeword $\bm{c}$ of $N$ bits. $P = N - K$ is the number of
 redundancy bits added as additional information and $R = K/N$ is the code rate.
 The higher the code rate $R$ is, the lower the number of bits $P$ is. The
@@ -81,18 +81,18 @@ the sink. It is possible to observe two different rates: 1) the Bit Error Rate
 (BER); 2) the Frame Error Rate (FER). The BER is calculated considering the $K$
 information bits independently, for instance a $10^{-3}$ BER means that there is
 an average of one binary error per thousand information bits transmitted. The
-FER is computed considering the entire frame, if there is one, two or more wrong
-bits in the current frame, it will be counted as one erroneous frame. A
-$10^{-2}$ FER means that there is an average of one frame error per hundred
-frame transmitted. These rates depend on many factors: the noise of the channel,
-the modulation type, the code type, the code rate $R$, etc. The lower the bit
-and frame error rates are, the higher the correction power of the system is.
+FER is computed considering the entire frame, if there is at least one wrong bit
+in the current frame, it will be counted as one erroneous frame. A $10^{-2}$ FER
+means that there is an average of one frame error per hundred frame transmitted.
+These rates depend on many factors: the noise of the channel, the modulation
+type, the code type, the code rate $R$, etc. The lower the bit and frame error
+rates are, the higher the correction power of the system is.
 
 \section{Channel Model}
 \label{sec:ctx_awgn}
 
 In this thesis, only causal transmission channels without memory effect and
-stationary are considered. In other words, the output of the channel at time $t$
+stationary are considered. In other words, the output of the channel at time~$t$
 only depends on its input at time $t$. In order to describe the disturbance
 applied to the message $\bm{x}$ passing through the transmission channel,
 different models can be used. However, in the literature, the selected model is
@@ -160,7 +160,7 @@ limit. These codes are already integrated in current communication systems. They
 are usually classified in two main families: block codes and convolutional
 codes. The block codes generate the redundancy by packets of data while the
 convolutional codes compute the redundancy bit by bit on the data stream. The
-purpose of this section is to introduce to most used channel code families.
+purpose of this section is to introduce the most used channel code families.
 
 The convolutional codes have been introduced by Peter Elias in
 1955~\cite{Elias1955}. The objective was to propose an alternative to the block
@@ -172,7 +172,7 @@ has been used by the NASA for satellite communications for instance.
 The Raj \textbf{B}ose, D. K. Ray-\textbf{C}haudhuri and Alexis,
 \textbf{H}ocquenghem (BCH) codes are block codes discovered in the late
 1950s~\cite{Hocquenghem1959,Bose1960}. They are algebraic codes built from a
-polynomial. It results in low complexity decoding algorithms. These codes are
+polynomial. This results in low complexity decoding algorithms. These codes are
 used in the CDs, DVDs and SSDs. In modern coding schemes, they are often
 concatenated to other codes in order to improve their correction powers
 especially when there are erroneous frames with a small number of erroneous
@@ -185,7 +185,7 @@ But unlike the BCH codes, the RS codes are based on symbols instead of bits
 ADSL, DVB-T, etc.). % If the number of bits per symbol is one then the RS codes
 % are equivalent to the BCH codes.
 
-The Low-Density Parity-Check (LDPC) codes are linear block codes, they have been
+The Low-Density Parity-Check (LDPC) codes are linear block codes. They have been
 discovered by Robert G. Gallager in 1962~\cite{Gallager1962}. Unfortunately, at
 the time of their discovery, the computational power available in the
 transceivers was not sufficient to decode them. Later, in 1995, the LDPC codes
@@ -211,7 +211,7 @@ The polar codes are linear block codes like the LDPC. They have been invented
 by \Arikan in 2009~\cite{Arikan2009}. For the first time, they are present in
 the 5G standard (control channels). The particularity of these codes is that
 they are the only ones for which it has been mathematically demonstrated that
-they reach the Shannon's limit (considering an infinite codeword length).
+they reach Shannon's limit (considering an infinite codeword length).
 
 Many other codes exist like Hamming codes, Plotkin codes, Gilbert codes, Golay
 codes, Reed-Muller codes~\cite{Muller1954,Reed1954}, the raptor
@@ -328,11 +328,11 @@ $\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
   \label{fig:ctx_ldpc_parity_checks}
 \end{figure}
 
-The construction of an Low-Density Parity-Check (LDPC) code is based on the
-combination of many parity-check nodes. Fig.~\ref{fig:ctx_ldpc_parity_checks} is
-an example of an LDPC code with four parity-check constraints denoted as $a$,
+The construction of a Low-Density Parity-Check (LDPC) code is based on the
+combination of several parity-check nodes. Fig.~\ref{fig:ctx_ldpc_parity_checks}
+is an example of a LDPC code with four parity-check constraints denoted as $a$,
 $b$, $c$ and $d$. The parity-check constraints are also known as the \emph{check
-nodes} ($C_N$). And the \emph{variable nodes} ($V_N$) are the bits of the LDPC
+nodes} ($C_N$). The \emph{variable nodes} ($V_N$) are the bits of the LDPC
 codeword. The parity-check matrix corresponding to the
 Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
 \begin{equation*}
@@ -347,7 +347,7 @@ Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
 
 The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
 matrix. The example shown in
-Fig.~\ref{fig:ctx_ldpc_parity_checks} is here to help to the comprehension and
+Fig.~\ref{fig:ctx_ldpc_parity_checks} is here to help the comprehension and
 is not a real LDPC code: indeed, the corresponding $\bm{\mathcal{H}}$ matrix is
 not sparse.
 
@@ -356,8 +356,8 @@ not sparse.
 The bit $\hat{u}_n$ corresponding to the input LLR $l_n$ of a parity-check code
 can be decoded as follow: $\hat{u}_n = \hardDec\big(l_n +
 \sum\limits_{j \neq n}{l_j}\big)$, with $\hardDec$ the hard decision function
-that returns 0 if the LLR is positive and 1 else. For instance, considering the
-parity-check code in Fig.~\ref{fig:ctx_ldpc_parity_check}, $\hat{u}_0 =
+that returns 0 if the LLR is positive and 1 otherwise. For instance, considering
+the parity-check code in Fig.~\ref{fig:ctx_ldpc_parity_check}, $\hat{u}_0 =
 \hardDec\big(l_0 + (l_1 \boxplus l_2 \boxplus l_3 \boxplus l_4)\big)$,
 $\hat{u}_1 = \hardDec\big(l_1 + (l_0 \boxplus l_2 \boxplus l_3 \boxplus
 l_4)\big)$, etc.
@@ -378,7 +378,8 @@ decoded bits $\bm{\hat{u}}$. In the first iteration, the a priori information
 $\bm{a}$ sent to the check nodes is directly the channel values $\bm{l}$. But,
 in the next iterations, the a priori information $\bm{a}$ is updated with the
 variable nodes values $\bm{v}$. To avoid direct auto-confirmation issues, the
-up-coming extrinsic LLR is systematically subtracted to the propagated message.
+up-coming extrinsic LLR is systematically subtracted from the propagated
+message.
 
 \begin{figure}[htp]
   \centering
@@ -582,8 +583,8 @@ systematic encoding is possible because of the characteristics of the
 $\bm{\mathcal{G}}$ generator polar matrices: $\bm{\mathcal{G}} \times
 \bm{\mathcal{G}} = \bm{I}$. In other terms, $\bm{\mathcal{G}}$ is invertible and
 its inverse is itself. A direct consequence of this property is that one can
-encode from the left to the right or from the right to the left: the generated
-codeword $\bm{c}$ will be the same. This is why the factor graphs proposed in
+encode from left to right or from right to left: the generated codeword $\bm{c}$
+will be the same. This is why the factor graphs proposed in
 Fig.~\ref{fig:ctx_polar_encoder} and Fig.~\ref{fig:ctx_polar_encoder_sys} are
 not directed.
 
@@ -666,7 +667,7 @@ the decoding process is terminated. If the polar code is not systematic, the
 decoded bits $\bm{\hat{u}}$ are the leaf bits in the tree. Otherwise, if the
 polar code is systematic, the decoded bits $\bm{\hat{u}}$ can be directly
 extracted from the root node of the polar tree in the form of an $N$-bit partial
-sum vectors. In this work, only the systematic polar encoding scheme is
+sum vectors. In this thesis, only the systematic polar encoding scheme is
 considered. This construction leads to an improved BER while the decoding
 computational complexity remains unchanged.
 
@@ -756,8 +757,8 @@ They proposed to concatenate a CRC to the codeword in order to discriminate the
 candidate codewords at the final stage of the SCL decoding. Indeed, this
 technique drastically improves the FER performance of the decoding process. This
 algorithm is denoted as the \emph{CRC-Aided SCL} (CA-SCL). In terms of
-computational complexity, the overhead consists in the computation of $L$ CRC at
-the end of each decoding.
+computational complexity, the overhead consists in the computation of $L$ CRCs
+at the end of each decoding.
 
 \subsubsection{Simplified Successive Cancellation Class of Algorithms}
 \label{sec:ctx_polar_simplified_decoders}
@@ -788,12 +789,12 @@ repetition and SPC codes sub-trees, respectively. These special nodes,
 originally defined for SC decoding, can be employed in the case of SCL decoding
 as long as some modifications are made in the path metric
 calculation~\cite{Sarkis2016}. This tree-pruned version of the algorithm is
-called Simplified SCL (SSCL) and the CA-SSCL when a CRC is used to discriminate
+called Simplified SCL (SSCL) and CA-SSCL when a CRC is used to discriminate
 the final candidate codewords. The tree pruning technique can drastically reduce
 the amount of computations in the decoding process. The
 Fig.~\ref{fig:ctx_polar_tree_pruning_example} shows that more than half of the
 tree nodes can be removed for $N = 8$ and $R = 1 / 2$ (this is representative of
-the real-life codes).
+real-life codes).
 
 \subsubsection{Adaptive Successive Cancellation List Decoding Algorithm}
 \label{sec:ctx_polar_ascl}
@@ -803,7 +804,7 @@ gradually increasing $L$. This variation of SCL is called Adaptive SCL
 (A-SCL)~\cite{Li2012}. The first step of the A-SCL algorithm is to decode the
 received frame with the SC algorithm. Then, the decoded polar codeword is
 checked with a CRC. If the CRC is not valid, the SCL algorithm is applied with
-$L=2$. If no candidate in the list satisfies the CRC, $L$ is gradually doubled
+$L=2$. If no candidate in the list satisfies the CRC, $L$ is repeatedly doubled
 until it reaches the value $L_{max}$. We call this version of the A-SCL decoding
 the Fully Adaptive SCL (FA-SCL) as opposed to the Partially Adaptive SCL
 (PA-SCL), in which the $L$ value is not gradually doubled but directly increased
@@ -1149,30 +1150,31 @@ For a $R=1/2$ encoder, the current $p_k$ output parity bit can be expressed as a
 linear combination of the $\nu$ previous bits of the message:
 $p_k = \sum_{j=0}^\nu g^{(2)}_{j} u_{k-j} + \sum_{j=1}^\nu g^{(1)}_{j} p_{k-j}$,
 where $\nu$ represents the number of elements memorized inside the encoder.
-The sequence of elements $g_j$ is called the code-generating sequence and is
+The sequence of elements~$g_j$ is called the code-generating sequence and is
 often expressed in octal. Fig.~\ref{fig:ctx_turbo_sub_encoder_graph} gives three
-representation of a convolutional code of rate $R = 1/2$ with a memory $\nu = 2$
-($D_0$ and $D_1$ are shift registers). Its two code-generating sequences
-$\bm{g^{(1)}} = (7)_8$ and $\bm{g^{(2)}} = (5)_8$ define the $c_2 = p$ output
-while $c_1 = u$. In the example, the convolutional code has the particularity to
-be systematic because $c_1 = u$ and recursive because of the feedback loop
-before the first shift register $D_0$. In the literature, this type of coding
-scheme is called Recursive Systematic Convolutional (RSC). Only RSC codes are
-considered in the document. In Fig.~\ref{fig:ctx_turbo_sub_encoder}, the number
-of $D$ memories $\nu = 2$ and so, the code can have $2^\nu = 4$ different
-states. Thus, a convolutional code can be expressed as a finite-state machine as
-shown in Fig.~\ref{fig:ctx_turbo_sub_encoder_mealy}. The initial state $S_0$
-corresponds to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$
-and $D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and,
-finally, the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on
-the edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if
-the input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
+representations of a convolutional code of rate $R = 1/2$ with a memory
+$\nu = 2$ ($D_0$ and $D_1$ are shift registers). Its two code-generating
+sequences $\bm{g^{(1)}} = (7)_8$ and $\bm{g^{(2)}} = (5)_8$ define the $c_2 = p$
+output while $c_1 = u$. In the example, the convolutional code has the
+particularity to be systematic because $c_1 = u$ and recursive because of the
+feedback loop before the first shift register $D_0$. In the literature, this
+type of coding scheme is called Recursive Systematic Convolutional (RSC). Only
+RSC codes are considered in the document. In
+Fig.~\ref{fig:ctx_turbo_sub_encoder}, the number of $D$ memories $\nu = 2$ so,
+the code can have $2^\nu = 4$ different states. Thus, a convolutional code can
+be expressed as a finite-state machine as shown in
+Fig.~\ref{fig:ctx_turbo_sub_encoder_mealy}. The initial state $S_0$ corresponds
+to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$ and
+$D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and, finally,
+the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on the
+edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if the
+input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
 $c_2 = 0$ and will go in the state~$S_2$. This is denoted by \emph{1/10} below
 the directed edge between $S_1$ and $S_2$.
 
 Fig.~\ref{fig:ctx_turbo_sub_encoder_trellis} introduces another convenient
 representation of convolutional codes: the trellis. This representation has
-been used the first time by Dave Forney in 1973~\cite{Forney1973}. It is
+been used for the first time by Dave Forney in 1973~\cite{Forney1973}. It is
 especially useful to facilitate the understanding of the decoding process.
 Indeed, it enables to see the internal state of the encoder, its transitions,
 and the temporal evolution. However, the purpose of this section is not to
@@ -1201,13 +1203,15 @@ input bit while the second one encode the $u'$ bit. The $u'$~bit is determined
 from $u$ after a $\Pi$ interleaving process. For each $u_k$ bit there is a
 single $u_k'$ associated bit in the $K$ input information bits. The interleaving
 process is a key point for the efficiency of a turbo code.
-%Its main purpose is to fight against bursts of errors.
-During the interleaving process the sequence of information bits is in the
-\emph{natural order}, then these information bits are permuted. The interleaver
-outputs is a sequence of information bits in the \emph{interleaved order}. The
-permutation function defines the interleaver type. The $K$ information bits in
-the natural order are given to the sub-encoder 1 while the $K$ information bits
-in the interleaved order are given to the sub-encoder 2.
+%Its main purpose is to protect against bursts of errors.
+The interleaving process permutes the information bits from their \emph{natural
+(sequential) order} into the \emph{interleaved order}.
+%During the interleaving process the sequence of information bits is in the
+%\emph{natural order}, then these information bits are permuted. The interleaver
+%outputs is a sequence of information bits in the \emph{interleaved order}.
+The permutation function defines the interleaver type. The $K$ information bits
+in the natural order are given to the sub-encoder 1 while the $K$ information
+bits in the interleaved order are given to the sub-encoder 2.
 
 \subsubsection{Turbo Decoding Algorithm}
 \label{sec:turbo_overview}
@@ -1230,13 +1234,13 @@ is the codeword size: $N = K \times 3$.
 
 \paragraph{Algorithm Outline}
 
-Turbo decoding is carried out during multiple iterations. Each iteration
+Turbo decoding is carried out over several iterations. Each iteration
 consists of two component decoding phases. During each phase, a component
 decoder performs a maximum a posteriori (MAP) decoding based on the BCJR
 algorithm~\cite{Bahl1974}, which generates so-called extrinsic LLRs given the
 LLRs obtained by the detector and a priori LLRs obtained from the other
 component decoder. The BCJR algorithm consists of one forward and one backward
-traversal on a trellis, which is defined by the underlying code. Specifically,
+traversal on a trellis, which are defined by the underlying code. Specifically,
 to decode a codeword of $K$ information bits, the BCJR algorithm performs the
 following steps: (i) the branches of the trellis are weighted from the
 systematic LLRs ($\bm{L_s}$), the parity LLRs ($\bm{L_p}$) and the a priori
@@ -1246,7 +1250,7 @@ backward traversal step, it computes $K$ sets of backward state metrics for each
 transmitted information bit; (iv) to compute the extrinsic LLRs ($L_e$), the
 BCJR algorithm then combines the forward and backward state metrics. The
 $\bm{L_s}$, $\bm{L_p}$, $\bm{L'_p}$ vectors of LLRs correspond to the decoder
-input $\bm{l}$ split in 3 sub-sets.
+input $\bm{l}$ split into 3 sub-sets.
 
 \begin{algorithm}
   \caption{Pseudo-code of the BCJR decoding algorithm.}
@@ -1331,7 +1335,7 @@ The forward state metrics have to be computed recursively from trellis step to
 trellis step. The forward state metrics of step $k+1$ correspond to the vector
 $\bm{\alpha^{k+1}} = [\alpha_0^{k+1}, ... ,\alpha_7^{k+1}]$, where the
 $j^{th}$ forward state metric $\alpha_j^{k+1}$ only depends on two forward
-state metrics of stage $k$. These state metrics are computed by:
+state metrics of stage $k$. These state metrics are computed as:
 \begin{equation}
   \label{eq:ctx_turbo_alpha}
   \alpha_j^{k+1} =
@@ -1412,10 +1416,10 @@ approximated as follow: $\maxstar(a,b) \approx \max(a,b)$. The correction term
 is simply removed. This approximation is called the \emph{max-log-MAP} algorithm
 (ML-MAP). Its low computational complexity makes efficient software and hardware
 implementations possible. However, the ML-MAP algorithm can negatively affect
-the decoding performance. But it is possible to partially recover the error-rate
-performance loss by scaling the extrinsic LLRs in the turbo decoder by a factor
-$\alpha$. This version is called the \emph{Enhanced} max-log-MAP (EML-MAP)
-algorithm~\cite{Vogt2000,Studer2011}.
+the decoding performance. Yet, it is possible to partially recover the
+error-rate performance loss by scaling the extrinsic LLRs in the turbo decoder
+by a factor $\alpha$. This version is called the \emph{Enhanced} max-log-MAP
+(EML-MAP) algorithm~\cite{Vogt2000,Studer2011}.
 % The impact of the approximations on the decoding performance is shown in
 % Fig.~\ref{plot:ctx_turbo_approximations}.
 
@@ -1450,11 +1454,12 @@ algorithm~\cite{Vogt2000,Studer2011}.
 
 \section{Applicative Contexts}
 
-In the previous section 3 channel code families have been presented. In this
-thesis we focus on software implementations of the previously introduced channel
-decoders. These decoders can be used in different applicative contexts like for
-simulations or in real-time systems for instance. This section describes the
-different applicative contexts that will be considered all along the manuscript.
+In the previous section, three channel code families have been presented. In
+this thesis we focus on software implementations of the previously introduced
+channel decoders. These decoders can be used in different applicative contexts
+such as simulations or in real-time systems for instance. This section
+describes the different applicative contexts that will be considered all along
+the manuscript.
 
 \subsection{Functional Simulation}
 \label{sec:ctx_simulation}
@@ -1477,32 +1482,32 @@ different applicative contexts that will be considered all along the manuscript.
 \end{figure}
 
 There are many possible coding schemes with different characteristics. The
-previous section introduced different families of FEC codes that are present in
+previous section introduced several families of FEC codes that are present in
 most of common standards. Before they were standardized, these codes have been
 evaluated and compared. The codes can be applied in a infinity of different
 ways. For each coding scheme, many different decoding algorithms can be
 implemented. It is then mandatory to be able to evaluate and compare the BER/FER
 decoding performance of selected decoders with each others before implementing
-it in real systems. To this purpose, the channel coding designers use functional
-simulation. On an AWGN channel, depending on the channel code, it is possible to
-predict with varying degrees of ease (in term of computational effort) the
-BER/FER decoding performance of a digital communication system. For simple
-channel codes like BCH, RS and convolutional codes it is possible to evaluate
-analytically the performance while for more complex codes like LDPC, turbo and
-polar codes it becomes more difficult to use direct methods. The solution is
-then to resort to a compute intensive Monte Carlo simulation of the digital
-communication system. The idea is to evaluate the performance of the system by
-generating many random frames and applying random noise samples on these frames,
-the noisy frames are decoded and the output sequence of bit $\bm{\hat{u}}$ is
-compared with the initial information bits $\bm{u}$. The error count is then
-used to update the BER/FER value until they reach a stable value.
+them in real systems. To this purpose, the channel coding designers use
+functional simulation. On an AWGN channel, depending on the channel code, it is
+possible to predict with varying degrees of computational effort the BER/FER
+decoding performance of a digital communication system. For simple channel codes
+like BCH, RS and convolutional codes it is possible to analytically evaluate the
+performance while for more complex codes like LDPC, turbo and polar codes it
+becomes more difficult to use direct methods. The solution is then to resort to
+a compute intensive Monte Carlo simulation of the digital communication system.
+The idea is to evaluate the performance of the system by generating many random
+frames and applying random noise samples on these frames, the noisy frames are
+decoded and the output sequence of bit $\bm{\hat{u}}$ is compared with the
+initial information bits $\bm{u}$. The error count is then used to update the
+BER/FER value until they reach a stable value.
 
 Fig.~\ref{fig:ctx_simu_com_chain_specs} describes a simulation sequence similar
 to the digital communication chain presented in Fig.~\ref{fig:ctx_com_chain}.
 The only difference is that the \emph{sink} block has been replaced by what we
 call a \emph{monitor}. The \emph{monitor}, unlike the \emph{sink}, knows the $K$
 output information bits from the \emph{source} ($\bm{u}$). The $C$, $K$ and $N$
-parameters are the type of the code/decoder, the number of information bits and
+parameters define the type of code/decoder, the number of information bits and
 the codeword size, respectively. These parameters have a direct impact on the
 selection of the \emph{channel encoder} and the \emph{channel decoder} blocks
 in the simulation. Fig.~\ref{fig:ctx_simu_com_chain_in_out} shows the BER output
@@ -1530,18 +1535,18 @@ performances estimated with Monte Carlo simulations on a large variety of code
 families and decoding parameters. On each graphic, the BER is plotted with solid
 lines while the FER is plotted with dashed lines. Both the BER and the FER
 depend on the SNR ($E_b/N_0$). The higher the SNR is, the lower the noise is and
-therefore fewer errors. For instance, in Fig.~\ref{fig:ctx_bfer_ldpc}, on
-the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR, the
-configuration 2 of the decoder achieves better decoding performance than the
+therefore the number of errors. In Fig.~\ref{fig:ctx_bfer_ldpc}, for instance,
+on the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR,
+the configuration 2 of the decoder achieves better decoding performance than the
 configuration 1 because the {\color{Paired-3} green} curve is below the
-{\color{Paired-7} orange} curve. In other terms, lower is better. In the plotted
-examples, there is two decoder configurations, the second one gives better
-BER/FER decoding performance. This is achieved at the cost of a higher
-computational effort during the decoding process compared to the first
-configuration. The purpose of Fig.~\ref{fig:ctx_bfer} is not to compare the
-codes with each others but to introduce the typical BER/FER curves that will be
-used in the next chapters. It shows that there is a large set of possible
-combinations of codes and decoding configurations.
+{\color{Paired-7} orange} curve. In other terms, lower is better. When multiple
+configurations are shown together, they are ordered by increasing BER/FER
+performance. This is achieved at the cost of a higher computational effort
+during the decoding process compared to the first configuration. The purpose of
+Fig.~\ref{fig:ctx_bfer} is not to compare codes with each others but to
+introduce the typical BER/FER curves that will be used in the next chapters. It
+shows that there is a large set of possible combinations of codes and decoding
+configurations.
 
 \newpage
 \subsection{Software-Defined Radio}
@@ -1549,9 +1554,9 @@ combinations of codes and decoding configurations.
 A Software-Defined Radio (SDR) is a radio communication system where components
 traditionally implemented in hardware are instead implemented by means of
 software. The concept was first introduced by Joseph Mitola in
-1992~\cite{Mitola1992,Mitola1993}. Since, SDR systems have been used in various
-contexts like for military needs or amateur radio for instance. Recently, the
-SDR is considered as a good candidate for the 5G wireless mobile network and
+1992~\cite{Mitola1992,Mitola1993}. Since then, SDR systems have been used in
+various contexts such as military needs or amateur radio for instance. Recently,
+the SDR is considered a good candidate for the 5G wireless mobile network and
 more generally in cloud radio access networks. This is detailed in the next
 paragraphs.
 
@@ -1571,20 +1576,20 @@ terminals.
   \quad{}
   \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
   \quad{}
-  \subfloat[][Cloud-RAN]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
+  \subfloat[][Cloud-RAN.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
   \caption
     [Base stations evolution in mobile networks.]
     {Base stations evolution in mobile networks.}
   \label{fig:ctx_sdr_base_station}
 \end{figure}
 
-In the two first generations of mobile network (1G and 2G), all the signal
+In the two first generations of mobile networks (1G and 2G), all the signal
 processing was treated in the base station near the antenna (cf.
 Fig~\ref{fig:ctx_sdr_base_station_1G_2G}). Since the third generation of mobile
 networks (3G) two types of processing have been separated: 1) the radio
 frequency (RF) processing on the one side and 2) the base band (BB) processing
 on the other side. The RF processing is attached to the antenna while the BB
-processing is regrouped for multiple antennas (cf.
+processing is shared among multiple antennas (cf.
 Fig~\ref{fig:ctx_sdr_base_station_3G_4G}). The range of this type of station is
 approximately 40 kilometers. The connexions between the antennas and the BB
 station are made through wired links. The RF processing mainly converts the
@@ -1592,7 +1597,7 @@ analog signal into a digital one (or the other way around) while the BB station
 performs all the digital processing including the encoding/decoding and the
 digital modulation/demodulation. The purpose of separation of the RF and BB
 processing is to be able to put the BB stations near the urban centers and so to
-facilitate their maintenance (cost reduction).
+reduce their cost of maintenance.
 
 The virtualization of the mobile network is considered by industrial
 actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
@@ -1603,15 +1608,15 @@ In this network structure, the computational hardware resources of the BB
 processing are shared between multiple antennas (cf.
 Fig~\ref{fig:ctx_sdr_base_station_5G_future}). This enables new optimizations:
 1) better adaptation to non-uniform traffic; 2) energy saving; 3) throughput
-increase and latency reduction; 4) increased scalability and
-maintainability~\cite{Checko2015a}. To this purpose, the computational BB units
-have to be virtualized: there should no longer be dedicated hardware to specific
+increase and latency reduction; 4) scalability and maintainability
+increase~\cite{Checko2015a}. To this purpose, the computational BB units have to
+be virtualized: there should no longer be hardware dedicated to specific
 antenna. On the contrary, the BB computational effort has to be distributed at
 the cloud level.
 
-From the first to the forth generation of mobile networks, the BB processing was
-systematically made on Application-Specific Integrated Circuits (ASICs or
-dedicated hardware). But with the emergence of the Cloud-RAN more flexible
+From the first to the fourth generation of mobile networks, the BB processing
+was systematically made on Application-Specific Integrated Circuits (ASICs or
+dedicated hardware). However, with the emergence of the Cloud-RAN more flexible
 solutions like the software ones are seriously considered. On the receiver side,
 the algorithms can be compute intensive (especially the digital demodulation and
 the channel decoding). Knowing that, a main challenge is to be able to achieve
@@ -1625,10 +1630,10 @@ ones~\cite{Nikaein2015,Rodriguez2017}.
 
 Non-Orthogonal Multiple Access (NOMA) mechanisms are investigated as means to
 improve the fifth-generation mobile communication systems (5G)~\cite{Islam2017}
-to realize massive connectivity and to reduce bit error rates. Sparse Code
+to support massive connectivity and to reduce bit error rates. Sparse Code
 Multiple Access (SCMA) is a NOMA mechanism that offers better bit error rate
 performance and higher spectral efficiency, while the sparsity of the codebooks
-ensures lower complexity of decoding compared to other non-orthogonal
+ensures a lower complexity of decoding compared to other non-orthogonal
 modulations~\cite{Nikopour2013}. SCMA is a promising candidate for 5G
 communication systems since it provides up to 3 times more connectivity by
 spreading the information of each user's codebook over sets of shared Orthogonal
@@ -1751,13 +1756,12 @@ Cloud Radio Access Networks (Cloud-RANs).
 \subsubsection{Overview of the System Model}
 \label{sec:ctx_scma_overview}
 
-In this section, symbols $\mathbb{B}$, $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{R}$
-and $\mathbb{C}$ denote binary, natural, integer, real and complex numbers.
-Scalar, vector and matrix are presented as $x$, $\bm{x}$, $\bm{X}$ respectively.
-The $n^\text{th}$ element of a vector denoted by $\bm{x}_n$ and $\bm{X}_{n,m}$
-is the element of $n^\text{th}$ row and $m^\text{th}$ column of matrix $\bm{X}$.
-Notation $\diag(x)$ shows a diagonal matrix where its n'th diagonal element is
-$\bm{x_n}$. In addition, the transpose of a matrix is expressed as $\bm{X^T}$.
+In this section, scalar, vector and matrix are presented as $x$, $\bm{x}$,
+$\bm{X}$ respectively. The $n^\text{th}$ element of a vector denoted by
+$\bm{x}_n$ and $\bm{X}_{n,m}$ is the element of $n^\text{th}$ row and
+$m^\text{th}$ column of matrix $\bm{X}$. Notation $\diag(x)$ shows a diagonal
+matrix where its n'th diagonal element is $\bm{x_n}$. In addition, the transpose
+of a matrix is expressed as $\bm{X^T}$.
 
 An SCMA encoder with $J$ users (layers) and $K$ physical resources is a function
 that maps a binary stream of data to $K$-dimensional complex constellations
@@ -1771,7 +1775,7 @@ as OFDM tones. Fig.~\ref{fig:ctx_scma_enc} shows that in the multiplexed scheme
 of SCMA, all chosen codewords of the $J$ layers are added together after being
 multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
 is shown in Fig.~\ref{fig:ctx_scma_codec}. The output of the SCMA encoder is
-affected by the white additive noise $\bm{n}$:
+altered by a white additive noise $\bm{n}$:
 \begin{equation}
   \label{eq:ctx_scma_1}
   \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
@@ -1854,7 +1858,7 @@ Fig.~\ref{fig:ctx_scma_dec_graph} shows a Bayesian factor graph representation
 of an MPA decoder with six users and four physical resources. Thanks to the
 sparsity of the codebooks, exactly three users collide in each physical
 resource. There are four possible codewords for each of the three connected
-user's codebooks which gives 64 possible combined codewords in each physical
+user's codebooks, which gives 64 possible combined codewords in each physical
 resource.
 
 In the first step of the MPA, the 64~distances between each possible
@@ -1866,7 +1870,7 @@ combined codeword and the actual received codeword are calculated:
   \sum \bm{h}_{l,m_u} \bm{x}_{l,m_u} ||},
 \end{equation}
 where $\zeta$ is the set of users connected to resource $\beta$ and the
-considered codeword is denoted as $m$.
+considered codeword is denoted as~$m$.
 % For instance, \eqref{eq:ctx_scma_5} can be rewritten for resource 4 as:
 % \begin{equation}
 %   \label{eq:ctx_scma_6}
@@ -1890,7 +1894,7 @@ After calculating the residual probability of each codeword with
 received codewords among the users and resources nodes of the factor-graph.
 According to Fig.~\ref{fig:ctx_scma_dec_alg} (I), a message from resources to
 users has been defined to contain extrinsic information of two other connected
-users. For instance, a message from resource 4 to user 2 containing the
+users. For instance, a message from resource~4 to user~2 containing the
 probability information of codeword $i$ can be expressed as:
 \begin{equation}
   \label{eq:ctx_scma_8}
@@ -1906,9 +1910,9 @@ guess swap at the user node:
 \begin{equation}
   \label{eq:ctx_scma_9}
   \mu_{UE3 \rightarrow RES1}(i) = \frac{\mu_{RES3 \rightarrow UE3}(i)}
-  {\sum_i\mu_{RES3 \rightarrow UE3}(i)},
+  {\sum_i\mu_{RES3 \rightarrow UE3}(i)}.
 \end{equation}
-message passing between users and resources (see \eqref{eq:ctx_scma_8} and
+Message passing between users and resources (see \eqref{eq:ctx_scma_8} and
 \eqref{eq:ctx_scma_9}) will be repeated three to eight times to reach the
 desired decoding performance. The final belief at each user $B(i)$ is the
 multiplication of all incoming messages as illustrated in
@@ -1939,7 +1943,7 @@ simplifies \eqref{eq:ctx_scma_8} in:
   \mu_{UE2 \rightarrow RES1}(j) + \mu_{UE3 \rightarrow RES1}(k),
 \end{equation}
 due to elimination of exponential's high dynamic ranges, there is no need to
-normalize the guess swap like in \eqref{eq:ctx_scma_9} and
+normalize the guess swap unlike in \eqref{eq:ctx_scma_9} and
 $\mu_{UE3 \rightarrow RES1}(i) = \mu_{RES3 \rightarrow UE3}(i).$
 The rest of the algorithm can be expressed as follows:
 \begin{equation}
@@ -2148,12 +2152,12 @@ problems:
 
   \item \textbf{Algorithmic heterogeneity:} A large number of channel codes have
     been designed over time. For each kind of code, several decoding
-    configurations are available. While it is straightforward to describe a
+    configurations are possible. While it is straightforward to describe a
     unique coding scheme, it is more challenging to have a unified software
     description that supports all the coding schemes and their associated
     algorithms. This difficulty comes from the heterogeneity of the data
     structure necessary to describe a channel code and the associated decoder:
-    turbo codes are based on trellis scheme, LDPC codes are well-defined on
+    turbo codes are based on trellis schemes, LDPC codes are well-defined on
     factor graphs and polar codes are efficiently decoded using binary trees.
 
   \item \textbf{Reproducibility:} It is usually tedious to reproduce results
@@ -2188,72 +2192,80 @@ challenges:
     ones like Windows, macOS and Linux.
 \end{enumerate}
 
-\section{Organization and Contributions}
+% \section{Organization and Contributions}
+
+% % In this thesis we propose to study the most time consuming algorithms of digital
+% % communication systems, to adapt and optimize them on General Purpose Processors
+% % (GPPs) like the CPUs. The long simulation times and the real world application
+% % requirements make it desirable to have \textbf{high throughput and low latency
+% % implementations}. The algorithmic heterogeneity requires \textbf{flexible,
+% % modular software}. The reproducibility issue pushes towards a \textbf{portable}
+% % and \textbf{open-source software}.
 
 % In this thesis we propose to study the most time consuming algorithms of digital
 % communication systems, to adapt and optimize them on General Purpose Processors
-% (GPPs) like the CPUs. The long simulation times and the real world application
-% requirements make it desirable to have \textbf{high throughput and low latency
-% implementations}. The algorithmic heterogeneity requires \textbf{flexible,
-% modular software}. The reproducibility issue pushes towards a \textbf{portable}
-% and \textbf{open-source software}.
+% (GPPs) like the CPUs. The long simulation times and the real-world application
+% requirements make it desirable to have portable, flexible, high throughput and
+% low latency implementations. The latter are presented in Chapter~\ref{chap:opt}
+% and evaluated in Chapter~\ref{chap:eval}. The algorithmic heterogeneity requires
+% modular software and the reproducibility issue pushes towards an open-source
+% software: this is discussed in Chapter~\ref{chap:aff3ct}. In real-time contexts,
+% maintaining a good level of performance can be challenging. Solutions to help in
+% this direction have been proposed in Chapter~\ref{chap:sdr}.
 
-In this thesis we propose to study the most time consuming algorithms of digital
-communication systems, to adapt and optimize them on General Purpose Processors
-(GPPs) like the CPUs. The long simulation times and the real-world application
-requirements make it desirable to have portable, flexible, high throughput and
-low latency implementations. The latter are presented in Chapter~\ref{chap:opt}
-and evaluated in Chapter~\ref{chap:eval}. The algorithmic heterogeneity requires
-modular software while the reproducibility issue pushes towards an open-source
-software: this is discussed in Chapter~\ref{chap:aff3ct}. In real-time contexts,
-maintaining a good level of performance can be challenging. Solutions to help in
-this direction have been proposed in Chapter~\ref{chap:sdr}.
+% In Chapter~\ref{chap:opt}, new efficient implementations of the LDPC, polar and
+% turbo decoders are proposed as well as an efficient implementation of the SCMA
+% demodulator. First, an overall portable methodology is detailed to meet the high
+% throughput constraint required by both the simulations and the real-time
+% systems. This methodology is based on the Single Instruction Multiple Data
+% (SIMD) model implemented in most of the current CPUs. Depending on how the CPU
+% SIMD instructions are used, it is possible to maximize the throughput or the
+% latency of the implemented algorithms. Then, specific optimized implementations
+% are detailed for each decoder/demodulator. These implementations focus on
+% maximizing the flexibility, high throughput and low latency. Depending on the
+% implementations, some compromises have to be made and some of these
+% characteristics can be maximized unbeknownst to others.
 
-In Chapter~\ref{chap:opt}, new efficient implementations of the LDPC, polar and
-turbo decoders are proposed as well as an efficient implementation of the SCMA
-demodulator. First, an overall portable methodology is detailed to meet the high
-throughput constraint required by both the simulations and the real-time
-systems. This methodology is based on the Single Instruction Multiple Data
-(SIMD) model implemented in most of the current CPUs. Depending on how the CPU
-SIMD instructions are used, it is possible to maximize the throughput or the
-latency of the implemented algorithms. Then, specific optimized implementations
-are detailed for each decoder/demodulator. These implementations focus on
-maximizing the flexibility, high throughput and low latency. Depending on the
-implementations, some compromises have to be made and some of these
-characteristics can be maximized unbeknownst to others.
+% In Chapter~\ref{chap:aff3ct}, \AFFECT, our toolbox dedicated to the forward
+% error correction algorithms is presented. \AFFECT is unique in the domain and it
+% is composed by many various algorithm implementations (including those presented
+% in Chapter~\ref{chap:opt}). \AFFECT is the software that enables the signal
+% processing algorithms heterogeneity thanks to a robust software architecture
+% based on well-defined and coherent interfaces. It allows reproducibility of the
+% results as it is open-source and extensively tested. \AFFECT also contains a
+% parallel functional simulator and enables extensive exploration/validation of
+% existing or new algorithms on a large combination of parameters.
 
-In Chapter~\ref{chap:aff3ct}, \AFFECT, our toolbox dedicated to the forward
-error correction algorithms is presented. \AFFECT is unique in the domain and it
-is composed by many various algorithm implementations (including those presented
-in Chapter~\ref{chap:opt}). \AFFECT is the software that enables the signal
-processing algorithms heterogeneity thanks to a robust software architecture
-based on well-defined and coherent interfaces. It allows reproducibility of the
-results as it is open-source and extensively tested. \AFFECT also contains a
-parallel functional simulator and enables extensive exploration/validation of
-existing or new algorithms on a large combination of parameters.
+% In Chapter~\ref{chap:eval}, the efficient algorithm implementations proposed
+% in Chapter~\ref{chap:opt} are evaluated and compared with the state-of-the-art.
+% The FEC software decoders hall of fame is introduced to summarize and to compare
+% the proposed contributions and the other works in the literature. Some metrics
+% are defined for ease of comparison. These metrics focus on normalized
+% throughput, proper use of hardware and energy efficiency. Finally, the \AFFECT
+% simulator efficiency is demonstrated on various multi-cores CPUs and on
+% a multi-node cluster.
 
-In Chapter~\ref{chap:eval}, the efficient algorithm implementations proposed
-in Chapter~\ref{chap:opt} are evaluated and compared with the state-of-the-art.
-The FEC software decoders hall of fame is introduced to summarize and to compare
-the proposed contributions and the other works in the literature. Some metrics
-are defined for ease of comparison. These metrics focus on normalized
-throughput, proper use of hardware and energy efficiency. Finally, the \AFFECT
-simulator efficiency is demonstrated on various multi-cores CPUs and on
-a multi-node cluster.
+% In Chapter~\ref{chap:sdr}, a new embedded Domain Specific Language (eDSL) for
+% the SDR is presented. The AFFECT software suite is enriched with new blocks
+% dedicated to the efficient implementation of real time digital communication
+% systems on multi-core CPUs. These blocks enable automatic parallelism. As an
+% example of use, a full DVB-S2 transceiver has been implemented. All the digital
+% processing is performed with \AFFECT while the analogical communications have
+% been achieved with Universal Software Radio Peripherals (USRPs). The results
+% matches the satellite real time constraints.
 
-In Chapter~\ref{chap:sdr}, a new embedded Domain Specific Language (eDSL) for
-the SDR is presented. The AFFECT software suite is enriched with new blocks
-dedicated to the efficient implementation of real time digital communication
-systems on multi-core CPUs. These blocks enable automatic parallelism. As an
-example of use, a full DVB-S2 transceiver has been implemented. All the digital
-processing is performed with \AFFECT while the analogical communications have
-been achieved with Universal Software Radio Peripherals (USRPs). The results
-matches the satellite real time constraints.
+% These various contributions have been the topic of scientific publications. They
+% are given at the end of the manuscript. As a convention in the document, the
+% numeric citations are contributions of this thesis while the alphabetic
+% citations concern the other works in the literature.
 
-These various contributions have been the topic of scientific publications. They
-are given at the end of the manuscript. As a convention in the document, the
-numeric citations are contributions of this thesis while the alphabetic
-citations concern the other works in the literature.
+
+
+
+
+
+
+
 
 % The manuscript is organized as follow: Chapter~\ref{chap:opt} explains the
 % optimizations made to meet the high throughputs and low latencies constraints on
