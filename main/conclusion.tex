@@ -16,7 +16,7 @@ time is spent in the receiver and more precisely in the decoding stage. This is
 why, we propose efficient implementations of these algorithms on CPUs. The
 proposed implementations enable fast evaluations and validations of various
 configurations. Moreover, there is a growing need to build full digital
-communication chains in software. This is what we call the Software Defined
+communication chains in software. This is what we call the Software-Defined
 Radio (SDR). Thus, the challenge is to take advantage of multi-core CPU
 architectures to schedule the processing in parallel.
 
@@ -27,27 +27,29 @@ level presents in the actual CPUs is the Single Instruction Multiple Data (SIMD)
 model. In Section~\ref{sec:opt_mipp}, \MIPP, a generic SIMD library, is
 proposed. This library enables simplified and portable use of the CPUs
 vectorized instructions. Then, in Section~\ref{sec:opt_vec}, two main
-vectorization strategies are detailed: the intra-frame SIMD strategy and the
-inter-frame SIMD strategy. The intra-frame SIMD strategy consists in using the
-algorithm inherent parallelism to speedup the computation in a single frame
-while the inter-frame SIMD strategy processes several frames in parallel.
-In a second part of this chapter, specific optimizations for each channel codes
-are given. First, a new SIMD implementation of the LDPC Belief Propagation (BP)
-decoder is proposed. This decoder rests upon the inter-frame strategy and is
-able to adapt to many algorithmic sub-variants which is without precedent in the
-domain. Then, the optimizations of two polar decoders is proposed, namely the
-Successive Cancellation (SC) and the Successive Cancellation List (SCL)
-algorithms. Both the inter-frame and intra-frame strategies are implemented.
-This two decoders are based on a recursive description and the decoding process
-can be see as a tree traversal. Some specific optimizations like the tree
-pruning are performed to drastically reduce the number of tree nodes. The
-recursive calls have also been unrolled and generated decoders are proposed to
-reach highest possible throughputs and latencies. This comes at the cost of
-reduced flexibility. Finally, an SIMD implementation of the turbo decoder
-(max-log-MAP algorithms) is given. The implementation uses the inter-frame
-SIMD strategy and targets high throughputs. Specific optimization have been made
-to increase the decoder efficiency: some loops at the core of the decoding
-process have been merged and unrolled to increase the registers reuse.
+vectorization strategies are detailed: the intra-frame SIMD strategy that
+enables very low latency implementations and the inter-frame SIMD strategy that
+enables very high throughput implementations. The intra-frame SIMD strategy
+consists in using the algorithm inherent parallelism to speedup the computation
+in a single frame while the inter-frame SIMD strategy processes several frames
+in parallel. In a second part of this chapter, specific optimizations for each
+channel codes are given. First, a new SIMD implementation of the LDPC Belief
+Propagation (BP) decoder is proposed. This decoder rests upon the inter-frame
+strategy and focuses on maximizing the flexibility. Indeed, it is able to adapt
+to many algorithmic sub-variants which is without precedent in the domain. Then,
+the optimizations of two polar decoders is proposed, namely the Successive
+Cancellation (SC) and the Successive Cancellation List (SCL) algorithms. Both
+the inter-frame and intra-frame strategies are implemented. This two decoders
+are based on a recursive description and the decoding process can be see as a
+tree traversal. Some specific optimizations like the tree pruning are performed
+to drastically reduce the number of tree nodes. The recursive calls have also
+been unrolled and generated decoders are proposed to reach the best possible
+throughputs and latencies. This comes at the cost of reduced flexibility.
+Finally, an SIMD implementation of the turbo decoder (max-log-MAP algorithms) is
+given. The implementation uses the inter-frame SIMD strategy and targets high
+throughputs. Specific optimization have been made to increase the decoder
+efficiency: some loops at the core of the decoding process have been merged and
+unrolled to increase the registers reuse.
 
 %In Chapter~\ref{chap:aff3ct}, \AFFECT, our open-source toolbox, is presented.
 \AFFECT is a library of digital communication algorithms, developed as part of
@@ -74,10 +76,10 @@ well as state-of-the-art works. These HoFs allow to compare CPU and GPU
 implementations. Some metrics like the normalized throughput, the Throughput
 Under Normalized Decoding Cost (TNDC) and the energy consumption are defined.
 Finally the \AFFECT simulator performance is evaluated over several server-class
-CPUs. It shows that the simulator is able to take advantage of the new SIMD
-instructions and multi-core architecture. During the simulation of a polar code,
-a peak performance of 11 Gb/s is reached on a AMD\R  EPYC CPU. To the best of
-our knowledge, this is the first work to reach this level of performance.
+CPUs. It shows that the simulator is able to take advantage of various SIMD
+instructions and multi-core architectures. During the simulation of a polar
+code, a peak performance of 11 Gb/s is reached on a AMD\R EPYC CPU. To the best
+of our knowledge, this is the first work to reach this level of performance.
 
 The \AFFECT library has been enriched with a new embedded Domain Specific
 Language (eDSL). Main components have been designed to satisfy the SDR needs in
@@ -112,19 +114,19 @@ library where some sub-parts of the toolbox are reused or some methodologies are
 extracted.
 
 To conclude on this thesis work, the contributions are 1) the definition of task
-level optimization techniques that enable high performance implementations of
-signal processing algorithms on CPUs, 2) an open-source software that enables
-homogeneous uses of various algorithms and implementations and 3) a new language
-dedicated to the SDR needs that enables to define digital communication systems
-taking advantage of the CPUs parallel architecture. \AFFECT has been designed
-for high performance keeping in mind that the algorithms come from the signal
-community experts that are not familiar with CPU optimization techniques.
-Consequently, there is a clear separation of concerns between the tasks design
-and their parallel execution. Co-design is then possible: signal experts can
-focus on the tasks description while HPC experts can work independently on the
-parallel execution thanks to the eDSL abstraction. To the best of our knowledge,
-\AFFECT is the first environment to propose this level of performance combined
-with the integration of many algorithms.
+level optimization techniques that enable high performance portable
+implementations of signal processing algorithms on CPUs, 2) an open-source
+software that enables homogeneous uses of various algorithms and implementations
+and 3) a new language dedicated to the SDR needs that enables to define digital
+communication systems taking advantage of the CPUs parallel architecture.
+\AFFECT has been designed for high performance keeping in mind that the
+algorithms come from the signal community experts that are not familiar with CPU
+optimization techniques. Consequently, there is a clear separation of concerns
+between the tasks design and their parallel execution. Co-design is then
+possible: signal experts can focus on the tasks description while HPC experts
+can work independently on the parallel execution thanks to the eDSL abstraction.
+To the best of our knowledge, \AFFECT is the first environment to propose this
+level of performance combined with the integration of many algorithms.
 
 % \newpage
 \section*{Perspectives}

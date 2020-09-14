@@ -6,38 +6,107 @@
 \markboth{Introduction}{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-From time immemorial, man has sought to communicate. It started with the
-development of the spoken language. However, one of the main limitation with
-speech is that it only works at close range. To overcome this issue, the writing
-has been invented. Man has always been seeking for more efficient ways to extend
-his communication possibilities. Nowadays, with the advent of the Internet, the
-digital communications represent the last technology advances to communicate
-world-wide. Digital communications allow both live video transmission and the
-use of a messaging system for instance. With the growing number of users and
-needs, the digital communication systems are the subject of an important area of
-research. New digital communication systems have to be able to match high
-throughput and low latency constraints as well as acceptable energy consumption
-levels.
+% From time immemorial, man has sought to communicate. It started with the
+% development of the spoken language. However, one of the main limitation with
+% speech is that it only works at close range. To overcome this issue, the writing
+% has been invented. Man has always been seeking for more efficient ways to extend
+% his communication possibilities. Nowadays, with the advent of the Internet, the
+% digital communications represent the last technology advances to communicate
+% world-wide. Digital communications allow both live video transmission and the
+% use of a messaging system for instance. With the growing number of users and
+% needs, the digital communication systems are the subject of an important area of
+% research. New digital communication systems have to be able to match high
+% throughput and low latency constraints as well as acceptable energy consumption
+% levels.
 
-Traditionally, the digital communication systems are implemented in hardware, on
+% Traditionally, the digital communication systems are implemented in hardware, on
+% dedicated chips. The required signal processing algorithms are often very
+% specific and repetitive. Thus, they are good candidates for specialized
+% architectures. However, with the growing number of use cases and standards,
+% these algorithms are evolving and are becoming more and more complex. In this
+% context, it becomes interesting to consider more generic processing units.
+% For instance, this type of programmable processing units is available in the
+% computers and is commonly referred as the Central Process Unit (CPU). The CPUs
+% are General Purpose Processors (GPP) that can adapt to various types of
+% algorithms. Improving the computational and the energy efficiency of these
+% processors is one of the main concern in computer science. As they are largely
+% adopted for many use cases, the CPUs take advantage of the best manufacturing
+% processes (up to 7 nm). Thanks to their pipelined architecture they are able to
+% reach very high frequencies ranging from 1 to 4 GHz. They also come with
+% dedicated memory caches that enable efficient spatial and temporal reuse of
+% data. Nowadays, the computational efficiency of the CPUs relies on the
+% multi-core architecture as well as on the vectorized instructions. These type of
+% instructions are able to perform the same operation on a chunk of data. This is
+% also known as the Single Instruction Multiple Data (SIMD) model.
+
+% From an energy point of view, it is clear that the CPUs are not directly
+% competitive with the dedicated architectures. Their large number of instructions
+% are the key of their capacity to adapt to many algorithms but this is also a
+% limitation when targeting specific implementations. Many transistors are
+% unused and consume a non-negligible amount of energy. On the other hand, the
+% main strength of the GPP architectures comes from their ability to be used
+% programmatically with high level languages. Consequently, the time required to
+% implement new algorithms is much faster on GPPs than on dedicated hardwares.
+% However, even with reduced implementation time, it is still challenging to
+% develop algorithms that take advantage of the CPUs parallelism levels. To this
+% purpose, dedicated compilers, languages and libraries are a important research
+% area in computer science. In the conception of digital communication systems, it
+% is largely adopted to rely on software implementations for the evaluation and
+% the validation of signal processing algorithms. Moreover, the software
+% implementations are also considered for real time uses. Their flexibility and
+% reduced time to market are becoming more and more attractive.
+
+% To help to the comprehension of the motivations, a parallel can be made between
+% the deep learning and the signal processing domains. Like for the deep learning,
+% the signal processing algorithms are based on a sub-set of predefined operators
+% and the communication between those algorithms rest upon regular work flows.
+% Thus, they are good candidates for dedicated languages. Firstly, like for the
+% neural networks, there is a preliminary phase where the digital communication
+% system is calibrated. This phase is generally made in software and requires
+% a non-negligible computational power (it is close to the learning phase in
+% machine learning). Then, once the characteristics of the system has been chosen,
+% the calibrated algorithms can be implemented in hardware or in software.
+% Depending on the targeted throughput and latency, the real-time implementations
+% can be challenging as some of the processing are compute intensive. This
+% thesis proposes optimizations techniques for the signal processing algorithms
+% that are close to the one used in the deep learning domain. One of the most
+% significant is the use of short representations of the real numbers during the
+% computations.
+
+\subsubsection*{Digital Communications}
+
+Man has sought to communicate from time immemorial. Since then, man has always
+been seeking for more efficient ways to extend his communication possibilities.
+Nowadays, with the advent of the Internet, the digital communications represent
+the last technology advances to communicate world-wide. For instance, digital
+communications enable both live video transmission and the use of a messaging
+system. With the growing number of users and needs, the digital communication
+systems are the subject of an important area of research. New digital
+communication systems have to be able to match high throughput and low latency
+constraints as well as acceptable energy consumption levels.
+
+Traditionally, digital communication systems are implemented in hardware, on
 dedicated chips. The required signal processing algorithms are often very
 specific and repetitive. Thus, they are good candidates for specialized
 architectures. However, with the growing number of use cases and standards,
 these algorithms are evolving and are becoming more and more complex. In this
 context, it becomes interesting to consider more generic processing units.
-For instance, this type of programmable processing units is available in the
-computers and is commonly referred as the Central Process Unit (CPU). The CPUs
-are General Purpose Processors (GPP) that can adapt to various types of
-algorithms. Improving the computational and the energy efficiency of these
-processors is one of the main concern in computer science. As they are largely
-adopted for many use cases, the CPUs take advantage of the best manufacturing
-processes (up to 7 nm). Thanks to their pipelined architecture they are able to
-reach very high frequencies ranging from 1 to 4 GHz. They also come with
-dedicated memory caches that enable efficient spatial and temporal reuse of
-data. Nowadays, the computational efficiency of the CPUs relies on the
-multi-core architecture as well as on the vectorized instructions. These type of
-instructions are able to perform the same operation on a chunk of data. This is
-also known as the Single Instruction Multiple Data (SIMD) model.
+This type of programmable processing units is available in computers and is
+commonly referred as the Central Process Unit (CPU). The CPUs are General
+Purpose Processors (GPP) that can adapt to various types of algorithms.
+
+\subsubsection*{Computer Architecture}
+
+Improving the computational and the energy efficiency of these processors is one
+of the main concern in computer science. As they are largely adopted for many
+use cases, the CPUs take advantage of the best manufacturing processes (up to
+7~nm). Thanks to their pipelined architecture they are able to reach very high
+frequencies ranging from 1 to 4 GHz. They also come with dedicated memory caches
+that enable efficient spatial and temporal reuse of data. Nowadays, the
+computational efficiency of the CPUs relies on the multi-core architecture as
+well as on the vectorized instructions. These type of instructions are able to
+perform the same operation on a chunk of data. This is also known as the Single
+Instruction Multiple Data (SIMD) model.
 
 From an energy point of view, it is clear that the CPUs are not directly
 competitive with the dedicated architectures. Their large number of instructions
@@ -46,29 +115,118 @@ limitation when targeting specific implementations. Many transistors are
 unused and consume a non-negligible amount of energy. On the other hand, the
 main strength of the GPP architectures comes from their ability to be used
 programmatically with high level languages. Consequently, the time required to
-implement new algorithms is much faster on GPPs than on dedicated hardwares.
+implement new algorithms is much shorter on GPPs than on dedicated hardwares.
 However, even with reduced implementation time, it is still challenging to
-develop algorithms that take advantage of the CPUs parallelism levels. To this
-purpose, dedicated compilers, languages and libraries are a important research
-area in computer science. In the conception of digital communication systems, it
-is largely adopted to rely on software implementations for the evaluation and
-the validation of signal processing algorithms. Moreover, the software
-implementations are also considered for real time uses. Their flexibility and
-reduced time to market are becoming more and more attractive.
+develop algorithms that take advantage of the CPUs parallelism levels.
 
-To help to the comprehension of the motivations, a parallel can be made between
-the deep learning and the signal processing domains. Like for the deep learning,
-the signal processing algorithms are based on a sub-set of predefined operators
-and the communication between those algorithms rest upon regular work flows.
-Thus, they are good candidates for dedicated languages. Firstly, like for the
-neural networks, there is a preliminary phase where the digital communication
-system is calibrated. This phase is generally made in software and requires
-a non-negligible computational power (it is close to the learning phase in
-machine learning). Then, once the characteristics of the system has been chosen,
-the calibrated algorithms can be implemented in hardware or in software.
-Depending on the targeted throughput and latency, the real-time implementations
-can be challenging as some of the processing are compute intensive. This
-thesis proposes optimizations techniques for the signal processing algorithms
-that are close to the one used in the deep learning domain. One of the most
-significant is the use of short representations of the real numbers during the
-computations.
+\subsubsection*{Hardware Abstraction and Software}
+
+The ever growing complexity of processors motivates new hardware abstractions.
+Even if it is still possible to write assembly codes, one should agree that it
+is not adapted to real-size applications. Moreover, in general the designers of
+an application are not familiar with the specificities of the CPU architectures.
+Then, it becomes important to propose new models (or abstractions) on top of the
+hardware, enabling the efficient use of processors to the greatest number of
+people. To this purpose, dedicated compilers, languages and libraries are an
+important research area in computer science.
+
+In the conception of digital communication systems, it is now common to rely on
+software implementations for the evaluation and the validation of signal
+processing algorithms. These evaluation and validation steps consist in
+the simulation of the whole communication system and it is compute intensive.
+Thus, high performance implementations are required.
+
+Moreover, the software implementations are also considered for real-time uses.
+Their flexibility and reduced time to market are becoming more and more
+attractive.
+
+\subsubsection*{Contributions}
+
+In this thesis we propose to study the most time consuming algorithms of digital
+communication systems, to adapt and optimize them on General Purpose Processors
+(GPPs) like the CPUs. The long simulation times and the real-world application
+requirements make it desirable to have portable, flexible, high throughput and
+low latency implementations. The proposed implementations are shown to be
+competitive with the state-of-the-art ones. Contrary to the other works, this
+thesis strives to extract generic methodologies and strategies common to the
+majority of the signal processing algorithms. And, the proposed implementations
+tries to be as flexible as possible without sacrificing too much the
+performance.
+
+The signal processing algorithms come with various characteristics. Thus, it is
+of interest to be able to manage this algorithmic heterogeneity, to find the
+similarities and to identify the differences. In this work, the various
+implementations have been package in one single software library, namely
+\AFFECT. These implementations cohabit together thanks to well-defined
+interfaces and an adapted software architecture based on the Object-Oriented
+Programming (OOP) paradigm.
+
+An other important concern of this work is the ability to reproduce the
+scientific results. Indeed, all the proposed implementations are regrouped in
+\AFFECT which is an open-source software. Specific strategies has been operated
+to minimize the possible regressions based on the digital communication systems
+characteristics. These regression strategies are automated and ensure that the
+source code remain stable even if many contributors are working together.
+
+These various contributions have been the topic of scientific publications in
+both the computer science and the signal processing communities. They are given
+at the end of the manuscript (see the \hyperref[sec:publi]{Personal
+Publications} section). As a convention in the document, the numeric citations
+are contributions of this thesis while the alphabetic citations concern the
+other works in the literature.
+
+\subsubsection*{Dissertation Organization}
+
+This dissertation is organized in five chapters. The first chapter describes the
+context and details the objectives. The other chapters presents our
+contributions.
+
+In Chapter~\ref{chap:ctx}, the digital communication systems are presented and
+defined. Then, the most time consuming part of these systems is detailed, namely
+the channel decoders. After that, applicative contexts of this thesis are
+defined. The two main ones are the functional simulation and the
+Software-Defined Radio (SDR). The functional simulation enables the evaluation
+and the validation of different digital communication systems while the SDR
+corresponds to the real-time execution of these systems in software. Finally,
+the main problematics are exposed.
+
+In Chapter~\ref{chap:opt}, new efficient implementations of the decoders are
+proposed. First, an overall portable methodology is detailed to meet the high
+throughput constraint required by both the simulations and the real-time
+systems. This methodology is based on the Single Instruction Multiple Data
+(SIMD) model implemented in most of the current CPUs. Depending on how the CPU
+SIMD instructions are used, it is possible to maximize the throughput or the
+latency of the implemented algorithms. Then, specific optimized implementations
+are detailed for each signal processing algorithm. These implementations focus
+on maximizing the flexibility, high throughput and low latency. Depending on the
+implementations, some compromises have to be made and some of these
+characteristics can be maximized unbeknownst to others.
+
+In Chapter~\ref{chap:aff3ct}, \AFFECT, our toolbox dedicated to the forward
+error correction (FEC) algorithms is presented. \AFFECT is unique in the domain
+and it is composed by many various algorithm implementations (including those
+presented in Chapter~\ref{chap:opt}). \AFFECT is the software that enables the
+signal processing algorithms heterogeneity thanks to a robust software
+architecture based on well-defined and coherent interfaces. It allows
+reproducibility of the results as it is open-source and extensively tested.
+\AFFECT also contains a parallel functional simulator and enables extensive
+exploration/validation of existing or new algorithms on a large combination of
+parameters.
+
+In Chapter~\ref{chap:eval}, the efficient algorithm implementations proposed
+in Chapter~\ref{chap:opt} are evaluated and compared with the state-of-the-art.
+The FEC software decoders hall of fame is introduced to summarize and to compare
+the proposed contributions and the other works in the literature. Some metrics
+are defined for ease of comparison. These metrics focus on normalized
+throughput, proper use of hardware and energy efficiency. Finally, the \AFFECT
+simulator efficiency is demonstrated on various multi-cores CPUs and on
+a multi-node cluster.
+
+In Chapter~\ref{chap:sdr}, a new embedded Domain Specific Language (eDSL) for
+the SDR is presented. The AFFECT software suite is enriched with new blocks
+dedicated to the efficient implementation of real-time digital communication
+systems on multi-core CPUs. These blocks enable automatic parallelism. As an
+example of use, a full DVB-S2 transceiver has been implemented. All the digital
+processing is performed with \AFFECT while the analogical communications have
+been achieved with Universal Software Radio Peripherals (USRPs). The results
+matches the satellite real-time constraints.
