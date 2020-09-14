@@ -4,5 +4,14 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Personal Publications}
 
-\printbibliography[title={Personal Publications}, env=bibliographyNUM, keyword=Cassagne, resetnumbers=true]
-\label{sec:publi}
+\chapter*{Personal Publications}
+\label{chap:publi}
+
+\section*{International Journals}
+\printbibliography[heading=none, title={International Journals}, env=bibliographyNUM, keyword=Cassagne, resetnumbers=true, type=article]
+
+\section*{International Conferences}
+\printbibliography[heading=none, title={International Conferences}, env=bibliographyNUM, keyword=Cassagne, type=inproceedings]
+
+\section*{National Conferences and Posters}
+\printbibliography[heading=none, title={National Conferences and Posters}, env=bibliographyNUM, keyword=Cassagne, nottype=article, nottype=inproceedings]
