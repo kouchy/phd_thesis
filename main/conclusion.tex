@@ -9,12 +9,12 @@
 \section*{Conclusion}
 
 In the context of digital communications, channel coding schemes are widely
-spread. This thesis focused on three channel codes present in most of the
-current digital communication standards: the LDPC codes, the polar codes and the
-turbo codes. In digital communication systems, most of the computational
+spread. This thesis focused on three channel codes that are present in most of
+the current digital communication standards: the LDPC codes, the polar codes and
+the turbo codes. In digital communication systems, most of the computational
 time is spent in the receiver and more precisely in the decoding stage. This is
-why, we propose efficient implementations of these algorithms on CPUs. The
-proposed implementations enable fast evaluations and validations of various
+why, we propose efficient implementations of these decoding algorithms on CPUs.
+The proposed implementations enable fast evaluations and validations of various
 configurations. Moreover, there is a growing need to build full digital
 communication chains in software. This is what we call the Software-Defined
 Radio (SDR). Thus, the challenge is to take advantage of multi-core CPU
@@ -37,42 +37,42 @@ channel codes are given. First, a new SIMD implementation of the LDPC Belief
 Propagation (BP) decoder is proposed. This decoder rests upon the inter-frame
 strategy and focuses on maximizing the flexibility. Indeed, it is able to adapt
 to many algorithmic sub-variants which is without precedent in the domain. Then,
-the optimizations of two polar decoders is proposed, namely the Successive
+the optimizations of two polar decoders are proposed, namely the Successive
 Cancellation (SC) and the Successive Cancellation List (SCL) algorithms. Both
 the inter-frame and intra-frame strategies are implemented. This two decoders
-are based on a recursive description and the decoding process can be see as a
+are based on a recursive description and the decoding process can be seen as a
 tree traversal. Some specific optimizations like the tree pruning are performed
 to drastically reduce the number of tree nodes. The recursive calls have also
 been unrolled and generated decoders are proposed to reach the best possible
 throughputs and latencies. This comes at the cost of reduced flexibility.
 Finally, an SIMD implementation of the turbo decoder (max-log-MAP algorithms) is
 given. The implementation uses the inter-frame SIMD strategy and targets high
-throughputs. Specific optimization have been made to increase the decoder
+throughputs. Specific optimizations have been made to increase the decoder
 efficiency: some loops at the core of the decoding process have been merged and
 unrolled to increase the registers reuse.
 
 %In Chapter~\ref{chap:aff3ct}, \AFFECT, our open-source toolbox, is presented.
 \AFFECT is a library of digital communication algorithms, developed as part of
 this thesis, focusing on high performance implementations. Its software
-architecture supports the algorithmic heterogeneity and many channel codes are
+architecture supports the algorithmic heterogeneity. Many channel codes are
 supported like the LDPC codes, the polar codes and the turbo codes detailed
 before. To the best of our knowledge, \AFFECT is the library with the most
 comprehensive support for channel coding algorithms. The toolbox also includes a
 BER/FER simulator. Many digital communication systems can be evaluated over
 various parameters. The simulator takes advantage of the multi-core CPU
 architectures to reduce the restitution time. All these features have been
-designed to enable reproducible science. A BER/FER comparator tools has been
+designed to enable reproducible science. A BER/FER comparator tool has been
 developed to easily search in a database of 500 pre-simulated BER/FER
 references. All there references are results simulated with \AFFECT and that can
-be reproduced. To this purpose, a pipeline of tests has been implemented: each
+be reproduced. To this purpose, a pipeline of tests has been implemented. Each
 time there is a modification in the source code, the database of references is
 replayed to avoid regressions.
 
 The new implementations have been evaluated and compared with the
 state-of-the-art. The results show levels of performance close to the best
 software implementations in the literature. Exhaustive surveys are given through
-software decoder Hall of Fames (HoFs). The proposed decoders ares reported as
-well as state-of-the-art works. These HoFs allow to compare CPU and GPU
+software decoder Hall of Fames (HoFs). The proposed decoders are reported as
+well as state-of-the-art works. These HoFs enable to compare CPU and GPU
 implementations. Some metrics like the normalized throughput, the Throughput
 Under Normalized Decoding Cost (TNDC) and the energy consumption are defined.
 Finally the \AFFECT simulator performance is evaluated over several server-class
@@ -83,38 +83,38 @@ of our knowledge, this is the first work to reach this level of performance.
 
 The \AFFECT library has been enriched with a new embedded Domain Specific
 Language (eDSL). Main components have been designed to satisfy the SDR needs in
-terms of 1) expressiveness; 2) performance. Most of the communication systems
-can be represented by a directed graph of processing tasks (dataflow model). The
-proposed eDSL uses this representation to improve the expressiveness. Indeed,
-the tasks data transfers and their execution are automatically managed by the
-eDSL. Moreover, in real-time contexts, the performance is an important aspect.
-To reduce the execution time, some data independent parts of the graph of tasks
-can be duplicated and each duplication can be executed on separated CPU cores.
-This strategy leads to an increased throughput. However, when it cannot be
-applied the well-known pipeline strategy have been implemented. Thus, the
-performance of the overall communication system can be increased up to the
-throughput of the slowest task. Then, the proposed eDSL is evaluated in an
-applicative context: the software implementation of the DVB-S2 standard. The
-results demonstrate the efficiency of the \AFFECT eDSL. Indeed, the proposed
-solution matches satellite real-time constraints (30 $\thicksim$ 50~Mb/s). This
-is the consequence of two main factors: 1) the task level optimizations, 2) the
-low overhead eDSL, with among others, an efficient implementation of the
-pipeline technique.
+terms of 1) expressiveness; 2) performance. Most of the digital communication
+systems can be represented by a directed graph of processing tasks (dataflow
+model). The proposed eDSL uses this representation to improve the
+expressiveness. Indeed, the tasks data transfers and their execution are
+automatically managed by the eDSL. Moreover, in real-time contexts, the
+performance is an important aspect. To reduce the execution time, some data
+independent parts of the graph of tasks can be duplicated. Each duplication can
+be executed on separated CPU cores. This strategy leads to an increased
+throughput. However, when it cannot be applied the well-known pipeline strategy
+have been implemented. Thus, the performance of the overall communication system
+can be increased up to the throughput of the slowest task. Then, the proposed
+eDSL is evaluated in an applicative context: the software implementation of the
+DVB-S2 standard physical layer. The results demonstrate the efficiency of the
+\AFFECT eDSL. Indeed, the proposed solution matches satellite real-time
+constraints (30 $\thicksim$ 50~Mb/s). This is the consequence of two main
+factors: 1) the task level optimizations, 2) the low overhead eDSL, with among
+others, an efficient implementation of the pipeline technique.
 
 \AFFECT is currently used in several industrial contexts for simulation purposes
 (Turbo concept, Airbus, Thales, Huawei) and for specific developments (CNES,
-Schlumberger, Airbus, Thales, Orange), as well as in academic projects (NAND
-French National Agency project, IdEx CPU, RST CNES). The MIT license chosen for
-the project enables industrial and academic partners to reuse parts of \AFFECT
-in their own projects without any restriction. Moreover, \AFFECT has been cited
-in scientific publications. Many works are exploiting the \AFFECT simulator as a
-reference for the decoding performance. In other works, \AFFECT has been
-enriched to support new features. And, in some cases, \AFFECT is used as a
-library where some sub-parts of the toolbox are reused or some methodologies are
-extracted.
+Schlumberger, Airbus, Thales, Orange, Safran), as well as in academic projects
+(NAND French National Agency project, IdEx CPU, RST CNES). The MIT license
+chosen for the project enables industrial and academic partners to reuse parts
+of \AFFECT in their own projects without any restriction. Moreover, \AFFECT has
+been cited in scientific publications. Many works are exploiting the \AFFECT
+simulator as a reference for the decoding performance. In other works, \AFFECT
+has been enriched to support new features. And, in some cases, \AFFECT is used
+as a library where some sub-parts of the toolbox are reused or some
+methodologies are extracted.
 
-To conclude on this thesis work, the contributions are 1) the definition of task
-level optimization techniques that enable high performance portable
+To conclude on this thesis work, the main contributions are 1) the definition of
+task level optimization techniques that enable high performance portable
 implementations of signal processing algorithms on CPUs, 2) an open-source
 software that enables homogeneous uses of various algorithms and implementations
 and 3) a new language dedicated to the SDR needs that enables to define digital
@@ -126,7 +126,8 @@ between the tasks design and their parallel execution. Co-design is then
 possible: signal experts can focus on the tasks description while HPC experts
 can work independently on the parallel execution thanks to the eDSL abstraction.
 To the best of our knowledge, \AFFECT is the first environment to propose this
-level of performance combined with the integration of many algorithms.
+level of performance combined with the integration of many digital communication
+algorithms.
 
 % \newpage
 \section*{Perspectives}
@@ -144,7 +145,7 @@ build new codes from various kernels that are not just powers of two. This is
 called multi-kernel polar codes. Some preliminary works have been conducted to
 find kernels that have good factorization properties. However, this is a brute
 force exploration and the complexity grows exponentially with the size of the
-kernels. It could be interesting to reduce the kernels exploration domain and to
+kernels. It could be interesting to reduce the kernel exploration domain and to
 apply HPC techniques to reduce the finding time. The multi-kernel polar codes
 construction is a promising area of research that could lead to decoding
 performance even closer to the Shannon limit.
@@ -155,17 +156,17 @@ growing interest for GPUs in the HPC community. The GPUs are very parallel
 architectures. In some conditions, the GPU implementations can lead to
 non-negligible reduction of the computational time compared to the
 implementations on CPU. It could be interesting to study the integration of
-GPU tasks in \AFFECT. One of the main challenges will be to manage the CPU to
-GPU and GPU to CPU transfers. Even if the GPUs are a good alternative to the
-CPUs, we believe that they will not be integrated in cloud-RAN architectures.
-The FPGAs look like to provide a better compromize between power efficiency and
+GPU tasks in \AFFECT. One of the main challenges is to manage the CPU to GPU and
+GPU to CPU transfers. Even if the GPUs are a good alternative to the CPUs, we
+believe that they will not be integrated in cloud-RAN architectures. The FPGAs
+look like to provide a better compromize between power efficiency and
 computational performance for scaling up. Their integration in \AFFECT could be
 a great challenge.
 
-Finally, the proposed eDSL could be enriched. Indeed, the pipeline stages are
-given by the user while they could be found automatically. The execution time of
-the tasks is mostly constant for a given CPU. Thus, an auto-tuning phase could
-be applied to determine a good configuration of the pipeline stages
+Finally, the proposed eDSL could be enriched. For instance, the pipeline stages
+are given by the user while they could be found automatically. The execution
+time of the tasks is mostly constant for a given CPU. Thus, an auto-tuning phase
+could be applied to determine a good configuration of the pipeline stages
 automatically. Moreover, the scheduling of the tasks inside a sequence is very
 basic. The tasks are not executed in parallel even if the data dependencies
 allow it. We think that a dynamic scheduling strategy like it can be found in
@@ -178,4 +179,4 @@ restitution time. These improvements could lead to an extension of the \AFFECT
 eDSL. Indeed, the targeted domain could be expended to the generalized streaming
 applications (image/video processing, cryptographic processing, networking, DSP,
 etc.). The challenge will be to identify the required additional modules and to
-integrate them into the eDSL without breaking the execution efficiency.
+integrate them into the eDSL with no impact on the execution efficiency.

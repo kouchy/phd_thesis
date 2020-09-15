@@ -1686,7 +1686,7 @@ decoding algorithm. This implementation largely relies on the inter-frame SIMD
 strategy combined with a fixed-point representation of the LLRs and some
 specializations for the LTE 8-state trellis.
 
-\section{SCMA Decoders}
+\section{SCMA Demodulators}
 \label{sec:opt_scma}
 
 Besides methodical improvements of the MPA such as log-MPA, hardware oriented
@@ -1851,6 +1851,7 @@ SIMD register are not used. The data layout has been adapted and the memory
 allocation is padded. By this way, the read and written extra-elements do not
 produce segmentation fault errors.
 
+\newpage
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}
 
