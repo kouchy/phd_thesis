@@ -43,10 +43,10 @@ instructions are able to perform the same operation on a chunk of data. This is
 also known as the Single Instruction Multiple Data (SIMD) architectural model.
 
 From an energy point of view, it is clear that the CPUs are not directly
-competitive with the dedicated architectures. Their large number of instructions
-are the key of their capacity to adapt to many algorithms but this is also a
-limitation when targeting specific implementations. Many transistors are
-unused and consume a non-negligible amount of energy. On the other hand, the
+competitive compared to the dedicated architectures. Their large number of
+instructions are the key of their capacity to adapt to many algorithms but this
+is also a limitation when targeting specific implementations. Many transistors
+are unused and consume a non-negligible amount of energy. On the other hand, the
 main strength of the GPP architectures comes from their abilities to be used
 programmatically with high level languages. Consequently, the time required to
 implement new algorithms is much shorter on GPPs than on dedicated hardwares.
@@ -67,12 +67,28 @@ languages and libraries are an important research area in computer science.
 In the design of digital communication systems, it is now common to rely on
 software implementations for the evaluation and the validation of signal
 processing algorithms. These evaluation and validation steps consist in
-the simulation of the whole communication system and it is compute intensive.
-Thus, high performance implementations are required.
+the simulation of the whole communication system. Generally these type of
+simulations are implemented by signal processing experts with high level
+programing languages like MATLAB\R or Python. However, with the growing
+complexity of the digital communication systems, this simulations are becoming
+more and more compute intensive. Using high level programming languages is a
+limiting factor because it can lead to large restitution times (from days to
+weeks). Thus, high performance implementations based on lower level programming
+languages are considered.
 
 Moreover, the software implementations are also considered for real-time uses.
 Their flexibility and reduced time to market are becoming more and more
-attractive.
+attractive. Indeed, dedicated hardware solutions require specific skills and are
+achieved by electronics specialists. In general, the signal processing experts
+are not able to implement neither software nor hardware efficient solutions. The
+dialog between the two communities is not always simple as they have different
+concerns. The purpose of this thesis is to ease the overall design of digital
+communication systems, from the conception to the implementation. Dedicated
+tools and interfaces are proposed to help the signal processing experts to
+design fast software implementations. In general, this type of software
+implementations are a good start to better understand the algorithms hotspots.
+From this point, electronics specialists can improve proposed software solutions
+and, if necessary, design adapted hardware implementations.
 
 \subsubsection*{Contributions}
 
