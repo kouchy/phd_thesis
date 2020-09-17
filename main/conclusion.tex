@@ -51,7 +51,6 @@ throughputs. Specific optimizations have been made to increase the decoder
 efficiency: some loops at the core of the decoding process have been merged and
 unrolled to increase the registers reuse.
 
-%In Chapter~\ref{chap:aff3ct}, \AFFECT, our open-source toolbox, is presented.
 \AFFECT is a library of digital communication algorithms, developed as part of
 this thesis, focusing on high performance implementations. Its software
 architecture supports the algorithmic heterogeneity. Many channel codes are
@@ -104,7 +103,7 @@ others, an efficient implementation of the pipeline technique.
 \AFFECT is currently used in several industrial contexts for simulation purposes
 (Turbo concept, Airbus, Thales, Huawei) and for specific developments (CNES,
 Schlumberger, Airbus, Thales, Orange, Safran), as well as in academic projects
-(NAND French National Agency project, IdEx CPU, RST CNES). The MIT license
+(NAND French National Agency project, IdEx CPU, R\&T CNES). The MIT license
 chosen for the project enables industrial and academic partners to reuse parts
 of \AFFECT in their own projects without any restriction. Moreover, \AFFECT has
 been cited in scientific publications. Many works are exploiting the \AFFECT
@@ -129,7 +128,6 @@ To the best of our knowledge, \AFFECT is the first environment to propose this
 level of performance combined with the integration of many digital communication
 algorithms.
 
-% \newpage
 \section*{Perspectives}
 
 Several study and research perspectives remain to be explored following this
@@ -147,8 +145,8 @@ find kernels that have good factorization properties. However, this is a brute
 force exploration and the complexity grows exponentially with the size of the
 kernels. It could be interesting to reduce the kernel exploration domain and to
 apply HPC techniques to reduce the finding time. The multi-kernel polar codes
-construction is a promising area of research that could lead to decoding
-performance even closer to the Shannon limit.
+construction is a promising area of research that could lead to better
+finite-length decoding performance.
 
 One of the main contribution of this thesis is to propose efficient digital
 signal processing methods and implementations on CPU. Nowadays there is a
