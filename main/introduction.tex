@@ -23,35 +23,42 @@ in hardware, on dedicated chips. The required signal processing algorithms are
 often very specific and repetitive. Thus, they are good candidates for
 specialized architectures. However, with the growing number of use cases and
 telecommunication standards, these algorithms are evolving and are becoming more
-and more heterogeneous. In this context, it becomes interesting to consider more
-generic architectures. This type of programmable architectures is available in
-computers and is commonly referred as the Central Process Unit (CPU). The CPUs
-are General Purpose Processors (GPP) that can adapt to various types of
-algorithms.
+and more heterogeneous. In this context, it becomes interesting to consider
+software implementations on generic architectures. This type of programmable
+architectures is available in computers and is commonly referred as the Central
+Process Unit (CPU). The CPUs are General Purpose Processors (GPP) that can adapt
+to various types of algorithms.
 
 \subsubsection*{Computer Architecture}
 
 Improving the computational and the energy efficiency of these processors is one
 of the main concern in computer science. As they are largely adopted for many
-use cases, the CPUs take advantage of the best manufacturing processes (up to
-7~nm). Thanks to their pipelined architecture they are able to reach very high
-processing frequencies ranging from 1 to 4 GHz. They also come with dedicated
-memory caches that enable efficient spatial and temporal reuse of data.
-Nowadays, the computational efficiency of the CPUs relies on the multi-core
-architecture as well as on the vectorized instructions. These types of
-instructions are able to perform the same operation on a chunk of data. This is
-also known as the Single Instruction Multiple Data (SIMD) architectural model.
+use cases, the CPUs take advantage of the best manufacturing processes. Thanks
+to their pipelined architecture they are able to reach very high processing
+frequencies ranging from 1 to 4 GHz. They also come with dedicated memory caches
+that enable efficient spatial and temporal reuse of data.
+% Nowadays, the computational efficiency of the CPUs relies on the multi-core
+% architecture as well as on the vectorized instructions.
+Nowadays, the computational efficiency of the CPUs relies on two main parallel
+techniques. The first one is the multi-core architecture: it consists in
+duplicating the hardware of the ``CPU'' in multiple instances called cores.
+These cores are mostly independent from each other. They are packaged together
+in the same chip (called the CPU) and generally they share a fast memory: the
+last level cache. The second parallel technique is the vectorized instructions.
+These types of instructions are available in each core and are able to perform
+the same operation on a chunk of data. This is also known as the Single
+Instruction Multiple Data (SIMD) architectural model.
 
-From an energy point of view, it is clear that the CPUs are not directly
-competitive compared to the dedicated architectures. Their large number of
-instructions are the key of their capacity to adapt to many algorithms but this
-is also a limitation when targeting specific implementations. Many transistors
-are unused and consume a non-negligible amount of energy. On the other hand, the
-main strength of the GPP architectures comes from their abilities to be used
-programmatically with high level languages. Consequently, the time required to
-implement new algorithms is much shorter on GPPs than on dedicated hardwares.
-However, even with reduced implementation time, it is still challenging to
-design algorithms that take advantage of the CPUs parallelism levels.
+From an energy point of view, it is clear that CPUs are not directly competitive
+compared to dedicated architectures. Their large number of instructions enable
+efficient implementations of many algorithms but this is also a limitation when
+targeting specific implementations. Many transistors are unused and consume a
+non-negligible amount of energy. On the other hand, the main strength of the GPP
+architectures comes from their abilities to be used programmatically with high
+level languages. Consequently, the time required to implement new algorithms is
+much shorter on GPPs than on dedicated hardwares. However, even with reduced
+implementation time, it is still challenging to design algorithms that take
+advantage of the CPUs parallelism levels.
 
 \subsubsection*{Hardware Abstraction and Software}
 
@@ -70,7 +77,7 @@ processing algorithms. These evaluation and validation steps consist in
 the simulation of the whole communication system. Generally these type of
 simulations are implemented by signal processing experts with high level
 programing languages like MATLAB\R or Python. However, with the growing
-complexity of the digital communication systems, this simulations are becoming
+complexity of the digital communication systems, these simulations are becoming
 more and more compute intensive. Using high level programming languages is a
 limiting factor because it can lead to large restitution times (from days to
 weeks). Thus, high performance implementations based on lower level programming
@@ -79,10 +86,12 @@ languages are considered.
 Moreover, the software implementations are also considered for real-time uses.
 Their flexibility and reduced time to market are becoming more and more
 attractive. Indeed, dedicated hardware solutions require specific skills and are
-achieved by electronics specialists. In general, the signal processing experts
-are not able to implement neither software nor hardware efficient solutions. The
+achieved by electronics specialists. In general, signal processing experts
+do not focus on implementing efficient software or hardware solutions. The
 dialog between the two communities is not always simple as they have different
-concerns. The purpose of this thesis is to ease the overall design of digital
+concerns.
+
+The purpose of this thesis is to ease the overall design of digital
 communication systems, from the conception to the implementation. Dedicated
 tools and interfaces are proposed to help the signal processing experts to
 design fast software implementations. In general, this type of software
@@ -94,29 +103,30 @@ and, if necessary, design adapted hardware implementations.
 
 In this thesis we propose to study the most time consuming algorithms of digital
 communication systems, to adapt and optimize them on General Purpose Processors
-(GPPs) like the CPUs. The long simulation times and the real-world application
-requirements make it desirable to have portable, flexible, high throughput and
-low latency implementations. The proposed high performance implementations are
-shown to be competitive with the state-of-the-art ones. Contrary to the previous
-works, this thesis strives to extract generic methodologies and strategies
-common to the majority of the signal processing algorithms. Actually, the
-proposed implementations try to be as flexible as possible without sacrificing
-too much the performance.
+(GPPs) like the CPUs. These algorithms are adopted in most of the current
+digital communication standards. The long simulation times and the real-world
+application requirements make it desirable to have portable, flexible, high
+throughput and low latency implementations. The proposed high performance
+implementations are shown to be competitive with the state-of-the-art ones.
+Contrary to the previous works, this thesis strives to extract generic
+methodologies and strategies common to the majority of the signal processing
+algorithms. Actually, the proposed implementations try to be as flexible as
+possible without sacrificing too much the performance.
 
 The signal processing algorithms come with various characteristics. Thus, it is
-of interest to be able to manage this algorithmic heterogeneity, to find the
-similarities and to identify the differences. In this work, the various
-implementations have been package in one single software library, namely
-\AFFECT. These implementations cohabit together thanks to well-defined
-interfaces and an adapted software architecture based on the Object-Oriented
-Programming (OOP) paradigm.
+of interest to be able to manage this algorithmic heterogeneity. In this work,
+to enable code reuse, similarities are identified into this zoo of algorithms.
+The various implementations have been packaged, classed and organized in
+one single software library, namely \AFFECT. These implementations cohabit
+together thanks to well-defined interfaces and an adapted software architecture
+based on the Object-Oriented Programming (OOP) paradigm.
 
 Another important concern of this work is the ability to reproduce the
 scientific results. Indeed, all the proposed implementations are regrouped in
-\AFFECT which is an open-source software. Specific strategies has been operated
+\AFFECT which is an open-source software. Specific strategies have been operated
 to minimize the possible regressions based on the digital communication systems
 characteristics. These non-regression strategies are automated. They ensure that
-the source code remain stable even if many contributors are working together.
+the source code remains stable even if many contributors are working together.
 
 These contributions have been the topic of several scientific publications in
 both the computer science and the signal processing communities. They are listed
@@ -132,12 +142,12 @@ context and details the objectives. The next chapters present our contributions.
 
 In Chapter~\ref{chap:ctx}, the digital communication systems are detailed. Then,
 the most time consuming part of these systems is presented, namely the channel
-decoders. After that, applicative contexts of this thesis are defined. The two
-main ones are the functional simulation and the Software-Defined Radio (SDR).
-The functional simulation enables the evaluation and the validation of different
-digital communication systems while the SDR corresponds to the real-time
-execution of these systems in software. Finally, the main problematics are
-exposed.
+decoders. After that, the applicative contexts of this thesis are defined. The
+two main ones are the functional simulation and the Software-Defined Radio
+(SDR). The functional simulation enables the evaluation and the validation of
+different digital communication systems while the SDR corresponds to the
+real-time execution of these systems in software. Finally, the main problematics
+are exposed.
 
 In Chapter~\ref{chap:opt}, new efficient implementations of the decoders are
 proposed. First, an overall portable methodology is detailed to meet the high
