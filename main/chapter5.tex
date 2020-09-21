@@ -436,30 +436,10 @@ synchronization buffers in the adaptors. The default buffer size is one (the
 buffers can only contain the data of one \emph{push 1} input sockets). During
 the copy of the input sockets data in one of the buffers, the corresponding
 thread cannot access the data until the copy is finished. The synchronization is
-automatically managed by the framework.
-% When the \emph{push 1} task (producer) finishes the copy, it increments a
-% \emph{head} counter by one then the corresponding \emph{pull n} task (consumer)
-% checks that the \emph{head} counter is higher than the \emph{tail} counter and
-% copies the data from the buffer to its output socket. When this copy is over,
-% the producer increments the \emph{tail} counter by one.
-If the buffer is full, the producer (\emph{push 1 and n} tasks) has to wait.
-It is similar for the consumer (\emph{pull 1 and n} tasks) if the buffer is
-empty. We implemented both active and passing waiting.
-
-% The active waiting is a \emph{while-loop} over a condition (empty or full
-% buffer). The active waiting is the most efficient waiting strategy but it
-% requires to actively dedicate one core to the waiting. This is why, depending on
-% the hardware resources and the implemented pipeline, it may be better to use the
-% passive waiting alternative. The implementation of the passive waiting has been
-% achieved with the \Cxy{11} condition variables. In this case, when the current
-% thread is calling the \emph{wait} method over a condition variable, then the
-% core attached to thread is released and can perform other tasks during the
-% waiting. Waking up a waiting thread is made with the \emph{notify} method of the
-% condition variable. Waking up a thread come with an extra cost because of
-% required context switch, this is the main drawback of this method compared to
-% the active waiting. This overhead can be mitigated by using larger
-% synchronization buffers to overlap the thread context switch incompressible
-% time.
+automatically managed by the framework. If the buffer is full, the producer
+(\emph{push 1 and n} tasks) has to wait. It is similar for the consumer
+(\emph{pull 1 and n} tasks) if the buffer is empty. We implemented both active
+and passing waiting.
 
 In the previously described implementation, the copies from and to the buffers
 can take a non-negligible amount of time. Thus, the process encapsulation
@@ -539,7 +519,6 @@ synchronization tasks in the receiver side. Before the radio transmission
     [Selected DVB-S2 configurations (MODCOD).]
     {Selected DVB-S2 configurations (MODCOD).}
   \label{tab:dvbs2_modcod}
-  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{c c c c c c c c}
     \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{PLH}}}$ & \textbf{Interleaver}\\
     \hline \hline
@@ -547,7 +526,6 @@ synchronization tasks in the receiver side. Before the radio transmission
     MODCOD 2 &  QPSK & 8/9 & 14232 & 14400 & 16200 & 16740 & no\\
     MODCOD 3 & 8-PSK & 8/9 & 14232 & 14400 & 16200 & 16740 & column/row\\
   \end{tabular}
-  % }}
 \end{table}
 
 The DVB-S2 defines 32 different configurations or \emph{MODCODs}. This work
@@ -780,11 +758,9 @@ The stage 7 takes 76\% of the time with especially the \emph{Decoder BCH} task
 ($t^\text{Rx}_{17}$) that takes 59\% of the time. $t^\text{Rx}_{17}$ should not
 take so many time compared to the other tasks. Indeed, we chose to not spend
 too much time in optimizing the BCH decoding process as the stage 7 throughput
-can easily be increased with the sequence duplication technique.
-% Theoretically, with an infinite number of cores and memory bandwidth, the
-% throughput of the stage 7 could be infinite too.
-The second slower stage in the stage 3. This stage is the main hotspot of the
-implemented receiver. The stage 3 contains only one synchronization task
+can easily be increased with the sequence duplication technique. The second
+slower stage in the stage 3. This stage is the main hotspot of the implemented
+receiver. The stage 3 contains only one synchronization task
 ($t^\text{Rx}_{5}$). In the current implementation this task cannot be
 duplicated (or parallelized) because there is an internal data dependency with
 the previous frame (state-full task). The stage 3 is the real limiting factor of
@@ -927,10 +903,6 @@ clearer  signal conditions (7.5 dB) and the information throughput reaches
 80 Mb/s. MODCOD~2 is in-between.
 
 \subsection{Related Works}
-
-% \begin{itemize}
-%   \item \xmark~donner un point de comparaison avec un récepteur DVB-S2 matériel.
-% \end{itemize}
 
 Some other works are focusing on the SDR implementation of a DVB-S2 transceiver.
 To the best of our knowledge, here is a list of the existing projects:

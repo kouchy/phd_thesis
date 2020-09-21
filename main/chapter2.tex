@@ -49,8 +49,6 @@ dedicated to channel codes. Our contributions are:
 \begin{itemize}
   \item A portable and high performance  \Cxx SIMD library called \MIPP, for
     SSE, AVX, AVX-512 and NEON instruction sets;
-  % \item An implementation of several channel codes with this wrapper. We
-  %   present the main advantages of \MIPP in this context;
   \item A comparison with other state-of-the-art SIMD libraries on a Mandelbrot
     code, demonstrating that the code based on \MIPP has similar performance as
     hand-written intrinsics.
@@ -247,30 +245,23 @@ dedicated to MIPP~\cite{Cassagne2018}. Be aware that the features of the other
 wrappers presented here could have evolved since that time.
 
 \begin{table}[htp]
-  % \renewcommand{\arraystretch}{0.95}
-  % \tabcolsep=6pt
   \centering
   \caption{Comparison of various SIMD wrappers: General Information and Features.}
   \label{tab:opt_mipp_comparison_general}
-  % \begin{adjustbox}{angle=90}
-  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{r r r r | c c c}
-  % \hline
   \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{General Information}}}      & \multicolumn{3}{c}{\multirow{2}{*}{\textbf{Features}}}\\
                 &                     &                &                  &                &                    &                 \\ \hline
-  \textbf{Name} & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}   \\ %\cline{11-16}
+  \textbf{Name} & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}   \\
                 &                     & \textbf{Year}  &                  & \textbf{Func.} & \textbf{Technique} & \textbf{Suite}  \\ \hline \hline
-  \MIPP         & \cite{Cassagne2018} & 2013           & MIT              & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
-  \VCL          & \cite{Fog}          & 2012           & GNU GPL          & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \simdpp       & \cite{Kanapickas}   & 2013           & Boost Software   & \xmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
-  \TSIMD        & \cite{Moller2016}   & 2016           & Open-source      & \xmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \Vc           & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark         & Op. overload.      & \cmark          \\ %\cline{2-19}
-  \xsimd        & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark         & Op. overload.      & \textbf{N/A}    \\ %\cline{2-19}
-  \BoostSIMD    & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark         & Expr. templ.       & \cmark          \\ %\cline{2-19}
-  \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\ %\hline
+  \MIPP         & \cite{Cassagne2018} & 2013           & MIT              & \cmark         & Op. overload.      & \cmark          \\
+  \VCL          & \cite{Fog}          & 2012           & GNU GPL          & \cmark         & Op. overload.      & \textbf{N/A}    \\
+  \simdpp       & \cite{Kanapickas}   & 2013           & Boost Software   & \xmark         & Expr. templ.       & \cmark          \\
+  \TSIMD        & \cite{Moller2016}   & 2016           & Open-source      & \xmark         & Op. overload.      & \textbf{N/A}    \\
+  \Vc           & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark         & Op. overload.      & \cmark          \\
+  \xsimd        & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark         & Op. overload.      & \textbf{N/A}    \\
+  \BoostSIMD    & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark         & Expr. templ.       & \cmark          \\
+  \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\
   \end{tabular}
-  % }}
-  % \end{adjustbox}
 \end{table}
 Table~\ref{tab:opt_mipp_comparison_general} and
 Table~\ref{tab:opt_mipp_comparison_isa_data} compare various SIMD wrappers.
@@ -282,30 +273,23 @@ richness of the SIMD wrapper landscape. Some of the wrappers presented, such as
 \MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic
 research context.
 \begin{table}[htp]
-  % \renewcommand{\arraystretch}{0.95}
-  % \tabcolsep=6pt
   \centering
   \caption{Comparison of various SIMD wrappers: Supported ISA and Data Type.}
   \label{tab:opt_mipp_comparison_isa_data}
-  % \begin{adjustbox}{angle=90}
-  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{r || c c c c c || c c | c c c c}
-  % \hline
   {\multirow{4}{*}{\textbf{Name}}} & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                 & \multicolumn{6}{c}{\multirow{2}{*}{\textbf{Data Type}}}                    \\
                                    & \multicolumn{5}{c||}{}                                                          & \multicolumn{6}{c}{}                                                       \\ \cline{2-12}
-                                   & \textbf{SSE} & \textbf{AVX} & \textbf{AVX512} & \textbf{NEON} & \textbf{AltiV.} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c}{\textbf{Integer}} \\ %\cline{2-12}
+                                   & \textbf{SSE} & \textbf{AVX} & \textbf{AVX512} & \textbf{NEON} & \textbf{AltiV.} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c}{\textbf{Integer}} \\
                                    & 128-bit      & 256-bit      & 512-bit         & 128-bit       & 128-bit         & 64      & 32                        & 64     & 32     & 16     & 8         \\ \hline \hline
-  \MIPP                            & \cmark       & \cmark       & \cmark          & \cmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \VCL                             & \cmark       & \cmark       & \cmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \simdpp                          & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \TSIMD                           & \cmark       & \cmark       & \xmark          & \cmark        & \xmark          & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \Vc                              & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark    \\ %\cline{2-19}
-  \xsimd                           & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark    \\ %\cline{2-19}
-  \BoostSIMD                       & \cmark       & \xmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\cline{2-19}
-  \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\ %\hline
+  \MIPP                            & \cmark       & \cmark       & \cmark          & \cmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
+  \VCL                             & \cmark       & \cmark       & \cmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
+  \simdpp                          & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
+  \TSIMD                           & \cmark       & \cmark       & \xmark          & \cmark        & \xmark          & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark    \\
+  \Vc                              & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark    \\
+  \xsimd                           & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark    \\
+  \BoostSIMD                       & \cmark       & \xmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
+  \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
   \end{tabular}
-  % }}
-  % \end{adjustbox}
 \end{table}
 Some others, \simdpp and \xsimd, appear to be standalone development efforts by
 individual programmers or maintainers. Proprietary, closed-source solutions also
@@ -357,18 +341,16 @@ teams of these wrappers.
   \centering
   \caption{Specifications of the target processors.}
   \label{tab:opt_mipp_specs}
-  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c c c c}
   \textbf{Name}                   & \textbf{Exynos5422} & \textbf{RK3399} & \textbf{Core\TM i5-5300U}  & \textbf{Xeon Phi\TM 7230} \\ \hline \hline
-  \textbf{Year}                   & 2014                & 2016            & 2015                       & 2016                      \\ %\hline
-  \textbf{Vendor}                 & Samsung\R           & Rockchip\R      & Intel\R                    & Intel\R                   \\ %\hline
+  \textbf{Year}                   & 2014                & 2016            & 2015                       & 2016                      \\
+  \textbf{Vendor}                 & Samsung\R           & Rockchip\R      & Intel\R                    & Intel\R                   \\
   \multirow{2}{*}{\textbf{Arch.}} & ARMv7               & ARMv8           & \multirow{2}{*}{Broadwell} & Knights                   \\
-                                  & Cortex-A15          & Cortex-A72      &                            & Landing                   \\ %\hline
-  \textbf{Cores/Freq.}            & 4/2.0 GHz           & 2/1.6 GHz       & 2/2.3 GHz                  & 64/1.3 GHz                \\ %\hline
-  \textbf{LLC}                    & 2 MB L2             & 1 MB L2         & 3 MB L3                    & 32MB L2                   \\ %\hline
+                                  & Cortex-A15          & Cortex-A72      &                            & Landing                   \\
+  \textbf{Cores/Freq.}            & 4/2.0 GHz           & 2/1.6 GHz       & 2/2.3 GHz                  & 64/1.3 GHz                \\
+  \textbf{LLC}                    & 2 MB L2             & 1 MB L2         & 3 MB L3                    & 32MB L2                   \\
   \textbf{TDP}                    & $\sim$4 W           & $\sim$2 W       & 15 W                       & 215 W                     \\
   \end{tabular}
-  % }}
 \end{table}
 
 Four different architectures are considered for performance results as
@@ -644,23 +626,17 @@ depends on the frame size $N$. Generally $N > p_\text{SIMD}$, this is why the
 proposed implementation is based on the intra-frame SIMD strategy.
 
 \begin{table}[htp]
-  % \tabcolsep=6pt
   \centering
   \caption{AWGN channel throughputs and speedups of the \MIPP implementation.}
   \label{lst:opt_simu_awgn_speedup}
-  % {\small
   \begin{tabular}{r | r  r r r}
                              & \textbf{NEON} & \textbf{SSE} & \textbf{AVX} & \textbf{AVX-512} \\ \hline \hline
   \textbf{SIMD size}         & 4             & 4            & 8            & 16               \\ %\hline
   \textbf{Throughput} (Mb/s) & 40.9          & 107.4        & 178.3        & 95.1             \\ %\hline
   \textbf{Speedup}           & $\times 3.1$  & $\times 2.3$ & $\times 4.2$ & $\times 14.4$    \\
   \end{tabular}
-  % }
 \end{table}
 
-%The \MIPP wrapper helps to write a readable code without sacrificing the
-%performance. It also gives the opportunity to compile this same source code for
-%various architectures.
 Table~\ref{lst:opt_simu_awgn_speedup} presents the measured speedups with the
 same \MIPP code compiled for NEON, SSE, AVX and AVX-512, compared to the
 sequential code (can be auto-vectorized). It also gives the actual throughput
@@ -668,9 +644,6 @@ for each instruction set. The conversion of floating-point format from single
 precision to double precision only requires to replace the \verb|float| keyword
 by \verb|double|. The ability to switch seamlessly from one data type to another
 is clearly a strength of the \MIPP library.
-%In the source code, the register type is based on a generic type name \verb|T|
-%(\verb|mipp::Reg<T>|). This way the same source code can work on \verb|float| or
-%on \verb|double| data types.
 
 \subsection{Quantizer}
 \label{sec:opt_simu_quantizer}
@@ -702,18 +675,15 @@ quantized number, including $v$ bits for the fractional part.
 \end{listing}
 
 \begin{table}[htp]
-  % \tabcolsep=6pt
   \centering
   \caption{Quantizer throughputs and speedups of the \MIPP implementation.}
   \label{tab:opt_simu_quantizer_speedup}
-  % {\small
   \begin{tabular}{r | r  r r}
                              & \textbf{NEON} & \textbf{SSE}  & \textbf{AVX}  \\ \hline \hline
-  \textbf{SIMD size}         & 4-16          & 4-16          & 8-32          \\ %\hline
-  \textbf{Throughput} (Mb/s) & 300.6         & 3541.4        & 5628.3        \\ %\hline
+  \textbf{SIMD size}         & 4-16          & 4-16          & 8-32          \\
+  \textbf{Throughput} (Mb/s) & 300.6         & 3541.4        & 5628.3        \\
   \textbf{Speedup}           & $\times 4.6$  & $\times 15.6$ & $\times 25.8$ \\
   \end{tabular}
-  % }
 \end{table}
 
 The associate sequential code is presented in
@@ -933,7 +903,6 @@ on a given node.
 
 \subsubsection{Impact of the Tree Pruning on the Decoding Performances}
 
-% SC --------------------------------------------------------------------------
 \begin{figure}[htp]
   \centering
   \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:opt_polar_sc_tree_cut_intra}}
@@ -963,7 +932,6 @@ rule \emph{Single Parity Check} (\verb|SPC|) has been applied with different
 level limits for 9/10 code rate, where it has a significant impact and may
 benefit from fine tuning.
 
-% SCL -------------------------------------------------------------------------
 \begin{figure}[htp]
   \centering
   \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/scl_tree_cut/scl_tree_cut}
@@ -1032,8 +1000,6 @@ be applied~\cite{Lin2014}.
 \subsection{Polar Application Programming Interface}
 \label{sec:opt_polar_api}
 
-% SCL -------------------------------------------------------------------------
-
 The main challenge in implementing an architecture dependent Application
 Programming Interface (API) is to provide enough flexibility to enable varied
 types, data layout and optimization strategies such as intra-frame SIMDization
@@ -1067,7 +1033,7 @@ The template \verb|N_ELMTS| parameter is not used in the proposed
 \verb|API_polar_SIMD| implementation. The interest of this parameter will be
 explained in the next section.
 
-\begin{listing}%[htp]
+\begin{listing}
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/polar/f_g_h_simd.cpp}
   \caption{Example of a \Cxx SIMD polar API ($f$, $g$ and $h$ functions are
     implemented).}
@@ -1091,8 +1057,6 @@ switch from SIMD to sequential implementations.
 
 \subsubsection{Dynamic Implementation}
 
-%The concept of generic and flexible decoder is defined in
-%Section~\ref{sec:ctx_polar_generic_flexible}.
 In this section, if a decoder is generic and flexible, it is called
 \emph{dynamic} (as opposed to \emph{generated} or \emph{unrolled} decoders). The
 proposed dynamic SSC decoder directly uses the polar API introduced in
@@ -1244,10 +1208,6 @@ efficient \emph{heap} vector data layout. Therefore traversing the tree
 corresponds to moving through the array, at different offsets and considering
 different index intervals. The LLR offset is computed from the graph depth~$d$
 (the node vertical indexing) as follows:
-% \begin{equation}
-%   off_{l}(d = 0) = 0,~off_{l}(d > 0) =
-%   \sum\limits_{i = 1}^{d} \frac{N}{2^{i-1}}.
-% \end{equation}
 \begin{equation}
  o_{\lambda}(d) = \begin{cases}
    0                                         &\text{$d = 0$},\\
@@ -1324,7 +1284,6 @@ l.18).
 \subsubsection{LLR and Metric Sorting}
 \label{sec:opt_polar_scl_sorting}
 
-% Metric sorting is involved in the aforementioned path selection step, but also
 Metric sorting is involved in the path selection step, but also
 in the ``$\updatePaths()$'' sub-routine (Alg.~\ref{alg:ctx_polar_scl_decoder},
 l.16) and consequently in each leaf. Sorting the LLRs is also necessary in
@@ -1428,8 +1387,7 @@ this was not beneficial in any use case.
   \centering
   \caption{Polar decoders memory complexity.}
   \label{tab:opt_polar_scl_memory_footprint}
-  %{\small
-   \begin{tabular}{r r}
+  \begin{tabular}{r r}
     \textbf{Algorithms}        & \textbf{Memory Footprint} \\
     \hline
     \hline
@@ -1437,8 +1395,7 @@ this was not beneficial in any use case.
     (CA-)SSCL$_{\texttt{ptr}}$ & $\mathcal{O}((3L + 1)NQ)$ \\
     A-SSCL$_{\texttt{cpy}}$    & $\mathcal{O}((2L + 3)NQ)$ \\
     A-SSCL$_{\texttt{ptr}}$    & $\mathcal{O}((3L + 3)NQ)$ \\
-  \end{tabular}
-  %}
+ \end{tabular}
 \end{table}
 
 The exact memory footprint of the SSCL decoders is hard to estimate as there are
@@ -1523,7 +1480,6 @@ independently of the number of decoding iterations.
   \caption{Loop fusion BCJR implementation.}
   \label{alg:opt_turbo_bcjr_loop_fusion}
 
-  % \small
   \For(\Comment*[f]{Vectorized loop}){all frames}
   {
     $\boldsymbol{\alpha}^0\gets \initAlpha()$
@@ -1573,12 +1529,6 @@ effective speedup, as shown in Section~\ref{sec:eval_turbo}.
 \subsection{Software Implementation of the Turbo Decoder}
 \label{sec:opt_turbo_implem}
 
-% The use of \Cxx templates associated to our generic SIMD library (\MIPP) enables
-% the same source code to be compiled using different formats (32-bit
-% \verb|float|, 16-bit \verb|short|, and 8-bit \verb|char|) and different SIMD
-% instructions (SSE, AVX and NEON). It provides possible trade-offs between
-% SIMDization, throughput and error-correction performance.
-
 \subsubsection{Fixed-point Representation}
 
 Nowadays on x86 CPUs, there are large SIMD registers: SSE/NEON are 128 bits
@@ -1609,8 +1559,6 @@ $K$-bit wide and are duplicated $F\times T$ times because of the inter-frame
 strategy. The memory footprint in bytes is approximately: $18 \times K \times
 \sizeof(\text{data}) \times F \times T$ (where $F = p_\text{SIMD}$). The
 interleaving and deinterleaving lookup tables have been neglected in this model.
-%We did not consider the 2 lookup tables (interleaving and deinterleaving) in
-%this model as they are not duplicated $M\times T$ times.
 
 \subsubsection{Forward Trellis Traversal}
 
@@ -1728,10 +1676,6 @@ AVX-512 (or KNCI) ISAs, respectively.
 \subsection{Adapting the Algorithms to Improve Data-Level Parallelism}
 \label{sec:opt_scma_adapting_algorithms}
 
-% SSE, NEON, AVX and KNCI ISAs handle SIMD operations. KNCI and AVX use 512-bit
-% and 256-bit registers respectively, while SSE and NEON use 128-bit registers.
-% For instance, an AVX operation can process eight 32-bit floating-point numbers
-% simultaneously.
 The SIMD instructions provide high-performance loads and stores to the cache
 memory due to data vectorization. Flattening matrices to vectors is a
 prerequisite to enable SIMD contiguous accesses to memory. In the presented work
@@ -1739,19 +1683,10 @@ the SIMD operations are made on 32-bit floating-point real numbers (\verb|T| =
 \verb|float|). The proposed implementations are working on $F = J = 6$ frames.
 The $F$ frames are not independent so we consider that the SIMD strategy is
 similar to the intra-frame SIMD strategy presented in
-Section~\ref{sec:opt_vec_intra}.
-% Vectorized
-% instructions such as AVX are accessible in \Cxx through intrinsic
-% functions. An intrinsic is a function that directly maps to an assembly
-% instructions (for some rare exceptions it can be more than one instruction).
-% Nowadays, AVX units use sixteen 256-bit YMM registers and a 32-bit MXCSR control
-% register to handle vectors of eight 32-bit or four 64-bit floating-point
-% numbers. The AVX ISA allows to perform SSE instructions using the lower 128-bit
-% lane of the YMM registers.
-For the MPA, the SIMD instructions are used to 1) compute the complex norm
-$||.||$ in \eqref{eq:ctx_scma_5}, 2) calculate the exponentials
-in~\eqref{eq:ctx_scma_7}, 3) perform users to resources messaging and final
-beliefs at each user in \eqref{eq:ctx_scma_10}.
+Section~\ref{sec:opt_vec_intra}. For the MPA, the SIMD instructions are used to
+1) compute the complex norm $||.||$ in \eqref{eq:ctx_scma_5}, 2) calculate the
+exponentials in~\eqref{eq:ctx_scma_7}, 3) perform users to resources messaging
+and final beliefs at each user in \eqref{eq:ctx_scma_10}.
 
 \paragraph{SIMD Computation of Complex Norms}
 
@@ -1936,11 +1871,6 @@ Additionally, for some decoding algorithms, it is not possible to maintain
 optimal error-rate performance with too short fixed-point representations
 (8-bit). It could be interesting to consider mixed-precision in these specific
 cases.
-
-% In the next chapter, \AFFECT, the toolbox that regroups all the proposed
-% implementations, is introduced. This is followed by the Chapter~\ref{chap:eval}
-% where the proposed implementations are evaluated and compared with the
-% state-of-the-art.
 
 The next chapter introduces \AFFECT, the toolbox we designed to integrate all
 the proposed implementations in a consistent, modular and extensible forward

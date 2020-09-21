@@ -36,18 +36,16 @@ of the main concern in computer science. As they are largely adopted for many
 use cases, the CPUs take advantage of the best manufacturing processes. Thanks
 to their pipelined architecture they are able to reach very high processing
 frequencies ranging from 1 to 4 GHz. They also come with dedicated memory caches
-that enable efficient spatial and temporal reuse of data.
-% Nowadays, the computational efficiency of the CPUs relies on the multi-core
-% architecture as well as on the vectorized instructions.
-Nowadays, the computational efficiency of the CPUs relies on two main parallel
-techniques. The first one is the multi-core architecture: it consists in
-duplicating the hardware of the ``CPU'' in multiple instances called cores.
-These cores are mostly independent from each other. They are packaged together
-in the same chip (called the CPU) and generally they share a fast memory: the
-last level cache. The second parallel technique is the vectorized instructions.
-These types of instructions are available in each core and are able to perform
-the same operation on a chunk of data. This is also known as the Single
-Instruction Multiple Data (SIMD) architectural model.
+that enable efficient spatial and temporal reuse of data. Nowadays, the
+computational efficiency of the CPUs relies on two main parallel techniques. The
+first one is the multi-core architecture: it consists in duplicating the
+hardware of the ``CPU'' in multiple instances called cores. These cores are
+mostly independent from each other. They are packaged together in the same chip
+(called the CPU) and generally they share a fast memory: the last level cache.
+The second parallel technique is the vectorized instructions. These types of
+instructions are available in each core and are able to perform the same
+operation on a chunk of data. This is also known as the Single Instruction
+Multiple Data (SIMD) architectural model.
 
 From an energy point of view, it is clear that CPUs are not directly competitive
 compared to dedicated architectures. Their large number of instructions enables

@@ -41,8 +41,6 @@ state-of-the-art LDPC decoders.
 \begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
-  % {\scriptsize
-  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c  c  c}
                          & \textbf{Platinum 8168}        & \textbf{EPYC 7452}       \\
     \hline
@@ -54,8 +52,6 @@ state-of-the-art LDPC decoders.
     \textbf{LLC}         & 33 MB L3                      & 128 MB L3                \\
     \textbf{TDP}         & 205 W                         & 155 W                    \\
   \end{tabular}
-  % }
-  % }}
   \label{tab:eval_ldpc_specs}
 \end{table}
 
@@ -87,7 +83,6 @@ fixed-point representation.
   \centering
   \subfloat[][Throughput.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_thr}\label{plot:eval_ldpc_WiMAX_thr}}
   \quad
-  % \\
   \subfloat[][Latency.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_lat}\label{plot:eval_ldpc_WiMAX_lat}}
   \caption
     [LDPC decoder throughput and latency depending on the number of cores (WiMAX).]
@@ -119,7 +114,6 @@ preferable to use the wider possible SIMD instructions on the EPYC 7452 CPU.
   \centering
   \subfloat[][Throughput.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_thr}\label{plot:eval_ldpc_DVB-S2_thr}}
   \quad
-  % \\
   \subfloat[][Latency.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_lat}\label{plot:eval_ldpc_DVB-S2_lat}}
   \caption
     [LDPC decoder throughput and latency depending on the number of cores (DVB-S2).]
@@ -240,7 +234,6 @@ decoders.
   \centering
   \caption{Specification of the x86 platforms.}
   \label{tab:eval_polar_sc_specs_x86}
-  %{\scriptsize
   \begin{tabular}{c | c c c}
                                 & \textbf{E3-1225}        & \textbf{i7-2600}        & \textbf{i7-4850HQ}         \\
   \hline
@@ -250,18 +243,13 @@ decoders.
   \textbf{Arch.}                & \emph{Sandy Bridge}     & \emph{Sandy Bridge}     & \emph{Crystal Well}        \\
   \textbf{Process}              & 32 nm                   & 32 nm                   & 22 nm                      \\
   \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 & L3 8 MB                 & L3 6 MB                    \\
-  % Flags for 32-bit& \verb|-std=c++11 -Ofast -funroll-loops -mavx|\\
-  % Flags for 8-bit & \verb|-std=c++11 -Ofast -funroll-loops -msse4.1|\\
   \end{tabular}
-  %}
-  % \vspace{-1.5em}
 \end{table}
 
 \begin{table}[htp]
   \centering
   \caption{Specification of the ARM\R platforms.}
   \label{tab:eval_polar_sc_specs_arm}
-  % {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c c c}
                                       &       \textbf{A15-J} &    \textbf{A15-O/A7-O} &       \textbf{A57/A53} \\
     \hline
@@ -278,30 +266,7 @@ decoders.
                                       &                      &     freq. 250--600 MHz &     freq. 450--850 MHz \\
                                       &                      &              L2 512 KB &                L2 1 MB \\
   \end{tabular}
-  % }}
 \end{table}
-
-% The platforms used for performance evaluation are shown in
-% Table~\ref{tab:eval_polar_sc_gen_thr_specs}. Unless stated otherwise, each
-% measure is obtained as the best of ten runs of a 10~second simulation, taking
-% into account frame loading and result storing. SNR (Signal Noise Ratio) is set
-% to 2.5~dB for tests with 1/5 and 1/2 rates, and to 4.0 dB for the 5/6, 0.84, and
-% 9/10 rate tests. Colors differentiate the codes rates of the Polar Code, point
-% shapes differentiate decoder types (Intra-SIMD vs Inter-SIMD).
-
-% The experiments are conducted on two ARM~\bl platforms, an \odrx board using a
-% 32-bit Samsung Exynos 5410 CPU and the reference 64-bit \juno Development
-% Platform from ARM running a Linux operating system, detailed in
-% Table~\ref{tab:eval_polar_energy_arm_specs}.
-
-% The \bigARM and the \little clusters of cores on the \odr board are on/off in a
-% mutually exclusive way. The active cluster is selected through the Linux
-% \verb|cpufreq| mechanism. Both clusters can be activated together or separately
-% on the \juno board. Both platforms report details on supply voltage, current
-% amperage, power consumption for each cluster. Only the \odr platform reports
-% details for the RAM. Consequently, most experiments have been primarily
-% conducted on the \odr platform to benefit from the additional insight provided
-% by the RAM metrics.
 
 Table~\ref{tab:eval_polar_sc_specs_x86} shows the x86/Intel\R targets used for
 the polar SC decoders evaluation while Table~\ref{tab:eval_polar_sc_specs_arm}
@@ -348,7 +313,6 @@ number of information bits and $F$ is the number of frames decoded in parallel.
     throughput), for dynamic SC decoders. $N = 4096$, rate $R = 1/2$. The RAM
     consumption is not included in $P$ and in $E_b$.}
   \label{tab:eval_polar_energy_results}
-  %{\footnotesize
   \begin{tabular}{r r r r r r r}
     \textbf{Cluster} & \textbf{Freq.} & \textbf{Impl.} & $\bm{\mathcal{L}}$ & $\bm{\mathcal{T}_i}$ & $\bm{P}$ & $\boldsymbol{E_b}$ \\
                      &          (MHz) &                &          ($\mu$s)  &               (Mb/s) &      (W) &               (nJ) \\
@@ -374,7 +338,6 @@ number of information bits and $F$ is the number of frames decoded in parallel.
                                &                       & intra &    9.2 & 221.8 & 9.017 &  40.5 \\
                                &                       & inter &   51.8 & 632.2 & 9.997 &  15.8 \\
   \end{tabular}
-  %}
 \end{table}
 
 Table~\ref{tab:eval_polar_energy_results} gives an overview of the decoder
@@ -404,7 +367,6 @@ the low power SDR systems because of its high power requirements.
   \centering
   \subfloat[][Total (cluster + memory)]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
   \quad
-  % \\
   \subfloat[][Memory only]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
   \caption
     [SC variation of the \emph{energy-per-bit} for different frame sizes and
@@ -431,8 +393,6 @@ require 16~times more memory than the intra-frame decoders. Then, for the frame
 size $N = 2^{20}$, both intra and inter-frame decoders now exceed the cache
 capacity. The RAM power consumption becomes more significant due to the
 increased number of cache misses causing RAM transactions.
-% In general the code generation is effective on the intra-frame strategy whereas
-% it is negligible on the inter-frame version of the code.
 
 Considering those previous observations, it is more energy efficient to use
 inter-frame strategy for small frame sizes, whereas it is better to apply
@@ -442,7 +402,6 @@ intra-frame strategy for larger frame sizes.
   \centering
   \subfloat[][ARM\R Cortex-A7 (ODROID-XU+E)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a7}\label{plot:eval_polar_sc_energy_freq_a7}}
   \quad
-  % \\
   \subfloat[][ARM\R Cortex-A15 (ODROID-XU+E)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a15}\label{plot:eval_polar_sc_energy_freq_a15}}
   \caption
     [SC variation of the \emph{energy-per-bit} depending on the cluster
@@ -529,11 +488,6 @@ decoding throughputs.
 
 \subsubsection{Source Code Compression for the Generated Decoders}
 
-% For all the test series, the bandwidth first increases with codeword size, as
-% the tree pruning becomes increasingly more effective with larger trees. The
-% effect is stronger for Intra-SIMD where pruning also results in removing
-% inefficient scalar nodes.
-
 For generated decoders, the corresponding binary size is linearly increasing
 with the codeword size $N$. Beyond a codeword size point which depends on the
 architecture and on the selected SIMD version, performance decreases due to L1I
@@ -573,7 +527,6 @@ implemented a sub-tree folding algorithm in the generator.
   \centering
   \subfloat[][Without compression]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
   \quad
-  % \\
   \subfloat[][With compression]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
   \caption
     {Generated SC decoder binary sizes depending on the frame size
@@ -607,7 +560,6 @@ Fig.~\ref{plot:eval_polar_sc_energy_implems_vs}.
     {Comparison of 8-bit fixed-point dynamic SC decoders (intra-frame SIMD).
      $N = 32768$ and $R = 5/6$.}
   \label{tab:eval_polar_energy_comparison}
-  %{\footnotesize
   \begin{tabular}{r r r r r r}
     \textbf{Ref.}        & \textbf{Platform} & \textbf{Freq.} & \textbf{SIMD} & $\bm{\mathcal{L}}$ & $\bm{\mathcal{T}_i}$ \\
                          &                   &          (GHz) &               &           ($\mu$s) &               (Mb/s) \\
@@ -618,7 +570,6 @@ Fig.~\ref{plot:eval_polar_sc_energy_implems_vs}.
     \cite{Cassagne2016b} &             A15-O &            1.1 &          NEON &                391 &                  70  \\
     \cite{Cassagne2016b} &               A57 &            1.1 &          NEON &                374 &                  73  \\
   \end{tabular}
-  %}
 \end{table}
 
 Table~\ref{tab:eval_polar_energy_comparison} shows a performance comparison
@@ -633,7 +584,6 @@ decoder. Even if we used a more recent CPU, the same set of instructions
   \centering
   \subfloat[][Intel\R Xeon\TM E3-1225 (AVX SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_x86}\label{plot:eval_polar_sc_gen_thr_intra_x86}}
   \quad
-  % \\
   \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
   \caption
     [SC performance comparison between two code rates (intra-frame
@@ -681,7 +631,6 @@ decoder. Even if we used a more recent CPU, the same set of instructions
   \centering
   \subfloat[][Intel\R Xeon\TM E3-1225 (SSE4.1 SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_x86}\label{plot:eval_polar_sc_gen_thr_inter_x86}}
   \quad
-  % \\
   \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
   \caption
     [SC performance comparison between several code rates (inter-frame
@@ -730,7 +679,6 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
 \subsubsection{Throughput and Latency of Adaptive SCL Decoders}
 
 \begin{table}[htp]
-  %\renewcommand{\arraystretch}{1.1}
   \centering
   \caption
     [Throughput comparisons between floating-point and fixed-point A-SSCL
@@ -740,7 +688,6 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
     $L = 32$ and 32-bit CRC (Gzip). $\mathcal{L}_\text{avg}$ is in $\mu$s and
     $\mathcal{T}_i$ is in Mb/s.}
   \label{tab:eval_polar_scl_perfs_fixed}
-  %{\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r  r  r  r  r |  r  r | r  r}
     \multirow{2}{*}{\textbf{Decoder}} & \multirow{2}{*}{\textbf{Prec.}} & \multirow{2}{*}{\shortstack[r]{\textbf{$\bm{\mathcal{L}_\text{worst}}$}\\($\mu$s)}} & \multicolumn{2}{c|}{\textbf{3.5 dB}} & \multicolumn{2}{c|}{\textbf{4.0 dB}} & \multicolumn{2}{c}{\textbf{4.5 dB}} \\
     \cline{4-9}
@@ -755,7 +702,6 @@ with the C++ GNU compiler (version 5.4.0) and with the following options:
                              & 16-bit & 1198 &  68.7 &  25.6 &  7.7 & 225.7 & 4.3 & 408.7 \\
                              &  8-bit & 1259 &  71.8 &  24.4 &  7.7 & 227.3 & 4.1 & 425.9 \\
   \end{tabular}
-  %}}
 \end{table}
 
 The property to easily change the list size of the SCL decoders enables the use
@@ -806,7 +752,6 @@ average throughput is better with the FA-SSCL algorithm.
     32-bit floating-point representation. Polar code (2048,1723), $L = 32$,
     32-bit CRC.}
   \label{tab:eval_polar_scl_perfs_comparison}
-  %{\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r r r r r r r}
     \multirow{2}{*}{\textbf{Ref.}}        & \multirow{2}{*}{\textbf{Target}} & \multirow{2}{*}{\textbf{Decoder}} & \multirow{1}{*}{\textbf{$\bm{\mathcal{L}_\text{worst}}$}} & \multicolumn{3}{c}{$\bm{\mathcal{T}_i}$ (Mb/s)} \\
     \cline{5-7}
@@ -840,7 +785,6 @@ average throughput is better with the FA-SSCL algorithm.
                                           &                                  & PA-SSCL                           &   635                             &  7.60           &  42.10          & 237.60          \\
                                           &                                  & FA-SSCL                           &  1201                             & 26.10           & 207.80          & 345.50          \\
   \end{tabular}
-  %}}
 \end{table}
 
 The throughput and latency of the proposed decoder compared to other reported
@@ -889,8 +833,6 @@ with the state-of-the-art decoders.
 \begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
-  % {\scriptsize
-  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c  c  c}
                          & \textbf{E5-2650}          & \textbf{i7-4960HQ}        & \textbf{E5-2680 v3}        \\
     \hline
@@ -899,10 +841,8 @@ with the state-of-the-art decoders.
     \textbf{Cores/Freq.} & 8 cores, 2--2.8 GHz       & 4 cores, 2.6--3.8 GHz     & 12 cores,  2.5--3.3 GHz    \\
     \textbf{Arch.}       & \textit{Ivy Bridge} Q1'12 & \textit{Haswell} Q4'13    & \textit{Haswell} Q3'14     \\
     \textbf{LLC}         & 20 MB L3                  & 6 MB L3                   & 30 MB L3                   \\
-%   \textbf{TDP}         & 95 W                      & 47 W                      & 120 W                      \\
+    \textbf{TDP}         & 95 W                      & 47 W                      & 120 W                      \\
   \end{tabular}
-  % }
-  % }}
   \label{tab:eval_turbo_specs}
 \end{table}
 
@@ -965,7 +905,6 @@ SSE outperforms the AVX one.
 
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
   \centering
   \caption
     [Comparison of the proposed turbo decoder with the state-of-art.]
@@ -1050,7 +989,6 @@ other works in the literature.
 
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
   \centering
   \caption{LDPC Software Decoders Hall of Fame.}
   \label{tab:eval_ldpc_hof}
@@ -1115,7 +1053,6 @@ other works in the literature.
 
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
   \centering
   \caption{Polar Software Decoders Hall of Fame.}
   \label{tab:eval_polar_hof}
@@ -1166,7 +1103,6 @@ other works in the literature.
 
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
-  % \tabcolsep=6pt
   \centering
   \caption{Turbo Software Decoders Hall of Fame.}
   \label{tab:eval_turbo_hof}
@@ -1214,8 +1150,6 @@ other works in the literature.
   \end{adjustbox}
 \end{table}
 
-% On the \AFFECT website, an overview of software channel decoders
-% state-of-the-art is provided for the mains channel codes.
 In this section three software decoders Hall of Fames (HoFs) are provided:
 1) for the LDPC decoders in Table~\ref{tab:eval_ldpc_hof}, 2) for the polar
 decoders in Table~\ref{tab:eval_polar_hof} and 3) for the turbo decoders in
@@ -1307,8 +1241,6 @@ power consumption, throughput and latency are discussed.
 \begin{table}[htp]
   \centering
   \caption{Specifications of the target processors.}
-  % {\scriptsize
-  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c  c  c}
                                   & \textbf{i7-6700HQ}        & \textbf{7120P}                & \textbf{A57}          \\
     \hline
@@ -1320,8 +1252,6 @@ power consumption, throughput and latency are discussed.
     \textbf{LLC}                  & 6 MB L3                   & 30.5 MB L2                    & 2 MB L2               \\
     \textbf{TDP}                  & 45 W                      & 300 W                         & 15 W                  \\
   \end{tabular}
-  % }
-  % }}
   \label{tab:eval_scma_specs}
 \end{table}
 
@@ -1353,7 +1283,6 @@ Xeon Phi\TM co-processor the Intel compiler (version 17) has been used.
     [MPA throughput, latency, power and energy characteristics.]
     {MPA throughput, latency, power and energy characteristics over 768 Million bits~\cite{Ghaffari2019}.}
   \label{tab:eval_scma_thr}
-  % {\small\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r r | r r r r}
   & \textbf{Algorithm} & \textbf{Optim.} & $\bm{\mathcal{L}}$ & $\bm{\mathcal{T}}$ & $\bm{P}$ & $\bm{E_b}$ \\
   & \textbf{\& SIMD}   & \textbf{Level}  & (s)                & (Mb/s)             & (W)      & ($\mu$J)   \\
@@ -1384,7 +1313,6 @@ Xeon Phi\TM co-processor the Intel compiler (version 17) has been used.
   & MPA        & \texttt{-Ofast} &   752.9 &          4.07 &   7.18 &           1.76 \\ %         1.02
   & MPA        & \texttt{-O3}    &  1920.0 &          1.60 &   6.99 &           4.37 \\ %         0.40
   \end{tabular}
-  % }}
 \end{table}
 
 Table~\ref{tab:eval_scma_thr} shows the comparison of throughput, latency, power
@@ -1437,11 +1365,6 @@ compared to the ARM\R-based implementations. On the Intel\R ICPC compiler, the
 best performances are obtained using the \verb|-O2| optimization level. Enabling
 the \verb|-O3| optimization level and the fast math library does not lead to
 higher throughputs.
-% The MPA decoding algorithm exhibits its best performance on this platform when
-% cross compiled using \verb|-O2 -mmic| flags by an Intel\R ICPC compiler. Using
-% fast math options such as \verb|-no-prec-div| \verb|-no-prec-sqrt|
-% \verb|-fp-speculation=fast| \verb|-fp-model-fast=2| do not change the results
-% significantly with the Intel\R compiler.
 
 \paragraph{A57 Platform}
 
@@ -1570,7 +1493,6 @@ and macOS at the same level of performance.
      total simulation performance and in \colorbox{Paired-5!15}{red} the worst
      total simulation performance.}
   \label{tab:eval_simu_taks_thr_lat}
-  % {\resizebox{\linewidth}{!}{
   {\small
   \begin{tabular}{c | l | r r r r r r | r}
   & \textbf{CPU}           & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
@@ -1595,7 +1517,6 @@ and macOS at the same level of performance.
 % &     EPYC\TM 7452       &          9.42  &           0.14  &           0.23  &         4.90  &             0.06  &         0.13  &         14.88  \\
   &     EPYC\TM 7702       &          9.51  &       \BF{0.14} &           0.22  &         4.88  &             0.06  &     \BF{0.13} &         14.94  \\
   \end{tabular}
-  % }}
   }
 \end{table}
 
@@ -1628,7 +1549,6 @@ multi-core performance.
 \begin{figure}[htp]
   \centering
   \subfloat[][Simulator speedups.]{\includegraphics[width=1.00\textwidth]{\curChapter/fig/simu/speedup/speedup}\label{plot:eval_simu_speedup}}
-  % \quad
   \\
   \subfloat[][Simulator throughputs.]{\includegraphics[width=0.70\textwidth]{\curChapter/fig/simu/throughput/throughput}\label{plot:eval_simu_throughput}}
   \caption
@@ -1643,39 +1563,23 @@ multi-core performance.
 Figure~\ref{plot:eval_simu_speedup} depicts the speedups achieved on the various
 modern CPU architectures, while Figure~\ref{plot:eval_simu_throughput} exposes
 the corresponding simulation information throughputs. In
-Figure~\ref{plot:eval_simu_speedup}, the speedups on each architecture are computed
-with respect to the single thread simulation time on the same architecture. Each
-run assigns at most one \AFFECT thread to each hardware thread. Since the
-architectures have different number of hardware threads, the presented speedups
-do not all have the same number of measurement points.
-% In Figure~\ref{plot:simu_speedup_throughput}, an $N=2048$ and $K=1723$
-% Polar code (FA-SCL decoder, $L=32$, 32-bit GZip \verb|0x04C11DB7| CRC) is
-% simulated with a BPSK modulation and over an AWGN channel ($E_b/N_0 = 4.5$~dB,
-% last SNR point of the blue curve in Figure~\ref{fig:ctx_bfer_polar}). The
-% frozen bits of the polar code have been generated with the Gaussian
-% Approximation method (GA)~\cite{Trifonov2012}. The communication chain is fully
-% vectorized with the \MIPP wrapper~\cite{Cassagne2018} and multi-threaded with
-% \Cxy{11} threads. The intra-frame vectorization is applied (c.f.
-% Section~\ref{sec:opt_vec_intra}) to take advantage of the algorithms inherent
-% level of parallelism, when the multi-threaded parallelism is used,
-To reduce the simulation time it is possible to multiply the number of
-concurrent communication chains, thanks to the independence property of Monte
-Carlo simulations.
-% In order to achieve highest possible throughputs, the receiver part of the simulator is
-% configured to work with 8-bit fixed-point representation for real numbers. It
-% has been shown that this representation does not degrade the decoding
-% performances of the FA-SCL decoder~\cite{Leonardon2019}. However \AFFECT
-% algorithms implementations can also be run on other representations like
-% 64/32-bit floating-point and 16-bit fixed-point.
-The simulation scales rather well on the tested architectures. The data remains
-in the CPU caches because of the moderate frame size ($N = 2048$) and SIMD
-intra-frame strategy. Scaling on the Xeon\TM Gold 6140 is not as good as the
-other targets, because the \textit{Intel\R Turbo Boost} technology is enabled on
-this platform. The CPU runs at higher frequencies when the number of active
-cores is low. \AFFECT effectively leverages the simultaneous multi-threading
-(SMT) technology. This is especially true for the ThunderX2\R CN9975 and Xeon\TM
-Gold 6140 targets. The SMT technology helps to improve the usage of the
-available instruction-level parallelism.
+Figure~\ref{plot:eval_simu_speedup}, the speedups on each architecture are
+computed with respect to the single thread simulation time on the same
+architecture. Each run assigns at most one \AFFECT thread to each hardware
+thread. Since the architectures have different number of hardware threads, the
+presented speedups do not all have the same number of measurement points. To
+reduce the simulation time it is possible to multiply the number of concurrent
+communication chains, thanks to the independence property of Monte
+Carlo simulations. The simulation scales rather well on the tested
+architectures. The data remains in the CPU caches because of the moderate frame
+size ($N = 2048$) and SIMD intra-frame strategy. Scaling on the Xeon\TM Gold
+6140 is not as good as the other targets, because the \textit{Intel\R Turbo
+Boost} technology is enabled on this platform. The CPU runs at higher
+frequencies when the number of active cores is low. \AFFECT effectively
+leverages the simultaneous multi-threading (SMT) technology. This is especially
+true for the ThunderX2\R CN9975 and Xeon\TM Gold 6140 targets. The SMT
+technology helps to improve the usage of the available instruction-level
+parallelism.
 
 The best multi-threaded throughput performance is achieved on the AMD\R EPYC
 platform and its 128 cores. 11 Gb/s are reached on the two AMD\R EPYC 7702 CPUs.
@@ -1696,7 +1600,6 @@ chance that it would have increased the throughput even more.
   \centering
   \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
   \label{tab:eval_simu_speedup_mpi}
-% {\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{r  r  r  r}
   \textbf{Nodes} & \textbf{Cores} & \textbf{Info. T/P} & \textbf{Speedup} \\
                  &                & (Mb/s)             &                  \\
@@ -1715,7 +1618,6 @@ chance that it would have increased the throughput even more.
   16             & 384            & 31,640             & 16.22            \\
   32             & 768            & 63,075             & 32.34            \\
   \end{tabular}
-% }%}
 \end{table}
 
 Table~\ref{tab:eval_simu_speedup_mpi} shows the multi-node scaling with the

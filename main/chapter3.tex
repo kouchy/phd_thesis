@@ -29,9 +29,6 @@ section concludes this chapter.
 
 \AFFECT for \emph{A Fast Forward Error Correction Toolbox} is a set of tools
 regrouping all the contributions of this thesis and more.
-% \AFFECT is pronounced \emph{[\textschwa'fekt]} like ``affect'' in English. The
-% ``E'' is reversed to a ``3'' and symbolizes a channel error that can be easily
-% corrected. It is also inspired by the leetspeak to create a proper noun.
 
 \subsection{High Performance Implementations}
 
@@ -147,11 +144,10 @@ the same. In other terms, the \AFFECT simulator is deterministic.
   \centering
   \caption{\C/\Cxx open source channel coding simulators/libraries.}
   \label{tab:fec_libraries_comparison}
-  % \begin{adjustbox}{angle=90}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{r   r  r  r  r  r | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
   \multirow{4}{*}{\textbf{Name}} & \multirow{4}{*}{\textbf{Ref.}} &                  &                &                & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
-                                 &                                & \textbf{Contri-} & \textbf{Code}  & \textbf{Start} &                                   &        &        &        &        &        &        &        &        &        &         \\ %\cline{5-6}
+                                 &                                & \textbf{Contri-} & \textbf{Code}  & \textbf{Start} &                                   &        &        &        &        &        &        &        &        &        &         \\
                                  &                                & \textbf{butors}  & \textbf{Lines} & \textbf{Year}  &                                   &        &        &        &        &        &        &        &        &        &         \\
                                  &                                &                  &                &                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline\hline
                                                                                                                                                            % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
@@ -179,7 +175,6 @@ the same. In other terms, the \AFFECT simulator is deterministic.
   {TurboFEC}                     & \cite{TurboFEC}                &                2 &             4k & 2015           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
   \end{tabular}
   }}
-  % \end{adjustbox}
 \end{table}
 
 In the digital signal processing community, many scientists implement their own
@@ -411,7 +406,6 @@ The \AFFECT software functionalities are decomposed in three main parts: the
   \centering
   \caption{List of the channel codes (codecs) supported in \AFFECT.}
   \label{tab:aff3ct_features_codecs}
-% {\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{ c | c | c }
   \multirow{2}{*}{\textbf{Channel Code}}  & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Decoders}}        \\
                                           &                                    &                                           \\
@@ -452,7 +446,6 @@ The \AFFECT software functionalities are decomposed in three main parts: the
   (single and double                      & NASA                               & BCJR - Linear Approximation (L-MAP)       \\
   binary)                                 &                                    & BCJR - Max-log Approximation (ML-MAP)     \\
   \end{tabular}
-% }%}
 \end{table}
 
 The codecs are the main part of the toolbox. There is a broad range of supported
@@ -474,7 +467,6 @@ arithmetic.
   \centering
   \caption{List of the modulations/demodulations (modems) supported in \AFFECT.}
   \label{tab:aff3ct_features_modems}
-  %{\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{ c | c | c }
   \multirow{2}{*}{\textbf{Modem}} & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Information}}  \\
                                   &                                    &                                        \\
@@ -504,7 +496,6 @@ arithmetic.
   \multirow{2}{*}{{User defined}} & \multirow{2}{*}{-}                 & Constellation and order can be         \\
                                   &                                    & defined from an external file          \\
   \end{tabular}
-  %}%}
 \end{table}
 
 In typical communication chains, it is necessary to adapt the digital signal
@@ -524,7 +515,6 @@ at the digital level.
   \centering
   \caption{List of the channel models supported in \AFFECT.}
   \label{tab:aff3ct_features_channels}
-  % {\footnotesize%\resizebox{\linewidth}{!}{
   \begin{tabular}{ c | c | c }
   \multirow{2}{*}{\textbf{Channel}}      & \multirow{2}{*}{\textbf{Multi-user}} & \multirow{2}{*}{\textbf{Information}}          \\
                                          &                                      &                                                \\
@@ -545,7 +535,6 @@ at the digital level.
   \multirow{2}{*}{{User defined}}        & \multirow{2}{*}{No}                  & User can import noise samples                  \\
                                          &                                      & from an external file                          \\
   \end{tabular}
-  %}%}
 \end{table}
 
 For simulation purposes, it is crucial to emulate the behavior of the physical
