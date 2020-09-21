@@ -12,7 +12,7 @@ heterogeneity, portability and reproducible science. In the second section,
 \AFFECT is compared with the other existing \verb|C|/\Cxx FEC software
 libraries. The third section presents \AFFECT as a library dedicated to the
 digital communication algorithms. The software architecture and functionalities
-are described. Then, examples of library use are given in \Cxx and MATLAB. The
+are described. Then, examples of library use are given in \Cxx and MATLAB\R. The
 fourth section focuses on the \AFFECT BER/FER simulator that comes with the
 toolbox. A tour of the possible explorations is given and our BER/FER comparator
 is presented. At the end, the \AFFECT testing strategy is explained. The fifth
@@ -36,12 +36,13 @@ regrouping all the contributions of this thesis and more.
 \subsection{High Performance Implementations}
 
 The signal processing community mainly writes source codes with high level
-languages like MATLAB or Python. These languages enable to write implementations
-close to the pseudo-code but an important part of the CPU computational power is
-wasted. When targeting low error-rate functional simulations or real-time
-constraints (like for the Cloud-RAN and the SDR), these high level languages are
-not suitable. With the increasing complexity of the digital communication
-systems it becomes crucial to have high performance implementations.
+languages like MATLAB\R or Python. These languages enable to write
+implementations close to the pseudo-code but an important part of the CPU
+computational power is wasted. When targeting low error-rate functional
+simulations or real-time constraints (like for the Cloud-RAN and the SDR), these
+high level languages are not suitable. With the increasing complexity of the
+digital communication systems it becomes crucial to have high performance
+implementations.
 
 To this purpose, \AFFECT is mainly written in \Cxx~\cite{Stroustrup2013}. This
 choice has been made to focus on high performance implementations without
@@ -61,7 +62,7 @@ For the signal processing algorithms implemented in \AFFECT, we observed that
 compared to interpreted languages, the speedups range from 10 to 1000 in \Cxx.
 If we consider the very optimized implementations presented in
 Chapter~\ref{chap:opt}, the speedups are closer to 1000. Of course the speedups
-are not simply coming from the porting of the MATLAB code to the \Cxx code. It
+are not simply coming from the porting of the MATLAB\R code to the \Cxx code. It
 is true that the compiler is sometime able to perform optimizations that can
 benefit for the overall performance. But, most of the speedup comes from
 dedicated implementations. The \Cxx enables source code implementations to take
@@ -189,7 +190,7 @@ simulators/libraries. This comparison table is also available
 online where it is regularly updated\footnote{\texttt{C}/\Cxx Open Source FEC
 Libraries: \url{http://aff3ct.github.io/fec_libraries.html}}. We choose to
 compare with projects compiled as binaries, since they aim at high throughput
-and low latency, as \AFFECT. Many open source projects in Python or in MATLAB
+and low latency, as \AFFECT. Many open source projects in Python or in MATLAB\R
 exist as well. But these tools are usually slower than compiled binaries, and
 rather aim at prototyping.
 
@@ -371,34 +372,34 @@ performance appears to be equivalent to the performance of the pure software
 simulation which shows that the hardware BCH decoder is correctly implemented.
 This process is also known as \emph{hardware in the loop}.
 
-\subsection{MATLAB Wrapper}
+\subsection{MATLAB\R Wrapper}
 
-In the signal processing community it is common to exploit MATLAB to implement
+In the signal processing community it is common to exploit MATLAB\R to implement
 and to evaluate new algorithms or/and configurations. More specifically, the
 \emph{Communications Toolbox} is often used. This toolbox contains a larger set
 of digital communication algorithms than \AFFECT. But they often lack of
 efficiency, especially for the channel decoder implementations. Knowing that, a
-wrapper MATLAB has been proposed to be interfaced to the compiled \AFFECT
-library. The wrapper can be seen as a new MATLAB toolbox that proposes faster
-decoder implementations than the traditional MATLAB communications toolbox.
+wrapper MATLAB\R has been proposed to be interfaced to the compiled \AFFECT
+library. The wrapper can be seen as a new MATLAB\R toolbox that proposes faster
+decoder implementations than the traditional MATLAB\R communications toolbox.
 \AFFECT also comes with channel decoders that are not available in the standard
 communications toolbox.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{matlab}{\curChapter/src/use_cases/library/repetition_chain.m}
-  \caption{Example of the \AFFECT MATLAB wrapper.}
+  \caption{Example of the \AFFECT MATLAB\R wrapper.}
   \label{lst:aff3ct_library_matlab}
 \end{listing}
 
-The proposed MATLAB wrapper is automatically generated for the \AFFECT headers.
-The Clang compiler is used to generate the Abstract Syntax Tree (AST) of the
-\AFFECT source code. A Python script extracts useful classes and methods.
+The proposed MATLAB\R wrapper is automatically generated for the \AFFECT
+headers. The Clang compiler is used to generate the Abstract Syntax Tree (AST)
+of the \AFFECT source code. A Python script extracts useful classes and methods.
 These data are stored in a JSON database. Then, another Python script has been
-written to generate \Cxx and MATLAB codes. It effectively performs the
-interfaces between the \AFFECT library and MATLAB.
+written to generate \Cxx and MATLAB\R codes. It effectively performs the
+interfaces between the \AFFECT library and MATLAB\R.
 Listing~\ref{lst:aff3ct_library_matlab} shows the same example of code as in
-Section~\ref{sec:aff3ct_library_example} written in MATLAB. At the time of the
-writing, the MATLAB wrapper has not been publicly released yet.
+Section~\ref{sec:aff3ct_library_example} written in MATLAB\R. At the time of the
+writing, the MATLAB\R wrapper has not been publicly released yet.
 
 \subsection{Software Functionalities}
 \label{sec:aff3ct_features}
@@ -859,7 +860,7 @@ support for channel coding algorithms. \AFFECT also comes with multiple channel
 models (AWGN, Rayleigh, BEC, BSC, etc.) and modulation schemes (PSK, QAM, PAM,
 OOK, CPM, SCMA, etc.). All these efficient algorithm implementations can be
 used from interfaces. Examples of library usages are given in native \Cxx or
-by using the MATLAB wrapper.
+by using the MATLAB\R wrapper.
 
 \AFFECT also comes with a BER/FER simulator. All the previously enumerated
 features can be simulated over various parameters. The simulator takes advantage
