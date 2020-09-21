@@ -72,7 +72,7 @@ repository: \url{https://github.com/aff3ct/MIPP}}.
 
 \MIPP provides two application programming interface levels. The
 \emph{Low Level Interface} (low) implements a basic thin abstraction layer
-directly on top of the intrinsics. The \emph{Medium Level Interface} (med.),
+directly on top of the intrinsics. The \emph{medium level interface} (med.),
 built on top of \MIPP low, abstracts away more details to lessen the effort from
 the application programmer by relying on object encapsulation and operator
 overloading.
@@ -113,11 +113,13 @@ expanded as an operation and a blend instead.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/mipp/mli.cpp}
-  \caption{Medium Level Interface encapsulation.}
+  \caption
+    [\MIPP medium level interface encapsulation.]
+    {Medium level interface encapsulation.}
   \label{lst:opt_mipp_mli}
 \end{listing}
 
-The \MIPP Medium Level Interface (\MIPP med.) provides additional expressiveness
+The \MIPP medium level interface (\MIPP med.) provides additional expressiveness
 to the programmer. \verb|mipp::reg| and \verb|mipp::msk| basic types are
 encapsulated in \verb|mipp::Reg<T>| and \verb|mipp::Msk<N>| objects,
 respectively. The \verb|T| and \verb|N| template parameters correspond to the
@@ -339,7 +341,9 @@ teams of these wrappers.
 \begin{table}[htp]
   \tabcolsep=6pt
   \centering
-  \caption{Specifications of the target processors.}
+  \caption
+    [Specifications of the target processors for the \MIPP experiments.]
+    {Specifications of the target processors.}
   \label{tab:opt_mipp_specs}
   \begin{tabular}{c | c c c c}
   \textbf{Name}                   & \textbf{Exynos5422} & \textbf{RK3399} & \textbf{Core\TM i5-5300U}  & \textbf{Xeon Phi\TM 7230} \\ \hline \hline
@@ -973,11 +977,11 @@ order to offer a tradeoff between throughput and decoding performance.
   \centering
   \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/scl_spc/scl_spc_diff}
   \caption
-    [Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @$10^{-5}$
-     FER]
-    {Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL @ $10^{-5}$
-     FER. 32-bit intra-frame SIMD strategy (on the Intel\R Core\TM i5-6600K
-     CPU).}
+    [Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL decoder @
+     $10^{-5}$ FER]
+    {Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL decoder @
+     $10^{-5}$ FER. 32-bit intra-frame SIMD strategy (on the Intel\R Core\TM
+     i5-6600K CPU).}
   \label{plot:opt_polar_scl_spc}
 \end{figure}
 
@@ -1138,8 +1142,10 @@ highly optimized routines.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/polar/generated_sc_decoder.cpp}
-  \caption{The final code generated corresponding to the pruned tree in
-    Fig.~\ref{fig:ctx_polar_tree_pruning_example}.}
+  \caption
+    [Generated polar SC decoder source code.]
+    {Generated polar SC decoder source code corresponding to the pruned tree in
+     Fig.~\ref{fig:ctx_polar_tree_pruning_example}.}
   \label{lst:opt_polar_generated_sc_decoder}
 \end{listing}
 
@@ -1602,13 +1608,17 @@ $\beta_j^{k-1}$ values. The $\beta_j^k$ metrics are never stored in memory.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/turbo/alpha_generic.cpp}
-  \caption{Generic implementation of the $\bm{\alpha^k}$ computations.}
+  \caption
+    [Generic implementation of the BCJR $\bm{\alpha^k}$ computations.]
+    {Generic implementation of the $\bm{\alpha^k}$ computations.}
   \label{lst:opt_turbo_alpha_generic}
 \end{listing}
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/turbo/alpha_unrolled.cpp}
-  \caption{Unrolled implementation of the $\bm{\alpha^k}$ computations.}
+  \caption
+    [Unrolled implementation of the BCJR $\bm{\alpha^k}$ computations.]
+    {Unrolled implementation of the $\bm{\alpha^k}$ computations.}
   \label{lst:opt_turbo_alpha_unrolled}
 \end{listing}
 
