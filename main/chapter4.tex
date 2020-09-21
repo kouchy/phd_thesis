@@ -505,8 +505,8 @@ exceeds the L1I cache size.
 We mitigated this issue by reducing decoder binary sizes by applying two
 compression techniques: 1) in the generated code, we moved the buffer offsets
 from template arguments to function arguments. It enabled the compiler to
-factorize more function calls than before (improvement by a factor of 10), 2) we
-implemented a sub-tree folding algorithm in the generator.
+factorize more function calls than before, 2) we implemented a sub-tree folding
+algorithm in the generator.
 % ---- to remove, already explained in chap 3
 
 \begin{table}[htp]
@@ -824,7 +824,7 @@ bits extraction in the SC decoder. Finally, as mentioned before, the throughput
 of the proposed FA-SSCL significantly outperforms all the other SCL decoders (up
 to 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
 
-\newpage
+% \newpage
 \section{Turbo Decoders}
 \label{sec:eval_turbo}
 
@@ -911,6 +911,19 @@ SSE outperforms the AVX one.
 
 \subsection{Comparison with State-Of-The-Art Turbo Decoders}
 
+Table~\ref{tab:eval_turbo_comparison} shows a performance comparison with
+related works. \emph{SIMD} is the number of elements that can be computed in
+parallel in one SIMD instruction. \emph{Pre.} is the precision of LLRs in bits.
+\emph{Inter} is the number of frames computed in parallel. \emph{i} is the
+number of turbo decoding iterations. \emph{BER} and \emph{FER} are the decoding
+performance of the decoder at 0.7 dB. $\mathcal{L}$ is the decoder latency.
+$\mathcal{T}_i$ is the information throughput of the decoder and
+$\mathcal{NT}_i$ is the normalized information throughput: this metric considers
+6 iterations on a single core. It enables to directly compare the throughput of
+the listed decoders. The FER performance of the proposed decoders are shown in
+Fig.~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
+decoder leads to BER/FER degradations.
+
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
   \centering
@@ -940,19 +953,6 @@ SSE outperforms the AVX one.
   \end{tabular}
   }}
 \end{table}
-
-Table~\ref{tab:eval_turbo_comparison} shows a performance comparison with
-related works. \emph{SIMD} is the number of elements that can be computed in
-parallel in one SIMD instruction. \emph{Pre.} is the precision of LLRs in bits.
-\emph{Inter} is the number of frames computed in parallel. \emph{i} is the
-number of turbo decoding iterations. \emph{BER} and \emph{FER} are the decoding
-performance of the decoder at 0.7 dB. $\mathcal{L}$ is the decoder latency.
-$\mathcal{T}_i$ is the information throughput of the decoder and
-$\mathcal{NT}_i$ is the normalized information throughput: this metric considers
-6 iterations on a single core. It enables to directly compare the throughput of
-the listed decoders. The FER performance of the proposed decoders are shown in
-Fig.~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
-decoder leads to BER/FER degradations.
 
 The variety of CPU targets and algorithmic parameters enables to
 show some global emerging trends. When comparing to similar CPU
@@ -991,7 +991,7 @@ implementation is able to reach the reference decoding performance in 16-bit.
 In 8-bit, there is contained decoding performance degradations compared to the
 other works in the literature.
 
-\newpage
+% \newpage
 \section{FEC Software Decoders Hall of Fame}
 \label{sec:eval_hof}
 
