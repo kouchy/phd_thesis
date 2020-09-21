@@ -158,10 +158,9 @@ other instruction sets.
 
 \MIPP selects the most recent instruction set available at compile time. For
 instance, a code compiled with the \verb|-march=avx| flag of the GNU GCC
-compiler uses \verb|AVX| instructions even if the architecture supports
-\verb|SSE| as well. The vector register size is determined by the instruction
-set and the data type. A dedicated function returns the number of elements in a
-\MIPP register:
+compiler uses AVX instructions even if the architecture supports SSE as well.
+The vector register size is determined by the instruction set and the data type.
+A dedicated function returns the number of elements in a \MIPP register:
 \mint{C++}|constexpr int n = mipp::nElmtsPerRegister<T>();|
 {\noindent
 A shortened version of this previous function is also defined as:
@@ -1644,7 +1643,7 @@ specializations for the LTE 8-state trellis.
 \label{sec:opt_scma}
 
 Besides methodical improvements of the MPA such as log-MPA, hardware oriented
-improvements are important to take full benefit of Cloud-RAN servers
+improvements are important to take full benefit of C-RAN servers
 capabilities. Since MPA and log-MPA are control heavy algorithms, mishandling of
 data can induce huge performance losses. This section explores how MPA can be
 reformulated: 1) to improve data locality in cache and to reduce cache misses
@@ -1870,7 +1869,7 @@ implementations and are good candidates to improve them. For each implementation
 the inter- or the intra-frame SIMD strategy has been selected. With the growing
 size of the SIMD registers, it becomes difficult to achieve high efficiency
 using the intra-frame SIMD strategy. However, the reduced latencies are still
-very interesting, especially for the SDR and the Cloud-RAN needs. Then, it could
+very interesting, especially for the SDR and the C-RAN needs. Then, it could
 be a good idea to combine both the intra- and inter-frame SIMD strategies. The
 intra-SIMD will absorb as much as possible the algorithm inherent parallelism
 while the inter-SIMD will fill the empty elements in the SIMD registers. The

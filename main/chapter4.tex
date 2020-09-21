@@ -859,7 +859,7 @@ detailed in Table~\ref{tab:eval_turbo_specs}. A mid-range processor (i7-4960HQ)
 is used for comparison with similar CPU targets in the
 literature~\cite{Huang2011,Zhang2012,Wu2013}. The two high-end processors
 (E5-2650 and E5-2680 v3) are used for multi-threading benchmarking. Indeed,
-E5-2650 and E5-2680 v3 are potentially good candidates for Cloud-RAN servers.
+E5-2650 and E5-2680 v3 are potentially good candidates for C-RAN servers.
 Moreover, the code has been compiled with the GNU compiler (version 4.8) and
 with the \verb|-Ofast -funroll-loops -msse4.1/-mavx2| options.
 
@@ -1206,7 +1206,7 @@ iterations/lists ($I$). The normalized throughput can be expressed as follows:
 \end{equation}
 for the LDPC HoF $I = 50$, for the turbo HoF $I = 6$ and for the polar HoF
 $I = 1$.
-The \emph{Throughput Under Normalized Decoding Cost} (\emph{TNDC}) is a metric
+The \emph{Throughput under Normalized Decoding Cost} (\emph{TNDC}) is a metric
 proposed in~\cite{Ying2012}. The general idea is to see how much the hardware
 components are stressed (higher TNDC is better). In the initial paper, the TNDC
 was only taking care of the frequency and the number of cores. In this thesis we
@@ -1266,7 +1266,7 @@ power consumption, throughput and latency are discussed.
   \label{tab:eval_scma_specs}
 \end{table}
 
-Energy efficiency is of interest in the design of Cloud-RAN servers. It is
+Energy efficiency is of interest in the design of C-RAN servers. It is
 determined by the rate of computation that can be achieved by a processor.
 Joint optimization of the throughput and energy consumption is a main goal of
 system designers. Energy optimization can significantly reduce the cost of cloud
@@ -1393,7 +1393,7 @@ Eliminating the exponential computations almost doubled the performance in E-MPA
 (15.30 Mbps) as compared to MPA+NEON (8.40 Mbps). It shows the limits of low
 power processors when many exponentials have to be calculated. Nevertheless, by
 using E-MPA, the ARM\R low power processors can be a good candidate for
-implementation of SCMA decoders on Cloud-RAN servers as it enables significant
+implementation of SCMA decoders on C-RAN servers as it enables significant
 energy savings.
 
 Considering the energy consumed per decoded bit ($E_b$), the SIMD algorithms
@@ -1600,7 +1600,7 @@ platform and its 128 cores. 11 Gb/s are reached on the two AMD\R EPYC 7702 CPUs.
 The best Intel\R target (Xeon\TM Gold 6140) can only get half of the AMD\R CPU
 performance. The ARM\R target and the Xeon Phi\TM are not competitive in terms
 of throughput even when all the hardware threads are assigned. It is possible
-that these targets are more adapted for SDR usage (like for the Cloud-RAN) when
+that these targets are more adapted for SDR usage (like for the C-RAN) when
 power consumption matter more. However, for simulation purpose, it is clear that
 the AMD\R EPYC CPUs are more interesting. Those results also demonstrate the
 interest to enable the frequency boost as well as the SMT technology. Indeed,

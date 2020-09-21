@@ -160,7 +160,7 @@ convolutional code is infinite. The coding scheme is made in a way that the
 output depends on the current input and on the inputs before. This type of code
 has been used by the NASA for satellite communications for instance.
 
-The Raj \textbf{B}ose, D. K. Ray-\textbf{C}haudhuri and Alexis,
+The Raj \textbf{B}ose, D. K. Ray-\textbf{C}haudhuri and Alexis
 \textbf{H}ocquenghem (BCH) codes are block codes discovered in the late
 1950s~\cite{Hocquenghem1959,Bose1960}. They are algebraic codes built from a
 polynomial. This results in low complexity decoding algorithms. These codes are
@@ -1136,7 +1136,7 @@ terminals.
   \quad{}
   \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
   \quad{}
-  \subfloat[][Cloud-RAN.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
+  \subfloat[][C-RAN.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
   \caption
     [Base stations evolution in mobile networks.]
     {Base stations evolution in mobile networks.}
@@ -1162,7 +1162,7 @@ reduce their cost of maintenance.
 The virtualization of the mobile network is considered by industrial
 actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
 Rost2014,Checko2015a} as a promising evolution. This is also known as the
-\emph{Cloud Radio Access Network} (Cloud-RAN). The Cloud-RAN is especially
+\emph{Cloud Radio Access Network} (C-RAN). The C-RAN is especially
 proposed for a part of the processing traditionally made in the base stations.
 In this network structure, the computational hardware resources of the BB
 processing are shared between multiple antennas (cf.
@@ -1176,7 +1176,7 @@ the cloud level.
 
 From the first to the fourth generation of mobile networks, the BB processing
 was systematically made on Application-Specific Integrated Circuits (ASICs or
-dedicated hardware). However, with the emergence of the Cloud-RAN more flexible
+dedicated hardware). However, with the emergence of the C-RAN more flexible
 solutions like the software ones are seriously considered. On the receiver side,
 the algorithms can be compute intensive (especially the digital demodulation and
 the channel decoding). Knowing that, a main challenge is to be able to achieve
@@ -1206,7 +1206,7 @@ the design of high throughput and low complexity decoders a
 challenge~\cite{Lu2015}. In this thesis, we propose to study the SCMA system
 as it is usually combined with the channel code families presented before.
 It is introduced in this section and revised later in light of the needs of
-Cloud Radio Access Networks (Cloud-RANs).
+Cloud Radio Access Networks (C-RANs).
 
 \subsubsection{Overview of the System Model}
 \label{sec:ctx_scma_overview}
@@ -1341,7 +1341,7 @@ for $\bm{\hat{x}}$:
   \Bigg).
 \end{equation}
 
-\paragraph{Log-MAP}
+\paragraph{Log-MPA}
 \label{sec:ctx_scma_log-map}
 
 Since calculation of exponentials in \eqref{eq:ctx_scma_7} requires relatively
