@@ -7,29 +7,23 @@
 
 This chapter introduces the context of digital communication systems. Its
 purpose is to define notions that will be reused in the manuscript and to give
-a general view and defines the main objectives of this thesis.
-
-The first section presents the principle of the digital communication systems
-with its different parts: transmitter, channel and receiver.
-The most common metrics used in digital communications are also introduced.
-
-The second section details the channel model and the digital modulation used all
-along the manuscript. A characterization of the signal-to-noise ratio is given
-as well as the notion of probability at the output of the channel and the
-demodulator.
-
-The third section introduces the channel codes considered in this manuscript:
-namely the LDPC, the polar and the turbo codes. The corresponding encoding and
-decoding processing are detailed for each channel code family.
-
-In the fourth section, three applicative contexts are detailed for the
-considered channel codes. The functional simulation enables the design and the
-validation of a coding scheme. The software-defined radio is a radio
-communication system where components are implemented by means of software.
-Then, the sparse code multiple access mechanism is presented as it is a
-promising solution for massive connectivity in future mobile networks.
-
-The fifth section gives the main problematics of the thesis.
+a general view and defines the main objectives of this thesis. The first section
+presents the principle of the digital communication systems with its different
+parts: transmitter, channel and receiver. The most common metrics used in
+digital communications are also introduced. The second section details the
+channel model and the digital modulation used all along the manuscript. A
+characterization of the signal-to-noise ratio is given as well as the notion of
+probability at the output of the channel and the demodulator. The third section
+introduces the channel codes considered in this manuscript: namely the LDPC, the
+polar and the turbo codes. The corresponding encoding and decoding processing
+are detailed for each channel code family. In the fourth section, three
+applicative contexts are detailed for the considered channel codes. The
+functional simulation enables the design and the validation of a coding scheme.
+The software-defined radio is a radio communication system where components are
+implemented by means of software. Then, the sparse code multiple access
+mechanism is presented as it is a promising solution for massive connectivity in
+future mobile networks. The fifth section gives the main problematics of the
+thesis.
 
 \vspace*{\fill}
 \minitoccustom
@@ -2178,91 +2172,20 @@ challenges:
     can be very data-intensive. As a consequence, the compute intensive blocks
     of the transceiver have to be well optimized to reach levels of performance
     comparable with the hardware implementations.
+
   \item \textbf{Low latency:} Reaching high throughput is not always the major
     constraint, for instance, in audio-conferencing applications it is
     uncomfortable to perceive a delay when people are speaking.
+
   \item \textbf{Flexibility:} The software implementations have to be able to
     adapt to various configurations. For instance, when the SNR is changing,
-    the code rate $R$ of the decoder can be switched on the fly,
+    the code rate $R$ of the decoder can be switched on the fly.
+
   \item \textbf{Portability:} The proposed solutions can be deployed on high-end
     servers as well as on embedded low power systems. Moreover, many operating
     systems coexist, and it is important to be able to support the most famous
     ones like Windows, macOS and Linux.
 \end{enumerate}
-
-% \section{Organization and Contributions}
-
-% % In this thesis we propose to study the most time consuming algorithms of digital
-% % communication systems, to adapt and optimize them on General Purpose Processors
-% % (GPPs) like the CPUs. The long simulation times and the real world application
-% % requirements make it desirable to have \textbf{high throughput and low latency
-% % implementations}. The algorithmic heterogeneity requires \textbf{flexible,
-% % modular software}. The reproducibility issue pushes towards a \textbf{portable}
-% % and \textbf{open-source software}.
-
-% In this thesis we propose to study the most time consuming algorithms of digital
-% communication systems, to adapt and optimize them on General Purpose Processors
-% (GPPs) like the CPUs. The long simulation times and the real-world application
-% requirements make it desirable to have portable, flexible, high throughput and
-% low latency implementations. The latter are presented in Chapter~\ref{chap:opt}
-% and evaluated in Chapter~\ref{chap:eval}. The algorithmic heterogeneity requires
-% modular software and the reproducibility issue pushes towards an open-source
-% software: this is discussed in Chapter~\ref{chap:aff3ct}. In real-time contexts,
-% maintaining a good level of performance can be challenging. Solutions to help in
-% this direction have been proposed in Chapter~\ref{chap:sdr}.
-
-% In Chapter~\ref{chap:opt}, new efficient implementations of the LDPC, polar and
-% turbo decoders are proposed as well as an efficient implementation of the SCMA
-% demodulator. First, an overall portable methodology is detailed to meet the high
-% throughput constraint required by both the simulations and the real-time
-% systems. This methodology is based on the Single Instruction Multiple Data
-% (SIMD) model implemented in most of the current CPUs. Depending on how the CPU
-% SIMD instructions are used, it is possible to maximize the throughput or the
-% latency of the implemented algorithms. Then, specific optimized implementations
-% are detailed for each decoder/demodulator. These implementations focus on
-% maximizing the flexibility, high throughput and low latency. Depending on the
-% implementations, some compromises have to be made and some of these
-% characteristics can be maximized unbeknownst to others.
-
-% In Chapter~\ref{chap:aff3ct}, \AFFECT, our toolbox dedicated to the forward
-% error correction algorithms is presented. \AFFECT is unique in the domain and it
-% is composed by many various algorithm implementations (including those presented
-% in Chapter~\ref{chap:opt}). \AFFECT is the software that enables the signal
-% processing algorithms heterogeneity thanks to a robust software architecture
-% based on well-defined and coherent interfaces. It allows reproducibility of the
-% results as it is open-source and extensively tested. \AFFECT also contains a
-% parallel functional simulator and enables extensive exploration/validation of
-% existing or new algorithms on a large combination of parameters.
-
-% In Chapter~\ref{chap:eval}, the efficient algorithm implementations proposed
-% in Chapter~\ref{chap:opt} are evaluated and compared with the state-of-the-art.
-% The FEC software decoders hall of fame is introduced to summarize and to compare
-% the proposed contributions and the other works in the literature. Some metrics
-% are defined for ease of comparison. These metrics focus on normalized
-% throughput, proper use of hardware and energy efficiency. Finally, the \AFFECT
-% simulator efficiency is demonstrated on various multi-cores CPUs and on
-% a multi-node cluster.
-
-% In Chapter~\ref{chap:sdr}, a new embedded Domain Specific Language (eDSL) for
-% the SDR is presented. The AFFECT software suite is enriched with new blocks
-% dedicated to the efficient implementation of real time digital communication
-% systems on multi-core CPUs. These blocks enable automatic parallelism. As an
-% example of use, a full DVB-S2 transceiver has been implemented. All the digital
-% processing is performed with \AFFECT while the analogical communications have
-% been achieved with Universal Software Radio Peripherals (USRPs). The results
-% matches the satellite real time constraints.
-
-% These various contributions have been the topic of scientific publications. They
-% are given at the end of the manuscript. As a convention in the document, the
-% numeric citations are contributions of this thesis while the alphabetic
-% citations concern the other works in the literature.
-
-
-
-
-
-
-
 
 
 % The manuscript is organized as follow: Chapter~\ref{chap:opt} explains the
