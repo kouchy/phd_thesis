@@ -1035,13 +1035,6 @@ The template \verb|N_ELMTS| parameter is not used in the proposed
 \verb|API_polar_SIMD| implementation. The interest of this parameter will be
 explained in the next section.
 
-\begin{listing}
-  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/polar/f_g_h_simd.cpp}
-  \caption{Example of a \Cxx SIMD polar API ($f$, $g$ and $h$ functions are
-    implemented).}
-  \label{lst:opt_polar_api}
-\end{listing}
-
 A single SIMD polar API is necessary to both intra-frame and inter-frame
 strategies. In both cases, only the input and output pointers change. The
 intra-frame strategy exploits SIMD units without increasing the decoder latency.
@@ -1053,6 +1046,13 @@ that can be heavily pruned from these numerous scalar nodes. Even if the tree is
 heavily pruned some nodes cannot be fully vectorized in the lower layers. In
 this context, the building blocks of the polar API enable to automatically
 switch from SIMD to sequential implementations.
+
+\begin{listing}
+  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/polar/f_g_h_simd.cpp}
+  \caption{Example of a \Cxx SIMD polar API ($f$, $g$ and $h$ functions are
+    implemented).}
+  \label{lst:opt_polar_api}
+\end{listing}
 
 \subsection{Successive Cancellation Decoders}
 \label{sec:opt_polar_sc}
