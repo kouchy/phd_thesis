@@ -152,7 +152,7 @@ $128 / 32 = 4$ MB per core. This is approximately three times more L3 memory
 per core for the EPYC CPU. As a consequence, the AMD\R Zen 2 architecture is
 more adapted to the inter-frame SIMD strategy.
 
-\subsection{Comparison with State-Of-The-Art BP Decoders.}
+\subsection{Comparison with State-of-the-art BP Decoders.}
 
 \begin{table}[htp]
   \centering
@@ -554,7 +554,7 @@ $N = 2^{15}$. The proposed compression technique enables to exceed that limit.
 For instance, we were able to generate $N = 2^{20}$ decoders as shown in
 Fig.~\ref{plot:eval_polar_sc_energy_implems_vs}.
 
-\subsubsection{Comparison with State-Of-The-Art SC Decoders}
+\subsubsection{Comparison with State-of-the-art SC Decoders}
 
 \paragraph{Dynamic Implementation}
 
@@ -748,7 +748,7 @@ SCL algorithm for $L={2,4,8,16,32}$. This is the reason why the worst latency of
 the PA-SSCL algorithm is lower while the average latency. Consequently the
 average throughput is better with the FA-SSCL algorithm.
 
-\subsubsection{Comparison with State-Of-The-Art SCL Decoders}
+\subsubsection{Comparison with State-of-the-art SCL Decoders}
 
 \begin{table}[htp]
   \centering
@@ -908,7 +908,7 @@ codewords ($K=1024$) it is more energy efficient to resort to AVX. But this is
 not so clear on larger codewords ($K=6144$) since with 3/4 cores, the code using
 SSE outperforms the AVX one.
 
-\subsection{Comparison with State-Of-The-Art Turbo Decoders}
+\subsection{Comparison with State-of-the-art Turbo Decoders}
 
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
@@ -1511,8 +1511,8 @@ and macOS at the same level of performance.
   & \textbf{CPU}           & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
   \hline \hline
   \multirow{6}{*}{\rotatebox[origin=c]{90}{$\bm{\mathcal{T}}$ (Mb/s)}}
-  &     Xeon Phi\TM 7230   &         100.2  &         1862.1  &            -    &         49.8  &           2073.2  &        921.4  &          29.0  \\
   & \CR ThunderX2\R CN9975 & \CR      53.7  & \CR      672.9  & \CR      748.3  & \CR    112.1  & \CR       6338.4  & \CR   2386.3  & \CR      28.4  \\
+  &     Xeon Phi\TM 7230   &         100.2  &         1862.1  &            -    &         49.8  &           2073.2  &        921.4  &          29.0  \\
   &     Xeon\TM E5-2680 v3 &         159.7  &         7427.1  &         4586.2  &        247.5  &          20832.6  &       8234.5  &          82.3  \\
   & \CB Xeon\TM Gold 6140  & \CB \BF{421.7} & \CB    14131.7  & \CB\BF{12931.5} & \CB\BF{376.5} & \CB  \BF{31749.5} & \CB  11093.0  & \CB     171.8  \\
 % &     Xeon\TM Gold 6142  &           -    &            -    &            -    &          -    &              -    &          -    &           -    \\
@@ -1521,8 +1521,8 @@ and macOS at the same level of performance.
   &     EPYC\TM 7702       &         215.4  &    \BF{14919.5} &         9234.5  &        359.5  &          28404.0  &  \BF{13562.0} &         115.4  \\
   \hline \hline
   \multirow{6}{*}{\rotatebox[origin=c]{90}{$\bm{\mathcal{L}}$ ($\mu$s)}}
-  &     Xeon Phi\TM 7230   &         20.45  &           1.10  &           -     &        35.23  &             0.83  &         1.87  &         59.48  \\
   & \CR ThunderX2\R CN9975 & \CR     38.15  & \CR       3.04  & \CR       2.74  & \CR    15.65  & \CR         0.27  & \CR     0.72  & \CR     60.58  \\
+  &     Xeon Phi\TM 7230   &         20.45  &           1.10  &           -     &        35.23  &             0.83  &         1.87  &         59.48  \\
   &     Xeon\TM E5-2680 v3 &         12.82  &           0.28  &           0.45  &         7.09  &             0.08  &         0.21  &         20.93  \\
   & \CB Xeon\TM Gold 6140  & \CB  \BF{4.86} & \CB       0.14  & \CB   \BF{0.16} & \CB \BF{4.66} & \CB     \BF{0.05} & \CB     0.16  & \CB     10.03  \\
 % &     Xeon\TM Gold 6142  &          -     &           -     &           -     &         -     &             -     &         -     &          -     \\
@@ -1614,30 +1614,31 @@ chance that it would have increased the throughput even more.
   \caption{\AFFECT multi-node speedups (single node: $2\times$Xeon\TM E5-2680 v3).}
   \label{tab:eval_simu_speedup_mpi}
   \begin{tabular}{r  r  r  r}
-  \textbf{Nodes} & \textbf{Cores} & \textbf{Info. T/P} & \textbf{Speedup} \\
-                 &                & (Mb/s)             &                  \\
+  \textbf{Nodes} & \textbf{Cores} & $\bm{\mathcal{T}_i}$ & \textbf{Speedup} \\
+                 &                & (Mb/s)               &                  \\
   \hline
   \hline
-   1             &  24            &  1,950             &  1.00            \\
-   2             &  48            &  3,901             &  1.95            \\
-%  3             &  72            &  5,826             &  2.99            \\
-   4             &  96            &  7,793             &  4.00            \\
-%  5             & 120            &  9,731             &  4.99            \\
-%  6             & 144            & 11,691             &  5.99            \\
-%  7             & 168            & 13,644             &  7.00            \\
-   8             & 192            & 15,829             &  8.12            \\
-%  9             & 216            & 17,755             &  9.10            \\
-% 10             & 240            & 19,582             & 10.04            \\
-  16             & 384            & 31,640             & 16.22            \\
-  32             & 768            & 63,075             & 32.34            \\
+   1             &  24            &  1,950               &  1.00            \\
+   2             &  48            &  3,901               &  1.95            \\
+%  3             &  72            &  5,826               &  2.99            \\
+   4             &  96            &  7,793               &  4.00            \\
+%  5             & 120            &  9,731               &  4.99            \\
+%  6             & 144            & 11,691               &  5.99            \\
+%  7             & 168            & 13,644               &  7.00            \\
+   8             & 192            & 15,829               &  8.12            \\
+%  9             & 216            & 17,755               &  9.10            \\
+% 10             & 240            & 19,582               & 10.04            \\
+  16             & 384            & 31,640               & 16.22            \\
+  32             & 768            & 63,075               & 32.34            \\
   \end{tabular}
 \end{table}
 
 Table~\ref{tab:eval_simu_speedup_mpi} shows the multi-node scaling with the
-OpenMPI library (version 3.1.2). The information throughput (T/P) and the
-speedup values are almost linear with the number of nodes: This is expected
-because there are very few communications between the various MPI processes.
-Note that the super-linear scaling is due to the measurement imprecision.
+OpenMPI library (version 3.1.2). The information throughput ($\mathcal{T}_i$)
+and the speedup values are almost linear with the number of nodes: This is
+expected because there are very few communications between the various MPI
+processes. Note that the super-linear scaling is due to the measurement
+imprecision.
 
 Those aforementioned results demonstrate the high throughput
 capabilities of the \AFFECT simulator. For instance, when using 32 MPI nodes on
