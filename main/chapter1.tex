@@ -483,6 +483,7 @@ To summarize, the polar encoding process can be defined as follow: $\bm{c} =
   \label{fig:ctx_polar_encoder}
 \end{figure}
 
+\newpage
 Fig.~\ref{fig:ctx_polar_encoder} presents $\bm{\mathcal{G}}$ generator
 matrices depending on $N$ and their associate encoding schemes described with
 factor graphs. The recursive structure of the polar codes is represented by the
@@ -1024,23 +1025,6 @@ the manuscript.
 \subsection{Functional Simulation}
 \label{sec:ctx_simulation}
 
-\begin{figure}[htp]
-  \centering
-  \subfloat[][Specification of the simulation chain.]
-  {
-    \includegraphics[scale=1]{\curChapter/fig/simu/com_chain/com_chain}
-    \label{fig:ctx_simu_com_chain_specs}
-  }
-  \\
-  \subfloat[][Input simulation parameters and output BER results.]
-  {
-    \includegraphics[scale=1]{\curChapter/fig/simu/in_out/in_out}
-    \label{fig:ctx_simu_com_chain_in_out}
-  }
-  \caption{Description of a digital communication system simulation.}
-  \label{fig:ctx_simu_com_chain}
-\end{figure}
-
 There are many possible coding schemes with different characteristics. The
 previous section introduced several families of FEC codes that are present in
 most of common standards. Before they were standardized, these codes have been
@@ -1061,6 +1045,23 @@ frames and applying random noise samples on these frames, the noisy frames are
 decoded and the output sequence of bit $\bm{\hat{u}}$ is compared with the
 initial information bits $\bm{u}$. The error count is then used to update the
 BER/FER value until they reach a stable value.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[][Specification of the simulation chain.]
+  {
+    \includegraphics[scale=1]{\curChapter/fig/simu/com_chain/com_chain}
+    \label{fig:ctx_simu_com_chain_specs}
+  }
+  \\
+  \subfloat[][Input simulation parameters and output BER results.]
+  {
+    \includegraphics[scale=1]{\curChapter/fig/simu/in_out/in_out}
+    \label{fig:ctx_simu_com_chain_in_out}
+  }
+  \caption{Description of a digital communication system simulation.}
+  \label{fig:ctx_simu_com_chain}
+\end{figure}
 
 Fig.~\ref{fig:ctx_simu_com_chain_specs} describes a simulation sequence similar
 to the digital communication chain presented in Fig.~\ref{fig:ctx_com_chain}.
@@ -1162,17 +1163,16 @@ reduce their cost of maintenance.
 The virtualization of the mobile network is considered by industrial
 actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
 Rost2014,Checko2015a} as a promising evolution. This is also known as the
-\emph{Cloud Radio Access Network} (C-RAN). The C-RAN is especially
-proposed for a part of the processing traditionally made in the base stations.
-In this network structure, the computational hardware resources of the BB
-processing are shared between multiple antennas (cf.
-Fig~\ref{fig:ctx_sdr_base_station_5G_future}). This enables new optimizations:
-1) better adaptation to non-uniform traffic; 2) energy saving; 3) throughput
-increase and latency reduction; 4) scalability and maintainability
-increase~\cite{Checko2015a}. To this purpose, the computational BB units have to
-be virtualized: there should no longer be hardware dedicated to specific
-antenna. On the contrary, the BB computational effort has to be distributed at
-the cloud level.
+\emph{Cloud Radio Access Network} (C-RAN). The C-RAN is proposed for a part of
+the processing traditionally made in the base stations. In this network
+structure, the computational hardware resources of the BB processing are shared
+between multiple antennas (see Fig~\ref{fig:ctx_sdr_base_station_5G_future}).
+This enables new optimizations: better adaptation to non-uniform traffic;
+energy saving; higher throughput and lower latency; scalability and
+maintainability increase~\cite{Checko2015a}. Thus, the computational BB units
+have to be virtualized: there should no longer be hardware dedicated to specific
+antenna. Contrariwise, the BB computational effort has to be distributed at the
+cloud level.
 
 From the first to the fourth generation of mobile networks, the BB processing
 was systematically made on Application-Specific Integrated Circuits (ASICs or
@@ -1274,15 +1274,14 @@ and the SCMA decoder can be seen as a digital demodulator.
 \subsubsection{Message Passing Algorithm Decoding Scheme}
 \label{sec:ctx_scma_detection}
 
-Exploiting sparsity of the codebooks, Belief Propagation (BP) or Message Passing
-Algorithm (MPA) decoders were introduced to achieve very good decoding
-performance with lower complexity~\cite{Zhang2014a}.
-Fig.~\ref{fig:ctx_scma_dec_graph} shows a Bayesian factor graph representation
-of an MPA decoder with six users and four physical resources. Thanks to the
-sparsity of the codebooks, exactly three users collide in each physical
-resource. There are four possible codewords for each of the three connected
-user's codebooks, which gives 64 possible combined codewords in each physical
-resource.
+Exploiting sparsity of the codebooks, Message Passing Algorithm (MPA)
+decoders were introduced to achieve very good decoding performance with lower
+complexity~\cite{Zhang2014a}. Fig.~\ref{fig:ctx_scma_dec_graph} shows a Bayesian
+factor graph representation of an MPA decoder with six users and four physical
+resources. Thanks to the sparsity of the codebooks, exactly three users collide
+in each physical resource. There are four possible codewords for each of the
+three connected user's codebooks, which gives 64 possible combined codewords in
+each physical resource.
 
 In the first step of the MPA, the 64~distances between each possible
 combined codeword and the actual received codeword are calculated:
@@ -1354,9 +1353,9 @@ simplifies \eqref{eq:ctx_scma_8} in:
   \mu_{UE2 \rightarrow RES1}(j) + \mu_{UE3 \rightarrow RES1}(k),
 \end{equation}
 due to elimination of exponential's high dynamic ranges, there is no need to
-normalize the guess swap unlike in \eqref{eq:ctx_scma_9} and
-$\mu_{UE3 \rightarrow RES1}(i) = \mu_{RES3 \rightarrow UE3}(i).$
-The rest of the algorithm can be expressed as follows:
+normalize the guess swap and $\mu_{UE3 \rightarrow RES1}(i) =
+\mu_{RES3 \rightarrow UE3}(i).$ The rest of the algorithm can be expressed as
+follows:
 \begin{equation}
   \label{eq:ctx_scma_15}
   B_3(i) = \mu_{RES3 \rightarrow UE3}(i) + \mu_{RES1 \rightarrow UE3}(i),
