@@ -43,26 +43,25 @@ implementations.
 
 To this purpose, \AFFECT is mainly written in \Cxx~\cite{Stroustrup2013}. This
 choice has been made to focus on high performance implementations without
-sacrificing too much the expressibility. The \Cxx is a compiled language, it
-enables very low level programming paradigms like intrinsics functions (or even
-assembly code) as well as high level concepts like the Object-Oriented
-Programming (OOP) paradigm. Moreover, the \Cxx comes with the template
-meta-programming technique to facilitate the programming at compile time.
-Another main advantage of the \Cxx is that it is constantly
-evolving~\cite{Stroustrup2020} and it is well-spread in the HPC community.
-However, we choose to limit the utilization of the \Cxx to its 2011 version
-(\Cxy{11}). This choice has been made for two main reasons: 1) to maximize the
-compatibility with the installed compilers in various environments; 2) the
-\Cxy{11} features are sufficient for digital communication systems.
+sacrificing too much the expressiveness. \Cxx is a compiled language, it enables
+very low level programming paradigms like intrinsics functions (or even assembly
+code) as well as high level concepts like the Object-Oriented Programming (OOP)
+paradigm. Moreover, \Cxx comes with the template meta-programming technique
+to facilitate the programming at compile time. Another main advantage of \Cxx is
+that it is constantly evolving~\cite{Stroustrup2020} and it is well-spread in
+the HPC community. However, we choose to limit the utilization of \Cxx to its
+2011 version (\Cxy{11}). This choice has been made for two main reasons: 1) to
+maximize the compatibility with the installed compilers in various environments;
+2) \Cxy{11} features are sufficient for digital communication systems.
 
 For the signal processing algorithms implemented in \AFFECT, we observed that
 compared to interpreted languages, the speedups range from 10 to 1000 in \Cxx.
-If we consider the very optimized implementations presented in
+If we consider the heavily optimized implementations presented in
 Chapter~\ref{chap:opt}, the speedups are closer to 1000. Of course the speedups
 are not simply coming from the porting of the MATLAB\R code to the \Cxx code. It
 is true that the compiler is sometime able to perform optimizations that can
 benefit for the overall performance. But, most of the speedup comes from
-dedicated implementations. The \Cxx enables source code implementations to take
+dedicated implementations. \Cxx enables source code implementations to take
 advantage of the hardware architecture. Moreover, it is up to the developer to
 exploit his/her knowledge of the CPU architecture in the design process. As
 explained in Chapter~\ref{chap:opt}, optimizations like the vectorization, the
@@ -81,7 +80,7 @@ to the users and 2) to maximize code reuse among implementations.
 In the context of the channel codes, the algorithmic heterogeneity is
 challenging. Actually, each family has its own specificities. This is why in
 most existing projects the focus is made on a single code family (see
-Section~\ref{sec:aff3ct_related_works}). It strongly motivated the need of a
+Section~\ref{sec:aff3ct_related_works}). This strongly motivated the need of a
 toolbox like \AFFECT. The objective is to homogenize the use of various FEC code
 families.
 
@@ -94,7 +93,7 @@ efficient algorithms.
 
 \subsection{Portability}
 
-The portability is a main concern in \AFFECT. The signal community use different
+Portability is a main concern in \AFFECT. The signal community use multiple
 operating systems. The predominant ones are Windows, macOS and Linux. Thanks to
 the \Cxy{11} standard library, the same \AFFECT source code can be compiled on
 these three operating systems. It is possible to compile with the GNU compiler
@@ -104,16 +103,16 @@ work as long as they are compatible with the \Cxy{11} standard.
 
 \AFFECT also takes advantage of various common CPU architectures like
 Intel\R/AMD\R and ARM\R processors. The Intel\R/AMD\R CPUs are widely spread
-in the current laptops as well as in the clusters (or in the supercomputers).
-The ARM\R CPUs are interesting as they are generally consuming less energy than
-the Intel\R/AMD\R CPUs. They are good candidates for embedded systems. Moreover,
+in current laptops as well as in the clusters (or in the supercomputers). ARM\R
+CPUs are interesting as they are generally consuming less energy than
+Intel\R/AMD\R CPUs. They are good candidates for embedded systems. Moreover,
 they are more and more present in HPC contexts. At the time of the writing,
 Fugaku, the most powerful supercomputer in the world, is based on ARM CPUs.
 
-The heterogeneity of the CPU architectures is mainly managed by \MIPP (c.f.
+The heterogeneity of the CPU architectures is mainly managed by \MIPP (see
 Section~\ref{sec:opt_mipp}). The compiled binary is dedicated to the appropriate
 SIMD ISA. If the architecture is not recognized then the \AFFECT binary
-fall-back to a sequential version.
+falls back to a sequential version.
 
 \subsection{Reproducible Science}
 
@@ -121,16 +120,16 @@ In the signal processing community it is not common to share the resulting
 implementations of a scientific publication. Thus, it is sometime a tedious task
 to reproduce the state-of-the-art results. Consequently, the community spends a
 non-negligible amount of time in ``reinventing the wheel''. We think this should
-be avoided and \AFFECT is an open source toolbox coming with a permissive MIT
+be avoided, thus \AFFECT is an open source toolbox coming with a permissive MIT
 license. This way, industrial and academic actors can invest themselves and
 reuse parts of \AFFECT in their own projects without any restrictions. The
-general impact of \AFFECT is discussed in Section~\ref{sec:aff3ct_impact}.
+diffusion of \AFFECT is discussed in Section~\ref{sec:aff3ct_impact}.
 
-Even if the code is fully open, there is no guarantee that the achieved results
+Even when a code is fully open, there is no guarantee that the achieved results
 can be reproduced as the code is constantly evolving. Any modification of the
 source code can break features that were working before. This problem is
-inherent to all living projects. To reduce as much as possible the regressions,
-a full pipeline of tests has been created. It is detailed in
+inherent to all living projects. To prevent regressions as much as possible, a
+full pipeline of tests has been created. It is detailed in
 Section~\ref{sec:aff3ct_ci_cd}. Each time someone makes a modification on the
 \AFFECT source code, then the pipeline of tests is triggered. The
 reproducibility of the results is based on the fact that for a given \AFFECT
@@ -211,11 +210,11 @@ monitor are module classes. Tools can be classes or functions. For instance, the
 polar API presented in Section~\ref{sec:opt_polar_api} is a static class
 implementing the polar $f$, $g$ and $h$ functions (c.f.
 Equation~\ref{eq:ctx_polar_f_g_h}) that are common to all the polar decoders.
-Many implementations of defined interfaces can coexist. For instance, it exists
-an abstract \verb|Encoder| class that defines the \verb|encode| pure virtual
-method. The \verb|encode| method takes $\bm{u}$ bits of length $K$ as inputs and
-outputs $\bm{c}$ bits of size $N$. Then, there are many implementations of the
-\verb|Encoder| class like the \verb|Encoder_polar| class, the
+Many implementations of defined interfaces can coexist. For instance, the
+abstract \verb|Encoder| class that defines the \verb|encode| pure virtual
+method. The \verb|encode| method takes a vector $\bm{u}$ of $K$ bits as inputs
+and outputs a vector $\bm{c}$ of $N$ bits. Then, there are many implementations
+of the \verb|Encoder| class like the \verb|Encoder_polar| class, the
 \verb|Encoder_LDPC| class, the \verb|Encoder_turbo| class, etc. To simplify the
 instanciation of the non-static classes (like the encoders), many factory
 classes have been created. Their job is to simplify the allocation of the module
@@ -248,7 +247,7 @@ allocate the data of the output sockets.
 The tools regroups many different types of processing:
 \begin{itemize}
   \item \textbf{Algorithmic \& Math}: the algorithmic components focus on the
-    implementation of traditional algorithmic structures. For instance, it
+    implementation of traditional algorithmic structures. For instance, this
     contains implementations of trees, matrices, histograms, etc. It also
     contains sorting and PRNG algorithm implementations. The math components
     regroup the interpolations, the Galois fields, the distributions, the
@@ -258,7 +257,7 @@ The tools regroups many different types of processing:
     \verb|Polar_API| is located here;
   \item \textbf{Display}: these components are classes and functions dedicated
     to the display of the information in the terminal or in files. Statistic
-    functions are located here as well as classed dedicated to the display of
+    functions are located here as well as classes dedicated to the display of
     the BER and the FER performances;
   \item \textbf{Interface}: these abstract classes define interfaces. For
     instance, the \verb|Interface_reset| proposes a common interface for the
@@ -274,17 +273,17 @@ overview of what can be found in the different tools.
 
 \subsubsection{Factory}
 
-In \AFFECT, one has to allocate modules dynamically at the runtime. Combined
-with the fact that there are many possible combinations of modules, we applied
-the factory pattern. In the OOP paradigm, the factory method pattern is
-dedicated to the the problem of creating objects without having to specify the
-exact class of the object that will be created. This is done by calling a method
-on the factory. In \AFFECT, all the factories propose a \verb|build| method to
-this purpose. The return type of the \verb|build| method is always an abstract
-class that regroups a sub-set of implemented classes. Considering the factory
+In \AFFECT, one has to allocate modules dynamically at runtime. Combined with
+the fact that there are many possible combinations of modules, we applied the
+factory pattern. In the OOP paradigm, the factory method pattern is dedicated to
+the the problem of creating objects without having to specify the exact class of
+the object that will be created. This is done by calling a method on the
+factory. In \AFFECT, all the factories propose a \verb|build| method to this
+purpose. The return type of the \verb|build| method is always an abstract class
+that regroups a sub-set of implemented classes. Considering the factory
 \verb|Source| class, first the instantiation of this class is required. Then,
 the created object comes with a list of public members that can be manually set
-or deduced from the command line arguments. Once it is done the \verb|build|
+or deduced from the command line arguments. Once this is done the \verb|build|
 method can be called. This method makes use of the public members (previously
 set) of the object to instantiate an object of the module \verb|Source| class.
 This object can be a \verb|Source_random| object, a \verb|Source_user_binary|
@@ -293,12 +292,12 @@ object, etc.
 \subsection{Examples of Library Use}
 \label{sec:aff3ct_library_example}
 
-As a FEC library, \AFFECT can be used programmatically. In real-time contexts or
+As a FEC library, \AFFECT can be used programmatically in real-time contexts or
 to build specific functional simulations. \AFFECT blocks can also be operated in
 external projects without restriction. In this section we propose two
 illustrative examples of the \AFFECT library usage. The first one is dedicated
 to the simulation of a digital communication chain while the second focuses on
-the validation of an hardware decoder.
+the validation of a hardware decoder.
 
 \paragraph{Simulation of a Digital Communication Chain}
 
@@ -350,11 +349,11 @@ connected to the input socket \verb|module::enc::sck::encode::u| of the
 \end{listing}
 The simulation is then started and each task is executed. In
 Listing~\ref{lst:aff3ct_library_tasks_execution}, the whole communication chain
-is executed multiple times, until the $E = 100$ frame error limit is achieved.
+is executed multiple times, until the $E = 100$ frame error limit is reached.
 Complete examples of the \AFFECT library are available on
 GitHub\footnote{\AFFECT library examples: \url{https://github.com/aff3ct/my_project_with_aff3ct/}}.
 
-\paragraph{Validation of an Hardware Decoder}
+\paragraph{Validation of a Hardware Decoder}
 
 The \AFFECT library has also been used to prototype FPGA decoders.
 In~\cite{Cassagne2017a}, a BCH decoder is implemented on a Xilinx\R Artix-7
@@ -363,9 +362,9 @@ then sent to the FPGA using the UART protocol. The hardware BCH decoder
 processes the frame and sends it back to the PC. \AFFECT can then proceed and
 perform the rest of the processing for this frame. Once the number of residual
 errors is updated, \AFFECT starts with a new frame, and so on. The decoding
-performance appears to be equivalent to the performance of the pure software
-simulation which shows that the hardware BCH decoder is correctly implemented.
-This process is also known as \emph{hardware in the loop}.
+performance matches to the performance of the pure software simulation which
+shows that the hardware BCH decoder is correctly implemented. This process is
+also known as \emph{hardware in the loop}.
 
 \subsection{MATLAB\R Wrapper}
 
@@ -374,7 +373,7 @@ and to evaluate new algorithms or/and configurations. More specifically, the
 \emph{Communications Toolbox} is often used. This toolbox contains a larger set
 of digital communication algorithms than \AFFECT. But they often lack of
 efficiency, especially for the channel decoder implementations. Knowing that, a
-wrapper MATLAB\R has been proposed to be interfaced to the compiled \AFFECT
+MATLAB\R wrapper has been proposed to be interfaced to the compiled \AFFECT
 library. The wrapper can be seen as a new MATLAB\R toolbox that proposes faster
 decoder implementations than the traditional MATLAB\R communications toolbox.
 \AFFECT also comes with channel decoders that are not available in the standard
@@ -544,7 +543,9 @@ Table~\ref{tab:aff3ct_features_channels} reports all the supported channels. The
 channels involve complex floating-point computations. It is frequent to use
 expensive exponential and trigonometric operations. As for the decoders, the
 channel software implementations have to be carefully optimized based on branch
-instructions reduction and massive vectorization.
+instructions reduction and massive vectorization. The \emph{multi-user} column
+refers to the ability of the channel to add correlated noise to a sub-set of
+frames.
 
 \section{Simulation of Digital Communication Algorithms}
 
@@ -553,19 +554,19 @@ instructions reduction and massive vectorization.
 
 The \AFFECT toolbox comes with a dedicated functional
 simulator~\cite{Cassagne2017}. It is based on the \AFFECT library presented
-before. We remarked that the functional simulation chain are very often similar.
-For this reason, the simulation chain presented in
-Fig.~\ref{fig:aff3ct_library_task_module} has been enriched and implemented. The
+before. We remarked that the functional simulation chains are often similar. For
+this reason, the simulation chain presented in
+Fig.~\ref{fig:aff3ct_library_task_module} has been implemented and enriched. The
 proposed simulator supports multi-threading to take advantage of current CPU
-multi-core architecture. It is also able to run on supercomputers and comes with
-a multi-node implementation based on the well-known HPC Message Passing
+multi-core architectures. It is also able to run on supercomputers and comes
+with a multi-node implementation based on the well-known HPC Message Passing
 Interface (MPI). The multi-core and multi-node performance of the \AFFECT
 simulator is illustrated later in Section~\ref{sec:eval_simu}.
 
 One of the main advantage of the \AFFECT simulator is to come with a common
 interface for many channel code families. It is also possible to evaluate the
 error-rate performance of these code families on various configurations thanks
-to the supported modems and channel models. It also becomes easier to compare
+to the supported modems and channel models. This makes it easy to compare
 different code families with each other.
 
 \begin{listing}[htp]
@@ -578,10 +579,10 @@ The \AFFECT simulator is a command line executable. All its possible parameters
 are exhaustively documented\footnote{\AFFECT documentation:
 \url{https://aff3ct.readthedocs.io}}. Listing~\ref{lst:aff3ct_simulator_input}
 proposes to simulate a $(2048,1723)$ polar code from 1 dB to 4 dB with a step of
-1 dB (c.f. Section~\ref{sec:ctx_simulation}). By default, the AWGN channel is
+1 dB (see Section~\ref{sec:ctx_simulation}). By default, the AWGN channel is
 selected as well as the BPSK modulation. Then the SC decoder is specified. For a
 given SNR, by default the simulation stops when more than 100 erroneous frames
-are detected.
+have been detected.
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{console}{\curChapter/src/use_cases/simulator/output.txt}
@@ -601,15 +602,15 @@ can be skipped.
 \subsection{In-depth Parameter Exploration}
 
 One of the main strength of the \AFFECT simulator is to enable the exploration
-of various configurations. In this section, a tour of the possible parameters is
-given. The objective is not to be exhaustive and many more parameters could be
-explored. However, it gives a representative overview of the large variety of
-parameters that can be tweaked in the proposed simulator. As shown in
-Section~\ref{sec:aff3ct_features}, many code families are supported. To the best
-of our knowledge the \AFFECT toolbox regroups more channel codes than all the
-other existing libraries (see Section~\ref{sec:aff3ct_related_works}). Each of
-these codes can be simulated over many channel models (BEC, BSC, AWGN and
-Rayleigh) and modulation schemes (PSK, QAM, PAM, OOK, CPM and SCMA). In this
+of various configurations. In this section, a tour of possible experimentation
+scenarios is given. The objective is not to be exhaustive and many more
+parameters could be explored. However, it gives a representative overview of the
+large variety of parameters that can be tweaked in the proposed simulator. As
+shown in Section~\ref{sec:aff3ct_features}, many code families are supported. To
+the best of our knowledge the \AFFECT toolbox regroups more channel codes than
+all the other existing libraries (see Section~\ref{sec:aff3ct_related_works}).
+Each of these codes can be simulated over many channel models (BEC, BSC, AWGN
+and Rayleigh) and modulation schemes (PSK, QAM, PAM, OOK, CPM and SCMA). In this
 thesis the channel model is always the AWGN and the modulation scheme is almost
 always a BPSK. It can also be the SCMA modulation. It will be explicitly
 mentioned in the latter case. For each channel code, many decoding algorithms
@@ -651,7 +652,7 @@ of the MS. They enable to recover a part of the SPA decoding performance.
 \end{figure}
 
 In Fig~\ref{plot:aff3ct_ldpc_scheduling} only the SPA is considered
-and the decoding performances of various scheduling policies is compared. The
+and the decoding performances of various scheduling policies are compared. The
 results show that the convergence of the layered scheduling policies is faster
 than the traditional flooding scheduling for a same number of iterations.
 Increasing the number of iterations improves the decoding performance while it
@@ -750,14 +751,14 @@ Traditionally the BER and FER decoding performances are presented in a form of
 graphical curves (see Fig.~\ref{fig:ctx_bfer}). It is then much easier to
 compare their decoding performance.
 
-To this purpose, the BER/FER comparator is introduced. It is available
-online on the \AFFECT website\footnote{\AFFECT online BER/FER comparator:
+To this purpose, we introduced the BER/FER comparator. It is available online on
+the \AFFECT website\footnote{\AFFECT online BER/FER comparator:
 \url{http://aff3ct.github.io/comparator.html}}. It is capable to read the
-\AFFECT simulator outputs. But, it can also easily adapt to many other formats.
-The comparator is written in JavaScript. It enables to run the comparator
+\AFFECT simulator outputs and it can also easily adapt to many other formats.
+The comparator is written in JavaScript. This enables to run the comparator
 easily on on any web browser (no installation is needed). A database of \AFFECT
 pre-simulated results is available. This database is the same as the error-rate
-reference results used in the regression tests (c.f.
+reference results used in the regression tests (see
 Section~\ref{sec:aff3ct_ci_cd}). These references are classified according to
 different characteristics: the code type, the modem type, the channel type,
 the frame size ($N$) and the code rate ($R$). At the time of the writing,
@@ -777,10 +778,11 @@ the Kaiserslautern University\footnote{Kaiserslautern ML BER/FER database:
 \subsection{Continuous Integration and Continuous Delivery}
 \label{sec:aff3ct_ci_cd}
 
-\AFFECT's development leverages streamlined Continuous Integration (CI) process.
-Each new commit the version control repository (Git) triggers a comprehensive
-sequence of tests to catch potential regressions. These tests are combined with
-Continuous Delivery (CD) tasks to deliver new \AFFECT builds automatically.
+\AFFECT's development leverages a streamlined Continuous Integration (CI)
+process. Each new commit the version control repository (Git) triggers a
+comprehensive sequence of tests to catch potential regressions. These tests are
+combined with Continuous Delivery (CD) tasks to deliver new \AFFECT builds
+automatically.
 
 \begin{figure}[htp]
   \centering
@@ -797,7 +799,7 @@ require the \AFFECT binaries. The \emph{test} stage is composed by a set of jobs
 focusing on regression testing. Error-rate reference results that have been
 recorded from previous simulations are replayed. The \emph{coverage} stage
 measures the percentage of the \AFFECT source code analyzed in the regression
-tests. Finally, the \emph{Deploy} stage contains jobs that are used to push the
+tests. Finally, the \emph{deploy} stage contains jobs that are used to push the
 pipeline results on various targets. For instance, the new builds are
 automatically pushed on the \AFFECT website\footnote{\AFFECT download page:
 \url{http://aff3ct.github.io/download.html}}.
@@ -821,14 +823,15 @@ Section~\ref{sec:opt_polar_pedge}) has been modified to generate Transport
 Triggered Architecture (TTA $\approx$ VLIW) instructions while
 in~\cite{Tasdighi2020} a new LDPC code construction method is proposed and
 directly implemented in the \AFFECT simulator. In some cases \AFFECT is used as
-a library where some sub-parts of the toolbox are reused or some methodologies
-are extracted~\cite{Florian2018,Cavatassi2019a,Cavatassi2019b,Ercan2020}. A
-non-negligible part of the citations are comparisons with the fast decoder
-implementations described in this manuscript~\cite{Zeng2017,Leonardon2018a,
-Guermouche2019,LeGal2019a,Shen2020}. Finally, in many works, \AFFECT is simply
-discussed and considered but not directly used~\cite{Debbabi2016,Debbabi2016a,
-Ercan2017,Natarajan2018,Cenova2019,Krainyk2019,Vameghestahbanati2019,
-Mohammed2019,Shaheen2019,Aly2019,Delomier2020}.
+a library from which some sub-parts of the toolbox are reused or some
+methodologies are extracted~\cite{Florian2018,Cavatassi2019a,Cavatassi2019b,
+Ercan2020}. A non-negligible part of the citations are comparisons with the fast
+decoder implementations described in this manuscript~\cite{Zeng2017,
+Leonardon2018a,Guermouche2019,LeGal2019a,Shen2020}. Finally, in many works,
+\AFFECT is simply discussed and considered but not directly
+used~\cite{Debbabi2016,Debbabi2016a,Ercan2017,Natarajan2018,Cenova2019,
+Krainyk2019,Vameghestahbanati2019,Mohammed2019,Shaheen2019,Aly2019,
+Delomier2020}.
 
 As \AFFECT is open-source, some of the previous works have been integrated
 inside the toolbox. However, it worths mentioning that \AFFECT is more often
