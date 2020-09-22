@@ -1328,8 +1328,8 @@ Xeon Phi\TM co-processor the Intel compiler (version 17) has been used.
 Table~\ref{tab:eval_scma_thr} shows the comparison of throughput, latency, power
 consumption and energy of different decoding algorithms that are executed on the
 three platforms to decode 768 Million bits. The average power and energy
-consumption measured on the Core\TM i7 processor were obtained with the turbostat
-software\footnote{turbostat: \url{https://github.com/torvalds/linux/tree/master/tools/power/x86/turbostat}}
+consumption measured on the Core\TM i7 processor were obtained with the
+\emph{turbostat} software\footnote{turbostat: \url{https://github.com/torvalds/linux/tree/master/tools/power/x86/turbostat}}
 which exploits the Intel\R performance counters in Machine Specific Registers
 (MSRs) to monitor CPU and RAM utilizations. However, in the case of ARM\R and
 Xeon Phi\TM platforms, external current sensors were used to measure the energy
@@ -1399,9 +1399,8 @@ Considering the energy consumed per decoded bit ($E_b$), the SIMD algorithms
 have a higher energy efficiency. The processor resources are well stressed and
 the power does not increase too much. Among the obtained results, the Xeon
 Phi\TM achieves the best throughput while the Cortex-A57 has the lowest energy
-consumption. If the number of users in the cloud is increased, then the results
-presented in this section are scalable up to the number of processing units
-dedicated to them.
+consumption. If the number of users in the cloud increases, then the presented
+results are scalable up to the number of processing units dedicated to them.
 
 \section{Analysis of the Simulator Performance}
 \label{sec:eval_simu}
@@ -1582,17 +1581,16 @@ architecture. Each run assigns at most one \AFFECT thread to each hardware
 thread. Since the architectures have different number of hardware threads, the
 presented speedups do not all have the same number of measurement points. To
 reduce the simulation time it is possible to multiply the number of concurrent
-communication chains, thanks to the independence property of Monte
-Carlo simulations. The simulation scales rather well on the tested
-architectures. The data remains in the CPU caches because of the moderate frame
-size ($N = 2048$) and SIMD intra-frame strategy. Scaling on the Xeon\TM Gold
-6140 is not as good as the other targets, because the \textit{Intel\R Turbo
-Boost} technology is enabled on this platform. The CPU runs at higher
-frequencies when the number of active cores is low. \AFFECT effectively
-leverages the simultaneous multi-threading (SMT) technology. This is especially
-true for the ThunderX2\R CN9975 and Xeon\TM Gold 6140 targets. The SMT
-technology helps to improve the usage of the available instruction-level
-parallelism.
+communication chains, thanks to the independence property of Monte Carlo
+simulations. The simulation scales rather well on the tested architectures. The
+data remains in the CPU caches because of the moderate frame size ($N = 2048$)
+and SIMD intra-frame strategy. Scaling on the Xeon\TM Gold 6140 is not as good
+as the other targets, because the \textit{Intel\R Turbo Boost} technology is
+enabled. The CPU runs at higher frequencies when the number of active cores is
+low. \AFFECT effectively leverages the simultaneous multi-threading (SMT)
+technology. This is especially true for the ThunderX2\R CN9975 and Xeon\TM Gold
+6140 targets. The SMT technology helps to improve the usage of the available
+instruction-level parallelism.
 
 The best multi-threaded throughput performance is achieved on the AMD\R EPYC
 platform and its 128 cores. 11 Gb/s are reached on the two AMD\R EPYC 7702 CPUs.
