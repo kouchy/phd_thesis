@@ -398,11 +398,10 @@ fixed point numbers and 128-bit vector registers) the inter-frame decoders
 require 16~times more memory than the intra-frame decoders. Then, for the frame
 size $N = 2^{20}$, both intra and inter-frame decoders now exceed the cache
 capacity. The RAM power consumption becomes more significant due to the
-increased number of cache misses causing RAM transactions.
-
-Considering those previous observations, it is more energy efficient to use
-inter-frame strategy for small frame sizes, whereas it is better to apply
-intra-frame strategy for larger frame sizes.
+increased number of cache misses causing RAM transactions. Considering those
+previous observations, it is more energy efficient to use inter-frame strategy
+for small frame sizes, whereas it is better to apply intra-frame strategy for
+larger frame sizes.
 
 \begin{figure}[htp]
   \centering
@@ -828,11 +827,10 @@ to 345.5 Mb/s at 4.5 dB in 32-bit floating-point).
 \section{Turbo Decoders}
 \label{sec:eval_turbo}
 
-In this section we propose to evaluate the fast turbo EML-MAP decoder
-implementation presented in Section~\ref{sec:opt_turbo_implem}. The decoder
-throughput is benched on middle and high-end x86 CPUs. Then, the energy
-efficiency of the proposed decoder is studied. Finally, the decoder is compared
-with the state-of-the-art decoders.
+In this section we propose to evaluate the turbo EML-MAP decoder presented in
+Section~\ref{sec:opt_turbo_implem}. The decoder throughput is benched on middle
+and high-end x86 CPUs. Then, the energy efficiency of the proposed decoder is
+studied. Finally, it is compared with the state-of-the-art decoders.
 
 \subsection{Experimentation Platforms}
 
@@ -867,7 +865,7 @@ with the \verb|-Ofast -funroll-loops -msse4.1/-mavx2| options.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.00\textwidth]{\curChapter/fig/turbo/thr/thr}
+  \includegraphics[width=0.90\textwidth]{\curChapter/fig/turbo/thr/thr}
   \caption
     [Information throughput of the turbo decoder depending on $K$.]
     {Information throughput depending on $K$ for various number of cores and
@@ -911,19 +909,6 @@ SSE outperforms the AVX one.
 
 \subsection{Comparison with State-Of-The-Art Turbo Decoders}
 
-Table~\ref{tab:eval_turbo_comparison} shows a performance comparison with
-related works. \emph{SIMD} is the number of elements that can be computed in
-parallel in one SIMD instruction. \emph{Pre.} is the precision of LLRs in bits.
-\emph{Inter} is the number of frames computed in parallel. \emph{i} is the
-number of turbo decoding iterations. \emph{BER} and \emph{FER} are the decoding
-performance of the decoder at 0.7 dB. $\mathcal{L}$ is the decoder latency.
-$\mathcal{T}_i$ is the information throughput of the decoder and
-$\mathcal{NT}_i$ is the normalized information throughput: this metric considers
-6 iterations on a single core. It enables to directly compare the throughput of
-the listed decoders. The FER performance of the proposed decoders are shown in
-Fig.~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
-decoder leads to BER/FER degradations.
-
 \begin{table}[htp]
   \renewcommand{\arraystretch}{1.2}
   \centering
@@ -953,6 +938,19 @@ decoder leads to BER/FER degradations.
   \end{tabular}
   }}
 \end{table}
+
+Table~\ref{tab:eval_turbo_comparison} shows a performance comparison with
+related works. \emph{SIMD} is the number of elements that can be computed in
+parallel in one SIMD instruction. \emph{Pre.} is the precision of LLRs in bits.
+\emph{Inter} is the number of frames computed in parallel. \emph{i} is the
+number of turbo decoding iterations. \emph{BER} and \emph{FER} are the decoding
+performance of the decoder at 0.7 dB. $\mathcal{L}$ is the decoder latency.
+$\mathcal{T}_i$ is the information throughput of the decoder and
+$\mathcal{NT}_i$ is the normalized information throughput: this metric considers
+6 iterations on a single core. It enables to directly compare the throughput of
+the listed decoders. The FER performance of the proposed decoders are shown in
+Fig.~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
+decoder leads to BER/FER degradations.
 
 The variety of CPU targets and algorithmic parameters enables to
 show some global emerging trends. When comparing to similar CPU
@@ -1173,6 +1171,7 @@ consideration while computing throughput, in order to compare raw performances
 using a consistent method. It remains possible, however, for
 typos/glitches/mistakes to have inadvertently made it to the scoreboard.
 
+\newpage
 All the entries are sorted by platform type (GPU and CPU) and chronologically.
 For each HoF table, a column is dedicated to the \emph{Hardware specifications}.
 Indeed, it can have a huge impact on the decoding performance depending on if
@@ -1220,10 +1219,10 @@ of the proposed implementation (lower is better):
 \begin{equation}
   E_d = (\text{TDP} / \mathcal{NT}) \times 10^3.
 \end{equation}
-For the TNDC and the decoding energy the normalized throughput is considered
-instead of the raw throughput in the formulas. So one can compare metrics
-with each other. One can note that there is additional information given by
-the colors in the different tables. The definition of the colors is:
+For the TNDC and the decoding energy, the normalized throughput is considered
+instead of the raw throughput. So one can compare metrics with each other. One
+can note that there is additional information given by the colors in the
+different tables. The definition of the colors is:
 \begin{itemize}
   \item {\color{Paired-1}blue}: only one core of the CPU is used, in the TNDC
     computation one core is considered, in $E_d$ the entire TDP is used,
@@ -1653,19 +1652,19 @@ latency and the energy efficiency have been studied and compared with other
 works. For the LDPC decoders and the turbo decoders, the inter-frame strategy
 has been applied and leads to throughputs comparable with the state-of-the-art
 performance. However, the latencies are not competitive with the intra-frame
-implementations found in the literature, as expected. These implementations are
-then more oriented for simulation purpose or for real-time applications that do
-not require low latency like the video streaming for instance. For the polar
+implementations found in the literature. These implementations are then more
+oriented for simulation purpose or for real-time applications that do not
+require low latency like the video streaming, for instance. For the polar
 decoders, both the inter-frame and intra-frame strategies has been implemented.
-It results in a complete framework that can adapt to a lot of applicative
-contexts. The proposed decoders are ones of the fastest in the literature. There
-are also able to be very flexible with the dynamic implementations or
-specialized for highest possible performance with the source code generation
-technique. For all the proposed decoders (LDPC, polar and turbo), the level of
-genericity is one of our main contribution. The implementations are able to
-adapt to various CPUs architectures as well as to support many algorithmic
-variants. Moreover, each of the presented implementations are able to work close
-to the reference decoding performance.
+It results in a complete framework that can adapt to many applicative contexts.
+The proposed decoders are ones of the fastest in the literature. There are also
+able to be very flexible with the dynamic implementations or specialized for
+highest possible performance with the source code generation technique. For all
+the proposed decoders (LDPC, polar and turbo), the level of genericity is one of
+our main contribution. The implementations are able to adapt to various CPUs
+architectures as well as to support many algorithmic variants. Moreover, each of
+the presented implementations are able to work close to the reference decoding
+performance.
 
 The software decoder Hall of Fames (HoFs) are then introduced. These HoFs are
 exhaustive surveys of the software decoders found in the literature. The
