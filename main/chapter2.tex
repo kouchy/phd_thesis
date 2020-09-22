@@ -152,15 +152,14 @@ Likewise, a scalar assigned to a vector sets all elements to this value.
 \label{sec:opt_mipp_implem}
 
 \MIPP targets SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2, FMA3, KNCI, AVX-512F
-and AVX-512BW instruction sets on Intel x86 and related architectures, as well
+and AVX-512BW instruction sets on Intel\R x86 and related architectures, as well
 as NEON, NEONv2, NEON64 and NEON64v2 on ARM\R. It can easily be extended to
-other instruction sets.
-
-\MIPP selects the most recent instruction set available at compile time. For
-instance, a code compiled with the \verb|-march=avx| flag of the GNU GCC
-compiler uses AVX instructions even if the architecture supports SSE as well.
-The vector register size is determined by the instruction set and the data type.
-A dedicated function returns the number of elements in a \MIPP register:
+other instruction sets. \MIPP selects the most recent instruction set available
+at compile time. For instance, a code compiled with the \verb|-march=avx| flag
+of the GNU GCC compiler uses AVX instructions even if the architecture supports
+SSE as well. The vector register size is determined by the instruction set and
+the data type. A dedicated function returns the number of elements in a \MIPP
+register:
 \mint{C++}|constexpr int n = mipp::nElmtsPerRegister<T>();|
 {\noindent
 A shortened version of this previous function is also defined as:
@@ -170,13 +169,12 @@ registers. The stride can be statically determined with the \verb|mipp::N<T>()|
 function. If the loop size is not a multiple of the register size, 1) a
 sequential tail loop can be implemented to compute the remaining elements, 2)
 the padding technique can be implemented to force the loop size to be a multiple
-of the vector registers.
+of the vector registers. When the instruction set cannot be determined, \MIPP
+med. falls back on sequential instructions. In this case, \MIPP does not use any
+intrinsic anymore. However, the compiler vectorizer still remains effective.
+This mode can also be selected by the programmer with the
+\verb|MIPP_NO_INTRINSICS| macro.
 }
-
-When the instruction set cannot be determined, \MIPP med. falls back on
-sequential instructions. In this case, \MIPP does not use any intrinsic anymore.
-However, the compiler vectorizer still remains effective. This mode can also be
-selected by the programmer with the \verb|MIPP_NO_INTRINSICS| macro.
 
 \MIPP supports the following data types: \verb|double|, \verb|float|,
 \verb|int64_t|, \verb|int32_t|, \verb|int16_t| and \verb|int8_t|. It also
@@ -292,6 +290,7 @@ research context.
   \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
   \end{tabular}
 \end{table}
+
 Some others, \simdpp and \xsimd, appear to be standalone development efforts by
 individual programmers or maintainers. Proprietary, closed-source solutions also
 exist on the market, such as \bSIMD, which is an extended version of \BoostSIMD,
@@ -372,7 +371,7 @@ All experiments have been performed in single-threaded. All studied problem
 sizes fit into the last level cache (LLC) of CPUs. The references for the
 speedup computations are always sequential versions of the SIMD codes. Those
 reference versions can be auto-vectorized by the compiler, thus a reference
-version is compiled for each SIMD instruction set.
+version is compiled for each SIMD ISA.
 
 \subsubsection{Qualitative and Quantitative Comparisons}
 
@@ -532,12 +531,12 @@ regrouped together in memory, then all the second elements of each frame are
 regrouped together, and so on. The dual reverse reordering operation is
 performed at the end of the inter-frame SIMD computations. The reordering
 operations are the main key to reach high throughputs in the inter-frame SIMD
-strategy. They enable efficient load and store instructions. These reordering
-and reversed reordering operations could be replaced by gather and scatter
-instructions each time a load and store instructions are required. But this
-solution delivers poorer performance on current CPU architectures. The selected
-version with reordering operations comes with a much better data locality at the
-cost of extra operations before and after the SIMD computations.
+strategy. They enable efficient load and store instructions. These operations
+could be replaced by gather and scatter instructions each time a load and store
+instructions are required. But this solution delivers poorer performance on
+current CPU architectures. The selected version with reordering operations comes
+with a much better data locality at the cost of extra operations before and
+after the SIMD computations.
 
 \begin{figure}[htp]
   \centering
@@ -640,6 +639,7 @@ proposed implementation is based on the intra-frame SIMD strategy.
   \end{tabular}
 \end{table}
 
+\newpage
 Table~\ref{lst:opt_simu_awgn_speedup} presents the measured speedups with the
 same \MIPP code compiled for NEON, SSE, AVX and AVX-512, compared to the
 sequential code (can be auto-vectorized). It also gives the actual throughput
@@ -831,11 +831,10 @@ number of characteristics of interest for its optimization:
   \item The decoder software implementation can be specialized for a particular
     configuration of frozen bits, as frozen bit locations do not change for many
     frames;
-  \item Similarly, multiple frames can be decoded concurrently, with parallel or
-    vector code. Such inter-frame optimizations can increase the decoding
-    throughput. However these optimizations are obtained at the expense of
-    latency, which is also an important metric of the application
-    (see~\cite{LeGal2015a}).
+  \item Multiple frames can be decoded concurrently with vector code. Such
+    inter-frame optimizations can increase the decoding throughput. However
+    these optimizations are obtained at the expense of latency, which is also an
+    important metric of the application (see~\cite{LeGal2015a}).
 \end{itemize}
 
 Beside optimizations coming from the computations in the tree, several
@@ -1137,6 +1136,7 @@ skeletons and low-level arithmetic routines, enables both ECC experts to focus
 on optimizing algorithm skeletons and architecture experts to focus on writing
 highly optimized routines.
 
+\newpage
 \paragraph{Decoder Generation}
 
 \begin{listing}[htp]
@@ -1257,12 +1257,12 @@ particularly effective for short polar codes.
 By profiling the Adaptive SCL decoder, one may observe that a significant amount
 of time is spent to process the cyclic redundancy checks. Its computational
 complexity is O($LN$) versus the computational complexity of the SCL decoding,
-O($LN\log N$). The first is not negligible compared to the second.
+O($LN\log N$). The first is not negligible compared to the second. In the
+adaptive decoder, the CRC verification is performed a first time after the SC
+decoding. In the following, we show how to reduce the computational complexity
+of these CRC verifications.
 
-In the adaptive decoder, the CRC verification is performed a first time after
-the SC decoding. In the following, we show how to reduce the computational
-complexity of these CRC verifications.
-
+\newpage
 First, an efficient CRC checking code has been implemented. Whenever the decoder
 has to check the CRC, the bits are packed and then computed 32 by 32. In order
 to further speed up the implementation, a lookup table used to store
@@ -1280,9 +1280,9 @@ Concerning SCL decoding, it is possible to sort the candidates according to
 their respective metrics and then to check the CRC of each candidate from the
 best to the worst. Once a candidate with a valid CRC is found, it is chosen as
 the decision. This method gives similar decoding performance as performing the
-cyclic redundancy check of each candidate and then selecting the one with the
+CRC of each candidate and then selecting the one with the
 best metric. With the adopted order, decoding time is saved by reducing the
-average number of checked candidates. This strategy has been adopted in the
+average number of checked candidates. This is made in the
 ``$\selectBestPath()$'' sub-routine (Alg.~\ref{alg:ctx_polar_scl_decoder},
 l.18).
 
@@ -1371,10 +1371,7 @@ Notice that in this work, each bit of the partial sums is stored as an 8-bit,
 16-bit or 32-bit number accordingly to the LLR data type. The code rate $R$ is
 equal to $1/2$. The throughput of the SSCL$_{\texttt{cpy}}$ version is higher
 for $N \leq 8192$ whereas the SSCL$_{\texttt{ptr}}$ version is more efficient
-for higher values of $N$. Although this does not appear in
-Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr}, experiments showed that the lower
-$L$ is, the more efficient SSCL$_{\texttt{cpy}}$ is compared to
-SSCL$_{\texttt{ptr}}$. Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr} also
+for higher values of $N$. Figure~\ref{plot:opt_polar_scl_cpy_vs_ptr} also
 illustrates the impact of the representation of partial sums. For very high
 values of $N$, the 8-bit fixed point representation takes advantage of fewer
 cache misses. As the decoding performance improvements of the SCL algorithm are
@@ -1426,17 +1423,15 @@ a part of the flexibility for higher throughput and lower latency performance.
 
 \section{Turbo Decoders}
 
-A Turbo decoder is in charge of decoding a large set of frames. Two strategies
+A turbo decoder is in charge of decoding a large set of frames. Two strategies
 are then possible to speedup the decoding process. i)
 \textit{intra-frame parallelism}: the decoder exploits the parallelism within
 the turbo-decoding process by executing concurrent tasks during
 the decoding of one frame. ii) \textit{inter-frame parallelism}: several frames
-are decoded simultaneously.
-
-In the perspective of a hardware implementation, the intra-frame approach is
-efficient~\cite{Muller2009} because the area overhead resulting from
-parallelization is lower than the speedup. On the contrary, the inter-frame
-strategy is inefficient, due to the duplication of multiple hardware
+are decoded simultaneously. In the perspective of a hardware implementation, the
+intra-frame approach is efficient~\cite{Muller2009} because the area overhead
+resulting from parallelization is lower than the speedup. On the contrary, the
+inter-frame strategy is inefficient, due to the duplication of multiple hardware
 turbo-decoders. The resulting speedup comes at a high cost in terms of area
 overhead.
 
@@ -1463,7 +1458,6 @@ Wu2013}. Multiple codewords are decoded in parallel, this improves the memory
 access regularity and the usage rate of SIMD units. The speedup is no longer
 bounded by the sequential parts, all removed, but this comes at the expense of
 an increase in memory footprint and latency.
-
 In this work, we focus on the inter-frame parallelization and show that the use
 of this approach enables some register-reuse optimizations that are not possible
 in the intra-frame strategy.
@@ -1734,7 +1728,6 @@ addition. Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the
 complex norm using a Structure of Array (SoA) data layout. This implementation
 does not require the \MIPP \verb|mipp::deinterleave| operation. The real
 and imaginary parts of the complex numbers are initially separated in memory.
-
 Our experiments demonstrated that the SoA method leads to higher performance
 than the AoS method. This is due to the economy of the \verb|mipp::deinterleave|
 operation. Depending on the SIMD ISA the deinterleaving can take up to 20\%
@@ -1791,7 +1784,6 @@ SIMD register are not used. The data layout has been adapted and the memory
 allocation is padded. By this way, the read and written extra-elements do not
 produce segmentation fault errors.
 
-\newpage
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}
 
@@ -1815,6 +1807,7 @@ Other well-known optimization techniques, such as loops unrolling, avoiding type
 conversions and functions inlining have been used to enhance the throughput of
 the various message passing algorithms.
 
+\newpage
 \section{Conclusion}
 
 In this chapter, generic strategies for efficient algorithm implementations on
