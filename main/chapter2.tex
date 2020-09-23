@@ -392,12 +392,12 @@ each wrapper. This problem is compute-bound. The chosen implementation relies on
 a floating-point representation (available online\footnote{Mandelbrot set source
 code: \url{https://gitlab.inria.fr/acassagn/mandelbrot}}).
 Figure~\ref{plot:opt_mipp_mandelbrot} presents the speedups obtained on various
-instruction sets on single-precision floating-point format (cf.
-Fig.~\ref{plot:opt_mipp_mandelbrot_32}) and on double-precision floating-point
-format (cf. Fig.~\ref{plot:opt_mipp_mandelbrot_64}). SSE stands for SSE4.2, NEON
-stands for NEONv2 (includes the FMA instructions), AVX stands for AVX2+FMA3 and
-AVX-512 stands for AVX-512F (with FMA instructions). The FMA benefit ranges from
-17\% (AVX2) to 26\% (AVX-512). An SIMD with intrinsics version has been
+instruction sets on single-precision floating-point format (see
+Figure~\ref{plot:opt_mipp_mandelbrot_32}) and on double-precision floating-point
+format (see Figure~\ref{plot:opt_mipp_mandelbrot_64}). SSE stands for SSE4.2,
+NEON stands for NEONv2 (includes the FMA instructions), AVX stands for AVX2+FMA3
+and AVX-512 stands for AVX-512F (with FMA instructions). The FMA benefit ranges
+from 17\% (AVX2) to 26\% (AVX-512). An SIMD with intrinsics version has been
 hand-coded for each specific instruction set. The intrinsics version is
 considered the ``\emph{golden}'' model.
 
@@ -429,28 +429,29 @@ stable version.
 It performs well in 32-bit NEON, SSE and AVX. But, it lacks AVX-512. Support of
 the 64-bit types is not planned since it is not useful for image computations.
 
+\newpage
 \textbf{\simdpp} supports an impressive number of instruction
 sets. This may explain why it does not support mathematical functions so far. It
 matches the performance of the other wrappers for NEON and SSE, but falls behind
 for AVX, and even more for AVX-512.
 
-\textbf{\VCL} is a high performance wrapper and perhaps the most feature rich
-for x86 SIMD at this time. It gives a lot of control to the developer and it is
+\textbf{\VCL} is a high performance wrapper and one of the most feature rich
+for x86 SIMD. It gives a lot of control to the developer and it is
 well documented. The obtained performance are on the same level as hand-written
 intrinsics. However, it is not yet available on NEON.
-For \MIPP we have tested both the lower-level programming interface and the
-medium-level programming interface of our \MIPP wrapper, mainly to detect
-potential overheads when using the medium level interface instead of the lower
-one. The obtained results do not show any performance penalties when using the
-\MIPP medium level interface. Moreover, the obtained speedups are close to the
-intrinsics version.
 
 \textbf{\MIPP} corresponds to a programming model close to the intrinsics, with
 some adaptations to architectures. Still, a high performance code requires that
 the developer knows how to decompose efficiently some computations with the SIMD
 instructions. Between AVX-512 and SSE or NEON for instance, several
 implementations of the same code are possible. \MIPP offers to the programmer
-the control on the intrinsics selected and ensures portability.
+the control on the intrinsics selected and ensures portability. We have tested
+both the lower-level programming interface and the medium-level programming
+interface of our \MIPP wrapper, mainly to detect potential overheads when using
+the medium level interface instead of the lower one. The obtained results do not
+show any performance penalties when using the \MIPP medium level interface.
+Moreover, the obtained speedups are close to the intrinsics version.
+
 
 \section{Vectorization Strategies}
 \label{sec:opt_vec}
@@ -524,7 +525,7 @@ a factor $p_\text{SIMD}$ but the latency of a single frame is mainly unchanged.
 Moreover, one may note that the $N$ bits of a frame are naturally transmitted
 frame by frame. It is then necessarily to perform a reordering operation before
 to start the inter-frame SIMD computations. This reordering process is
-illustrated in Fig.~\ref{fig:opt_vec_inter_frame} where $F$ frames are
+illustrated in Figure~\ref{fig:opt_vec_inter_frame} where $F$ frames are
 represented by different colors. The elements inside a single frame can be
 identified by the different patterns. All the first elements of each frame are
 regrouped together in memory, then all the second elements of each frame are
@@ -560,7 +561,7 @@ registers $\bm{r^c} = [r^a_0, r^b_0, ..., r^a_{p_\text{SIMD}/2-1},
 r^b_{p_\text{SIMD}/2-1}]$ and $\bm{r^d} = [r^a_{p_\text{SIMD}/2},
 r^b_{p_\text{SIMD}/2}, ..., r^a_{p_\text{SIMD}-1}, r^b_{p_\text{SIMD}-1}]$.
 The \verb|mipp::interleave| function is applied $N \times \log_2(F)$ times.
-Fig.~\ref{fig:opt_vec_reordering} shows the \MIPP implementation of the
+Figure~\ref{fig:opt_vec_reordering} shows the \MIPP implementation of the
 reordering process for $F = p_\text{SIMD} = 4$. To increase the speed of the
 reordering process, the template meta-programming technique has been used to
 unroll the \verb|mipp::interleave| calls. The generic reversed reordering
@@ -818,7 +819,7 @@ performances of this decoder are evaluated in Section~\ref{sec:eval_ldpc}.
 The polar decoder algorithms presented in Section~\ref{sec:ctx_polar} has a
 number of characteristics of interest for its optimization:
 \begin{itemize}
-  \item The tree traversal is sequential. $f$, $g$ and $h$ (cf.
+  \item The tree traversal is sequential. $f$, $g$ and $h$ (see
     Eq.~\ref{eq:ctx_polar_f_g_h}) functions are applied element-wise to all
     elements of the LLR and bits in the nodes and their children. As there is no
     dependence between computations involving different elements of the same
@@ -854,7 +855,7 @@ fully flattened, depending on the size of the code length.
 In order to perform the polar tree pruning, we implemented a pattern matching
 algorithm. For instance, knowing the initial location of the frozen bits, this
 algorithm can generate the pruned tree structure as illustrated in
-Fig.~\ref{fig:ctx_polar_tree_pruning_example}. Each internal node has a tag
+Figure~\ref{fig:ctx_polar_tree_pruning_example}. Each internal node has a tag
 indicating the type of processing required at that node (recursive children
 processing, $f$/$g$/$h$ functions to be applied or not). This tag is initially
 set to \emph{any}.
@@ -870,8 +871,8 @@ For some sub-tree pattern configurations, the processing to be performed at the
 root of such sub-trees can be simplified, or even skipped completely, for
 instance, when a node only has two frozen bit leaf children. To exploit such
 properties, the decoder generator repeatedly applies the set of sub-tree
-rewriting rules listed in Fig.~\ref{fig:opt_polar_patterns} using a depth first
-traversal to alter the node tags, until no rewriting rule applies anymore.
+rewriting rules listed in Figure~\ref{fig:opt_polar_patterns} using a depth
+first traversal to alter the node tags, until no rewriting rule applies anymore.
 
 Each rewriting rule defines a subtree pattern \emph{selector}, a new \emph{tag}
 for the subtree root, and the $f$, $g$, and $h$ \emph{processing functions} to
@@ -895,13 +896,13 @@ rule of the third column specializes the $g$ functions in $g_r$, but does not
 prune the recursive children processing.
 
 Rewriting rules are ordered by decreasing priority (left to right, then top row
-to bottom row in Fig.~\ref{fig:opt_polar_patterns}). Thus, if more than one rule
-match an encountered subtree, the highest priority rule is applied. The priority
-order is chosen such as to favor strongest computation reducing rules over rules
-with minor impact, and to ensure confluence by selecting the most specific
-pattern first. Rule selectors can match on node tags and/or node levels (leaf,
-specific level, above or below some level). A given rule is applied at most once
-on a given node.
+to bottom row in Figure~\ref{fig:opt_polar_patterns}). Thus, if more than one
+rule match an encountered subtree, the highest priority rule is applied. The
+priority order is chosen such as to favor strongest computation reducing rules
+over rules with minor impact, and to ensure confluence by selecting the most
+specific pattern first. Rule selectors can match on node tags and/or node levels
+(leaf, specific level, above or below some level). A given rule is applied at
+most once on a given node.
 
 \subsubsection{Impact of the Tree Pruning on the Decoding Performances}
 
@@ -922,7 +923,7 @@ The tree pruning step has a dramatical effect in general. For instance, on the
 SSC decoder, the reference code for a rate of 1/2 has 2047 nodes, whereas only
 291 nodes remain in the pruned version. However, the individual effect of each
 rewriting rule is not trivial. The plots in
-Fig.~\ref{plot:opt_polar_sc_tree_cut} show the specific impact of several
+Figure~\ref{plot:opt_polar_sc_tree_cut} show the specific impact of several
 rewriting rules (\verb|R0|, \verb|R1|, \verb|REP| and \verb|SPC|), with
 $N = 2048$ and multiple code rates, for intra-frame and inter-frame
 vectorization, respectively. The purpose of the plots is to show that no single
@@ -1076,7 +1077,7 @@ be unrolled by the compiler because \verb|n_elmts| is a runtime parameter. Thus,
 an useless overhead is due to the loop condition evaluation. To overcome this
 problem, we wrote a SSC sub-decoder with the template meta-programming
 technique. The idea is to fully unroll the recursive calls and to statically
-give the number of elements in the loops lines 6,15,23. To this purpose, a
+give the number of elements in the loops lines 6, 15, 23. To this purpose, a
 specific \verb|API_polar_SIMD_static| has been developed. The source code is
 mainly the same as the \verb|API_polar_SIMD| implementation. The only difference
 is that the \verb|n_elmts| parameter has been replaced by the static
@@ -1144,7 +1145,7 @@ highly optimized routines.
   \caption
     [Generated polar SC decoder source code.]
     {Generated polar SC decoder source code corresponding to the pruned tree in
-     Fig.~\ref{fig:ctx_polar_tree_pruning_example}.}
+     Figure~\ref{fig:ctx_polar_tree_pruning_example}.}
   \label{lst:opt_polar_generated_sc_decoder}
 \end{listing}
 
@@ -1153,7 +1154,7 @@ matching algorithm presented in Section~\ref{sec:opt_polar_pattern_matching}.
 Then, once the tree has been fully specialized, the P-EDGE generator performs a
 second tree traversal pass to output the resulting decoder. An example of such a
 tree specialization process together with the generator output is shown in
-Fig.~\ref{fig:ctx_polar_tree_pruning_example} and in
+Figure~\ref{fig:ctx_polar_tree_pruning_example} and in
 Listing~\ref{lst:opt_polar_generated_sc_decoder}. In
 Listing~\ref{lst:opt_polar_generated_sc_decoder}, each operation (\verb|f|,
 \verb|rep|, \verb|gr|, \verb|spc| and \verb|h|) is applied on $4$ elements. This
@@ -1197,8 +1198,8 @@ generated code, we moved the buffer offsets from template arguments to function
 arguments, which enabled the compiler to factorize more function calls than
 before (improvement by a factor of 10), 2) we implemented a sub-tree folding
 algorithm in the P-EDGE generator (see
-Fig.~\ref{fig:opt_polar_sc_gen_compression}), to detect multiple occurrences of
-a same sub-tree and to put the corresponding code into a dedicated function.
+Figure~\ref{fig:opt_polar_sc_gen_compression}), to detect multiple occurrences
+of a same sub-tree and to put the corresponding code into a dedicated function.
 These techniques lead to an improvement by a factor of 5 for $N=2^{16}$ knowing
 that the compression ratio increases with the size of the tree.
 
@@ -1242,8 +1243,8 @@ focuses on intra-frame SIMD dynamic decoders. A description of a fully unrolled
 SSCL decoder has been previously evaluated in~\cite{Sarkis2016}. But, we want to
 oppose it to more generic and flexible decoders. Some implementation
 improvements are necessary in order to be competitive with specific unrolled
-decoders of the literature. The polar API (c.f.~\ref{sec:opt_polar_api}) enables
-to benefit from the SIMD instructions for various target architectures.
+decoders of the literature. The polar API (see Section~\ref{sec:opt_polar_api})
+enables to benefit from the SIMD instructions for various target architectures.
 Optimizations of CRC checking benefit to both the non-adaptive and adaptive
 versions of the CA-SSCL algorithms. The new sorting technique presented in
 Section~\ref{sec:opt_polar_scl_sorting} can be applied to each variation of the
@@ -1620,7 +1621,7 @@ a generic \verb|trellis| structure as shown in
 Listing~\ref{lst:opt_turbo_alpha_generic}. The main problem is that the loop
 line 1 cannot be unrolled by the compiler and there is extra memory accesses (or
 indirections) due to the \verb|trellis| vector. Knowing precisely the structure
-of the trellis in the LTE standard (c.f. Fig.~\ref{fig:ctx_turbo_encoder_lte}),
+of the trellis in the LTE standard (see Figure~\ref{fig:ctx_turbo_encoder_lte}),
 it is possible to fully unroll the loop. The unrolled description is shown in
 Listing~\ref{lst:opt_turbo_alpha_unrolled}. This version is adopted in
 the Section~\ref{sec:eval_turbo} as it leads to significant throughput
@@ -1715,23 +1716,24 @@ and final beliefs at each user in \eqref{eq:ctx_scma_10}.
 Equations~\eqref{eq:ctx_scma_5} use a complex norm function $||.||$. It can be
 optimized by using SIMD instructions. There are two ways to perform this
 computation depending on the initial data layout.
-Fig.~\ref{fig:opt_scma_simd_norm_aos} depicts how to implement the norm function
-with an Array of Structures (AoS) layout for complex numbers. In this data
-layer, the complex numbers are represented as two consecutive floating-point
-numbers. The implementation with AoS uses five \MIPP functions: two
-\verb|mipp::load|, one \verb|mipp::deinterleave|, one \verb|mipp::norm| and one
-\verb|mipp::store|. The \MIPP loads and stores are equivalent to real SIMD
+Figure~\ref{fig:opt_scma_simd_norm_aos} depicts how to implement the norm
+function with an Array of Structures (AoS) layout for complex numbers. In this
+data layer, the complex numbers are represented as two consecutive
+floating-point numbers. The implementation with AoS uses five \MIPP functions:
+two \verb|mipp::load|, one \verb|mipp::deinterleave|, one \verb|mipp::norm| and
+one \verb|mipp::store|. The \MIPP loads and stores are equivalent to real SIMD
 move instructions. The \verb|mipp::deinterleave| operation can contain from 4 to
 12 real assembly instructions. It depends on the data type \verb|T| and the SIMD
 ISA. The \verb|mipp::norm| operation performs two multiplications and one
-addition. Fig.~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of the
-complex norm using a Structure of Array (SoA) data layout. This implementation
-does not require the \MIPP \verb|mipp::deinterleave| operation. The real
-and imaginary parts of the complex numbers are initially separated in memory.
-Our experiments demonstrated that the SoA method leads to higher performance
-than the AoS method. This is due to the economy of the \verb|mipp::deinterleave|
-operation. Depending on the SIMD ISA the deinterleaving can take up to 20\%
-longer. The SoA data layout is used for evaluations.
+addition. Figure~\ref{fig:opt_scma_simd_norm_soa} sketches the computation of
+the complex norm using a Structure of Array (SoA) data layout. This
+implementation does not require the \MIPP \verb|mipp::deinterleave| operation.
+The real and imaginary parts of the complex numbers are initially separated in
+memory. Our experiments demonstrated that the SoA method leads to higher
+performance than the AoS method. This is due to the economy of the
+\verb|mipp::deinterleave| operation. Depending on the SIMD ISA the
+deinterleaving can take up to 20\% longer. The SoA data layout is used for
+evaluations.
 
 \paragraph{SIMD Computation of Exponential}
 
@@ -1746,9 +1748,9 @@ longer. The SoA data layout is used for evaluations.
 
 To speedup the computation of the exponentials used in \eqref{eq:ctx_scma_7},
 the \verb|mipp::exp| math function is used. The flattened complex and normalized
-numbers are calculated as shown in Fig.~\ref{fig:opt_scma_simd_norm} to produce
-the preliminary values used to compute the probabilities.
-Fig.~\ref{fig:opt_scma_simd_exp} illustrates the full process on a vector of
+numbers are calculated as shown in Figure~\ref{fig:opt_scma_simd_norm} to
+produce the preliminary values used to compute the probabilities.
+Figure~\ref{fig:opt_scma_simd_exp} illustrates the full process on a vector of
 eight floating-point numbers ($p_\text{SIMD} = 8$). First the values are loaded
 into SIMD registers. Then they are multiplied by $-1/2\sigma^2$. Finally the
 exponential function is performed according to \eqref{eq:ctx_scma_7}.
@@ -1756,7 +1758,7 @@ exponential function is performed according to \eqref{eq:ctx_scma_7}.
 \paragraph{Exponential Approximation with the Estimated-MPA algorithm}
 
 In the proposed E-MAP algorithm approximation, \eqref{eq:ctx_scma_19} replaces
-the \verb|mipp::exp| function used in Fig.~\ref{fig:opt_scma_simd_exp}. It
+the \verb|mipp::exp| function used in Figure~\ref{fig:opt_scma_simd_exp}. It
 reduces the overall number of instructions to two multiplications and one
 addition. Knowing that the \verb|mipp::exp| function represents about 30 SIMD
 assembly instructions, the E-MAP algorithm leads to a drastic reduction of the
@@ -1776,13 +1778,13 @@ computation effort.
 Some remaining parts of the MPA can be vectorized too. Especially, the guess
 swaps and the computation of the final beliefs. Each user node can be
 vectorized but the available level of parallelism is limited to 4 elements.
-Fig.~\ref{fig:opt_scma_simd_final_guess} shows the computation of final beliefs
-for user 3 (this is illustrated in Fig.~\ref{fig:ctx_scma_dec_alg} (III)).
-There are four messages from a resource to a user containing the probabilities
-of four different codewords. If $p_\text{SIMD} > 4$ then some elements of the
-SIMD register are not used. The data layout has been adapted and the memory
-allocation is padded. By this way, the read and written extra-elements do not
-produce segmentation fault errors.
+Figure~\ref{fig:opt_scma_simd_final_guess} shows the computation of final
+beliefs for user 3 (this is illustrated in
+Figure~\ref{fig:ctx_scma_dec_alg}~(III)). There are four messages from a
+resource to a user containing the probabilities of four different codewords. If
+$p_\text{SIMD} > 4$ then some elements of the SIMD register are not used. The
+data layout has been adapted and the memory allocation is padded. By this way,
+the read and written extra-elements do not produce segmentation fault errors.
 
 \paragraph{Accuracy of Floating-point Computations}
 \label{sec:opt_scma_float}

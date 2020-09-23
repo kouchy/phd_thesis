@@ -237,7 +237,7 @@ denoted as $GF_2$. A block code is an application $g$ of $GF_2^K$ in $GF_2^N$
 with $K < N$. There are $2^K$ codewords $\bm{c}$. The two operations used to
 generate a codeword are the addition and the multiplication. In $GF_2$, the
 addition is equivalent to a logical \emph{exclusive or} ($\oplus$) and
-the multiplication is equivalent to a logical \emph{and} (cf.
+the multiplication is equivalent to a logical \emph{and} (see
 Table~\ref{tab:ctx_gf2_operations}).
 
 In this chapter, all the decoding algorithms are working on \emph{soft}
@@ -297,7 +297,7 @@ In this case, the encoding process is \emph{systematic}.
 \end{figure}
 
 One can note that a parity-check constraint can also be represented with a
-Tanner graph as shown in Fig.~\ref{fig:ctx_ldpc_parity_check}. It is also
+Tanner graph as shown in Figure~\ref{fig:ctx_ldpc_parity_check}. It is also
 possible to define a matrix of parity-check constraints namely
 $\bm{\mathcal{H}}$. In this case, there is only one constraint
 ($\mathcal{C}_0$), so $\bm{\mathcal{H}}$ is a one-dimension matrix (or a vector)
@@ -319,12 +319,12 @@ $\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
 \end{figure}
 
 The construction of a Low-Density Parity-Check (LDPC) code is based on the
-combination of several parity-check nodes. Fig.~\ref{fig:ctx_ldpc_parity_checks}
-is an example of a LDPC code with four parity-check constraints denoted as $a$,
-$b$, $c$ and $d$. The parity-check constraints are also known as the \emph{check
-nodes} ($C_N$). The \emph{variable nodes} ($V_N$) are the bits of the LDPC
-codeword. The parity-check matrix corresponding to the
-Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
+combination of several parity-check nodes.
+Figure~\ref{fig:ctx_ldpc_parity_checks} is an example of a LDPC code with four
+parity-check constraints denoted as $a$, $b$, $c$ and $d$. The parity-check
+constraints are also known as the \emph{check nodes} ($C_N$). The \emph{variable
+nodes} ($V_N$) are the bits of the LDPC codeword. The parity-check matrix
+corresponding to the Figure~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
 \begin{equation*}
 \bm{\mathcal{H}} =
 \begin{bmatrix}
@@ -337,7 +337,7 @@ Fig.~\ref{fig:ctx_ldpc_parity_checks} Tanner graph is:
 
 The $\bm{\mathcal{H}}$ parity matrix of an LDPC code has to be a low-density
 matrix. The example shown in
-Fig.~\ref{fig:ctx_ldpc_parity_checks} is here to help the comprehension and
+Figure~\ref{fig:ctx_ldpc_parity_checks} is here to help the comprehension and
 is not a real LDPC code: indeed, the corresponding $\bm{\mathcal{H}}$ matrix is
 not sparse.
 
@@ -347,7 +347,7 @@ The bit $\hat{u}_n$ corresponding to the input LLR $l_n$ of a parity-check code
 can be decoded as follow: $\hat{u}_n = \hardDec\big(l_n +
 \sum\limits_{j \neq n}{l_j}\big)$, with $\hardDec$ the hard decision function
 that returns 0 if the LLR is positive and 1 otherwise. For instance, considering
-the parity-check code in Fig.~\ref{fig:ctx_ldpc_parity_check}, $\hat{u}_0 =
+the parity-check code in Figure~\ref{fig:ctx_ldpc_parity_check}, $\hat{u}_0 =
 \hardDec\big(l_0 + (l_1 \boxplus l_2 \boxplus l_3 \boxplus l_4)\big)$,
 $\hat{u}_1 = \hardDec\big(l_1 + (l_0 \boxplus l_2 \boxplus l_3 \boxplus
 l_4)\big)$, etc.
@@ -355,12 +355,13 @@ l_4)\big)$, etc.
 In LDPC codes, there is more than one parity-check node. It is then possible to
 compute all the check nodes connected to a variable node and to store the result
 in a vector $\bm{v}$. Each LLR $v_n \in \bm{v}$ corresponds to one variable
-node. For instance, considering Fig.~\ref{fig:ctx_ldpc_parity_checks}, $V_0$ is
-connected to $C_a$ and $C_c$. So its LLR value can be computed as follow: $v_0
-= e_0 + e_1 = (l_3 \boxplus l_4 \boxplus l_6 \boxplus l_7) + (l_2 \boxplus l_5
-\boxplus l_7)$, where $e_0$ and $e_1$ are the extrinsic informations computed
-from $C_a$ and $C_c$, respectively. The decoded bits can be decided from the
-channel and the variable node LLR values: $\hat{u}_n = \hardDec{(l_n + v_n)}$.
+node. For instance, considering Figure~\ref{fig:ctx_ldpc_parity_checks}, $V_0$
+is connected to $C_a$ and $C_c$. So its LLR value can be computed as follow:
+$v_0 = e_0 + e_1 = (l_3 \boxplus l_4 \boxplus l_6 \boxplus l_7) + (l_2 \boxplus
+l_5 \boxplus l_7)$, where $e_0$ and $e_1$ are the extrinsic informations
+computed from $C_a$ and $C_c$, respectively. The decoded bits can be decided
+from the channel and the variable node LLR values: $\hat{u}_n = \hardDec{(l_n +
+v_n)}$.
 
 In the Belief Propagation (BP) decoding algorithm, there are many iterations (5
 to 100) between the variable nodes and the check nodes, before to decide the
@@ -388,7 +389,7 @@ message.
   \label{fig:ctx_ldpc_bp}
 \end{figure}
 
-Fig.~\ref{fig:ctx_ldpc_bp} illustrates a single BP iteration. First, the check
+Figure~\ref{fig:ctx_ldpc_bp} illustrates a single BP iteration. First, the check
 nodes are computed from the messages $m_j^i$ where $i$ is the index of the
 variable nodes and $j$ is the index of the check nodes. In the example, the
 $C_a$ check node computes $a^0_a \boxplus a^3_a \boxplus a^4_a \boxplus a^6_a
@@ -484,7 +485,7 @@ To summarize, the polar encoding process can be defined as follow: $\bm{c} =
 \end{figure}
 
 \newpage
-Fig.~\ref{fig:ctx_polar_encoder} presents $\bm{\mathcal{G}}$ generator
+Figure~\ref{fig:ctx_polar_encoder} presents $\bm{\mathcal{G}}$ generator
 matrices depending on $N$ and their associate encoding schemes described with
 factor graphs. The recursive structure of the polar codes is represented by the
 dashed rectangles in the factor graphs. For instance, when $N = 8$, the encoder
@@ -501,7 +502,7 @@ systematic.
 
 In 2011, \Arikan proposed a systematic coding scheme for the polar
 codes~\cite{Arikan2011}. The idea is to apply a pre-encoding step before the
-Kronecker transformations. Fig.~\ref{fig:ctx_polar_encoder_sys} shows the
+Kronecker transformations. Figure~\ref{fig:ctx_polar_encoder_sys} shows the
 systematic polar encoder for $N = 8$. The systematic encoding scheme can be
 expressed as: $\bm{c} = \mathcal{F'}\big(\mathcal{F}(u) \times
 \bm{\mathcal{G}}\big) \times \bm{\mathcal{G}}$, with $\mathcal{F'}$ the function
@@ -512,8 +513,8 @@ $\bm{\mathcal{G}}$ generator polar matrices: $\bm{\mathcal{G}} \times
 its inverse is itself. A direct consequence of this property is that one can
 encode from left to right or from right to left: the generated codeword $\bm{c}$
 will be the same. This is why the factor graphs proposed in
-Fig.~\ref{fig:ctx_polar_encoder} and Fig.~\ref{fig:ctx_polar_encoder_sys} are
-not directed.
+Figure~\ref{fig:ctx_polar_encoder} and Figure~\ref{fig:ctx_polar_encoder_sys}
+are not directed.
 
 \begin{figure}[htp]
   \centering
@@ -523,8 +524,8 @@ not directed.
 \end{figure}
 
 It is also possible to represent the polar encoding process with a binary tree
-structure. Fig.~\ref{fig:ctx_polar_tree} shows the binary tree representation of
-an $(8,4)$ polar encoder. The leaf nodes represent the initial bits from the
+structure. Figure~\ref{fig:ctx_polar_tree} shows the binary tree representation
+of an $(8,4)$ polar encoder. The leaf nodes represent the initial bits from the
 $\bm{v}$ vector. The bits in black are the information bits $\bm{u}$ and the
 white bits are the frozen bits. Two by two the initial bits are bound to a
 father node $n_x^2$ where $x$ is the index of the node in the layer 2. In
@@ -556,7 +557,7 @@ as \textit{partial sums} ($\bm{\hat{s}}$). At the decoder initialization, LLR
 values received from the channel ($\bm{l}$) are stored in the root node. Then,
 the decoding process performs a pre-order traversal of the tree. When a node is
 visited in the downward direction, LLRs of the node are updated. In the upward
-direction, partial sums are updated. Fig.~\ref{fig:ctx_polar_sc_decoder}
+direction, partial sums are updated. Figure~\ref{fig:ctx_polar_sc_decoder}
 summarizes the computations performed in both directions. The update functions
 are:
 \begin{eqnarray}
@@ -714,7 +715,7 @@ calculation~\cite{Sarkis2016}. This tree-pruned version of the algorithm is
 called Simplified SCL (SSCL) and CA-SSCL when a CRC is used to discriminate
 the final candidate codewords. The tree pruning technique can drastically reduce
 the amount of computations in the decoding process. The
-Fig.~\ref{fig:ctx_polar_tree_pruning_example} shows that more than half of the
+Figure~\ref{fig:ctx_polar_tree_pruning_example} shows that more than half of the
 tree nodes can be removed for $N = 8$ and $R = 1 / 2$ (this is representative of
 real-life codes).
 
@@ -781,8 +782,8 @@ linear combination of the $\nu$ previous bits of the message:
 $p_k = \sum_{j=0}^\nu g^{(2)}_{j} u_{k-j} + \sum_{j=1}^\nu g^{(1)}_{j} p_{k-j}$,
 where $\nu$ represents the number of elements memorized inside the encoder.
 The sequence of elements~$g_j$ is called the code-generating sequence and is
-often expressed in octal. Fig.~\ref{fig:ctx_turbo_sub_encoder_graph} gives three
-representations of a convolutional code of rate $R = 1/2$ with a memory
+often expressed in octal. Figure~\ref{fig:ctx_turbo_sub_encoder_graph} gives
+three representations of a convolutional code of rate $R = 1/2$ with a memory
 $\nu = 2$ ($D_0$ and $D_1$ are shift registers). Its two code-generating
 sequences $\bm{g^{(1)}} = (7)_8$ and $\bm{g^{(2)}} = (5)_8$ define the $c_2 = p$
 output while $c_1 = u$. In the example, the convolutional code has the
@@ -790,19 +791,19 @@ particularity to be systematic because $c_1 = u$ and recursive because of the
 feedback loop before the first shift register $D_0$. In the literature, this
 type of coding scheme is called Recursive Systematic Convolutional (RSC). Only
 RSC codes are considered in the document. In
-Fig.~\ref{fig:ctx_turbo_sub_encoder}, the number of $D$ memories $\nu = 2$ so,
+Figure~\ref{fig:ctx_turbo_sub_encoder}, the number of $D$ memories $\nu = 2$ so,
 the code can have $2^\nu = 4$ different states. Thus, a convolutional code can
 be expressed as a finite-state machine as shown in
-Fig.~\ref{fig:ctx_turbo_sub_encoder_mealy}. The initial state $S_0$ corresponds
-to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$ and
-$D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and, finally,
-the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on the
-edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if the
-input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
+Figure~\ref{fig:ctx_turbo_sub_encoder_mealy}. The initial state $S_0$
+corresponds to $D_0 = 0$ and $D_1 = 0$, the state~$S_1$ corresponds to $D_0 = 1$
+and $D_1 = 0$, the state~$S_2$ corresponds to $D_0 = 0$ and $D_1 = 1$ and,
+finally, the state~$S_3$ corresponds to $D_0 = 1$ and $D_1 = 1$. The notation on
+the edges is in the form of $u/c_1c_2$. For instance, from the state~$S_1$, if
+the input bit $u$ is 1, then the encoder will output two bits $c_1 = 1$ and
 $c_2 = 0$ and will go in the state~$S_2$. This is denoted by \emph{1/10} below
 the directed edge between $S_1$ and $S_2$.
 
-Fig.~\ref{fig:ctx_turbo_sub_encoder_trellis} introduces another convenient
+Figure~\ref{fig:ctx_turbo_sub_encoder_trellis} introduces another convenient
 representation of convolutional codes: the trellis. This representation has
 been used for the first time by Dave Forney in 1973~\cite{Forney1973}. It is
 especially useful to facilitate the understanding of the decoding process.
@@ -823,11 +824,11 @@ starting from $\nu +1$ time units, the trellis pattern is repeated.
 \end{figure}
 
 As mentioned before, a turbo code is built from two convolutional codes.
-Fig.~\ref{fig:ctx_turbo_encoder} shows a generic view of the turbo coding
+Figure~\ref{fig:ctx_turbo_encoder} shows a generic view of the turbo coding
 process. In the example, the code rate of the turbo code is $R = 1/3$. This rate
 is obtained from two convolutional sub-encoders of rate $R = 1/2$ (like the one
-shown in Fig.~\ref{fig:ctx_turbo_sub_encoder}). The two parity bits $p$ and $p'$
-are obtained from the $c_2$ outputs of the convolutional codes while the
+shown in Figure~\ref{fig:ctx_turbo_sub_encoder}). The two parity bits $p$ and
+$p'$ are obtained from the $c_2$ outputs of the convolutional codes while the
 systematic $c_1$ outputs are ignored. The first sub-encoder encodes the $u$
 input bit while the second one encode the $u'$ bit. The $u'$~bit is determined
 from $u$ after a $\Pi$ interleaving process. For each $u_k$ bit there is a
@@ -851,7 +852,7 @@ order are given to the sub-encoder 2.
 
 The turbo decoder consists of two component decoders exchanging soft information
 in terms of log-likelihood ratio (LLR) for each transmitted information bit
-through an interleaver and a deinterleaver. Fig.~\ref{fig:ctx_turbo_decoder}
+through an interleaver and a deinterleaver. Figure~\ref{fig:ctx_turbo_decoder}
 illustrates the internal structure of a turbo decoder. Two Soft Input Soft
 Output (SISO) decoders are represented with the interleaving process $\Pi$ and
 the deinterleaving process $\Pi^{-1}$. In our work, only rate $R = 1/3$
@@ -924,7 +925,7 @@ of the trellis.
 \end{figure}
 
 In this thesis, we focus on the turbo codes of the LTE standard~\cite{ETSI2013}
-(3G and 4G mobile networks). Fig.~\ref{fig:ctx_turbo_encoder_lte} gives the
+(3G and 4G mobile networks). Figure~\ref{fig:ctx_turbo_encoder_lte} gives the
 definition of one LTE turbo encoder. This encoder leads to an 8-state trellis.
 In the next sections and chapters, this LTE trellis is always considered.
 
@@ -1063,18 +1064,19 @@ BER/FER value until they reach a stable value.
   \label{fig:ctx_simu_com_chain}
 \end{figure}
 
-Fig.~\ref{fig:ctx_simu_com_chain_specs} describes a simulation sequence similar
-to the digital communication chain presented in Fig.~\ref{fig:ctx_com_chain}.
-The only difference is that the \emph{sink} block has been replaced by what we
-call a \emph{monitor}. The \emph{monitor}, unlike the \emph{sink}, knows the $K$
-output information bits from the \emph{source} ($\bm{u}$). The $C$, $K$ and $N$
-parameters define the type of code/decoder, the number of information bits and
-the codeword size, respectively. These parameters have a direct impact on the
-selection of the \emph{channel encoder} and the \emph{channel decoder} blocks
-in the simulation. Fig.~\ref{fig:ctx_simu_com_chain_in_out} shows the BER output
-of the resulting simulation. The $m$, $M$ and $s$ parameters enable to control
-the AWGN channel noise. $m$ is the minimum SNR value to simulate in the channel,
-while $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
+Figure~\ref{fig:ctx_simu_com_chain_specs} describes a simulation sequence
+similar to the digital communication chain presented in
+Figure~\ref{fig:ctx_com_chain}. The only difference is that the \emph{sink}
+block has been replaced by what we call a \emph{monitor}. The \emph{monitor},
+unlike the \emph{sink}, knows the $K$ output information bits from the
+\emph{source} ($\bm{u}$). The $C$, $K$ and $N$ parameters define the type of
+code/decoder, the number of information bits and the codeword size,
+respectively. These parameters have a direct impact on the selection of the
+\emph{channel encoder} and the \emph{channel decoder} blocks in the simulation.
+Figure~\ref{fig:ctx_simu_com_chain_in_out} shows the BER output of the resulting
+simulation. The $m$, $M$ and $s$ parameters enable to control the AWGN channel
+noise. $m$ is the minimum SNR value to simulate in the channel, while $M$ is the
+maximum SNR value. $s$ is the SNR step between two SNR values.
 
 \begin{figure}[htp]
   \centering
@@ -1091,12 +1093,12 @@ while $M$ is the maximum SNR value. $s$ is the SNR step between two SNR values.
   \label{fig:ctx_bfer}
 \end{figure}
 
-As an illustration, Fig.~\ref{fig:ctx_bfer} presents BER and FER decoding
+As an illustration, Figure~\ref{fig:ctx_bfer} presents BER and FER decoding
 performances estimated with Monte Carlo simulations on a large variety of code
 families and decoding parameters. On each graphic, the BER is plotted with solid
 lines while the FER is plotted with dashed lines. Both the BER and the FER
 depend on the SNR ($E_b/N_0$). The higher the SNR is, the lower the noise is and
-therefore the number of errors. In Fig.~\ref{fig:ctx_bfer_ldpc}, for instance,
+therefore the number of errors. In Figure~\ref{fig:ctx_bfer_ldpc}, for instance,
 on the same LDPC code ($N = 648$ and $K = 540$) and considering a 5.0 dB SNR,
 the configuration 2 of the decoder achieves better decoding performance than the
 configuration 1 because the {\color{Paired-3} green} curve is below the
@@ -1104,7 +1106,7 @@ configuration 1 because the {\color{Paired-3} green} curve is below the
 configurations are shown together, they are ordered by increasing BER/FER
 performance. This is achieved at the cost of a higher computational effort
 during the decoding process compared to the first configuration. The purpose of
-Fig.~\ref{fig:ctx_bfer} is not to compare codes with each others but to
+Figure~\ref{fig:ctx_bfer} is not to compare codes with each others but to
 introduce the typical BER/FER curves that will be used in the next chapters. It
 shows that there is a large set of possible combinations of codes and decoding
 configurations.
@@ -1145,14 +1147,14 @@ terminals.
 \end{figure}
 
 In the two first generations of mobile networks (1G and 2G), all the signal
-processing was treated in the base station near the antenna (cf.
-Fig~\ref{fig:ctx_sdr_base_station_1G_2G}). Since the third generation of mobile
-networks (3G) two types of processing have been separated: 1) the radio
+processing was treated in the base station near the antenna (see
+Figure~\ref{fig:ctx_sdr_base_station_1G_2G}). Since the third generation of
+mobile networks (3G) two types of processing have been separated: 1) the radio
 frequency (RF) processing on the one side and 2) the base band (BB) processing
 on the other side. The RF processing is attached to the antenna while the BB
-processing is shared among multiple antennas (cf.
-Fig~\ref{fig:ctx_sdr_base_station_3G_4G}). The range of this type of station is
-approximately 40 kilometers. The connexions between the antennas and the BB
+processing is shared among multiple antennas (see
+Figure~\ref{fig:ctx_sdr_base_station_3G_4G}). The range of this type of station
+is approximately 40 kilometers. The connexions between the antennas and the BB
 station are made through wired links. The RF processing mainly converts the
 analog signal into a digital one (or the other way around) while the BB station
 performs all the digital processing including the encoding/decoding and the
@@ -1163,12 +1165,12 @@ reduce their cost of maintenance.
 The virtualization of the mobile network is considered by industrial
 actors~\cite{Huawei2013,Ericsson2015} and academic ones~\cite{Wubben2014,
 Rost2014,Checko2015a} as a promising evolution. This is also known as the
-\emph{Cloud Radio Access Network} (C-RAN). The C-RAN is proposed for a part of
+\emph{Cloud Radio Access Network} (C-RAN): it is proposed for a part of
 the processing traditionally made in the base stations. In this network
 structure, the computational hardware resources of the BB processing are shared
-between multiple antennas (see Fig~\ref{fig:ctx_sdr_base_station_5G_future}).
-This enables new optimizations: better adaptation to non-uniform traffic;
-energy saving; higher throughput and lower latency; scalability and
+between multiple antennas (see Figure~\ref{fig:ctx_sdr_base_station_5G_future}).
+This enables new optimizations: 1) better adaptation to non-uniform traffic;
+2) energy saving; 3) higher throughput and lower latency; 4) scalability and
 maintainability increase~\cite{Checko2015a}. Thus, the computational BB units
 have to be virtualized: there should no longer be hardware dedicated to specific
 antenna. Contrariwise, the BB computational effort has to be distributed at the
@@ -1224,13 +1226,13 @@ $f : \mathbb{B}^{log_{2}(M)} \rightarrow \mathbb{X}, x = f(\bm{b})$ where
 $\bm{X} \subset \mathbb{C}^k$. The $K$-dimensional complex codeword $x$ is a
 sparse vector with $N < K$ non-zero entries. Each layer $j=1, ..., J$ has its
 own codebook to generate the desired codeword according to the binary input
-stream. Fig.~\ref{fig:ctx_scma} shows the SCMA uplink chain with $J = 6$,
+stream. Figure~\ref{fig:ctx_scma} shows the SCMA uplink chain with $J = 6$,
 $K = 4$ and $N = 2$. SCMA codewords are spread over $K$ physical resources, such
-as OFDM tones. Fig.~\ref{fig:ctx_scma_enc} shows that in the multiplexed scheme
-of SCMA, all chosen codewords of the $J$ layers are added together after being
-multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink chain
-is shown in Fig.~\ref{fig:ctx_scma_codec}. The output of the SCMA encoder is
-altered by a white additive noise $\bm{n}$:
+as OFDM tones. Figure~\ref{fig:ctx_scma_enc} shows that in the multiplexed
+scheme of SCMA, all chosen codewords of the $J$ layers are added together after
+being multiplied by the channel coefficient $\bm{h}_j$. Then, the entire uplink
+chain is shown in Figure~\ref{fig:ctx_scma_codec}. The output of the SCMA
+encoder is altered by a white additive noise $\bm{n}$:
 \begin{equation}
   \label{eq:ctx_scma_1}
   \bm{y} = \sum\limits_{j=1}^J \diag(\bm{h}_j)\bm{x}_j+\bm{n},
@@ -1238,8 +1240,8 @@ altered by a white additive noise $\bm{n}$:
 where $\bm{x}_j=(x_1,...,x_{Kj})^T$ and $\bm{h}_j=(h_1,...,h_{Kj})^T$ are
 respectively codeword and channel coefficients of layer $j$.
 Considering the digital communication chain presented in
-Fig.~\ref{fig:ctx_com_chain} the SCMA encoder can be seen as a digital modulator
-and the SCMA decoder can be seen as a digital demodulator.
+Figure~\ref{fig:ctx_com_chain} the SCMA encoder can be seen as a digital
+modulator and the SCMA decoder can be seen as a digital demodulator.
 
 \begin{figure}%[htp]
   \centering
@@ -1276,12 +1278,12 @@ and the SCMA decoder can be seen as a digital demodulator.
 
 Exploiting sparsity of the codebooks, Message Passing Algorithm (MPA)
 decoders were introduced to achieve very good decoding performance with lower
-complexity~\cite{Zhang2014a}. Fig.~\ref{fig:ctx_scma_dec_graph} shows a Bayesian
-factor graph representation of an MPA decoder with six users and four physical
-resources. Thanks to the sparsity of the codebooks, exactly three users collide
-in each physical resource. There are four possible codewords for each of the
-three connected user's codebooks, which gives 64 possible combined codewords in
-each physical resource.
+complexity~\cite{Zhang2014a}. Figure~\ref{fig:ctx_scma_dec_graph} shows a
+Bayesian factor graph representation of an MPA decoder with six users and four
+physical resources. Thanks to the sparsity of the codebooks, exactly three users
+collide in each physical resource. There are four possible codewords for each of
+the three connected user's codebooks, which gives 64 possible combined codewords
+in each physical resource.
 
 In the first step of the MPA, the 64~distances between each possible
 combined codeword and the actual received codeword are calculated:
@@ -1302,7 +1304,7 @@ using \eqref{eq:ctx_scma_7}:
 After calculating the residual probability of each codeword with
 \eqref{eq:ctx_scma_7}, iterative MPA starts exchanging beliefs on possible
 received codewords among the users and resources nodes of the factor-graph.
-According to Fig.~\ref{fig:ctx_scma_dec_alg} (I), a message from resources to
+According to Figure~\ref{fig:ctx_scma_dec_alg} (I), a message from resources to
 users has been defined to contain extrinsic information of two other connected
 users. For instance, a message from resource~4 to user~2 containing the
 probability information of codeword $i$ can be expressed as:
@@ -1314,7 +1316,7 @@ probability information of codeword $i$ can be expressed as:
   \times \mu_{UE4 \rightarrow RES4}(j) \times \mu_{UE5 \rightarrow RES4}(k).
   \end{split}
 \end{equation}
-As shown in Fig.~\ref{fig:ctx_scma_dec_alg}(II) there are only two resources
+As shown in Figure~\ref{fig:ctx_scma_dec_alg}(II) there are only two resources
 connected to each user. A message from a user to a resource is a normalized
 guess swap at the user node:
 \begin{equation}
@@ -1326,7 +1328,7 @@ Message passing between users and resources (see \eqref{eq:ctx_scma_8} and
 \eqref{eq:ctx_scma_9}) will be repeated three to eight times to reach the
 desired decoding performance. The final belief at each user $B(i)$ is the
 multiplication of all incoming messages as illustrated in
-Fig.~{\ref{fig:ctx_scma_dec_alg}}(III) and \eqref{eq:ctx_scma_10} for UE3 and
+Figure~{\ref{fig:ctx_scma_dec_alg}}(III) and \eqref{eq:ctx_scma_10} for UE3 and
 codeword $i$. Finally, \eqref{eq:ctx_scma_11} is used to calculate soft outputs
 for $\bm{\hat{x}}$:
 \begin{equation}

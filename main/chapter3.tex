@@ -208,7 +208,7 @@ chains. For instance, in Fig~\ref{fig:ctx_simu_com_chain}, the source, the
 encoder, the modulator, the channel, the demodulator, the decoder and the
 monitor are module classes. Tools can be classes or functions. For instance, the
 polar API presented in Section~\ref{sec:opt_polar_api} is a static class
-implementing the polar $f$, $g$ and $h$ functions (c.f.
+implementing the polar $f$, $g$ and $h$ functions (see
 Equation~\ref{eq:ctx_polar_f_g_h}) that are common to all the polar decoders.
 Many implementations of defined interfaces can coexist. For instance, the
 abstract \verb|Encoder| class that defines the \verb|encode| pure virtual
@@ -556,8 +556,8 @@ The \AFFECT toolbox comes with a dedicated functional
 simulator~\cite{Cassagne2017}. It is based on the \AFFECT library presented
 before. We remarked that the functional simulation chains are often similar. For
 this reason, the simulation chain presented in
-Fig.~\ref{fig:aff3ct_library_task_module} has been implemented and enriched. The
-proposed simulator supports multi-threading to take advantage of current CPU
+Figure~\ref{fig:aff3ct_library_task_module} has been implemented and enriched.
+The proposed simulator supports multi-threading to take advantage of current CPU
 multi-core architectures. It is also able to run on supercomputers and comes
 with a multi-node implementation based on the well-known HPC Message Passing
 Interface (MPI). The multi-core and multi-node performance of the \AFFECT
@@ -630,7 +630,7 @@ and their corresponding approximations can be compared.
   \label{plot:aff3ct_ldpc_update_rules}
 \end{figure}
 
-In Fig.~\ref{plot:aff3ct_ldpc_update_rules}, the LDPC belief propagation (BP)
+In Figure~\ref{plot:aff3ct_ldpc_update_rules}, the LDPC belief propagation (BP)
 decoding algorithm is considered with an horizontal layered scheduling. The
 $\mathcal{H}$ parity matrix has been taken from the WiMAX standard ($N=2304$,
 $R=1/2$). The impact of various update rules on the decoding performance is
@@ -675,7 +675,7 @@ designer to chose the right configuration.
 \end{figure}
 
 An example of polar decoders working on a $N = 2048$ and $K = 1723$ code is
-given in Fig.~\ref{plot:aff3ct_polar_scl_adaptive}. The FA-SSCL and PA-SSCL
+given in Figure~\ref{plot:aff3ct_polar_scl_adaptive}. The FA-SSCL and PA-SSCL
 decoders have the same decoding performance for a list size $L$. However,
 the throughputs are different depending on the SNR values. This is another
 example of possible explorations with the \AFFECT simulator. Depending on the
@@ -700,16 +700,16 @@ processing, it is common to reduce the amplitude of the data. A fixed-point
 representation can be shorter and more efficient than a floating-point
 representation. This is true for hardware decoder implementations as well as for
 high performance software implementations. In
-Fig.~\ref{plot:aff3ct_turbo_quantification}, the longest turbo code from the LTE
-standard is proposed ($K = 6144$, $R = 1/3$). The same code is evaluated over 3
-different data representations. \emph{float} is a 32-bit decoder working on
-floating-point data, this is the reference. \emph{int-16} and \emph{int-8}
+Figure~\ref{plot:aff3ct_turbo_quantification}, the longest turbo code from the
+LTE standard is proposed ($K = 6144$, $R = 1/3$). The same code is evaluated
+over 3 different data representations. \emph{float} is a 32-bit decoder working
+on floating-point data, this is the reference. \emph{int-16} and \emph{int-8}
 decoders are working on 16 bits and on 8 bits, respectively. The $Q_{s,v}$
-corresponds to the quantification format of the decoder input LLRs (c.f.
+corresponds to the quantification format of the decoder input LLRs (see
 Eq.~\ref{eq:opt_simu_quantizer}). $s$ is the number of bits of the quantized
 number, including $v$ bits for the fractional part. The quantification format is
 a parameter of the \AFFECT simulator. In
-Fig.~\ref{plot:aff3ct_turbo_quantification}, the 16-bit quantification is able
+Figure~\ref{plot:aff3ct_turbo_quantification}, the 16-bit quantification is able
 to match the reference decoding performance while there is a little performance
 degradation in 8-bit.
 
@@ -726,7 +726,7 @@ degradation in 8-bit.
 \end{figure}
 
 More complex simulation scenarios where the BPSK modulation is replaced by the
-SCMA modulation is illustrated in Fig.~\ref{plot:aff3ct_scma_fec}. The MPA
+SCMA modulation is illustrated in Figure~\ref{plot:aff3ct_scma_fec}. The MPA
 demodulator and its E-MPA approximation are combined with the LDPC codes, the
 polar codes and the turbo codes. The LDPC $\mathcal{H}$ parity matrix comes from
 the MacKay personal webpage\footnote{MacKay's webpage:
@@ -748,7 +748,7 @@ The \AFFECT output (see Listing~\ref{lst:aff3ct_simulator_output}) is not
 adapted to see the error-rate performance at a glance. One can note that it is
 even more complicated to compare two or more simulation outputs with each other.
 Traditionally the BER and FER decoding performances are presented in a form of
-graphical curves (see Fig.~\ref{fig:ctx_bfer}). It is then much easier to
+graphical curves (see Figure~\ref{fig:ctx_bfer}). It is then much easier to
 compare their decoding performance.
 
 To this purpose, we introduced the BER/FER comparator. It is available online on
@@ -791,7 +791,7 @@ automatically.
   \label{fig:aff3ct_ci_cd_pipeline}
 \end{figure}
 
-Fig.~\ref{fig:aff3ct_library_task_module} shows the different stages of the
+Figure~\ref{fig:aff3ct_library_task_module} shows the different stages of the
 \AFFECT CI/CD pipeline. The \emph{analysis} stage contains jobs that can be
 executed without compiling the \AFFECT binaries. The \emph{build} stage is a set
 of compilation jobs. The \emph{check} stage proposes verification jobs that
@@ -818,7 +818,7 @@ of \AFFECT in their own projects without any restriction.
 \AFFECT simulator as a reference for the decoding performance~\cite{Pignoly2018,
 Poulenard2018,Ghanaatian2018,Wang2019,Hsieh2020,Rush2020,Duffy2020}. In other
 works, \AFFECT has been enriched to support new features.
-In~\cite{Leonardon2018b} the P-EDGE generator tool (c.f.
+In~\cite{Leonardon2018b} the P-EDGE generator tool (see
 Section~\ref{sec:opt_polar_pedge}) has been modified to generate Transport
 Triggered Architecture (TTA $\approx$ VLIW) instructions while
 in~\cite{Tasdighi2020} a new LDPC code construction method is proposed and

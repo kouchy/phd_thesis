@@ -102,7 +102,7 @@ matrix where $N = 2304$ and $R = 1/2$. The second one is a bigger matrix from
 the DVB-S2 standard where $N = 16200$ and $K = 14400$.
 
 The throughput and latency values for the WiMAX $\mathcal{H}$ parity matrix are
-given in Fig.~\ref{plot:eval_ldpc_WiMAX_thr_lat}. On the Platinum 8168 target,
+given in Figure~\ref{plot:eval_ldpc_WiMAX_thr_lat}. On the Platinum 8168 target,
 the throughput evolution is almost linear in function of the number of cores and
 the wider instruction sets. In other words, the best throughput performance is
 obtained with AVX-512 instructions and on 24 cores. If we look at the latencies,
@@ -126,8 +126,8 @@ preferable to use the wider possible SIMD instructions on the EPYC 7452 CPU.
 \end{figure}
 
 The obtained throughput and latency values for the DVB-S2 $\mathcal{H}$ parity
-matrix are presented in Fig.~\ref{plot:eval_ldpc_DVB-S2_thr_lat}. This matrix is
-significantly larger than the previous one. As a consequence the memory
+matrix are presented in Figure~\ref{plot:eval_ldpc_DVB-S2_thr_lat}. This matrix
+is significantly larger than the previous one. As a consequence the memory
 footprint of the decoder is also higher. This highlights some limitations of the
 proposed inter-frame SIMD implementation. With this type of implementation, the
 memory footprint of the decoder is increasing with the size of the SIMD
@@ -540,7 +540,7 @@ algorithm in the generator.
 \end{figure}
 
 Table~\ref{tab:eval_polar_sc_gen_l1i_size} and
-Fig.~\ref{plot:eval_polar_sc_gen_l1i_size} illustrate the binary code size of
+Figure~\ref{plot:eval_polar_sc_gen_l1i_size} illustrate the binary code size of
 the decoders depending on $N$. The results which exceed the 32KB of the L1I
 cache are highlighted in bold font. A CPU with L1I = 32 KB is supposed, this is
 consistent with most of the current CPUs. Sub-tree folding is enabled starting
@@ -552,7 +552,7 @@ improvement, until $N=2^{14}$ the code size never exceeds the L1I cache anymore.
 In~\cite{Giard2016b}, authors report that they can't compile codes longer than
 $N = 2^{15}$. The proposed compression technique enables to exceed that limit.
 For instance, we were able to generate $N = 2^{20}$ decoders as shown in
-Fig.~\ref{plot:eval_polar_sc_energy_implems_vs}.
+Figure~\ref{plot:eval_polar_sc_energy_implems_vs}.
 
 \subsubsection{Comparison with State-of-the-art SC Decoders}
 
@@ -647,9 +647,9 @@ decoder. Even if we used a more recent CPU, the same set of instructions
   \label{plot:eval_polar_sc_gen_thr_inter}
 \end{figure}
 
-Fig.~\ref{plot:eval_polar_sc_gen_thr_intra} shows \AFFECT intra-frame throughput
-on different architectures. Our generic framework performance outperforms
-previous works (between 10\% and 25\% higher). This is confirmed in
+Figure~\ref{plot:eval_polar_sc_gen_thr_intra} shows \AFFECT intra-frame
+throughput on different architectures. Our generic framework performance
+outperforms previous works (between 10\% and 25\% higher). This is confirmed in
 Table~\ref{tab:eval_polar_sc_gen_thr_comparison} which compares \AFFECT with the
 state-of-the-art result samples for some specific code sizes reported
 in~\cite{Sarkis2014}. The throughput of the inter-frame implementation is shown
@@ -721,7 +721,7 @@ throughput. In Table~\ref{tab:eval_polar_scl_perfs_fixed}, maximum latency
 ($\mathcal{L}_\text{avg}$ in $\mu s$) and information throughput
 ($\mathcal{T}_i$ in Mb/s) are given. The FER performance of the 32-bit version
 of the PA/FA-SSCL decoders as well as the corresponding throughputs can be seen
-in Fig.~\ref{plot:aff3ct_polar_scl_adaptive}. The 16-bit and 8-bit
+in Figure~\ref{plot:aff3ct_polar_scl_adaptive}. The 16-bit and 8-bit
 implementations have similar decoding performance. Note that in 8-bit
 configuration only the \texttt{REP}$_{\texttt{8-}}$ nodes are used. The
 fixed-point implementation reduces, on average, the latency. In the high SNR
@@ -874,19 +874,19 @@ with the \verb|-Ofast -funroll-loops -msse4.1/-mavx2| options.
   \label{plot:eval_turbo_thr}
 \end{figure}
 
-Fig.~\ref{plot:eval_turbo_thr} shows the evolution of the information throughput
-depending on the code dimension $K$. This experiment was conducted on i7-4960HQ
-and E5-2680 v3 (both have \emph{Haswell} architectures). The throughput tends to
-increase linearly with the number of cores (up to 24 cores) except in AVX mode
-where a performance drop can be observed when $K > 4096$. The reason is that the
-AVX instructions use vectors $2\times$ wider than those used by SSE
-instructions. The inter-frame strategy loads twice the number of frames to fill
-these vectors. Thus, for $K > 4096$, in AVX, the memory footprint exceeds the L3
-cache occupancy. Consequently, the performance is driven by the RAM bandwidth.
-Then, as $K$ increases the number of RAM accesses increases. There is not enough
-memory bandwidth to feed all the cores. This explains the decreasing throughput
-for $K > 4096$, in AVX mode. Nonetheless, on E5-2680 v3 target, the throughput
-exceeds 1 Gbps for all codes with $K<4096$.
+Figure~\ref{plot:eval_turbo_thr} shows the evolution of the information
+throughput depending on the code dimension $K$. This experiment was conducted on
+i7-4960HQ and E5-2680 v3 (both have \emph{Haswell} architectures). The
+throughput tends to increase linearly with the number of cores (up to 24 cores)
+except in AVX mode where a performance drop can be observed when $K > 4096$. The
+reason is that the AVX instructions use vectors $2\times$ wider than those used
+by SSE instructions. The inter-frame strategy loads twice the number of frames
+to fill these vectors. Thus, for $K > 4096$, in AVX, the memory footprint
+exceeds the L3 cache occupancy. Consequently, the performance is driven by the
+RAM bandwidth. Then, as $K$ increases the number of RAM accesses increases.
+There is not enough memory bandwidth to feed all the cores. This explains the
+decreasing throughput for $K > 4096$, in AVX mode. Nonetheless, on E5-2680~v3
+target, the throughput exceeds 1 Gbps for all codes with $K<4096$.
 
 \subsection{Energy Efficiency on a Multi-core CPU}
 
@@ -900,10 +900,10 @@ exceeds 1 Gbps for all codes with $K<4096$.
   \label{plot:eval_turbo_energy}
 \end{figure}
 
-Fig.~\ref{plot:eval_turbo_energy} shows the energy consumed by the processor to
-decode one information bit ($E_d$) of the codes using SSE and AVX instructions
-on the i7-4960HQ CPU target. The throughput and power measurements were
-conducted on i7-4960HQ with the \emph{Intel\R Power Gadget} tool. For small
+Figure~\ref{plot:eval_turbo_energy} shows the energy consumed by the processor
+to decode one information bit ($E_d$) of the codes using SSE and AVX
+instructions on the i7-4960HQ CPU target. The throughput and power measurements
+were conducted on i7-4960HQ with the \emph{Intel\R Power Gadget} tool. For small
 codewords ($K=1024$) it is more energy efficient to resort to AVX. But this is
 not so clear on larger codewords ($K=6144$) since with 3/4 cores, the code using
 SSE outperforms the AVX one.
@@ -950,7 +950,7 @@ $\mathcal{T}_i$ is the information throughput of the decoder and
 $\mathcal{NT}_i$ is the normalized information throughput: this metric considers
 6 iterations on a single core. It enables to directly compare the throughput of
 the listed decoders. The FER performance of the proposed decoders are shown in
-Fig.~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
+Figure~\ref{plot:aff3ct_turbo_quantification}. One can note that using the 8-bit
 decoder leads to BER/FER degradations.
 
 The variety of CPU targets and algorithmic parameters enables to
@@ -1350,7 +1350,7 @@ the log-MPA with the fast math libraries and more aggressive optimizations,
 without compromising on the bit error rate performance. This is because log-MPA
 induces inefficient data accesses due to the messages passed from resources to
 users. Using the AVX and SSE SIMD ISAs reduces the branch mispredictions and the
-cache misses (cf. Section~\ref{sec:opt_scma_flattening}). Consequently, the
+cache misses (see Section~\ref{sec:opt_scma_flattening}). Consequently, the
 throughput is increased to 67.83 Mbps in MPA and to 75.46 Mbps for the E-MPA
 where the $\Psi'$ estimated exponentials from \eqref{eq:ctx_scma_19} are
 performed. These results confirm significant throughput gains for the proposed
@@ -1388,7 +1388,7 @@ noted that the four physical cores of the ARM\R platform were  utilized for
 those tests. Power consumption and energy used per decoded bit are lower on the
 ARM\R platform than on the Intel\R processors. The low power consumption of the
 ARM\R platform notably comes at the cost of less powerful floating-point
-arithmetic units (cf. MPA+NEON and E-MPA+NEON in Table~\ref{tab:eval_scma_thr}).
+arithmetic units (see MPA+NEON and E-MPA+NEON in Table~\ref{tab:eval_scma_thr}).
 Eliminating the exponential computations almost doubled the performance in E-MPA
 (15.30 Mbps) as compared to MPA+NEON (8.40 Mbps). It shows the limits of low
 power processors when many exponentials have to be calculated. Nevertheless, by
@@ -1417,7 +1417,7 @@ results are scalable up to the number of processing units dedicated to them.
 
 In this section we propose to evaluate the simulator performance over a
 representative simulation chain. This chain is illustrated in
-Fig.~\ref{fig:simu_chain}. The transmitter is simplified and only all-zero
+Figure~\ref{fig:simu_chain}. The transmitter is simplified and only all-zero
 codewords are generated. This technique enables to bench only the AWGN channel
 and the receiver tasks. The AWGN channel is presented in
 Section~\ref{sec:ctx_awgn} and the vectorized implementation from the
@@ -1432,14 +1432,14 @@ Section~\ref{sec:opt_simu_quantizer}). The decoder is the 8-bit polar FA-SSCL
 presented in Section~\ref{sec:ctx_polar_ascl} an in
 Section~\ref{sec:opt_polar_scl}. A $N = 2048$ and $K_1 = 1755$ polar code with
 $L = 32$ and a 32-bit CRC (GZip \verb|0x04C11DB7|) is simulated (see
-Fig.~\ref{plot:aff3ct_polar_scl_adaptive} for the FER decoding performance).
-This decoder has been chosen because it represents one of the best optimized
-decoder of this thesis work. After the decoding process, the 32 CRC bits are
-extracted from the polar codeword and $K_2 = 1723$ bits are returned. This
-operation consists in copying the $K_2$ first bits of the $K_1$ decoder output
-bits. Finally, the monitor checks if all the bits are equal to zero, if not,
-errors are counted. All the tasks of the proposed communication chain are fully
-vectorized with the \MIPP wrapper. The intra-frame SIMD strategy is applied.
+Figure~\ref{plot:aff3ct_polar_scl_adaptive} for the error rate). This decoder
+has been chosen because it represents one of the best optimized decoder of this
+thesis work. After the decoding process, the 32 CRC bits are extracted from the
+polar codeword and $K_2 = 1723$ bits are returned. This operation consists in
+copying the $K_2$ first bits of the $K_1$ decoder output bits. Finally, the
+monitor checks if all the bits are equal to zero, if not, errors are counted.
+All the tasks of the proposed communication chain are fully vectorized with the
+\MIPP wrapper. The intra-frame SIMD strategy is applied.
 
 This section is decomposed in three sub-sections. The first one details the
 selected experimentation platforms. Then, the mono-threaded performances

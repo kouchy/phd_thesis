@@ -132,7 +132,7 @@ to a template-based solution.
 The proposed eDSL comes with a set of elementary components: \emph{sequence},
 \emph{module}, \emph{task} and \emph{socket}. The \emph{module}, \emph{task} and
 \emph{socket} components have been reused and enriched from the \AFFECT library
-(cf. Section~\ref{sec:aff3ct_library_example}).
+(see Section~\ref{sec:aff3ct_library_example}).
 
 In the eDSL the \emph{task} is the fundamental component. It is also known as
 the \emph{filter} in the standard dataflow model. A task is an elementary
@@ -152,8 +152,8 @@ task execution which is expensive.
 
 A task can consume and produce public data. To this purpose, each task exposes
 input and/or output \emph{sockets}. The action of connecting the sockets of
-different tasks is called the \emph{binding} (cf.
-Fig.~\ref{fig:aff3ct_library_task_module}). The binding determines the tasks
+different tasks is called the \emph{binding} (see
+Figure~\ref{fig:aff3ct_library_task_module}). The binding determines the tasks
 execution order.
 
 Tasks that have been bound together can be regrouped in what we call a
@@ -170,12 +170,11 @@ The proposed eDSL is targeting streaming applications and more precisely signal
 processing and digital communication chains. In this type of applications, the
 processing is repeated indefinitely on batches of frames when the system is on.
 So, a sequence is executed in loop, it means that when the last task is
-executed, the next task is the first one on the next frame. The designed can
+executed, the next task is the first one on the next frame. The designer can
 control if the sequence should restart by giving a \emph{condition function}
 when calling the \verb|exec| method on the sequence. The prototype of the
 function is \verb|bool cond_func(void)|: if the function returns \emph{false},
-the sequence is repeated, else, if the function returns \emph{true}, the
-sequence is stopped.
+the sequence is repeated, the sequence is stopped otherwise.
 
 \begin{figure}[htp]
   \centering
@@ -186,29 +185,29 @@ sequence is stopped.
   \label{fig:dsl_sequence}
 \end{figure}
 
-Fig.~\ref{fig:dsl_sequence} shows two examples of sequence.
-Fig.~\ref{fig:dsl_sequence_chain} is a simple chain of tasks. The designer only
-needs to specify the first task of the chain ($t_1$). The sequence analysis
+Figure~\ref{fig:dsl_sequence} shows two examples of sequence.
+Figure~\ref{fig:dsl_sequence_chain} is a simple chain of tasks. The designer
+only needs to specify the first task of the chain ($t_1$). The sequence analysis
 automatically follows the binding until the last task ($t_4$).
-Fig.~\ref{fig:dsl_sequence_generic} is more complicated. Indeed there are bound
-tasks before and after the wanted sequence. There are also two \emph{first}
-tasks ($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and $t_6$). In this
-case, the designer needs to explicitly specify that $t_1$ and $t_3$ are first
-tasks. If $t_1$ is given before $t_3$ then $t_1$ will be executed first and
-$t_3$ after. The analysis starts from $t_1$ and continue to traverse new tasks
-if possible. In this example, $t_2$ can be executed directly after $t_1$ but
-$t_4$ cannot because it depends on $t_3$. So the analysis stops after $t_2$ and
-then restarts from $t_3$. The index $i$ of the $t_i$ task represents the
-execution order. The $t_5$ and $t_6$ last tasks have to be given by the designer
-because there are other tasks bound to their output sockets: the analysis cannot
-guess the end of the sequence alone.
+Figure~\ref{fig:dsl_sequence_generic} is more complicated. Indeed there are
+bound tasks before and after the wanted sequence. There are also two
+\emph{first} tasks ($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and
+$t_6$). In this case, the designer needs to explicitly specify that $t_1$ and
+$t_3$ are first tasks. If $t_1$ is given before $t_3$ then $t_1$ will be
+executed first and $t_3$ after. The analysis starts from $t_1$ and continue to
+traverse new tasks if possible. In this example, $t_2$ can be executed directly
+after $t_1$ but $t_4$ cannot because it depends on $t_3$. So the analysis stops
+after $t_2$ and then restarts from $t_3$. The index $i$ of the $t_i$ task
+represents the execution order. The $t_5$ and $t_6$ last tasks have to be given
+by the designer because there are other tasks bound to their output sockets: the
+analysis cannot guess the end of the sequence alone.
 
 In general, all the tasks of a sequence are repeated in the same predefined
 order. But it some particular cases, a task can raise the
 \verb|tools::processing_aborted| exception to restart the sequence (on the next
-frame) before its end. For instance, in Fig.~\ref{fig:dsl_sequence_chain} if the
-$t_3$ task raises the \verb|tools::processing_aborted| exception, then the next
-executed task is $t_1$ instead of $t_4$.
+frame) before its end. For instance, in Figure~\ref{fig:dsl_sequence_chain} if
+the $t_3$ task raises the \verb|tools::processing_aborted| exception, then the
+next executed task is $t_1$ instead of $t_4$.
 
 Some digital communication scenarios include repeated schemes. To map a repeated
 scheme, we introduced a specific type of task: the \emph{loop}. This task is
@@ -226,7 +225,7 @@ condition is \emph{false} and the second one is taken when the condition is
   \label{fig:dsl_loop}
 \end{figure}
 
-Fig.~\ref{fig:dsl_loop} illustrates a sequence of tasks with a loop. In this
+Figure~\ref{fig:dsl_loop} illustrates a sequence of tasks with a loop. In this
 particular case, the loop condition is based on an input socket. So the
 condition evaluation is dynamic and depends on the runtime values of this input
 socket. In a first place, the sub-sequence 1 is executed; then the loop
@@ -251,7 +250,7 @@ evaluation returns \emph{true} (\emph{for-loop} behavior).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.85]{\curChapter/fig/dsl/nested_loops/nested_loops}
+  \includegraphics[scale=1.00]{\curChapter/fig/dsl/nested_loops/nested_loops}
   \caption
     [Nested loops.]
     {Nested loops.}
@@ -261,10 +260,10 @@ evaluation returns \emph{true} (\emph{for-loop} behavior).
 The overall system also supports nested loops. The idea is to regroup the tasks
 in sub-sequences: one before the loop and two after the loop. This is
 implemented as a binary tree. Each time a loop is encountered, two new paths are
-created. Fig.~\ref{fig:dsl_nested_loops} shows an example with two loops ($L_1$
-and $L_2$). Five sub-sequences of tasks are created ($SS_x$): one before $L_1$
-($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$ and
-$SS_4$). In this example $L_2$ is a nested loop. Indeed, it is an inner loop
+created. Figure~\ref{fig:dsl_nested_loops} shows an example with two loops
+($L_1$ and $L_2$). Five sub-sequences of tasks are created ($SS_x$): one before
+$L_1$ ($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$
+and $SS_4$). In this example $L_2$ is a nested loop. Indeed, it is an inner loop
 within the body of an outer one ($L_1$).
 
 \subsection{Parallel Components}
@@ -280,7 +279,7 @@ within the body of an outer one ($L_1$).
 
 A created sequence can be duplicated. This way many threads can execute the
 sequence in parallel. The $t$ number of duplications (= number of threads) is a
-parameter of its constructor. As shown in Fig.~\ref{fig:dsl_sequence_dup}, one
+parameter of its constructor. As shown in Figure~\ref{fig:dsl_sequence_dup}, one
 thread is affected to one duplicated chain. Thus, a sequence is able to take
 advantage of the multi-core architectures. For instance, the \AFFECT simulator,
 extensively exploits the sequence duplication feature to automatically
@@ -386,32 +385,32 @@ efficiency of the pipeline.
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/pipeline/pipeline.cpp}
   \caption{\AFFECT \Cxx eDSL source code of the pipeline described in
-    Fig.~\ref{fig:dsl_pipeline}.}
+    Figure~\ref{fig:dsl_pipeline}.}
   \label{lst:dsl_pipeline}
 \end{listing}
 
 In this section, the pipeline implementation is illustrated through a simple
-example. Fig.~\ref{fig:dsl_pipeline} shows the difference between a pipeline
-description (cf. Fig.~\ref{fig:dsl_pipeline_usr}) and its actual instantiation
-(cf. Fig.~\ref{fig:dsl_pipeline_adp}). In Fig.~\ref{fig:dsl_pipeline} we suppose
-that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated (filled in blue). The
-designer knows that the execution time of the $t_1$ task is higher than the
-cumulate execution time of $t_5$ and $t_6$ tasks. We assume that the cumulate
-execution time of $t_2$, $t_3$ and $t_4$ is approximatively four times higher
-than $t_1$. This knowledge motivates the splitting of the stages 1, 2 and 3.
-There is no need to split the $t_5$ and $t_6$ tasks in two stages because the
+example. Figure~\ref{fig:dsl_pipeline} shows the difference between a pipeline
+description (see Figure~\ref{fig:dsl_pipeline_usr}) and its actual instantiation
+(see Figure~\ref{fig:dsl_pipeline_adp}). In Figure~\ref{fig:dsl_pipeline} we
+suppose that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated (filled in
+blue). The designer knows that the execution time of the $t_1$ task is higher
+than the cumulate execution time of $t_5$ and $t_6$ tasks. We assume that the
+cumulate execution time of $t_2$, $t_3$ and $t_4$ is approximatively four times
+higher than $t_1$. This knowledge motivates the splitting of the stages 1, 2 and
+3. There is no need to split the $t_5$ and $t_6$ tasks in two stages because the
 overall throughput is limited by the slowest stage ($t_1$ here). The stage 2 is
 duplicated four times to increase its throughput by four as we know that its
 latency is approximatively four times the sequence 1. In general, a primarily
 profiling phase of the sequential code is required to define the pipeline
 strategy. Listing~\ref{lst:dsl_pipeline} presents the \Cxx eDSL source code
-corresponding to the pipeline description in Fig.~\ref{fig:dsl_pipeline_usr}.
+corresponding to the pipeline description in Figure~\ref{fig:dsl_pipeline_usr}.
 Each $t_i$ task is contained (as a method) in the $M_i$ module (or class). The
 four main steps are: 1) the creation of the modules; 2) the binding of the
 tasks; 3) the creation of the pipeline; 4) the pipeline execution.
 
-Fig.~\ref{fig:dsl_pipeline_adp} presents the internal structure of the pipeline.
-As we can see, new tasks have been automatically added: \emph{push 1},
+Figure~\ref{fig:dsl_pipeline_adp} presents the internal structure of the
+pipeline. As we can see, new tasks have been automatically added: \emph{push 1},
 \emph{pull n} shared by a \emph{1 to n adaptor} module and \emph{push n},
 \emph{pull 1} shared by a \emph{n to 1 adaptor} module. The binding as been
 modified to insert the tasks of the adaptors. For instance, in the initial
@@ -451,8 +450,8 @@ processes that encapsulate these tasks dynamically replace the source code of
 the data buffer copy by a simple pointer copy. The pointers are exchanged
 cyclically.
 
-In Fig.~\ref{fig:dsl_pipeline_adp}, the pipeline threads are pinned to specific
-CPU cores. This is the direct consequence of the lines 38-43 in
+In Figure~\ref{fig:dsl_pipeline_adp}, the pipeline threads are pinned to
+specific CPU cores. This is the direct consequence of the lines 38-43 in
 Listing~\ref{lst:dsl_pipeline}. The \emph{hwloc} library~\cite{Broquedis2010}
 has been used and integrated in \AFFECT to pin the software threads to
 processing units (PUs or hardware threads). In the given example, we assume that
@@ -461,7 +460,7 @@ the CPU cores can only execute one hardware thread (SMT off) and so an
 designer. It can improve the multi-threading performance when dealing with NUMA
 architectures.
 
-Fig.~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
+Figure~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
 complicated task graphs can have more than two tasks to synchronize between two
 pipeline stages. The adaptor implementation can manage multiple socket
 synchronization. The key idea is to deal with a 2-dimensional array of buffers.
@@ -496,7 +495,7 @@ the main encountered problems and the adopted solutions.
   \label{fig:dvbs2_transmitter}
 \end{figure}
 
-Fig.~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
+Figure~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
 tasks. The tasks filled in blue are intrinsically sequential and cannot be
 duplicated. The initial information bits are read from a binary file
 ($t^\text{Tx}_1$). Then, the DVB-S2 coding scheme rests upon the serial
@@ -562,19 +561,19 @@ and the five remaining hardware threads have been dedicated to the stage 2.
   \label{fig:dvbs2_receiver}
 \end{figure}
 
-Fig.~\ref{fig:dvbs2_receiver} presents the task decomposition of the DVB-S2
+Figure~\ref{fig:dvbs2_receiver} presents the task decomposition of the DVB-S2
 receiver software implementation with the five distinct phases. The first one is
-called the \emph{waiting phase} (cf. Fig.~\ref{fig:dvbs2_receiver_learning}). It
-consists in waiting until a transmitter starts to transmit. The
+called the \emph{waiting phase} (see Figure~\ref{fig:dvbs2_receiver_learning}).
+It consists in waiting until a transmitter starts to transmit. The
 \emph{Synchronizer Frame} task ($t^\text{Rx}_8$) possesses a frame detection
-criterion. When a signal is detected, the \emph{learning phase 1} (cf.
-Fig.~\ref{fig:dvbs2_receiver_learning}) is executed during 150 frames. After
-that the \emph{learning phase 2} (cf. Fig.~\ref{fig:dvbs2_receiver_learning}) is
-also executed during 150 frames. After the \emph{learning phase 1 and 2}, the
-tasks have to be re-bound for the \emph{learning phase 3} (cf.
-Fig.~\ref{fig:dvbs2_receiver_transmission}). This last learning phase is
+criterion. When a signal is detected, the \emph{learning phase 1} (see
+Figure~\ref{fig:dvbs2_receiver_learning}) is executed during 150 frames. After
+that the \emph{learning phase 2} (see Figure~\ref{fig:dvbs2_receiver_learning})
+is also executed during 150 frames. After the \emph{learning phase 1 and 2}, the
+tasks have to be re-bound for the \emph{learning phase 3} (see
+Figure~\ref{fig:dvbs2_receiver_transmission}). This last learning phase is
 applied over 200 frames. After 500 frames for all the learning phases, the final
-\emph{transmission phase} is established (cf.
+\emph{transmission phase} is established (see
 Fig~\ref{fig:dvbs2_receiver_transmission}).
 
 In a real life communication systems, the internal clocks of the radios can
@@ -628,7 +627,7 @@ $t^\text{Rx}_8$ second output socket is left unbound.
   \label{fig:dvbs2_bfer}
 \end{figure}
 
-Fig.~\ref{fig:dvbs2_bfer} contains the BER and FER decoding performance of the
+Figure~\ref{fig:dvbs2_bfer} contains the BER and FER decoding performance of the
 3 selected MODCODs. The forms represent the channel conditions: the squares
 stand for a standard simulated AWGN channel, the triangles are also a simulated
 AWGN channel in which frequency shift, phase shift and symbol delay have been
@@ -683,7 +682,7 @@ throughputs with each others. This is the normalized average throughput
 ($\mathcal{N}_\text{Avg}$) has been introduced. It is the average throughput
 considering the $K$ information bits independently of the task output socket
 size. In a first observation, one may notice that the latencies of the tasks are
-very high compared to the ones presented in the simulator evaluation (cf.
+very high compared to the ones presented in the simulator evaluation (see
 Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
 $N = 16740$ and to the inter-frame level. Indeed, each task processes
 approximatively $16740 \times 16$ samples when in the simulator evaluation each
@@ -775,7 +774,7 @@ receive} task ($t^\text{Rx}_{1}$). Once the learning phase is done, the
 transmission phase is parallelized. Thus, the receiver becomes fast enough to
 absorb the radio buffer and samples in real time. During the transmission phase,
 the receiver is split into 8 stages as presented in
-Fig.~\ref{fig:dvbs2_receiver_transmission}. This decomposition has been
+Figure~\ref{fig:dvbs2_receiver_transmission}. This decomposition has been
 motivated by the nature of the tasks (sequential or parallel) and by the
 sequential measured throughput. The number of stages has been minimized in order
 to limit the pipeline overhead. Consequently, sequential and parallel tasks
@@ -824,24 +823,25 @@ did not try to reduce its overall occupancy.
   \label{plot:dvbs2_pipeline}
 \end{figure}
 
-Fig.~\ref{plot:dvbs2_pipeline} presents the repartition of the time in the
+Figure~\ref{plot:dvbs2_pipeline} presents the repartition of the time in the
 pipeline stages (MODCOD 2). The receiver is running over 35 threads.
-Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows the pipeline implementation with
-data copies. Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} shows the pipeline
+Figure~\ref{plot:dvbs2_pipeline_copy_dat} shows the pipeline implementation with
+data copies. Figure~\ref{plot:dvbs2_pipeline_copy_ptr} shows the pipeline
 implementation with pointer copies. \emph{Push wait} and \emph{Pull wait} are
 the percentage of time spent in passive or active waiting. \emph{Push copy} and
 \emph{Pull copy} are the percentage of time spent in copying the data to and
 from the adaptors buffers. \emph{Standard tasks} is the cumulative percentage of
-time spent by the tasks presented in Fig.~\ref{fig:dvbs2_receiver_transmission}.
-In both implementations the pipeline stage throughput is constraint by the
-slowest one. In Fig.~\ref{plot:dvbs2_pipeline_copy_dat} the measured throughput
-per stage is 40 Mb/s whereas in Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} the
+time spent by the tasks presented in
+Figure~\ref{fig:dvbs2_receiver_transmission}. In both implementations the
+pipeline stage throughput is constraint by the slowest one. In
+Figure~\ref{plot:dvbs2_pipeline_copy_dat} the measured throughput per stage is
+40 Mb/s whereas in Figure~\ref{plot:dvbs2_pipeline_copy_ptr} the
 measured throughput is 55 Mb/s. The pointer copy implementation throughput is
 $\approx$ 27\% higher than the data copy implementation.
-Fig.~\ref{plot:dvbs2_pipeline_copy_dat} shows that the copy overhead is
+Figure~\ref{plot:dvbs2_pipeline_copy_dat} shows that the copy overhead is
 non-negligible. A 27\% slowdown is directly due to these copies in the stage 3.
 It largely justifies the pointer copy implementation. In
-Fig.~\ref{plot:dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time is
+Figure~\ref{plot:dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time is
 taken by the $t^\text{Rx}_{5}$ task. This is also confirmed by the measured
 throughput (55 Mb/s) which is very close the sequential throughput (55.42
 Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
@@ -895,7 +895,7 @@ These results demonstrate the benefit of the parallelized implementation of the
 proposed receiver. The throughput speedup rangs from 10 to 20 compared to the
 sequential implementation. It is also important to note that the selected
 configurations are efficient in different SNR zones (as shown in
-Fig.~\ref{fig:dvbs2_bfer}). Depending on the signal quality, different MODCOD
+Figure~\ref{fig:dvbs2_bfer}). Depending on the signal quality, different MODCOD
 can be selected. A direct impact in observed on the system throughput. For
 instance, MODCOD~1 is adapted for noisy environments (3 dB). However the
 information throughput is limited to 37 Mb/s while MODCOD~3 is more adapted to
@@ -945,7 +945,7 @@ eDSL in an applicative context: the software implementation of the DVB-S2
 standard. The results demonstrate the efficiency of the \AFFECT eDSL. Indeed,
 the proposed solution matches satellite real time constraints (30 $\thicksim$
 50 Mb/s). This is the consequence of two main factors: 1) the task level
-optimizations, for instance a fast LDPC decoder has been applied (cf.
+optimizations, for instance a fast LDPC decoder has been applied (see
 Chapter~\ref{chap:opt}); 2) the quasi zero overhead eDSL, with among others, an
 efficient implementation of the pipeline technique.
 
