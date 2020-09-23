@@ -820,7 +820,7 @@ The polar decoder algorithms presented in Section~\ref{sec:ctx_polar} has a
 number of characteristics of interest for its optimization:
 \begin{itemize}
   \item The tree traversal is sequential. $f$, $g$ and $h$ (see
-    Eq.~\ref{eq:ctx_polar_f_g_h}) functions are applied element-wise to all
+    Equation~\ref{eq:ctx_polar_f_g_h}) functions are applied element-wise to all
     elements of the LLR and bits in the nodes and their children. As there is no
     dependence between computations involving different elements of the same
     node, these node computations can be parallelized or vectorized (see the
@@ -1284,19 +1284,19 @@ the decision. This method gives similar decoding performance as performing the
 CRC of each candidate and then selecting the one with the
 best metric. With the adopted order, decoding time is saved by reducing the
 average number of checked candidates. This is made in the
-``$\selectBestPath()$'' sub-routine (Alg.~\ref{alg:ctx_polar_scl_decoder},
+``$\selectBestPath()$'' sub-routine (Algorithm~\ref{alg:ctx_polar_scl_decoder},
 l.18).
 
 \subsubsection{LLR and Metric Sorting}
 \label{sec:opt_polar_scl_sorting}
 
 Metric sorting is involved in the path selection step, but also
-in the ``$\updatePaths()$'' sub-routine (Alg.~\ref{alg:ctx_polar_scl_decoder},
-l.16) and consequently in each leaf. Sorting the LLRs is also necessary in
-\verb|R1| and \verb|SPC| nodes. Because of a lack of information about the
-sorting technique presented in~\cite{Sarkis2016}, its reproduction is not
-possible. In this paragraph, the sorting algorithm used in our proposed SCL
-decoder is described.
+in the ``$\updatePaths()$'' sub-routine
+(Algorithm.~\ref{alg:ctx_polar_scl_decoder}, l.16) and consequently in each
+leaf. Sorting the LLRs is also necessary in \verb|R1| and \verb|SPC| nodes.
+Because of a lack of information about the sorting technique presented
+in~\cite{Sarkis2016}, its reproduction is not possible. In this paragraph, the
+sorting algorithm used in our proposed SCL decoder is described.
 
 In \verb|R1| nodes, a Chase-$2$~\cite{Chase1972} algorithm is applied. The two
 minimum absolute values of the LLRs have to be identified. The way to do the
@@ -1342,15 +1342,16 @@ SCL decoder.
 In the case of the SCL algorithm, $L$ paths have to be assigned to $L$ partial
 sum memory arrays. In~\cite{Tal2011}, this assignment is made with pointers. The
 advantage of pointers is that when a path is duplicated, in the
-``$\updatePaths()$'' sub-routine of Alg.~\ref{alg:ctx_polar_scl_decoder}, the
-partial sums are not copied. Actually, they can be shared between paths thanks
-to the use of pointers. This method limits the number of memory operations.
-Unfortunately, it is not possible to take advantage of the memory space
-reduction. Indeed, the partial sums have to be stored on $L(2N -1)$ bits. There
-is an alternative to this mechanism. If a logical path is statically assigned to
-a memory array, no pointer is necessary at the cost that partial sums must be
-copied when a path is duplicated (only $LN$ bits are required). This method is
-called SSCL$_{\texttt{cpy}}$ whereas the former is called SSCL$_{\texttt{ptr}}$.
+``$\updatePaths()$'' sub-routine of Algorithm~\ref{alg:ctx_polar_scl_decoder},
+the partial sums are not copied. Actually, they can be shared between paths
+thanks to the use of pointers. This method limits the number of memory
+operations. Unfortunately, it is not possible to take advantage of the memory
+space reduction. Indeed, the partial sums have to be stored on $L(2N -1)$ bits.
+There is an alternative to this mechanism. If a logical path is statically
+assigned to a memory array, no pointer is necessary at the cost that partial
+sums must be copied when a path is duplicated (only $LN$ bits are required).
+This method is called SSCL$_{\texttt{cpy}}$ whereas the former is called
+SSCL$_{\texttt{ptr}}$.
 
 \begin{figure}[htp]
   \centering
@@ -1713,7 +1714,7 @@ and final beliefs at each user in \eqref{eq:ctx_scma_10}.
   \label{fig:opt_scma_simd_norm}
 \end{figure}
 
-Equations~\eqref{eq:ctx_scma_5} use a complex norm function $||.||$. It can be
+Equation~\ref{eq:ctx_scma_5} use a complex norm function $||.||$. It can be
 optimized by using SIMD instructions. There are two ways to perform this
 computation depending on the initial data layout.
 Figure~\ref{fig:opt_scma_simd_norm_aos} depicts how to implement the norm
