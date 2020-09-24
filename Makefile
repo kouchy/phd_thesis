@@ -327,11 +327,11 @@ chapter3_fig: main/chapter3/src/archi/task_registering.cpp \
               main/chapter3/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_MAP_i6.txt \
               main/chapter3/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_ML-MAP_i6.txt \
               main/chapter3/fig/turbo/approximations/dat/Turbo_N18432_K6144_BCJR_p32_LTE_EML-MAP_i6.txt \
-              main/chapter3/fig/turbo/quantification/dat/data_6144.txt \
-              main/chapter3/fig/turbo/quantification/quantification.tex \
-              main/chapter3/fig/turbo/quantification/dat/data_6144_32b_float.txt \
-              main/chapter3/fig/turbo/quantification/dat/data_6144_16b_fixed_Q6_3.txt \
-              main/chapter3/fig/turbo/quantification/dat/data_6144_8b_fixed_Q6_2.txt \
+              main/chapter3/fig/turbo/quantization/dat/data_6144.txt \
+              main/chapter3/fig/turbo/quantization/quantization.tex \
+              main/chapter3/fig/turbo/quantization/dat/data_6144_32b_float.txt \
+              main/chapter3/fig/turbo/quantization/dat/data_6144_16b_fixed_Q6_3.txt \
+              main/chapter3/fig/turbo/quantization/dat/data_6144_8b_fixed_Q6_2.txt \
               main/chapter3/fig/scma/ber_uncoded/ber_uncoded.tex \
               main/chapter3/fig/scma/ber_uncoded/colors \
               main/chapter3/fig/scma/ber_uncoded/dat/scma_empa.txt \
@@ -376,7 +376,7 @@ chapter3_fig: main/chapter3/src/archi/task_registering.cpp \
 	cd main/chapter3/fig/polar/scl_adaptive/               && rubber -d scl_adaptive.tex
 	cd main/chapter3/fig/turbo/iterations                  && rubber -d iterations.tex
 	cd main/chapter3/fig/turbo/approximations              && rubber -d approximations.tex
-	cd main/chapter3/fig/turbo/quantification/             && rubber -d quantification.tex
+	cd main/chapter3/fig/turbo/quantization/               && rubber -d quantization.tex
 	cd main/chapter3/fig/scma/ber_uncoded/                 && rubber -d ber_uncoded.tex
 	cd main/chapter3/fig/scma/ber_uncoded_iter/            && rubber -d ber_uncoded_iter.tex
 	cd main/chapter3/fig/scma/fec/                         && rubber -d fec_1_2.tex
@@ -593,8 +593,8 @@ old_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
          main/chapter2/fig/polar/scl_spc/dat/data_spc.txt \
          main/chapter2/fig/polar/scl_spc/dat/data_spc_diff.txt \
          main/chapter3/fig/use_cases/library_task_module/library_task_module_old.svg \
-         main/chapter3/fig/turbo/quantification/quantification_old.gp \
-         main/chapter3/fig/turbo/quantification/dat/data_6144.txt \
+         main/chapter3/fig/turbo/quantization/quantization_old.gp \
+         main/chapter3/fig/turbo/quantization/dat/data_6144.txt \
          main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_old.gp \
          main/chapter4/fig/polar/sc_energy_implems_vs/dat/A15_1100MHz_R05_intra_inter_bis.dat \
          main/chapter4/fig/polar/sc_energy_freq/sc_energy_freq_old.gp \
@@ -627,7 +627,7 @@ old_fig: main/chapter1/fig/intro/com_chain/com_chain_old.svg \
 	cd main/chapter2/fig/polar/scl_spc/                    && gnuplot  scl_spc_diff_old.gp
 	cd main/chapter2/fig/polar/patterns/                   && fig2mpdf patterns_old.fig
 	cd main/chapter3/fig/use_cases/library_task_module/    && inkscape library_task_module_old.svg --export-pdf=library_task_module_old.pdf
-	cd main/chapter3/fig/turbo/quantification/             && gnuplot  quantification_old.gp
+	cd main/chapter3/fig/turbo/quantization/               && gnuplot  quantization_old.gp
 	cd main/chapter4/fig/polar/sc_energy_implems_vs/       && gnuplot  sc_energy_implems_vs_old.gp
 	cd main/chapter4/fig/polar/sc_energy_freq/             && gnuplot  sc_energy_freq_old.gp
 	cd main/chapter4/fig/polar/sc_energy_rate/             && gnuplot  sc_energy_rate_old.gp
@@ -713,7 +713,7 @@ clean: clean4all
 	cd main/chapter3/fig/polar/scl_adaptive/               && rubber --clean scl_adaptive
 	cd main/chapter3/fig/turbo/iterations                  && rubber --clean iterations
 	cd main/chapter3/fig/turbo/approximations              && rubber --clean approximations
-	cd main/chapter3/fig/turbo/quantification/             && rubber --clean quantification
+	cd main/chapter3/fig/turbo/quantization/               && rubber --clean quantization
 	cd main/chapter3/fig/scma/ber_uncoded/                 && rubber --clean ber_uncoded
 	cd main/chapter3/fig/scma/ber_uncoded_iter/            && rubber --clean ber_uncoded_iter
 	cd main/chapter3/fig/scma/fec/                         && rubber --clean fec_1_2
@@ -825,7 +825,7 @@ mrproper: clean4all
 	cd main/chapter3/fig/polar/scl_adaptive/               && rubber --clean -d scl_adaptive.tex
 	cd main/chapter3/fig/turbo/iterations                  && rubber --clean -d iterations.tex
 	cd main/chapter3/fig/turbo/approximations              && rubber --clean -d approximations.tex
-	cd main/chapter3/fig/turbo/quantification/             && rubber --clean -d quantification.tex
+	cd main/chapter3/fig/turbo/quantization/               && rubber --clean -d quantization.tex
 	cd main/chapter3/fig/scma/ber_uncoded/                 && rubber --clean -d ber_uncoded.tex
 	cd main/chapter3/fig/scma/ber_uncoded_iter/            && rubber --clean -d ber_uncoded_iter.tex
 	cd main/chapter3/fig/scma/fec/                         && rubber --clean -d fec_1_2.tex
@@ -881,7 +881,7 @@ clean_old_fig:
 	cd main/chapter2/fig/polar/scl_spc/                    && rm -f scl_spc_diff_old.pdf
 	cd main/chapter2/fig/polar/patterns/                   && rm -f patterns_old.pdf
 	cd main/chapter3/fig/use_cases/library_task_module/    && rm -f library_task_module_old.pdf
-	cd main/chapter3/fig/turbo/quantification/             && rm -f quantification_old.pdf
+	cd main/chapter3/fig/turbo/quantization/               && rm -f quantization_old.pdf
 	cd main/chapter4/fig/polar/sc_energy_implems_vs/       && rm -f sc_energy_implems_vs_old.pdf
 	cd main/chapter4/fig/polar/sc_energy_freq/             && rm -f sc_energy_freq_old.pdf
 	cd main/chapter4/fig/polar/sc_energy_rate/             && rm -f sc_energy_rate_N2048_old.pdf

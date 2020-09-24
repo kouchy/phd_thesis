@@ -8,11 +8,11 @@
 This chapter is dedicated to the introduction of our \AFFECT open-source
 toolbox. The first section describes the main prerequisites driven by four
 objectives: high performance software implementation, support for algorithmic
-heterogeneity, portability and reproducible science. In the second section,
-\AFFECT is compared with the other existing \verb|C|/\Cxx FEC software
-libraries. The third section presents \AFFECT as a library dedicated to the
-digital communication algorithms. The software architecture and functionalities
-are described. Then, examples of library use are given in \Cxx and MATLAB\R. The
+heterogeneity, portability and reproducibility. In the second section, \AFFECT
+is compared with the other existing \verb|C|/\Cxx FEC software libraries. The
+third section presents \AFFECT as a library dedicated to the digital
+communication algorithms. The software architecture and functionalities are
+described. Then, examples of library use are given in \Cxx and MATLAB\R. The
 fourth section focuses on the \AFFECT BER/FER simulator that comes with the
 toolbox. A tour of the possible explorations is given and our BER/FER comparator
 is presented. At the end, the \AFFECT testing strategy is explained. The fifth
@@ -28,7 +28,9 @@ section concludes this chapter.
 \section{Prerequisites}
 
 \AFFECT for \emph{A Fast Forward Error Correction Toolbox} is a set of tools
-regrouping all the contributions of this thesis and more.
+regrouping all the contributions of this thesis and more. In this section, we
+explain how \AFFECT answers to the different problematics defined in
+Section~\ref{sec:ctx_problematics}.
 
 \subsection{High Performance Implementations}
 
@@ -114,7 +116,7 @@ Section~\ref{sec:opt_mipp}). The compiled binary is dedicated to the appropriate
 SIMD ISA. If the architecture is not recognized then the \AFFECT binary
 falls back to a sequential version.
 
-\subsection{Reproducible Science}
+\subsection{Reproducibility}
 
 In the signal processing community it is not common to share the resulting
 implementations of a scientific publication. Thus, it is sometime a tedious task
@@ -176,7 +178,7 @@ the same. In other terms, the \AFFECT simulator is deterministic.
   }}
 \end{table}
 
-In the digital signal processing community, many scientists implement their own
+In the digital signal processing community, many researchers implement their own
 simulation chain to validate their works.
 Table~\ref{tab:fec_libraries_comparison} presents, to the best of our knowledge,
 a list of currently available \verb|C|/\Cxx open source channel coding
@@ -195,7 +197,9 @@ since all those libraries and tools share many characteristics (except the
 channel code itself). \AFFECT attempts to lower this redundancy by offering a
 full simulator/library that consistently supports a wide range of channel codes
 and homogenizes usage (command line, \Cxx interfaces, etc.) across all code
-families.
+families. One can observe that \AFFECT is the only library to support the LDPC
+codes, the polar codes and the turbo codes. These three channel codes are known
+to be the most challenging ones to implement.
 
 \section{Library of Digital Communication Algorithms}
 
@@ -303,11 +307,28 @@ the validation of a hardware decoder.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/use_cases/library_task_module/library_task_module}
+  \includegraphics[scale=0.9]{\curChapter/fig/use_cases/library_task_module/library_task_module}
   \caption{Simulation of a digital communication chain using the \AFFECT
     library.}
   \label{fig:aff3ct_library_task_module}
 \end{figure}
+
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/modules_allocation.cpp}
+  \caption{Example of modules allocation with the \AFFECT library.}
+  \label{lst:aff3ct_library_modules_allocation}
+\end{listing}
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/sockets_binding.cpp}
+  \caption{Example of sockets binding with the \AFFECT library.}
+  \label{lst:aff3ct_library_sockets_binding}
+\end{listing}
+\begin{listing}[htp]
+  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/tasks_execution.cpp}
+  \caption{Example of tasks execution with the \AFFECT library.}
+  \label{lst:aff3ct_library_tasks_execution}
+\end{listing}
+
 A simulation chain that can be implemented is given in
 Figure~\ref{fig:aff3ct_library_task_module}. The represented modules an tasks
 correspond to the classes and methods presented in the previous section. For
@@ -315,24 +336,13 @@ instance, the \textit{modem} module contains the \textit{modulate} and
 \textit{demodulate} tasks. Figure~\ref{fig:aff3ct_library_task_module} presents
 common modules and tasks typically found in a typical digital communication
 chain. It shows that the number of tasks per module can vary depending on the
-module type.
-\begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/modules_allocation.cpp}
-  \caption{Example of modules allocation with the \AFFECT library.}
-  \label{lst:aff3ct_library_modules_allocation}
-\end{listing}
-The first step is to allocate the modules. In
+module type. The first step is to allocate the modules. In
 Listing~\ref{lst:aff3ct_library_modules_allocation} we chose to allocate modules
 on the stack. But it is also possible to do the same on the heap. $K$ is the
 number of information bits, $N$ is the frame size and $E$ is the number of
 erroneous frames to simulate. In this basic example, a repetition code is
-selected, it simply repeats the information bits $N/K$ times.
-\begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/sockets_binding.cpp}
-  \caption{Example of sockets binding with the \AFFECT library.}
-  \label{lst:aff3ct_library_sockets_binding}
-\end{listing}
-The next step is to bind the sockets of successive tasks together (see
+selected, it simply repeats the information bits $N/K$ times. The next step is
+to bind the sockets of successive tasks together (see
 Listing~\ref{lst:aff3ct_library_sockets_binding}). To propose an easy to use
 interface, sockets and tasks can be selected through the \verb|[]| operator,
 which takes a \Cxx strongly typed enumerate. This way it is possible to
@@ -341,16 +351,10 @@ typed enumerates are checked at compile time (contrary to standard enumerates),
 making it impossible to use wrong values. For instance, in the example, the
 \textit{source} module output socket \verb|module::src::sck::generate::u| is
 connected to the input socket \verb|module::enc::sck::encode::u| of the
-\textit{encoder}.
-\begin{listing}[htp]
-  \inputminted[frame=lines,linenos]{C++}{\curChapter/src/use_cases/library/tasks_execution.cpp}
-  \caption{Example of tasks execution with the \AFFECT library.}
-  \label{lst:aff3ct_library_tasks_execution}
-\end{listing}
-The simulation is then started and each task is executed. In
+\textit{encoder}. The simulation is then started and each task is executed. In
 Listing~\ref{lst:aff3ct_library_tasks_execution}, the whole communication chain
 is executed multiple times, until the $E = 100$ frame error limit is reached.
-Complete examples of the \AFFECT library are available on
+Complete examples are available on
 GitHub\footnote{\AFFECT library examples: \url{https://github.com/aff3ct/my_project_with_aff3ct/}}.
 
 \paragraph{Validation of a Hardware Decoder}
@@ -359,12 +363,12 @@ The \AFFECT library has also been used to prototype FPGA decoders.
 In~\cite{Cassagne2017a}, a BCH decoder is implemented on a Xilinx\R Artix-7
 FPGA. \AFFECT simulates the transmission of a first frame. The noisy frame is
 then sent to the FPGA using the UART protocol. The hardware BCH decoder
-processes the frame and sends it back to the PC. \AFFECT can then proceed and
-perform the rest of the processing for this frame. Once the number of residual
-errors is updated, \AFFECT starts with a new frame, and so on. The decoding
-performance matches to the performance of the pure software simulation which
-shows that the hardware BCH decoder is correctly implemented. This process is
-also known as \emph{hardware in the loop}.
+processes the frame and sends it back to the PC. \AFFECT can then perform the
+rest of the processing for this frame. Once the number of residual errors is
+updated, \AFFECT starts with a new frame, and so on. The decoding performance
+matches to the performance of the pure software simulation which shows that the
+hardware BCH decoder is correctly implemented. This process is also known as
+\emph{hardware in the loop}.
 
 \subsection{MATLAB\R Wrapper}
 
@@ -595,7 +599,8 @@ corresponding to the \AFFECT command given in
 Listing~\ref{lst:aff3ct_simulator_input} (note that some details have been
 removed for concision). The same command line always gives the same decoding
 performance results. \verb|FRA| stands for the number of simulated frames,
-while \verb|BE| and \verb|FE| are the number of bit and frame errors. The
+while \verb|BE| and \verb|FE| are the number of bit and frame errors.
+The
 simulator output is adapted to post processing: lines starting with a hashtag
 can be skipped.
 
@@ -681,35 +686,35 @@ the throughputs are different depending on the SNR values. This is another
 example of possible explorations with the \AFFECT simulator. Depending on the
 targeted SNR range, it is more interesting to choose either decoder.
 
-\paragraph{Impact of the Decoder Quantification on the FER}
+\paragraph{Impact of the Decoder Quantization on the FER}
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.7\textwidth]{\curChapter/fig/turbo/quantification/quantification}
+  \includegraphics[width=0.7\textwidth]{\curChapter/fig/turbo/quantization/quantization}
   \caption
     [FER of the turbo decoder for $K = 6144$ (6 iterations) and
      $R=1/3$.]
     {Frame Error Rate of the turbo decoder for $K = 6144$, $R=1/3$ and 6
      decoding iterations. Enhanced max-log-MAP algorithm ($\alpha = 0.75$).}
-  \label{plot:aff3ct_turbo_quantification}
+  \label{plot:aff3ct_turbo_quantization}
 \end{figure}
 
-Another important feature is the impact of the quantification on the decoding
+Another important feature is the impact of the quantization on the decoding
 performance. To increase the throughput or to decrease the latency of a signal
 processing, it is common to reduce the amplitude of the data. A fixed-point
 representation can be shorter and more efficient than a floating-point
 representation. This is true for hardware decoder implementations as well as for
 high performance software implementations. In
-Figure~\ref{plot:aff3ct_turbo_quantification}, the longest turbo code from the
+Figure~\ref{plot:aff3ct_turbo_quantization}, the longest turbo code from the
 LTE standard is proposed ($K = 6144$, $R = 1/3$). The same code is evaluated
 over 3 different data representations. \emph{float} is a 32-bit decoder working
 on floating-point data, this is the reference. \emph{int-16} and \emph{int-8}
 decoders are working on 16 bits and on 8 bits, respectively. The $Q_{s,v}$
-corresponds to the quantification format of the decoder input LLRs (see
+corresponds to the quantization format of the decoder input LLRs (see
 Equation~\ref{eq:opt_simu_quantizer}). $s$ is the number of bits of the
-quantized number, including $v$ bits for the fractional part. The quantification
+quantized number, including $v$ bits for the fractional part. The quantization
 format is a parameter of the \AFFECT simulator. In
-Figure~\ref{plot:aff3ct_turbo_quantification}, the 16-bit quantification is able
+Figure~\ref{plot:aff3ct_turbo_quantization}, the 16-bit quantization is able
 to match the reference decoding performance while there is a little performance
 degradation in 8-bit.
 
@@ -753,18 +758,18 @@ compare their decoding performance.
 
 To this purpose, we introduced the BER/FER comparator. It is available online on
 the \AFFECT website\footnote{\AFFECT online BER/FER comparator:
-\url{http://aff3ct.github.io/comparator.html}}. It is capable to read the
+\url{http://aff3ct.github.io/comparator.html}}. It is capable of reading the
 \AFFECT simulator outputs and it can also easily adapt to many other formats.
 The comparator is written in JavaScript. This enables to run the comparator
-easily on on any web browser (no installation is needed). A database of \AFFECT
+easily on any web browser (no installation is needed). A database of \AFFECT
 pre-simulated results is available. This database is the same as the error-rate
 reference results used in the regression tests (see
 Section~\ref{sec:aff3ct_ci_cd}). These references are classified according to
 different characteristics: the code type, the modem type, the channel type,
 the frame size ($N$) and the code rate ($R$). At the time of the writing,
 approximatively 500 BER/FER references are available. For each reference, it
-possible to get the corresponding command line in the \AFFECT simulator. This
-way it is easy to reproduce the reference results or to modify the command line
+is possible to get the corresponding command line in the \AFFECT simulator. This
+way, it is easy to reproduce the reference results or to modify the command line
 parameters. The reference curves that have been published are marked with
 the Digital Object Identifier (DOI) of the corresponding publication. It is then
 possible to search a specific result from its DOI in the search bar. With the
@@ -860,7 +865,7 @@ features can be simulated over various parameters. The simulator takes advantage
 of the CPUs multi-core architecture to reduce the restitution time. Its capacity
 to explore a large variety of parameters is demonstrated. Many parameters can be
 tweaked like the number of decoding iterations, the approximations in the
-algorithm implementation, the quantification of the LLRs in the decoders, etc.
+algorithm implementation, the quantization of the LLRs in the decoders, etc.
 Some of these parameters are presented according to the decoders and
 demodulators detailed in Chapter~\ref{chap:ctx} and Chapter~\ref{chap:opt}. Note
 that this topic has been valued in a national conference~\cite{Cassagne2017}.

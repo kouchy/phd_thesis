@@ -1823,8 +1823,10 @@ overhead over specific intrinsic functions (or assembly code) and is able to
 operate on floating-point representations as well as fixed-point ones. For
 digital communication receiver algorithms, fixed-point representations are very
 interesting for channel coding algorithms because they offer increased SIMD
-widths, with moderate impact on the decoding performance. Note that the \MIPP
-wrapper has been scientifically published~\cite{Cassagne2018}.
+widths, with moderate impact on the decoding performance. To summarize, \MIPP
+improves the source code flexibility and portability while keeping the same
+level of performance. Note that the \MIPP wrapper has been published in a
+scientific conference~\cite{Cassagne2018}.
 
 In a second part, two main vectorization strategies are explicitly defined and
 presented. The intra-frame SIMD strategy operates on a single frame relying
@@ -1832,7 +1834,9 @@ on the algorithm inherent parallelism while the inter-frame SIMD strategy
 operates on multiple frames at the same time. The intra-SIMD can increase the
 throughput as well as the latency. On the contrary, the inter-SIMD does not
 improve the latency but comes with a potentially higher SIMD efficiency and can
-lead to very high throughputs.
+lead to very high throughputs. These two strategies can be applied to all the
+processing blocks of digital communication chains. Thus, they are a key point to
+address the algorithmic heterogeneity problem.
 
 Then, two expensive blocks of functional simulations are studied: the channel
 and the quantizer. Both algorithms are implemented with \MIPP by the mean of the

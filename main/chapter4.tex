@@ -9,7 +9,7 @@ This chapter proposes to evaluate the various contributions exposed in the
 previous chapters. The three first sections focus on the efficient
 implementations of the LDPC decoders, polar decoders and turbo decoders. The
 throughput, the latency and the energy efficiency are studied and compared with
-other works. The forth section summarizes the more efficient software decoder
+other works. The forth section summarizes the most efficient software decoder
 implementations we found in the literature. Three hall of fames are proposed:
 one for the LDPC decoders, one for the polar decoders and one for the turbo
 decoders. Some metrics are defined to facilitate the comparison with the
@@ -66,7 +66,7 @@ SSE, AVX and AVX-512 instructions while the AMD\R CPU can only execute SSE and
 AVX instructions. The GNU compiler version 7.5 has been used with the following
 optimization flags: \verb|-O3 -funroll-loops|.
 
-In this section, we choose to bench the BP decoder with an horizontal layered
+In this section, we choose to evaluate the BP decoder with an horizontal layered
 scheduling (BP-HL) and with the Normalized Min-Sum (NMS) update rules. We focus
 on the BP-HL+NMS implementation presented in
 Section~\ref{sec:opt_ldpc_spe_bphlnms}. This decoder is not as flexible as the
@@ -186,7 +186,7 @@ metric considers 50 iterations on a single core. It enables to directly compare
 the throughput of the listed decoders. In \cite{LeGal2016}, the decoder uses
 the same inter-frame SIMD strategy as our proposed decoder. The latency is
 comparable with our implementation while the throughput is about two times
-higher. This is a direct consequence on the 8-bit quantification. All the
+higher. This is a direct consequence on the 8-bit quantization. All the
 presented decoders from the literature are using a 8-bit fixed-point
 representation while our implementation is executed on 16-bit. The 8-bit
 implementations require specific modifications to ensure the same level of
@@ -1699,5 +1699,5 @@ journal~\cite{Cassagne2019a}. To the best of our knowledge, \AFFECT is one of
 the current fastest FEC simulator.
 
 The next chapter presents a new extension of the \AFFECT library to improve the
-SDR support. A embedded domain specific language is proposed to ease the usage
+SDR support. An embedded domain specific language is proposed to ease the usage
 of multi-core CPUs in real-time contexts.

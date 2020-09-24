@@ -14,7 +14,7 @@ then the parallel components are described. The third part is focusing on the
 implementations of the previously presented components. Among others, the
 sequence duplication technique and the pipeline implementation are discussed.
 Finally, the last part shows a concrete use case of the proposed eDSL on the
-well-spread DVB-S2 standard. A full digital transceiver has been designed in
+well-spread DVB-S2 standard. A fully digital transceiver has been designed in
 software. The DVB-S2 standard is presented from an applicative point of view
 (transmitter and receiver) and is then evaluated on a specific CPU target.
 
@@ -24,7 +24,7 @@ software. The DVB-S2 standard is presented from an applicative point of view
 
 \section{Related Works}
 
-Digigtal communication systems are traditionally implemented onto dedicated
+Digital communication systems are traditionally implemented onto dedicated
 hardware (ASIC) targeting high throughputs, low latencies and energy efficiency.
 However, the implementations of such solutions suffer from a long time to
 market, are expensive and are specific by nature~\cite{Palkovic2010,
@@ -67,7 +67,7 @@ the GPU architecture which is not optimized for latency efficiency.
 The Shanon's communication model presented in
 Section~\ref{sec:ctx_digital_communication_systems} can be refined in a way
 that the transmitter and the receiver are decomposed into many processing
-blocks. Those blocks are mainly connected to each other in an directed graph.
+blocks. Those blocks are mainly connected to each other in a directed graph.
 This perfectly matches the dataflow model~\cite{Dennis1980,Ackerman1982}: the
 blocks are the filters and the binding links between the blocks represent the
 data exchanges. The dataflow model enables to describe the system from a high
@@ -86,7 +86,7 @@ Glitia2010,Thies2010,DeOliveiraCastro2017}. Streaming applications are most of
 the time represented with the dataflow model and the dedicated languages often
 support the general or the cyclo-static dataflow model. They also very often
 come with automatic parallelism mechanisms like pipelining and forks/joins. With
-dedicated languages it is natural to describe a system with the dataflow model.
+dedicated languages, it is natural to describe a system with the dataflow model.
 The main drawbacks of this type of solution is that the designer has to learn a
 new language. But, when something is not intended by the language it is hard to
 find a workaround.
@@ -159,7 +159,7 @@ execution order.
 Tasks that have been bound together can be regrouped in what we call a
 \emph{sequence} of tasks. The sequence notion reminds us that the tasks are
 executed sequentially in a fixed order (like in the SDF model). To create a
-sequence, the designed has to give the first tasks and the last tasks to
+sequence, the designer has to give the first tasks and the last tasks to
 execute. Then the connected tasks will be analyzed and a sequence object will be
 built. The analysis is a deep traversal of the tasks graph. The order in which
 the tasks have been traversed is memorized in the sequence. When the designer
@@ -444,8 +444,8 @@ In the previously described implementation, the copies from and to the buffers
 can take a non-negligible amount of time. Thus, the process encapsulation
 detailed before replaces the copies by pointer switches. The idea is to
 dynamically re-bind the tasks just before and just after the \emph{push} and
-\emph{pull} tasks. It is also necessary to to bypass the regular execution in
-the \emph{push 1}, \emph{pull n}, \emph{push n} and \emph{pull 1} tasks. The
+\emph{pull} tasks. It is also necessary to bypass the regular execution in the
+\emph{push 1}, \emph{pull n}, \emph{push n} and \emph{pull 1} tasks. The
 processes that encapsulate these tasks dynamically replace the source code of
 the data buffer copy by a simple pointer copy. The pointers are exchanged
 cyclically.
@@ -462,7 +462,7 @@ architectures.
 
 Figure~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
 complicated task graphs can have more than two tasks to synchronize between two
-pipeline stages. The adaptor implementation can manage multiple socket
+pipeline stages. The adaptor implementation can manage multiple sockets
 synchronization. The key idea is to deal with a 2-dimensional array of buffers.
 Another difficult case is when a task $t_1$ is in stage 1 and possesses an
 output socket bound to an other task $t_{x}$ which is located in the stage 4.
@@ -478,8 +478,8 @@ H.264 source coding). In this section, a concrete use case of the \AFFECT eDSL
 is detailed. The full DVB-S2 transmitter and receiver are implemented in a
 SDR-compliant system. Two Universal Software Radio Peripherals (USRPs)
 N320\footnote{USRP N320: \url{https://www.ettus.com/all-products/usrp-n320/}.}
-have been used for the analogical signal transmission and reception where all
-the digital treatments of the system have been implemented under \AFFECT. The
+have been used for the analog signal transmission and reception where all
+the digital processing of the system have been implemented under \AFFECT. The
 purpose of this section is not to detail precisely all the implemented tasks
 but to expose the system as a whole. Some specific focuses are given to describe
 the main encountered problems and the adopted solutions.
@@ -499,7 +499,7 @@ Figure~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
 tasks. The tasks filled in blue are intrinsically sequential and cannot be
 duplicated. The initial information bits are read from a binary file
 ($t^\text{Tx}_1$). Then, the DVB-S2 coding scheme rests upon the serial
-concatenation of a BCH ($t^\text{Tx}_3$) and a LDPC code ($t^\text{Tx}_4$). The
+concatenation of a BCH ($t^\text{Tx}_3$) and an LDPC code ($t^\text{Tx}_4$). The
 selected modulation ($t^\text{Tx}_6$) is a Phase-Shift Keying (PSK). The
 scrambler tasks ($t^\text{Tx}_2$ and $t^\text{Tx}_8$) apply predefined repeated
 sequences of \emph{xor} to the frame in order to avoid too long sequences of the
@@ -786,7 +786,7 @@ than the throughput of the stage 3 (55.42 Mb/s). This is why the sequence
 duplication has been applied. The stage 7 has been parallelized over 28 threads.
 This looks overkill but the machine was dedicated to the DVB-S2 receiver
 and the throughput of the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) varies
-depending on the SNR. One can notice that a early termination criterion was
+depending on the SNR. One can notice that an early termination criterion was
 enabled. When the signal quality is very good, the \emph{Decoder LDPC} task runs
 fast and the threads can spend a lot of time in waiting. With the passive
 waiting version of the adaptor \emph{push} and \emph{pull} tasks, the CPU
@@ -892,7 +892,7 @@ spent in the  \emph{deinterleave} task ($t^\text{Rx}_{15}$) is higher than
 the time saved in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$).
 
 These results demonstrate the benefit of the parallelized implementation of the
-proposed receiver. The throughput speedup rangs from 10 to 20 compared to the
+proposed receiver. The throughput speedup ranges from 10 to 20 compared to the
 sequential implementation. It is also important to note that the selected
 configurations are efficient in different SNR zones (as shown in
 Figure~\ref{fig:dvbs2_bfer}). Depending on the signal quality, different MODCOD

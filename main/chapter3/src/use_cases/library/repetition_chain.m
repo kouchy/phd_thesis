@@ -1,6 +1,4 @@
-K = 128;
-N = 256;
-E = 100;
+K = 128; N = 256; E = 100;
 
 Src = aff3ct_module_source_random     (K   );
 Enc = aff3ct_module_encoder_repetition(K, N);

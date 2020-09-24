@@ -90,7 +90,7 @@ set style line 2 linetype 4  linecolor rgbcolor  blue_050 linewidth @my_line_wid
 set style line 3 linetype 6  linecolor rgbcolor green_050 linewidth @my_line_width
 set style line 4 linetype 7  linecolor rgbcolor green_025 linewidth @my_line_width
 
-set output "./quantification_old.pdf"
+set output "./quantization_old.pdf"
 #set multiplot layout 1,2 title "{/:Bold=11 Turbo decoder LTE-A (K = 6144, 6 iters, R=1/3, SF=0.75, scale-max-log-MAP)}"
 set multiplot layout 1,2
 
