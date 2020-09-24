@@ -1823,7 +1823,8 @@ overhead over specific intrinsic functions (or assembly code) and is able to
 operate on floating-point representations as well as fixed-point ones. For
 digital communication receiver algorithms, fixed-point representations are very
 interesting for channel coding algorithms because they offer increased SIMD
-widths, with moderate impact on the decoding performance.
+widths, with moderate impact on the decoding performance. Note that the \MIPP
+wrapper has been scientifically published~\cite{Cassagne2018}.
 
 In a second part, two main vectorization strategies are explicitly defined and
 presented. The intra-frame SIMD strategy operates on a single frame relying
@@ -1839,20 +1840,23 @@ intra-frame SIMD strategy. This results in high performance implementations to
 deliver fast functional simulations.
 
 The four last sections focus on the design of efficient software implementations
-of the algorithms presented in Chapter~\ref{chap:ctx} (LDPC, polar, turbo and
-SCMA decoders). The LDPC BP decoders, the polar SC decoders and the turbo
-decoder are compatible with the inter-frame SIMD strategy while the polar SC/SCL
-decoders and the SCMA decoders are compatible with the intra-frame SIMD
-strategy. Depending on the code families, we focus on different constraints. The
-LDPC BP decoders have been implemented to support many variants and thus to
-maximize the flexibility at the cost of lower throughputs and higher latencies
-compared to other works. This choice enables to evaluate the decoding
-performance of many algorithmic combinations. In the polar decoders, flexibility
-as well as aggressive optimizations are considered, combined and compared. The
-turbo decoder focuses on achieving the highest possible throughputs and some
-specializations are made for the LTE standard. Finally the SCMA decoder
-implementation tries to propose a compromise between high throughputs and low
-latencies.
+of the algorithms presented in Chapter~\ref{chap:ctx} (LDPC decoders, polar
+decoders, turbo decoder and SCMA demodulator). The LDPC BP decoders, the polar
+SC decoders and the turbo decoder are compatible with the inter-frame SIMD
+strategy while the polar SC/SCL decoders and the SCMA demodulator are
+compatible with the intra-frame SIMD strategy. Depending on the code families,
+we focus on different constraints. The LDPC BP decoders have been implemented to
+support many variants and thus to maximize the flexibility at the cost of lower
+throughputs and higher latencies compared to other works. This choice enables to
+evaluate the decoding performance of many algorithmic combinations. In the polar
+decoders, flexibility as well as aggressive optimizations are considered,
+combined and compared. The turbo decoder focuses on achieving the highest
+possible throughputs and some specializations are made for the LTE standard.
+Finally the SCMA demodulator implementation tries to propose a compromise
+between high throughputs and low latencies. Most of the proposed software
+implementations have been published in scientific conferences and
+journals~\cite{Ghaffari2019,Leonardon2019,Cassagne2015c,Cassagne2016b,
+Cassagne2016a}.
 
 The optimizations performed in the proposed implementations are compatible with
 a large set of CPUs, compilers, and data types. This portability is one of our
