@@ -185,7 +185,7 @@ requirements are not guaranteed by the default \Cxx memory allocator. The \MIPP
 memory allocator can be used as follows:
 \mint{C++}|std::vector<T,mipp::allocator> aligned_data;|
 {\noindent
-and shortened like this: \verb|mipp::vector<T>|.
+and shortened like this: \verb|mipp::vector<T> aligned_data|.
 }
 
 \MIPP comes with a comprehensive unitary test suite to validate new instruction
@@ -243,6 +243,16 @@ state-of-the-art. This comparison has been made in 2018 when we wrote a paper
 dedicated to MIPP~\cite{Cassagne2018}. Be aware that the features of the other
 wrappers presented here could have evolved since that time.
 
+Table~\ref{tab:opt_mipp_comparison_general} and
+Table~\ref{tab:opt_mipp_comparison_isa_data} compare various SIMD wrappers.
+Table~\ref{tab:opt_mipp_comparison_general} is focusing on the general features
+while Table~\ref{tab:opt_mipp_comparison_isa_data} is targeting the supported
+instruction sets and data types. They aim to present an overview of some
+prominent solutions, although they are by no means exhaustive due to the
+richness of the SIMD wrapper landscape. Some of the wrappers presented, such as
+\MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic
+research context.
+
 \begin{table}[htp]
   \centering
   \caption{Comparison of various SIMD wrappers: General Information and Features.}
@@ -262,15 +272,7 @@ wrappers presented here could have evolved since that time.
   \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\
   \end{tabular}
 \end{table}
-Table~\ref{tab:opt_mipp_comparison_general} and
-Table~\ref{tab:opt_mipp_comparison_isa_data} compare various SIMD wrappers.
-Table~\ref{tab:opt_mipp_comparison_general} is focusing on the general features
-while Table~\ref{tab:opt_mipp_comparison_isa_data} is targeting the supported
-instruction sets and data types. They aim to present an overview of some
-prominent solutions, although they are by no means exhaustive due to the
-richness of the SIMD wrapper landscape. Some of the wrappers presented, such as
-\MIPP, \Vc, \BoostSIMD, \VCL and \TSIMD, have been designed in an academic
-research context.
+
 \begin{table}[htp]
   \centering
   \caption{Comparison of various SIMD wrappers: Supported ISA and Data Type.}
