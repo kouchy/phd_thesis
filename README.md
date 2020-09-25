@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-The document compilation has only been tested on `Linux Ubuntu 16.04 LTS`, there
+The document compilation has only been tested on `Linux Ubuntu 20.04 LTS`, there
 is no guarantee it will compile without issues on other systems.
 
 The document has been written using `LaTeX` and `Biber` as the bibliography
@@ -20,16 +20,10 @@ The source code samples use the `minted` package which is based on the `Python`
 sudo apt install python-pygments python3-pygments
 ```
 
-<!-- Some of the figures are generated with `Gnuplot`, `XFig` and `Inkscape`:
-
-```bash
-sudo apt install gnuplot xfig inkscape
-``` -->
-
 `rubber` is used as the building system for the `LaTeX` documents:
 
 ```bash
-sudo apt install rubber
+sudo apt install make rubber
 ```
 
 ## How to Compile
@@ -50,7 +44,3 @@ of the available targets:
 `Linux Ubuntu 16.04 LTS`, the numbering of the sections and subsections is
 broken. Installing the latest version from [https://www.ctan.org/pkg/titlesec](https://www.ctan.org/pkg/titlesec)
 solves the problem.
-
-<!-- ## Plan of the Thesis
-
-[Follow this link.](plan.md) -> outdated now :-( -->
