@@ -371,9 +371,9 @@ the low power SDR systems because of its high power requirements.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Total (cluster + memory)]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
+  \subfloat[][Total (cluster + memory).]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
   \quad
-  \subfloat[][Memory only]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
+  \subfloat[][Memory only.]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
   \caption
     [SC variation of the \emph{energy-per-bit} for different frame sizes and
     implementations.]
@@ -840,6 +840,7 @@ studied. Finally, it is compared with the state-of-the-art decoders.
   \caption
     [Specifications of the target processors for the turbo decoder experiments.]
     {Specifications of the target processors.}
+  {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c  c  c}
                          & \textbf{E5-2650}          & \textbf{i7-4960HQ}        & \textbf{E5-2680 v3}        \\
     \hline
@@ -850,6 +851,7 @@ studied. Finally, it is compared with the state-of-the-art decoders.
     \textbf{LLC}         & 20 MB L3                  & 6 MB L3                   & 30 MB L3                   \\
     \textbf{TDP}         & 95 W                      & 47 W                      & 120 W                      \\
   \end{tabular}
+  }}
   \label{tab:eval_turbo_specs}
 \end{table}
 
@@ -1252,6 +1254,7 @@ power consumption, throughput and latency are discussed.
     [Specifications of the target processors for the SCMA demodulators
      experiments.]
     {Specifications of the target processors.}
+  {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | c  c  c}
                                   & \textbf{i7-6700HQ}        & \textbf{7120P}                & \textbf{A57}          \\
     \hline
@@ -1263,6 +1266,7 @@ power consumption, throughput and latency are discussed.
     \textbf{LLC}                  & 6 MB L3                   & 30.5 MB L2                    & 2 MB L2               \\
     \textbf{TDP}                  & 45 W                      & 300 W                         & 15 W                  \\
   \end{tabular}
+  }}
   \label{tab:eval_scma_specs}
 \end{table}
 
