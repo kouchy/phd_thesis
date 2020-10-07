@@ -178,18 +178,18 @@ the sequence is repeated, the sequence is stopped otherwise.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Simple chain sequence.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_chain}\label{fig:dsl_sequence_chain}}
+  \subfloat[][Simple chain sequence.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_chain}\label{fig:sdr_dsl_sequence_chain}}
   \quad
-  \subfloat[][Sequence with multiple first and last tasks.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_generic}\label{fig:dsl_sequence_generic}}
+  \subfloat[][Sequence with multiple first and last tasks.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_generic}\label{fig:sdr_dsl_sequence_generic}}
   \caption{Example of sequences.}
-  \label{fig:dsl_sequence}
+  \label{fig:sdr_dsl_sequence}
 \end{figure}
 
-Figure~\ref{fig:dsl_sequence} shows two examples of sequence.
-Figure~\ref{fig:dsl_sequence_chain} is a simple chain of tasks. The designer
+Figure~\ref{fig:sdr_dsl_sequence} shows two examples of sequence.
+Figure~\ref{fig:sdr_dsl_sequence_chain} is a simple chain of tasks. The designer
 only needs to specify the first task of the chain ($t_1$). The sequence analysis
 automatically follows the binding until the last task ($t_4$).
-Figure~\ref{fig:dsl_sequence_generic} is more complicated. Indeed there are
+Figure~\ref{fig:sdr_dsl_sequence_generic} is more complicated. Indeed there are
 bound tasks before and after the wanted sequence. There are also two
 \emph{first} tasks ($t_1$ and $t_3$) and two \emph{last} tasks ($t_5$ and
 $t_6$). In this case, the designer needs to explicitly specify that $t_1$ and
@@ -205,9 +205,9 @@ analysis cannot guess the end of the sequence alone.
 In general, all the tasks of a sequence are repeated in the same predefined
 order. But it some particular cases, a task can raise the
 \verb|tools::processing_aborted| exception to restart the sequence (on the next
-frame) before its end. For instance, in Figure~\ref{fig:dsl_sequence_chain} if
-the $t_3$ task raises the \verb|tools::processing_aborted| exception, then the
-next executed task is $t_1$ instead of $t_4$.
+frame) before its end. For instance, in Figure~\ref{fig:sdr_dsl_sequence_chain}
+if the $t_3$ task raises the \verb|tools::processing_aborted| exception, then
+the next executed task is $t_1$ instead of $t_4$.
 
 Some digital communication scenarios include repeated schemes. To map a repeated
 scheme, we introduced a specific type of task: the \emph{loop}. This task is
@@ -222,11 +222,11 @@ condition is \emph{false} and the second one is taken when the condition is
   \caption
     [Example of a sequence of tasks with a loop.]
     {Example of a sequence of tasks with a loop.}
-  \label{fig:dsl_loop}
+  \label{fig:sdr_dsl_loop}
 \end{figure}
 
-Figure~\ref{fig:dsl_loop} illustrates a sequence of tasks with a loop. In this
-particular case, the loop condition is based on an input socket. So the
+Figure~\ref{fig:sdr_dsl_loop} illustrates a sequence of tasks with a loop. In
+this particular case, the loop condition is based on an input socket. So the
 condition evaluation is dynamic and depends on the runtime values of this input
 socket. In a first place, the sub-sequence 1 is executed; then the loop
 condition is evaluated; if the condition return \emph{false} the sub-sequence 2
@@ -254,13 +254,13 @@ evaluation returns \emph{true} (\emph{for-loop} behavior).
   \caption
     [Nested loops.]
     {Nested loops.}
-  \label{fig:dsl_nested_loops}
+  \label{fig:sdr_dsl_sequence}
 \end{figure}
 
 The overall system also supports nested loops. The idea is to regroup the tasks
 in sub-sequences: one before the loop and two after the loop. This is
 implemented as a binary tree. Each time a loop is encountered, two new paths are
-created. Figure~\ref{fig:dsl_nested_loops} shows an example with two loops
+created. Figure~\ref{fig:sdr_dsl_sequence} shows an example with two loops
 ($L_1$ and $L_2$). Five sub-sequences of tasks are created ($SS_x$): one before
 $L_1$ ($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$
 and $SS_4$). In this example $L_2$ is a nested loop. Indeed, it is an inner loop
@@ -274,13 +274,13 @@ within the body of an outer one ($L_1$).
   \caption
     [Sequence duplication for multi-threaded execution.]
     {Sequence duplication for multi-threaded execution.}
-  \label{fig:dsl_sequence_dup}
+  \label{fig:sdr_dsl_sequence_dup}
 \end{figure}
 
 A created sequence can be duplicated. This way many threads can execute the
 sequence in parallel. The $t$ number of duplications (= number of threads) is a
-parameter of its constructor. As shown in Figure~\ref{fig:dsl_sequence_dup}, one
-thread is affected to one duplicated chain. Thus, a sequence is able to take
+parameter of its constructor. As shown in Figure~\ref{fig:sdr_dsl_sequence_dup},
+one thread is affected to one duplicated chain. Thus, a sequence is able to take
 advantage of the multi-core architectures. For instance, the \AFFECT simulator,
 extensively exploits the sequence duplication feature to automatically
 parallelize the processing. The duplication strategy is efficient since no
@@ -370,46 +370,47 @@ efficiency of the pipeline.
               sequences/stages definition (with the corresponding number of
               threads).]{
     \includegraphics[scale=1]{\curChapter/fig/dsl/pipeline/pipeline_usr}
-    \label{fig:dsl_pipeline_usr}}
+    \label{fig:sdr_dsl_pipeline_usr}}
   \\
   \subfloat[][Automatic parallelization of a pipeline description: sequence
               duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and
               binding.]{
     \includegraphics[width=1\textwidth]{\curChapter/fig/dsl/pipeline/pipeline_adp}
-    \label{fig:dsl_pipeline_adp}}
+    \label{fig:sdr_dsl_pipeline_adp}}
   \caption{Example of a pipeline description and the associate transformation
     with adaptors.}
-  \label{fig:dsl_pipeline}
+  \label{fig:sdr_dsl_pipeline}
 \end{figure}
 
 \begin{listing}[htp]
   \inputminted[frame=lines,linenos]{C++}{\curChapter/src/pipeline/pipeline.cpp}
   \caption{\AFFECT \Cxx eDSL source code of the pipeline described in
-    Figure~\ref{fig:dsl_pipeline}.}
-  \label{lst:dsl_pipeline}
+    Figure~\ref{fig:sdr_dsl_pipeline}.}
+  \label{lst:sdr_dsl_pipeline}
 \end{listing}
 
 In this section, the pipeline implementation is illustrated through a simple
-example. Figure~\ref{fig:dsl_pipeline} shows the difference between a pipeline
-description (see Figure~\ref{fig:dsl_pipeline_usr}) and its actual instantiation
-(see Figure~\ref{fig:dsl_pipeline_adp}). In Figure~\ref{fig:dsl_pipeline} we
-suppose that the $t_1$, $t_5$ and $t_6$ tasks cannot be duplicated (filled in
-blue). The designer knows that the execution time of the $t_1$ task is higher
-than the cumulate execution time of $t_5$ and $t_6$ tasks. We assume that the
-cumulate execution time of $t_2$, $t_3$ and $t_4$ is approximatively four times
-higher than $t_1$. This knowledge motivates the splitting of the stages 1, 2 and
-3. There is no need to split the $t_5$ and $t_6$ tasks in two stages because the
-overall throughput is limited by the slowest stage ($t_1$ here). The stage 2 is
-duplicated four times to increase its throughput by four as we know that its
-latency is approximatively four times the sequence 1. In general, a primarily
-profiling phase of the sequential code is required to define the pipeline
-strategy. Listing~\ref{lst:dsl_pipeline} presents the \Cxx eDSL source code
-corresponding to the pipeline description in Figure~\ref{fig:dsl_pipeline_usr}.
-Each $t_i$ task is contained (as a method) in the $M_i$ module (or class). The
-four main steps are: 1) the creation of the modules; 2) the binding of the
-tasks; 3) the creation of the pipeline; 4) the pipeline execution.
+example. Figure~\ref{fig:sdr_dsl_pipeline} shows the difference between a
+pipeline description (see Figure~\ref{fig:sdr_dsl_pipeline_usr}) and its actual
+instantiation (see Figure~\ref{fig:sdr_dsl_pipeline_adp}). In
+Figure~\ref{fig:sdr_dsl_pipeline} we suppose that the $t_1$, $t_5$ and $t_6$
+tasks cannot be duplicated (filled in blue). The designer knows that the
+execution time of the $t_1$ task is higher than the cumulate execution time of
+$t_5$ and $t_6$ tasks. We assume that the cumulate execution time of $t_2$,
+$t_3$ and $t_4$ is approximatively four times higher than $t_1$. This knowledge
+motivates the splitting of the stages 1, 2 and 3. There is no need to split the
+$t_5$ and $t_6$ tasks in two stages because the overall throughput is limited by
+the slowest stage ($t_1$ here). The stage 2 is duplicated four times to increase
+its throughput by four as we know that its latency is approximatively four times
+the sequence 1. In general, a primarily profiling phase of the sequential code
+is required to define the pipeline strategy. Listing~\ref{lst:sdr_dsl_pipeline}
+presents the \Cxx eDSL source code corresponding to the pipeline description in
+Figure~\ref{fig:sdr_dsl_pipeline_usr}. Each $t_i$ task is contained (as a
+method) in the $M_i$ module (or class). The four main steps are: 1) the creation
+of the modules; 2) the binding of the tasks; 3) the creation of the pipeline; 4)
+the pipeline execution.
 
-Figure~\ref{fig:dsl_pipeline_adp} presents the internal structure of the
+Figure~\ref{fig:sdr_dsl_pipeline_adp} presents the internal structure of the
 pipeline. As we can see, new tasks have been automatically added: \emph{push 1},
 \emph{pull n} shared by a \emph{1 to n adaptor} module and \emph{push n},
 \emph{pull 1} shared by a \emph{n to 1 adaptor} module. The binding as been
@@ -450,17 +451,17 @@ processes that encapsulate these tasks dynamically replace the source code of
 the data buffer copy by a simple pointer copy. The pointers are exchanged
 cyclically.
 
-In Figure~\ref{fig:dsl_pipeline_adp}, the pipeline threads are pinned to
+In Figure~\ref{fig:sdr_dsl_pipeline_adp}, the pipeline threads are pinned to
 specific CPU cores. This is the direct consequence of the lines 38-43 in
-Listing~\ref{lst:dsl_pipeline}. The \emph{hwloc} library~\cite{Broquedis2010}
-has been used and integrated in \AFFECT to pin the software threads to
-processing units (PUs or hardware threads). In the given example, we assume that
-the CPU cores can only execute one hardware thread (SMT off) and so an
-\emph{hwloc} PU is equal to a CPU core. The threads pinning is given by the
-designer. It can improve the multi-threading performance when dealing with NUMA
-architectures.
+Listing~\ref{lst:sdr_dsl_pipeline}. The \emph{hwloc}
+library~\cite{Broquedis2010} has been used and integrated in \AFFECT to pin the
+software threads to processing units (PUs or hardware threads). In the given
+example, we assume that the CPU cores can only execute one hardware thread (SMT
+off) and so an \emph{hwloc} PU is equal to a CPU core. The threads pinning is
+given by the designer. It can improve the multi-threading performance when
+dealing with NUMA architectures.
 
-Figure~\ref{fig:dsl_pipeline} is an example of a simple chain of tasks. More
+Figure~\ref{fig:sdr_dsl_pipeline} is an example of a simple chain of tasks. More
 complicated task graphs can have more than two tasks to synchronize between two
 pipeline stages. The adaptor implementation can manage multiple sockets
 synchronization. The key idea is to deal with a 2-dimensional array of buffers.
@@ -492,13 +493,13 @@ the main encountered problems and the adopted solutions.
   \caption
     [DVB-S2 transmitter software implementation.]
     {DVB-S2 transmitter software implementation.}
-  \label{fig:dvbs2_transmitter}
+  \label{fig:sdr_dvbs2_transmitter}
 \end{figure}
 
-Figure~\ref{fig:dvbs2_transmitter} shows the DVB-S2 transmitter decomposition in
-tasks. The tasks filled in blue are intrinsically sequential and cannot be
-duplicated. The initial information bits are read from a binary file
-($t^\text{Tx}_1$). Then, the DVB-S2 coding scheme rests upon the serial
+Figure~\ref{fig:sdr_dvbs2_transmitter} shows the DVB-S2 transmitter
+decomposition in tasks. The tasks filled in blue are intrinsically sequential
+and cannot be duplicated. The initial information bits are read from a binary
+file ($t^\text{Tx}_1$). Then, the DVB-S2 coding scheme rests upon the serial
 concatenation of a BCH ($t^\text{Tx}_3$) and an LDPC code ($t^\text{Tx}_4$). The
 selected modulation ($t^\text{Tx}_6$) is a Phase-Shift Keying (PSK). The
 scrambler tasks ($t^\text{Tx}_2$ and $t^\text{Tx}_8$) apply predefined repeated
@@ -517,7 +518,7 @@ synchronization tasks in the receiver side. Before the radio transmission
   \caption
     [Selected DVB-S2 configurations (MODCOD).]
     {Selected DVB-S2 configurations (MODCOD).}
-  \label{tab:dvbs2_modcod}
+  \label{tab:sdr_dvbs2_modcod}
   \begin{tabular}{c c c c c c c c}
     \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{PLH}}}$ & \textbf{Interleaver}\\
     \hline \hline
@@ -528,13 +529,13 @@ synchronization tasks in the receiver side. Before the radio transmission
 \end{table}
 
 The DVB-S2 defines 32 different configurations or \emph{MODCODs}. This work
-focuses on the 3~MODCODs given in Table.~\ref{tab:dvbs2_modcod}. Depending on
-the MODCOD, the PSK modulation and the LDPC code rate $R$ vary. In the MODCOD 1
-and 2 there is no interleaver and the MODCOD 3 uses a column/row interleaver.
-$K_\text{BCH}$ or $K$ is the number of information bits and the input size of
-the BCH encoder. $N_\text{BCH}$ or $K_\text{LDPC}$ is the output size of the
-BCH encoder and the input size of the LDPC encoder. $N_\text{LDPC}$ is the
-output size of the LDPC encoder. $N_\text{PLH}$ or $N$ is the frame size
+focuses on the 3~MODCODs given in Table.~\ref{tab:sdr_dvbs2_modcod}. Depending
+on the MODCOD, the PSK modulation and the LDPC code rate $R$ vary. In the
+MODCOD~1 and 2 there is no interleaver and the MODCOD 3 uses a column/row
+interleaver. $K_\text{BCH}$ or $K$ is the number of information bits and the
+input size of the BCH encoder. $N_\text{BCH}$ or $K_\text{LDPC}$ is the output
+size of the BCH encoder and the input size of the LDPC encoder. $N_\text{LDPC}$
+is the output size of the LDPC encoder. $N_\text{PLH}$ or $N$ is the frame size
 containing $N_\text{LDPC}$ bits plus the PLH and pilots bits.
 
 The DVB-S2 transmitter software implementation has been split into 3 pipeline
@@ -550,31 +551,33 @@ and the five remaining hardware threads have been dedicated to the stage 2.
   \centering
   \subfloat[][Waiting phase and learning phase 1 \& 2.]{
     \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_learning}
-    \label{fig:dvbs2_receiver_learning}}
+    \label{fig:sdr_dvbs2_receiver_learning}}
   \\
   \subfloat[][Learning phase 3 \& transmission phase.]{
     \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_transmission}
-    \label{fig:dvbs2_receiver_transmission}}
+    \label{fig:sdr_dvbs2_receiver_transmission}}
   \caption
     [DVB-S2 receiver software implementation.]
     {DVB-S2 receiver software implementation.}
-  \label{fig:dvbs2_receiver}
+  \label{fig:sdr_dvbs2_receiver}
 \end{figure}
 
-Figure~\ref{fig:dvbs2_receiver} presents the task decomposition of the DVB-S2
-receiver software implementation with the five distinct phases. The first one is
-called the \emph{waiting phase} (see Figure~\ref{fig:dvbs2_receiver_learning}).
-It consists in waiting until a transmitter starts to transmit. The
-\emph{Synchronizer Frame} task ($t^\text{Rx}_8$) possesses a frame detection
-criterion. When a signal is detected, the \emph{learning phase 1} (see
-Figure~\ref{fig:dvbs2_receiver_learning}) is executed during 150 frames. After
-that the \emph{learning phase 2} (see Figure~\ref{fig:dvbs2_receiver_learning})
-is also executed during 150 frames. After the \emph{learning phase 1 and 2}, the
-tasks have to be re-bound for the \emph{learning phase 3} (see
-Figure~\ref{fig:dvbs2_receiver_transmission}). This last learning phase is
+Figure~\ref{fig:sdr_dvbs2_receiver} presents the task decomposition of the
+DVB-S2 receiver software implementation with the five distinct phases. The first
+one is called the \emph{waiting phase} (see
+Figure~\ref{fig:sdr_dvbs2_receiver_learning}). It consists in waiting until a
+transmitter starts to transmit. The \emph{Synchronizer Frame} task
+($t^\text{Rx}_8$) possesses a frame detection criterion. When a signal is
+detected, the \emph{learning phase 1} (see
+Figure~\ref{fig:sdr_dvbs2_receiver_learning}) is executed during 150 frames.
+After that the \emph{learning phase 2} (see
+Figure~\ref{fig:sdr_dvbs2_receiver_learning}) is also executed during 150
+frames. After the \emph{learning phase 1 and 2}, the tasks have to be re-bound
+for the \emph{learning phase 3} (see
+Figure~\ref{fig:sdr_dvbs2_receiver_transmission}). This last learning phase is
 applied over 200 frames. After 500 frames for all the learning phases, the final
 \emph{transmission phase} is established (see
-Fig~\ref{fig:dvbs2_receiver_transmission}).
+Fig~\ref{fig:sdr_dvbs2_receiver_transmission}).
 
 In a real life communication systems, the internal clocks of the radios can
 diverge slightly. A specific processing has to be added in order to be
@@ -624,11 +627,11 @@ $t^\text{Rx}_8$ second output socket is left unbound.
   \caption
     [DVB-S2 BER and FER decoding performance.]
     {DVB-S2 BER/FER decoding performance (LDPC BP h-layered, min-sum, 10 ite.).}
-  \label{fig:dvbs2_bfer}
+  \label{fig:sdr_dvbs2_bfer}
 \end{figure}
 
-Figure~\ref{fig:dvbs2_bfer} contains the BER and FER decoding performance of the
-3 selected MODCODs. The forms represent the channel conditions: the squares
+Figure~\ref{fig:sdr_dvbs2_bfer} contains the BER and FER decoding performance of
+the 3 selected MODCODs. The forms represent the channel conditions: the squares
 stand for a standard simulated AWGN channel, the triangles are also a simulated
 AWGN channel in which frequency shift, phase shift and symbol delay have been
 taken into account and the circles are the real conditions measured performances
@@ -669,26 +672,26 @@ in the video streaming targeted application. The \emph{Decoder LDPC} task
 inter-frame SIMD technique. The other tasks simply process sixteen frames
 sequentially.
 
-Table~\ref{tab:dvbs2_tasks_thr_lat} presents the tasks throughputs and latencies
-measured for a sequential execution of the MODCOD 2 in the transmission phase.
-The tasks have been regrouped per stage in order to introduce the future
-decomposition when the parallelism is applied. The throughput is given in mega
-samples per second (MS/s). Indeed, some of the tasks are not working on bits but
-on samples and a bit is the smallest possible sample. The average (Avg),
-minimum (Min.) and maximum (Max.) throughputs are calculated with the number of
-output samples. Depending on the task, the number of output samples can
-drastically vary. Consequently, it is not possible to directly compare the task
-throughputs with each others. This is the normalized average throughput
-($\mathcal{N}_\text{Avg}$) has been introduced. It is the average throughput
-considering the $K$ information bits independently of the task output socket
-size. In a first observation, one may notice that the latencies of the tasks are
-very high compared to the ones presented in the simulator evaluation (see
-Section~\ref{sec:eval_simu}). This is mainly due to the very large frame size
-$N = 16740$ and to the inter-frame level. Indeed, each task processes
-approximatively $16740 \times 16$ samples when in the simulator evaluation each
-task processes approximatively $2048$ bits (there is a factor of $\approx 130$).
-The applicative context is very different and it is directly observable from the
-resulting latencies.
+Table~\ref{tab:sdr_dvbs2_tasks_thr_lat} presents the tasks throughputs and
+latencies measured for a sequential execution of the MODCOD 2 in the
+transmission phase. The tasks have been regrouped per stage in order to
+introduce the future decomposition when the parallelism is applied. The
+throughput is given in mega samples per second (MS/s). Indeed, some of the tasks
+are not working on bits but on samples and a bit is the smallest possible
+sample. The average (Avg), minimum (Min.) and maximum (Max.) throughputs are
+calculated with the number of output samples. Depending on the task, the number
+of output samples can drastically vary. Consequently, it is not possible to
+directly compare the task throughputs with each others. This is the normalized
+average throughput ($\mathcal{N}_\text{Avg}$) has been introduced. It is the
+average throughput considering the $K$ information bits independently of the
+task output socket size. In a first observation, one may notice that the
+latencies of the tasks are very high compared to the ones presented in the
+simulator evaluation (see Section~\ref{sec:eval_simu}). This is mainly due to
+the very large frame size $N = 16740$ and to the inter-frame level. Indeed, each
+task processes approximatively $16740 \times 16$ samples when in the simulator
+evaluation each task processes approximatively $2048$ bits (there is a factor of
+$\approx 130$). The applicative context is very different and it is directly
+observable from the resulting latencies.
 
 \begin{table}[htp]
   \centering
@@ -700,7 +703,7 @@ resulting latencies.
     The sequential tasks are represented by \colorbox{Paired-7!15}{orange} rows.
     The slowest \emph{sequential} stage is in \colorbox{Paired-5!15}{red}. The
     slowest of all stages is in \colorbox{Paired-1!15}{blue}.}
-  \label{tab:dvbs2_tasks_thr_lat}
+  \label{tab:sdr_dvbs2_tasks_thr_lat}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{r | r r r r  | r r r | r}
     \multicolumn{1}{r |}{\textbf{Stages and Tasks}}  & \multicolumn{4}{c |}{\textbf{Throughput} (MS/s)} & \multicolumn{3}{c |}{\textbf{Latency} ($\mu$s)} & \textbf{Time} \\
@@ -774,7 +777,7 @@ receive} task ($t^\text{Rx}_{1}$). Once the learning phase is done, the
 transmission phase is parallelized. Thus, the receiver becomes fast enough to
 absorb the radio buffer and samples in real time. During the transmission phase,
 the receiver is split into 8 stages as presented in
-Figure~\ref{fig:dvbs2_receiver_transmission}. This decomposition has been
+Figure~\ref{fig:sdr_dvbs2_receiver_transmission}. This decomposition has been
 motivated by the nature of the tasks (sequential or parallel) and by the
 sequential measured throughput. The number of stages has been minimized in order
 to limit the pipeline overhead. Consequently, sequential and parallel tasks
@@ -791,7 +794,7 @@ enabled. When the signal quality is very good, the \emph{Decoder LDPC} task runs
 fast and the threads can spend a lot of time in waiting. With the passive
 waiting version of the adaptor \emph{push} and \emph{pull} tasks, the CPU
 dynamically adapt the cores charge and energy can be saved. In
-Table~\ref{tab:dvbs2_tasks_thr_lat}, the presented \emph{Decoder LDPC} task
+Table~\ref{tab:sdr_dvbs2_tasks_thr_lat}, the presented \emph{Decoder LDPC} task
 throughputs and latencies are optimistic because we are in a SNR error-free
 zone. All the threads are pinned to a single core with the \emph{hwloc} library.
 The 28 threads of the stage 7 are pinned in round-robin between the CPU sockets.
@@ -814,44 +817,44 @@ did not try to reduce its overall occupancy.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_dat}\label{plot:dvbs2_pipeline_copy_dat}}
+  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_dat}\label{plot:sdr_dvbs2_pipeline_copy_dat}}
   \quad
-  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:dvbs2_pipeline_copy_ptr}}
+  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:sdr_dvbs2_pipeline_copy_ptr}}
   \caption
     [Comparison of the two pipeline implementations in the receiver.]
     {Comparison of the two pipeline implementations in the receiver (MODCOD 2).}
-  \label{plot:dvbs2_pipeline}
+  \label{plot:sdr_dvbs2_pipeline}
 \end{figure}
 
-Figure~\ref{plot:dvbs2_pipeline} presents the repartition of the time in the
+Figure~\ref{plot:sdr_dvbs2_pipeline} presents the repartition of the time in the
 pipeline stages (MODCOD 2). The receiver is running over 35 threads.
-Figure~\ref{plot:dvbs2_pipeline_copy_dat} shows the pipeline implementation with
-data copies. Figure~\ref{plot:dvbs2_pipeline_copy_ptr} shows the pipeline
-implementation with pointer copies. \emph{Push wait} and \emph{Pull wait} are
-the percentage of time spent in passive or active waiting. \emph{Push copy} and
-\emph{Pull copy} are the percentage of time spent in copying the data to and
-from the adaptors buffers. \emph{Standard tasks} is the cumulative percentage of
-time spent by the tasks presented in
-Figure~\ref{fig:dvbs2_receiver_transmission}. In both implementations the
+Figure~\ref{plot:sdr_dvbs2_pipeline_copy_dat} shows the pipeline implementation
+with data copies. Figure~\ref{plot:sdr_dvbs2_pipeline_copy_ptr} shows the
+pipeline implementation with pointer copies. \emph{Push wait} and \emph{Pull
+wait} are the percentage of time spent in passive or active waiting. \emph{Push
+copy} and \emph{Pull copy} are the percentage of time spent in copying the data
+to and from the adaptors buffers. \emph{Standard tasks} is the cumulative
+percentage of time spent by the tasks presented in
+Figure~\ref{fig:sdr_dvbs2_receiver_transmission}. In both implementations the
 pipeline stage throughput is constraint by the slowest one. In
-Figure~\ref{plot:dvbs2_pipeline_copy_dat} the measured throughput per stage is
-40 Mb/s whereas in Figure~\ref{plot:dvbs2_pipeline_copy_ptr} the
+Figure~\ref{plot:sdr_dvbs2_pipeline_copy_dat} the measured throughput per stage
+is 40 Mb/s whereas in Figure~\ref{plot:sdr_dvbs2_pipeline_copy_ptr} the
 measured throughput is 55 Mb/s. The pointer copy implementation throughput is
 $\approx$ 27\% higher than the data copy implementation.
-Figure~\ref{plot:dvbs2_pipeline_copy_dat} shows that the copy overhead is
+Figure~\ref{plot:sdr_dvbs2_pipeline_copy_dat} shows that the copy overhead is
 non-negligible. A 27\% slowdown is directly due to these copies in the stage 3.
 It largely justifies the pointer copy implementation. In
-Figure~\ref{plot:dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time is
-taken by the $t^\text{Rx}_{5}$ task. This is also confirmed by the measured
+Figure~\ref{plot:sdr_dvbs2_pipeline_copy_ptr} and in the stage 3, 100\% of time
+is taken by the $t^\text{Rx}_{5}$ task. This is also confirmed by the measured
 throughput (55 Mb/s) which is very close the sequential throughput (55.42
-Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
+Mb/s) reported in Table~\ref{tab:sdr_dvbs2_tasks_thr_lat}.
 
 \begin{table}[htp]
   \centering
   \caption
     [Throughput performance depending of the selected DVB-S2 configuration.]
     {Throughput performance depending of the selected DVB-S2 configuration.}
-  \label{tab:dvbs2_thr_modcod}
+  \label{tab:sdr_dvbs2_thr_modcod}
   \begin{tabular}{c | c c | c c}
     \multirow{3}{*}{\textbf{Config.}} & \multicolumn{4}{c }{\textbf{Throughput} (Mb/s)} \\
                                       & \multicolumn{2}{c |}{\textbf{Sequential}} & \multicolumn{2}{c }{\textbf{Parallel}} \\
@@ -863,25 +866,25 @@ Mb/s) reported in Table~\ref{tab:dvbs2_tasks_thr_lat}.
   \end{tabular}
 \end{table}
 
-Table~\ref{tab:dvbs2_thr_modcod} summarizes the obtained throughputs for the 3
-MODCODs presented in Table~\ref{tab:dvbs2_modcod}. Each time, sequential and
-parallel throughput are given. To measure to maximum achievable throughput, the
-USRP modules has been removed and replaced by the read of samples pre-registered
-in a binary file. This is because the pipeline stages are naturally adapting to
-the slowest one. It means that in a real communication, the throughput of the
-radio is always configured to be just a little bit slower than the slowest
-stage. Indeed, it is necessary for real time communication otherwise the radio
-task has to indefinitely bufferize the samples while the amount of available
-memory in the machine is clearly not infinite. The information throughput ($K$
-bits) is the final useful throughput for the user while the coded ($N$)
-throughput is here for observations. Between the MODCOD 1 and 2, only the LDPC
-code rate varies ($R=3/5$ and $R=8/9$ resp.). In the parallel implementation, it
-has a direct impact on the information throughput while the coded throughput is
-unchanged. Indeed, the \emph{Decoder LDPC} task ($t^\text{Rx}_{16}$) is
-parallelized in the stage 7. This stage is capable to adapt to the charge
-automatically. In the sequential implementation, the coded throughput is
-negatively impacted when $R=8/9$. Between the MODCOD 2 and 3, the modulation
-varies (QPSK and 8-PSK resp.) and the frames have to be deinterleaved
+Table~\ref{tab:sdr_dvbs2_thr_modcod} summarizes the obtained throughputs for the
+3 MODCODs presented in Table~\ref{tab:sdr_dvbs2_modcod}. Each time, sequential
+and parallel throughput are given. To measure to maximum achievable throughput,
+the USRP modules has been removed and replaced by the read of samples
+pre-registered in a binary file. This is because the pipeline stages are
+naturally adapting to the slowest one. It means that in a real communication,
+the throughput of the radio is always configured to be just a little bit slower
+than the slowest stage. Indeed, it is necessary for real time communication
+otherwise the radio task has to indefinitely bufferize the samples while the
+amount of available memory in the machine is clearly not infinite. The
+information throughput ($K$ bits) is the final useful throughput for the user
+while the coded ($N$) throughput is here for observations. Between the MODCOD 1
+and 2, only the LDPC code rate varies ($R=3/5$ and $R=8/9$ resp.). In the
+parallel implementation, it has a direct impact on the information throughput
+while the coded throughput is unchanged. Indeed, the \emph{Decoder LDPC} task
+($t^\text{Rx}_{16}$) is parallelized in the stage 7. This stage is capable to
+adapt to the charge automatically. In the sequential implementation, the coded
+throughput is negatively impacted when $R=8/9$. Between the MODCOD 2 and 3, the
+modulation varies (QPSK and 8-PSK resp.) and the frames have to be deinterleaved
 (column/row interleaver). High order modulation reduces the amount of samples
 processed by in the \emph{Synchronizer Timing} task ($t^\text{Rx}_{5}$): this
 results in higher throughput (80 Mb/s for the 8-PSK) in the slowest stage~3. In
@@ -895,9 +898,9 @@ These results demonstrate the benefit of the parallelized implementation of the
 proposed receiver. The throughput speedup ranges from 10 to 20 compared to the
 sequential implementation. It is also important to note that the selected
 configurations are efficient in different SNR zones (as shown in
-Figure~\ref{fig:dvbs2_bfer}). Depending on the signal quality, different MODCOD
-can be selected. A direct impact in observed on the system throughput. For
-instance, MODCOD~1 is adapted for noisy environments (3 dB). However the
+Figure~\ref{fig:sdr_dvbs2_bfer}). Depending on the signal quality, different
+MODCOD can be selected. A direct impact in observed on the system throughput.
+For instance, MODCOD~1 is adapted for noisy environments (3 dB). However the
 information throughput is limited to 37 Mb/s while MODCOD~3 is more adapted to
 clearer  signal conditions (7.5 dB) and the information throughput reaches
 80 Mb/s. MODCOD~2 is in-between.
@@ -968,4 +971,4 @@ graphical user interface like \emph{GNU Radio Companion} to facilitate the tasks
 creation and binding as well as the parallelism definition (sequence
 duplication, pipeline stages). The graphical user interface would then generate
 a ready to compile \Cxx code similar to the one presented in
-Listing~\ref{lst:dsl_pipeline}.
+Listing~\ref{lst:sdr_dsl_pipeline}.

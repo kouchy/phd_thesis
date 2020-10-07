@@ -144,7 +144,7 @@ the same. In other terms, the \AFFECT simulator is deterministic.
 \begin{table}[htp]
   \centering
   \caption{\C/\Cxx open source channel coding simulators/libraries.}
-  \label{tab:fec_libraries_comparison}
+  \label{tab:aff3ct_fec_libraries_comparison}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{r   r  r  r  r  r | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
   \multirow{4}{*}{\textbf{Name}} & \multirow{4}{*}{\textbf{Ref.}} &                  &                &                & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
@@ -180,9 +180,9 @@ the same. In other terms, the \AFFECT simulator is deterministic.
 
 In the digital signal processing community, many researchers implement their own
 simulation chain to validate their works.
-Table~\ref{tab:fec_libraries_comparison} presents, to the best of our knowledge,
-a list of currently available \verb|C|/\Cxx open source channel coding
-simulators/libraries. This comparison table is also available
+Table~\ref{tab:aff3ct_fec_libraries_comparison} presents, to the best of our
+knowledge, a list of currently available \verb|C|/\Cxx open source channel
+coding simulators/libraries. This comparison table is also available
 online where it is regularly updated\footnote{\texttt{C}/\Cxx Open Source FEC
 Libraries: \url{http://aff3ct.github.io/fec_libraries.html}}. We choose to
 compare with projects compiled as binaries, since they aim at high throughput
@@ -190,7 +190,7 @@ and low latency, as \AFFECT. Many open source projects in Python or in MATLAB\R
 exist as well. But these tools are usually slower than compiled binaries, and
 rather aim at prototyping.
 
-Table~\ref{tab:fec_libraries_comparison} shows that, generally, the
+Table~\ref{tab:aff3ct_fec_libraries_comparison} shows that, generally, the
 \verb|C|/\Cxx FEC libraries target a single family or a small subset of channel
 codes. As a consequence, a large effort is spent to re-develop similar features,
 since all those libraries and tools share many characteristics (except the

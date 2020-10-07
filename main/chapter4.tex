@@ -1416,14 +1416,14 @@ results are scalable up to the number of processing units dedicated to them.
   \caption
     [\AFFECT simulator chain.]
     {\AFFECT simulator chain.}
-  \label{fig:simu_chain}
+  \label{fig:eval_simu_chain}
 \end{figure}
 
 In this section we propose to evaluate the simulator performance over a
 representative simulation chain. This chain is illustrated in
-Figure~\ref{fig:simu_chain}. The transmitter is simplified and only all-zero
-codewords are generated. This technique enables to bench only the AWGN channel
-and the receiver tasks. The AWGN channel is presented in
+Figure~\ref{fig:eval_simu_chain}. The transmitter is simplified and only
+all-zero codewords are generated. This technique enables to bench only the AWGN
+channel and the receiver tasks. The AWGN channel is presented in
 Section~\ref{sec:ctx_awgn} and the vectorized implementation from the
 Section~\ref{sec:opt_simu_awgn} is applied. The SNR is set to
 $E_b/N_0 = 4.5$~dB. The BPSK demodulator implementation is also vectorized and
