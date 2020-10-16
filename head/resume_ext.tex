@@ -1,0 +1,404 @@
+%!TEX root = ../my_thesis.tex
+
+\cleardoublepage
+\phantomsection
+\chapter*{Résumé étendu}
+\markboth{Extended Abstract in French}{Résumé étendu (\emph{Extended Abstract in French})}
+\addcontentsline{toc}{chapter}{Extended Abstract in French}
+\vskip1em
+
+\newcommand{\vskipSectionResume}{\vskip0.5em}
+\newcommand{\vskipSSSectionResume}{\vskip0.25em}
+
+% résumé chap1 ----------------------------------------------------------------
+% -----------------------------------------------------------------------------
+\section*{Contexte et objectifs}
+\vskipSectionResume
+
+\subsubsection*{Organisation du chapitre}
+\vskipSSSectionResume
+
+Ce chapitre présente le contexte des systèmes de communication numérique. Il a
+pour but de définir les notions qui seront réutilisées dans le manuscrit et de
+donner une vue globale. Il définit aussi les principaux objectifs de cette
+thèse.
+
+La première partie présente le principe des systèmes de communication numérique
+avec ses différentes composantes : l'émetteur, le canal et le récepteur. Les
+métriques les plus couramment utilisées dans les communications numériques sont
+présentées avec notamment la définition du taux d'erreur binaire (\emph{Bit
+Error Rate}, BER) et du taux d'erreur trame (\emph{Frame Error Rate}, FER). La
+deuxième partie détaille le modèle de canal par ajout de bruit blanc gaussien
+(\emph{Additive White Gaussian Noise}, AWGN) et la modulation numérique binaire
+par changement de phase (\emph{Binary Phase-Shift Keying}, BPSK) utilisées tout
+au long du manuscrit. Une caractérisation du rapport signal sur bruit
+(\emph{Signal-to-Noise Ratio}, SNR) est donnée ainsi que la notion de
+probabilité à la sortie du canal. La troisième partie présente les familles de
+code correcteur d'erreurs considérées dans ce manuscrit : à savoir les codes
+LDPC, les codes polaires et les turbo-codes. Les traitements de codage (situé
+dans l’émetteur) et de décodage (situé dans le récepteur) correspondants sont
+détaillés pour chaque famille de code. Ces familles de code sont utilisées dans
+la plupart des standards actuels et viennent avec une complexité calculatoire
+élevée. Par conséquent, ce sont de bons candidats d'étude. Dans la dernière
+partie, deux contextes applicatifs majeurs sont détaillés pour les familles de
+code considérées. La simulation fonctionnelle permet la conception et la
+validation d'un schéma de codage. La radio logicielle (\emph{Software-Defined
+Radio}, SDR) est un système de communication radio où tous les composants sont
+implémentés en logiciel (par opposition à des implémentations matérielles plus
+couramment utilisées).
+
+\subsubsection*{Objectifs de la thèse}
+\vskipSSSectionResume
+
+À l'aube de la cinquième génération des standards pour la téléphonie mobile
+(5G), le défi consiste maintenant à concevoir des systèmes de communication
+capables de transmettre d'énormes quantités de données en peu de temps, à un
+faible coût énergétique et dans des environnements très variés. Les chercheurs
+s'efforcent d'affiner encore les schémas de codage existants, afin d'obtenir de
+faibles taux d'erreur résiduels grâce à des processus de décodage rapides,
+souples et les moins complexes possible.
+
+\paragraph{Simulation fonctionnelle}
+
+La validation d'un système de codage nécessite d'estimer son taux d'erreur. En
+général, il n'existe pas de modèle mathématique simple pour décrire ces
+performances. La seule solution pratique consiste à effectuer une simulation
+Monte Carlo de l'ensemble de la chaîne. Cela signifie que certaines données sont
+générées, encodées, modulées, bruitées, décodées de manière aléatoire, et que
+les performances sont ensuite estimées en mesurant le taux d'erreur binaire
+(BER) et le taux d'erreur trame (FER) à la fin de la chaîne de communication
+(après avis du décodeur). Ce processus a l'avantage d'être universel mais il
+entraîne également trois problèmes principaux :
+
+\begin{enumerate}
+  \item \textbf{Temps de simulation :}
+    $\sim 100$ trames erronées doivent être simulées pour estimer avec précision
+    les BER/FER. Ainsi, la mesure d'un FER de $10^{-7}$ nécessite la simulation
+    de la transmission de $\sim100\times 10^7=10^9$ trames. En supposant une
+    trame de 1000~bits, le simulateur doit alors calculer la transmission de
+    $10^{12}$~bits. En gardant à l'esprit que la complexité de calcul de
+    l'algorithme de décodage peut être importante, plusieurs semaines ou mois
+    peuvent être nécessaires pour estimer avec précision les BER/FER d'un schéma
+    de codage (en particulier si le taux d'erreur est faible).
+
+  \item \textbf{Hétérogénéité algorithmique :}
+    un grand nombre de codes correcteurs d'erreur ont été conçus au fil des
+    années. Pour chaque famille de code, plusieurs configurations de décodage
+    sont possibles. S'il est simple de décrire un schéma de codage unique, il
+    est  plus difficile d'avoir une description logicielle unifiée qui prenne en
+    charge tous les schémas de codage et les algorithmes associés. Cette
+    difficulté provient de l'hétérogénéité des structures de données nécessaires
+    pour décrire les différents schémas de codage canal : les turbo-codes sont
+    basés sur des treillis, les codes LDPC sont bien définis sur des graphes
+    bipartis et les codes polaires sont décodés efficacement à l'aide d'arbres
+    binaires.
+
+  \item \textbf{Reproductibilité :}
+    il est généralement fastidieux de reproduire des résultats issus de la
+    littérature. Cela peut s'expliquer par la grande quantité de paramètres
+    empiriques nécessaires pour définir un système de communication, et par le
+    fait que tous ne sont pas toujours rapportés dans les publications. En
+    outre, le code source des simulateurs est rarement accessible au public.
+    Par conséquent, beaucoup de temps est passé à ``réinventer la roue'' juste
+    pour pouvoir comparer de nouveaux résultats avec l'état de l'art.
+\end{enumerate}
+
+\paragraph{Radio logicielle}
+
+Le paradigme de la radio logicielle (\emph{Software-Defined Radio}, SDR) est
+désormais considéré pour des systèmes de communication réels. Pour répondre
+aux contraintes posées par les systèmes temps réel, voici les principaux défis à
+relever :
+
+\begin{enumerate}
+  \item \textbf{Haut débit :}
+    les nouvelles applications comme le streaming vidéo, peuvent être très
+    gourmandes en données. En conséquence, les tâches de calcul intensif de
+    l'émetteur et du récepteur doivent être bien optimisées pour atteindre des
+    niveaux de performance comparables aux implémentation matérielles.
+
+  \item \textbf{Faible latence :}
+    atteindre un débit élevé n'est pas toujours la contrainte majeure, par
+    exemple, dans les applications d'audio-conférence, il est inconfortable de
+    percevoir un retard lorsque les gens parlent.
+
+  \item \textbf{Flexibilité :}
+    les implémentations logicielles doivent pouvoir s'adapter à diverses
+    configurations. Par exemple, lorsque le rapport signal sur bruit (SNR)
+    change, le décodeur doit être capable se s'adapter ``à la volée'' à de
+    nouveaux taux de codage $R$.
+
+  \item \textbf{Portabilité :}
+    les solutions proposées peuvent être déployées sur des serveurs haut de
+    gamme ainsi que dans des systèmes embarqués à faible consommation d'énergie.
+    De plus, de nombreux systèmes d'exploitation coexistent, et il est important
+    de pouvoir supporter les plus communs comme Windows, macOS et Linux.
+\end{enumerate}
+
+% résumé chap2 ----------------------------------------------------------------
+% -----------------------------------------------------------------------------
+\section*{Stratégies d'optimisation}
+\vskipSectionResume
+
+\subsubsection*{Organisation du chapitre}
+\vskipSSSectionResume
+
+Ce chapitre se concentre sur les stratégies d'optimisation dédiées aux
+algorithmes de communication numérique. Nos contributions sont divisées en deux
+parties : 1) les stratégies génériques et 2) les optimisations spécifiques.
+La première partie décrit les stratégies génériques que nous avons proposées
+pour optimiser les algorithmes présents dans les récepteurs de systèmes de
+communication numérique. Il s'avère que la vectorisation est une des clefs pour
+implémenter des solutions logicielles efficaces. Une bibliothèque dédiée ainsi
+que des niveaux de parallélisme génériques sont proposés. La seconde partie est
+consacrée à l'implémentation logicielle efficace d'un sous-ensemble
+représentatif de décodeurs pour les trois grandes familles abordées plus tôt, à
+savoir : les codes LDPC, les codes polaires et les turbo-codes.
+
+\subsubsection*{Principaux résultats du chapitre}
+\vskipSSSectionResume
+
+En premier lieu, des stratégies génériques pour l'implémentation efficace
+d'algorithmes sur processeurs généralistes (CPU) sont présentées. Une
+contribution principale de ce chapitre est la proposition de \MIPP : une
+bibliothèque qui encapsule les instructions vectorielles. L'idée est d'abstraire
+les types de données et les multiples jeux d’instructions vectoriels existants
+afin de proposer des implémentations logicielles ``universelles'' et efficaces
+des algorithmes présents dans les récepteurs de systèmes de communication
+numérique. Nous montrons que \MIPP n'introduit presque pas de surcoût par
+rapport aux fonctions intrinsèques (ou du code assembleur). \MIPP fonctionne
+aussi bien sur des représentations en virgule flottante et que sur des
+représentations en virgule fixe. Pour les algorithmes présents dans les
+récepteurs de systèmes de communication numérique, les représentations en
+virgule fixe sont très intéressantes car elles permettent de traiter un plus
+grand nombre d'éléments dans les registres vectoriels, avec un impact modéré sur
+les performances de décodage. Pour résumer, \textbf{\MIPP améliore la
+flexibilité et la portabilité du code source tout en conservant le même niveau
+de performance.} Notez que la bibliothèque \MIPP a été valorisée suite à une
+publication dans une conférence scientifique~\cite{Cassagne2018}.
+
+Dans une deuxième partie, deux grandes stratégies de vectorisation sont
+explicitement définies et présentées. La stratégie intra-trame fonctionne
+sur une seule trame en s'appuyant sur le parallélisme inhérent à l'algorithme,
+tandis que la stratégie inter-trames fonctionne sur plusieurs trames en
+même temps. La stratégie intra-trame peut à la fois augmenter le débit et
+diminuer la latence. Au contraire, la stratégie inter-trames n'améliore pas la
+latence, mais elle s'accompagne d'une efficacité vectorielle potentiellement
+plus élevée et peut conduire à des débits très élevés. Ces deux stratégies
+peuvent être appliquées à tous les blocs de traitement des chaînes de
+communication numérique. \textbf{Les stratégies intra-trame et inter-trames
+constituent donc un point clé pour résoudre le problème de l'hétérogénéité
+algorithmique.}
+
+Les dernières parties du chapitre se concentrent sur la conception
+d'implémentations logicielles efficaces des algorithmes de décodage présentés
+dans le chapitre précédent. Les décodeurs LDPC, les décodeurs polaires et le
+turbo-décodeur sont compatibles avec la stratégie inter-trames, tandis que les
+décodeurs polaires sont aussi compatibles avec la stratégie intra-trame. En
+fonction des familles de codes, nous nous concentrons sur différentes
+contraintes. \textbf{Les décodeurs LDPC ont été mis en œuvre pour prendre en
+charge de nombreuses variantes et donc pour maximiser la flexibilité} au prix de
+débits plus faibles et de latences plus élevées par rapport à d'autres travaux.
+Ce choix permet d'évaluer les performances de décodage de nombreuses
+combinaisons algorithmiques. \textbf{Dans les décodeurs polaires, la flexibilité
+ainsi que des optimisations agressives sont considérées et comparées. Ces
+dernière permettent d'atteindre de très faibles latences.} \textbf{Le
+turbo-décodeur se concentre sur l'obtention des débits les plus élevés
+possibles} et certaines spécialisations sont faites pour la norme LTE. Il est à
+noter que la plupart des implémentations logicielles proposées ont fait l'objet
+de publications dans des conférences et des revues
+scientifiques~\cite{Ghaffari2019,Leonardon2019,Cassagne2015c,Cassagne2016b,
+Cassagne2016a}.
+
+% résumé chap3 ----------------------------------------------------------------
+% -----------------------------------------------------------------------------
+\section*{AFF3CT: une boîte à outils pour le codage canal}
+\vskipSectionResume
+
+\subsubsection*{Organisation du chapitre}
+\vskipSSSectionResume
+
+Ce chapitre est consacré à la présentation de notre boîte à outils open-source
+nommée \AFFECT. La première partie décrit les principaux prérequis en fonction
+de quatre objectifs : l'implémentation d'un logiciel hautement performant, la
+prise en charge de l'hétérogénéité algorithmique, la portabilité et la
+reproductibilité. Dans la deuxième partie, \AFFECT est comparé aux autres
+bibliothèques logicielles de codage canal \verb|C|/\Cxx existantes. La troisième
+partie présente \AFFECT comme une bibliothèque dédiée aux algorithmes de
+communication numérique. L'architecture et les fonctionnalités du logiciel sont
+décrites. Ensuite, des exemples d'utilisation de la bibliothèque sont donnés en
+\Cxx et MATLAB\R. La quatrième partie se concentre sur le simulateur \AFFECT qui
+est livré dans la boîte à outils. Un aperçu des explorations possibles est donné
+et notre comparateur de BER/FER est présenté. À la fin, la stratégie de test
+d'\AFFECT est expliquée. Une dernière partie est consacrée à l'impact d'\AFFECT
+dans les contextes industriels et universitaires. Une revue des publications
+scientifiques qui ont utilisé \AFFECT est donnée.
+
+\subsubsection*{Principaux résultats du chapitre}
+\vskipSSSectionResume
+
+Tout d'abord, l'accent est mis sur \textbf{la bibliothèque \AFFECT qui vient
+avec une architecture logicielle qui permet l'hétérogénéité algorithmique}. De
+nombreuses familles de codes correcteurs d'erreur sont supportées comme les
+codes LDPC, les codes polaires, les turbo-codes, les turbo-codes produit, les
+codes convolutifs, les codes BCH, les codes RS, etc. \textbf{À notre
+connaissance, \AFFECT est la bibliothèque qui offre le support le plus complet
+pour les algorithmes de codage canal.} \AFFECT est également livré avec des
+modèles de canaux multiples (AWGN, Rayleigh, BEC, BSC, etc.) et des schémas de
+modulation (PSK, QAM, PAM, OOK, CPM, SCMA, etc.). Toutes ces implémentations
+d'algorithmes efficaces peuvent être utilisées à partir d'interfaces. Des
+exemples d'utilisation de la bibliothèque sont donnés en natif \Cxx ou en
+utilisant l'encapsulation MATLAB\R. La boîte à outils \AFFECT a fait l'objet de
+publications dans une conférence et une revue scientifiques~\cite{Cassagne2017a,
+Cassagne2019a}.
+
+\textbf{\AFFECT est également fourni avec un simulateur fonctionnel de BER/FER.}
+Toutes les caractéristiques précédemment énumérées peuvent être simulées sur
+différents paramètres. Le simulateur tire parti de l'architecture multi-cœur des
+CPU pour réduire le temps de restitution. \textbf{Sa capacité à explorer une
+grande variété de paramètres est démontrée.} De nombreux paramètres peuvent être
+modifiés comme le nombre d'itérations de décodage, les approximations dans
+l'implémentation de l'algorithme, la quantification des données dans les
+décodeurs, etc. Certains de ces paramètres sont présentés pour les décodeurs
+introduits dans les chapitres précédents. Il est à noter que ce sujet a été
+valorisé par un article dans une conférence nationale~\cite{Cassagne2017}.
+
+\textbf{\AFFECT est conçu pour permettre la reproductibilité des résultats
+scientifique.} Un outil de comparaison des BER/FER a été ajouté pour permettre
+une recherche facile dans une base de données d'environ 500 références
+pré-simulées. Toutes ces références sont des résultats simulés avec \AFFECT et
+qui peuvent être reproduits. À cette fin, un pipeline de tests a été mis en
+place. Chaque fois qu'il y a une modification du code source, la base de données
+des références est rejouée pour éviter les régressions. Ces tests sont également
+effectués sur plusieurs architectures (x86 et ARM\R) et systèmes d'exploitation
+(Windows, macOS et Linux) afin de garantir que la portabilité soit toujours
+conservée.
+
+La dernière partie du chapitre traite de l'impact d'\AFFECT dans la communauté.
+\textbf{Il est montré que de plus en plus d'utilisateurs adoptent la boîte à
+outils \AFFECT aussi bien dans l'industrie que dans les milieux académiques.}
+Les contextes applicatifs sont variés et vont de la validation des performances
+de décodage à l'utilisation de sous-parties spécifiques de la bibliothèque. Les
+contributions externes sont cependant encore rares.
+
+% résumé chap4 ----------------------------------------------------------------
+% -----------------------------------------------------------------------------
+\section*{Évaluation et comparaison des performances}
+\vskipSectionResume
+
+\subsubsection*{Organisation du chapitre}
+\vskipSSSectionResume
+
+Ce chapitre propose d'évaluer les différentes contributions exposées dans les
+chapitres précédents. Les trois premières parties se concentrent sur les
+implémentations efficaces des décodeurs LDPC, des décodeurs polaires et du
+turbo-décodeur. Le débit, la latence et l'efficacité énergétique sont étudiés
+et comparés avec d'autres travaux. La quatrième partie résume les
+implémentations de décodeurs logiciels les plus efficaces que nous avons
+trouvées dans la littérature. Trois catégories de décodeurs sont proposées : une
+pour les décodeurs LDPC, une pour les décodeurs polaires et une pour les
+turbo-décodeurs. Certaines métriques sont définies pour faciliter la comparaison
+entre les différentes publications. La dernière partie est consacrée à une
+analyse des performances du simulateur \AFFECT. Une chaîne de communication
+numérique représentative est définie et évaluée en séquentiel et en parallèle.
+Cette chaîne utilise un décodeur polaire rapide présenté plus tôt dans le
+chapitre.
+
+\subsubsection*{Principaux résultats du chapitre}
+\vskipSSSectionResume
+
+Pour les décodeurs LDPC et les turbo-décodeurs, la stratégie inter-trames a été
+appliquée et permet d'obtenir des débits comparables aux meilleurs travaux de la
+littérature. Toutefois, les latences ne sont pas compétitives avec les
+meilleures implémentations de type intra-trame que l'on trouve dans la
+littérature. L'implémentation inter-trames proposée est alors davantage
+orientées vers la simulation ou vers des applications en temps réel qui ne
+nécessitent pas une faible latence comme le streaming vidéo, par exemple. Pour
+les décodeurs polaires, les stratégies inter-trames et intra-trame ont toute le
+deux été implémentées. Il en résulte un framework complet qui peut s'adapter à
+de nombreux contextes applicatifs. \textbf{Les décodeurs proposés sont parmi les
+plus rapides de la littérature. Ils peuvent également être très flexibles avec
+les implémentations dynamiques ou spécialisés pour des performances maximales
+avec la technique de génération de code source.} Pour tous les décodeurs
+proposés (LDPC, polar et turbo), le niveau de généricité est l'une de nos
+principales contributions. \textbf{Les implémentations sont capables de
+s'adapter à différentes architectures de CPU ainsi que de supporter de
+nombreuses variantes algorithmiques.} De plus, chacune des implémentations
+présentées est capable de travailler à un niveau proche des performances de
+décodage de référence. La plupart des résultats obtenus ont été publiés dans des
+conférences et des revues scientifiques~\cite{Ghaffari2019,Leonardon2019,
+Cassagne2015c,Cassagne2016b,Cassagne2016a}.
+
+Les ``Temples de la renommée'' (\emph{Hall of Fames}, HoFs) des décodeurs
+logiciels sont ensuite présentés. Ces HoFs représentent des états de l'art
+complets par famille de code correcteur d'erreur. Les implémentations de
+décodeurs proposées dans la thèse sont comparées avec les autres travaux de la
+littérature. Ces HoFs permettent de comparer les implémentations CPU et GPU.
+Certaines mesures telles que le débit normalisé, le TNDC et la consommation
+d'énergie sont définies. Les résultats montrent que ces dernières années, les
+implémentations CPU sont plus efficaces que les implémentations GPU en termes de
+débit, de latence et d'efficacité énergétique. L'un des principaux problèmes des
+implémentations basées sur GPU est le temps de transfert nécessaire entre le
+CPU et le GPU. Un autre problème majeur vient de l'architecture intrinsèque des
+GPU qui nécessite beaucoup de parallélisme pour être efficace. Il n'est pas
+toujours possible de tirer parti de ce niveau élevé de parallélisme dans les
+algorithmes de décodage canal. \textbf{Par conséquent, en général, les CPUs sont
+plus adaptés pour des implémentations à faible latence que les GPUs.}
+
+La dernière partie de ce chapitre est consacrée aux performances du simulateur
+\AFFECT. Une chaîne de communication numérique entièrement vectorisée est
+proposée pour l'évaluation. Les performances sur un seul cœur de calcul CPU sont
+d'abord présentées. Il en résulte qu'\AFFECT fonctionne le plus rapidement sur
+les derniers processeurs Intel\R Gold qui supportent le jeu d'instruction
+vectoriel ``AVX-512''. Ensuite, les performances sur plusieurs cœurs de calcul
+sont mises à l'épreuve et les processeurs AMD\R EPYC sont les plus performants :
+le débit utile de la chaîne atteint 11 Gb/s. Même si les processeurs AMD\R EPYC
+ne prennent en charge que les instructions de type ``AVX'', il semble que
+l'architecture Zen 2 soit bien équilibrée entre la puissance de calcul et la
+vitesse de la mémoire. Enfin, la capacité multi-nœuds du simulateur \AFFECT est
+testée et une accélération linéaire est observée sur 32 nœuds. Le débit de
+pointe en multi-nœuds est de 32 Gb/s. \textbf{Ces débits élevés permettent
+l'exploration de nombreuses combinaisons à un niveau de taux d'erreur très
+faible.} Une partie de ces résultats ont été publiés dans une revue
+scientifique~\cite{Cassagne2019a}. \textbf{À notre connaissance, \AFFECT est
+l'un des simulateurs de codes correcteurs d'erreurs les plus rapides
+actuellement.}
+
+% résumé chap5 ----------------------------------------------------------------
+% -----------------------------------------------------------------------------
+\section*{Un langage embarqué et spécifique pour la radio logicielle}
+\vskipSectionResume
+
+\subsubsection*{Organisation du chapitre}
+\vskipSSSectionResume
+
+Ce chapitre présente un nouveau langage embarqué et spécifique (\emph{embedded
+Domain Specific Language}, eDSL) pour la radio logicielle (SDR). La première
+partie présente les modèles et solutions existants. Elle motive également le
+besoin d'un nouveau langage dédié à la radio logicielle. Dans une deuxième
+partie, une description de l'eDSL proposé est donnée et détaillée en deux
+sous-parties. Dans un premier temps, les composants élémentaires sont présentés,
+puis, dans un second temps, les composants parallèles sont décrits. La troisième
+partie se concentre sur l'implémentation des composants présentés précédemment.
+Entre autres, la technique de duplication des séquences et l'implémentation du
+pipeline sont discutées. Enfin, la dernière partie présente un cas concret
+d'utilisation de l'eDSL sur une norme bien répandue dans les communications
+numériques: la norme DVB-S2. Un émetteur-récepteur entièrement numérique a été
+conçu en logiciel. La norme DVB-S2 est présentée d'un point de vue applicatif
+(émetteur et récepteur) et est ensuite évaluée sur une cible CPU spécifique.
+
+\subsubsection*{Principaux résultats du chapitre}
+\vskipSSSectionResume
+
+Les principaux composants de l'eDSL ont été conçus pour répondre aux besoins de
+la SDR en termes 1) d'expressivité avec des séquences, des tâches et des
+boucles ; 2) de performance avec la technique de duplication de séquences et la
+stratégie de pipeline. Nous avons évalué l'eDSL proposé dans un contexte
+applicatif : l'implémentation logicielle de la norme DVB-S2. \textbf{Les
+résultats démontrent l'efficacité de l'eDSL \AFFECT. En effet, la solution
+proposée répond aux contraintes de temps réel des satellites (30 $\thicksim$
+50 Mb/s).} Ceci est la conséquence de deux facteurs principaux : 1) les
+optimisations au niveau des tâches, par exemple un décodeur LDPC rapide a été
+utilisé (ce décodeur est détaillé dans les chapitres précédents) ; 2) l'eDSL a
+un très faible surcoût à l'utilisation. Cela est notamment possible grâce à une
+implémentation efficace de la technique du pipeline.
