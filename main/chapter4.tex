@@ -1510,7 +1510,8 @@ and macOS at the same level of performance.
      total simulation performance and in \colorbox{Paired-5!15}{red} the worst
      total simulation performance.}
   \label{tab:eval_simu_taks_thr_lat}
-  {\small
+  % {\small
+  {\resizebox{\linewidth}{!}{
   \begin{tabular}{c | l | r r r r r r | r}
   & \textbf{CPU}           & \textbf{Chan.} & \textbf{Demod.} & \textbf{Quant.} & \textbf{Dec.} & \textbf{CRC ext.} & \textbf{Mon.} & \textbf{Total} \\
   \hline \hline
@@ -1534,7 +1535,7 @@ and macOS at the same level of performance.
 % &     EPYC\TM 7452       &          9.42  &           0.14  &           0.23  &         4.90  &             0.06  &         0.13  &         14.88  \\
   &     EPYC\TM 7702       &          9.51  &       \BF{0.14} &           0.22  &         4.88  &             0.06  &     \BF{0.13} &         14.94  \\
   \end{tabular}
-  }
+  }}
 \end{table}
 
 Table~\ref{tab:eval_simu_taks_thr_lat} presents the mono-threaded
