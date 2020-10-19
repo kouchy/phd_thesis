@@ -31,19 +31,19 @@ deuxième partie détaille le modèle de canal par ajout de bruit blanc gaussien
 par changement de phase (\emph{Binary Phase-Shift Keying}, BPSK) utilisées tout
 au long du manuscrit. Une caractérisation du rapport signal sur bruit
 (\emph{Signal-to-Noise Ratio}, SNR) est donnée ainsi que la notion de
-probabilité à la sortie du canal. La troisième partie présente les familles de
-code correcteur d'erreurs considérées dans ce manuscrit : à savoir les codes
-LDPC, les codes polaires et les turbo-codes. Les traitements de codage (situé
-dans l’émetteur) et de décodage (situé dans le récepteur) correspondants sont
-détaillés pour chaque famille de code. Ces familles de code sont utilisées dans
-la plupart des standards actuels et viennent avec une complexité calculatoire
-élevée. Par conséquent, ce sont de bons candidats d'étude. Dans la dernière
-partie, deux contextes applicatifs majeurs sont détaillés pour les familles de
-code considérées. La simulation fonctionnelle permet la conception et la
-validation d'un schéma de codage. La radio logicielle (\emph{Software-Defined
-Radio}, SDR) est un système de communication radio où tous les composants sont
-implémentés en logiciel (par opposition à des implémentations matérielles plus
-couramment utilisées).
+probabilité à la sortie du canal et du démodulateur. La troisième partie
+présente les familles de code correcteur d'erreurs considérées dans ce
+manuscrit : à savoir les codes LDPC, les codes polaires et les turbo-codes. Les
+traitements de codage (situé dans l’émetteur) et de décodage (situé dans le
+récepteur) correspondants sont détaillés pour chaque famille de code. Ces
+familles de code sont utilisées dans la plupart des standards actuels et
+viennent avec une complexité calculatoire élevée. Par conséquent, ce sont de
+bons candidats d'étude. Dans la dernière partie, deux contextes applicatifs
+majeurs sont détaillés pour les familles de code considérées. La simulation
+fonctionnelle permet la conception et la validation d'un schéma de codage. La
+radio logicielle (\emph{Software-Defined Radio}, SDR) est un système de
+communication radio où tous les composants sont implémentés en logiciel (par
+opposition à des implémentations matérielles plus couramment utilisées).
 
 \subsubsection*{Objectifs de la thèse}
 \vskipSSSectionResume
@@ -80,9 +80,9 @@ entraîne également trois problèmes principaux :
     de codage (en particulier si le taux d'erreur est faible).
 
   \item \textbf{Hétérogénéité algorithmique :}
-    un grand nombre de codes correcteurs d'erreur ont été conçus au fil des
+    un grand nombre de codes correcteurs d'erreurs ont été conçus au fil des
     années. Pour chaque famille de code, plusieurs configurations de décodage
-    sont possibles. S'il est simple de décrire un schéma de codage unique, il
+    sont possibles. Si il est simple de décrire un schéma de codage unique, il
     est  plus difficile d'avoir une description logicielle unifiée qui prenne en
     charge tous les schémas de codage et les algorithmes associés. Cette
     difficulté provient de l'hétérogénéité des structures de données nécessaires
@@ -104,14 +104,14 @@ entraîne également trois problèmes principaux :
 \paragraph{Radio logicielle}
 
 Le paradigme de la radio logicielle (\emph{Software-Defined Radio}, SDR) est
-désormais considéré pour des systèmes de communication réels. Pour répondre
-aux contraintes posées par les systèmes temps réel, voici les principaux défis à
-relever :
+désormais considéré pour des systèmes de communication numérique réels. Pour
+répondre aux contraintes posées par les systèmes temps réel, voici les
+principaux défis à relever :
 
 \begin{enumerate}
   \item \textbf{Haut débit :}
     les nouvelles applications comme le \emph{streaming} vidéo, peuvent être
-    très gourmandes en données. En conséquence, les tâches de calcul intensif de
+    très gourmandes en données. Par conséquent, les tâches de calcul intensif de
     l'émetteur et du récepteur doivent être bien optimisées pour atteindre des
     niveaux de performance comparables aux implémentation matérielles.
 
@@ -124,13 +124,14 @@ relever :
     les implémentations logicielles doivent pouvoir s'adapter à diverses
     configurations. Par exemple, lorsque le rapport signal sur bruit (SNR)
     change, le décodeur doit être capable se s'adapter ``à la volée'' à de
-    nouveaux taux de codage $R$.
+    nouveaux taux de codage.
 
   \item \textbf{Portabilité :}
     les solutions proposées peuvent être déployées sur des serveurs haut de
-    gamme ainsi que dans des systèmes embarqués à faible consommation d'énergie.
-    De plus, de nombreux systèmes d'exploitation coexistent, et il est important
-    de pouvoir supporter les plus communs comme Windows, macOS et Linux.
+    gamme ainsi que dans des systèmes embarqués à faible consommation
+    énergétique. De plus, de nombreux systèmes d'exploitation coexistent, et il
+    est important de pouvoir supporter les plus communs comme Windows, macOS et
+    Linux.
 \end{enumerate}
 
 \section*{Chapitre~\ref{chap:opt} - Stratégies d'optimisation}
@@ -148,8 +149,8 @@ communication numérique. Il s'avère que la vectorisation est une des clefs pou
 implémenter des solutions logicielles efficaces. Une bibliothèque dédiée ainsi
 que des niveaux de parallélisme génériques sont proposés. La seconde partie est
 consacrée à l'implémentation logicielle efficace d'un sous-ensemble
-représentatif de décodeurs pour les trois grandes familles abordées plus tôt, à
-savoir : les codes LDPC, les codes polaires et les turbo-codes.
+représentatif de décodeurs pour les trois grandes familles de code abordées plus
+tôt, à savoir : les codes LDPC, les codes polaires et les turbo-codes.
 
 \subsubsection*{Principaux résultats}
 \vskipSSSectionResume
@@ -212,39 +213,39 @@ Cassagne2016a}.
 \subsubsection*{Organisation}
 \vskipSSSectionResume
 
-Ce chapitre est consacré à la présentation de notre boîte à outils open-source
-nommée \AFFECT. La première partie décrit les principaux prérequis en fonction
-de quatre objectifs : l'implémentation d'un logiciel hautement performant, la
-prise en charge de l'hétérogénéité algorithmique, la portabilité et la
-reproductibilité. Dans la deuxième partie, \AFFECT est comparé aux autres
-bibliothèques logicielles de codage canal \verb|C|/\Cxx existantes. La troisième
-partie présente \AFFECT comme une bibliothèque dédiée aux algorithmes de
-communication numérique. L'architecture et les fonctionnalités du logiciel sont
-décrites. Ensuite, des exemples d'utilisation de la bibliothèque sont donnés en
-\Cxx et en MATLAB\R. La quatrième partie se concentre sur le simulateur \AFFECT
-qui est livré dans la boîte à outils. Un aperçu des explorations possibles est
-donné et notre comparateur de BER/FER est présenté. À la fin, la stratégie de
-test d'\AFFECT est expliquée. Une dernière partie est consacrée à l'impact
-d'\AFFECT dans les contextes industriels et universitaires. Une revue des
-publications scientifiques qui ont utilisé \AFFECT est donnée.
+Ce chapitre est consacré à la présentation de notre boîte à outils
+\emph{open-source} nommée \AFFECT. La première partie décrit les principaux
+prérequis en fonction de quatre objectifs : l'implémentation d'un logiciel
+hautement performant, la prise en charge de l'hétérogénéité algorithmique, la
+portabilité et la reproductibilité. Dans la deuxième partie, \AFFECT est comparé
+aux autres bibliothèques logicielles de codage canal \verb|C|/\Cxx existantes.
+La troisième partie présente \AFFECT comme une bibliothèque dédiée aux
+algorithmes de communication numérique. L'architecture et les fonctionnalités du
+logiciel sont décrites. Ensuite, des exemples d'utilisation de la bibliothèque
+sont donnés en \Cxx et en MATLAB\R. La quatrième partie se concentre sur le
+simulateur \AFFECT qui est livré dans la boîte à outils. Un aperçu des
+explorations possibles est donné et notre comparateur de BER/FER est présenté. À
+la fin, la stratégie de test d'\AFFECT est expliquée. Une dernière partie est
+consacrée à l'impact d'\AFFECT dans les contextes industriels et universitaires.
+Une revue des publications scientifiques qui ont utilisé \AFFECT est donnée.
 
 \subsubsection*{Principaux résultats}
 \vskipSSSectionResume
 
 Tout d'abord, l'accent est mis sur \textbf{la bibliothèque \AFFECT qui vient
 avec une architecture logicielle qui permet l'hétérogénéité algorithmique}. De
-nombreuses familles de codes correcteurs d'erreur sont supportées comme les
+nombreuses familles de code correcteur d'erreurs sont supportées comme les
 codes LDPC, les codes polaires, les turbo-codes, les turbo-codes produit, les
 codes convolutifs, les codes BCH, les codes RS, etc. \textbf{À notre
 connaissance, \AFFECT est la bibliothèque qui offre le support le plus complet
-pour les algorithmes de codage canal.} \AFFECT est également livré avec des
-modèles de canaux multiples (AWGN, Rayleigh, BEC, BSC, etc.) et des schémas de
-modulation (PSK, QAM, PAM, OOK, CPM, SCMA, etc.). Toutes ces implémentations
-d'algorithmes efficaces peuvent être utilisées à partir d'interfaces. Des
-exemples d'utilisation de la bibliothèque sont donnés en \Cxx natif ou en
-utilisant l'encapsulation MATLAB\R. La boîte à outils \AFFECT a fait l'objet de
-publications dans une conférence et une revue scientifiques~\cite{Cassagne2017a,
-Cassagne2019a}.
+pour les algorithmes de codage canal.} \AFFECT est également livré avec de
+multiples modèles de canaux  (AWGN, Rayleigh, BEC, BSC, etc.) et différents
+schémas de modulation (PSK, QAM, PAM, OOK, CPM, SCMA, etc.). Toutes ces
+implémentations efficaces d'algorithmes peuvent être utilisées à partir
+d'interfaces. Des exemples d'utilisation de la bibliothèque sont donnés en \Cxx
+natif ou en utilisant l'encapsulation MATLAB\R. La boîte à outils \AFFECT a fait
+l'objet de publications dans une conférence et une revue
+scientifiques~\cite{Cassagne2017a,Cassagne2019a}.
 
 \textbf{\AFFECT est également fourni avec un simulateur fonctionnel de BER/FER.}
 Toutes les caractéristiques précédemment énumérées peuvent être simulées sur
@@ -322,7 +323,7 @@ Cassagne2015c,Cassagne2016b,Cassagne2016a}.
 
 Les ``Temples de la renommée'' (\emph{Hall of Fames}, HoFs) des décodeurs
 logiciels sont ensuite présentés. Ces HoFs représentent des états de l'art
-complets par famille de code correcteur d'erreur. Les implémentations de
+complets par famille de code correcteur d'erreurs. Les implémentations de
 décodeur proposées dans la thèse sont comparées avec les autres travaux de la
 littérature. Ces HoFs permettent de comparer les implémentations CPU et GPU.
 Certaines mesures telles que le débit normalisé, le TNDC et la consommation
@@ -340,18 +341,18 @@ La dernière partie de ce chapitre est consacrée aux performances du simulateur
 \AFFECT. Une chaîne de communication numérique entièrement vectorisée est
 proposée pour l'évaluation. Les performances sur un seul cœur de calcul CPU sont
 d'abord présentées. Il en résulte qu'\AFFECT fonctionne le plus rapidement sur
-les derniers processeurs Intel\R Gold qui supportent le jeu d'instruction
-vectoriel ``AVX-512''. Ensuite, les performances sur plusieurs cœurs de calcul
-sont mises à l'épreuve et les processeurs AMD\R EPYC sont les plus performants :
-le débit utile de la chaîne atteint 11 Gb/s. Même si les processeurs AMD\R EPYC
-ne prennent en charge que les instructions de type ``AVX'', il semble que
-l'architecture Zen 2 soit bien équilibrée entre la puissance de calcul et la
-vitesse de la mémoire. Enfin, la capacité multi-nœuds du simulateur \AFFECT est
-testée et une accélération linéaire est observée sur 32 nœuds. Le débit de
-pointe en multi-nœuds est de 32 Gb/s. \textbf{Ces débits élevés permettent
-l'exploration de nombreuses combinaisons à un niveau de taux d'erreur très
-faible.} Une partie de ces résultats ont été publiés dans une revue
-scientifique~\cite{Cassagne2019a}. \textbf{À l'heure actuelle et à notre
+les derniers processeurs Intel\R Gold qui supportent le jeu d'instructions
+vectorielles ``AVX-512''. Ensuite, les performances sur plusieurs cœurs de
+calcul sont mises à l'épreuve et les processeurs AMD\R EPYC sont les plus
+performants : le débit utile de la chaîne atteint 11 Gb/s. Même si les
+processeurs AMD\R EPYC ne prennent en charge que les instructions de type
+``AVX'', il semble que l'architecture Zen 2 soit bien équilibrée entre la
+puissance de calcul et la vitesse de la mémoire. Enfin, la capacité multi-nœuds
+du simulateur \AFFECT est testée et une accélération linéaire est observée sur
+32 nœuds. Le débit de pointe en multi-nœuds est de 32 Gb/s. \textbf{Ces débits
+élevés permettent l'exploration de nombreuses combinaisons à un niveau de taux
+d'erreur très faible.} Une partie de ces résultats ont été publiés dans une
+revue scientifique~\cite{Cassagne2019a}. \textbf{À l'heure actuelle et à notre
 connaissance, \AFFECT est l'un des simulateurs de codes correcteurs d'erreurs
 le plus rapide.}
 
