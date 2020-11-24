@@ -1,0 +1,141 @@
+%!TEX root = ./slides.tex
+
+% Packages --------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+% \usepackage[frenchb]{babel}
+\usepackage[english]{babel}
+\usepackage{eulervm}
+\usepackage{etoolbox,refcount}
+\usepackage[normalem]{ulem} % strikeout with \sout{}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{makecell}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{tikz-timing} % package pour les chronogrammes
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox} % align in includegraphics
+\usepackage{stmaryrd} % llbracket
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{marvosym} % grosse fleche
+\usepackage{calc}
+\usepackage[english, onelanguage, ruled, linesnumbered, vlined]{algorithm2e}
+\usepackage{bm}
+
+% Parameters ------------------------------------------------------------------
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc}
+\tikzset{
+    invisible/.style={opacity=0},
+    visible on/.style={alt={#1{}{invisible}}},
+    alt/.code args={<#1>#2#3}{%
+      \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+    },
+}
+\SetAlFnt{\footnotesize}
+% \DecimalMathComma
+
+% Beamer template -------------------------------------------------------------
+\input{../settings/colors}
+\usecolortheme[named=bleuUni]{structure}
+
+% Special commands : ddfrac and actionenv and compresslist
+\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
+
+\newenvironment<>{varblock}[2][\textwidth]{%
+  \setlength{\textwidth}{#1}
+  \begin{actionenv}#3%
+    \def\insertblocktitle{#2}%
+    \par%
+    \usebeamertemplate{block begin}}
+  {\par%
+    \usebeamertemplate{block end}%
+  \end{actionenv}}
+
+\newcommand{\compresslist}{ % Define a command to reduce spacing within itemize/enumerate environments, this is used right after \begin{itemize} or \begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{%
+      \node[shape=circle,fill=bleuUni,inner sep=2pt] (char) {\textbf{\textcolor{white}{#1}}};}}
+
+\newcommand{\itmsp}[1] {\setlength\itemsep{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% Beamer
+\usepackage[bars]{beamerthemetree} % Beamer theme v 2.2
+\mode<presentation>
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \oldmacro\hfill%
+\insertframenumber\,/\,\inserttotalframenumber}
+\setbeamertemplate{footline}[frame number]
+\setbeamersize{text margin left=10pt,text margin right=10pt}
+\setbeamerfont{frametitle}{size=\small}
+\setbeamertemplate{frametitle}{ \nointerlineskip %
+\begin{beamercolorbox}[wd=\paperwidth,ht=2.2ex,dp=.9ex,left]{frametitle} %
+                       \hspace*{2ex}\strut\bfseries\color{bleuUni!15!white}\insertframetitle\strut\par %
+\end{beamercolorbox}}
+
+%\setbeamerfont{headline}{size=\footnotesize}
+
+% \usepackage{animate}
+% \usepackage{multimedia}
+\usetheme{Ilmenau} % Beamer theme v 3.0
+\setbeamercolor{section in head/foot}{bg=marronUni}
+\useinnertheme{circles} %rectangle bullet points instead of circle ones
+\usepackage{beamerthemebars}
+\beamertemplatenavigationsymbolsempty
+%\setbeamercolor{navigation symbols dimmed}{fg=red!80!black}
+%\setbeamercolor{navigation symbols}{fg=red!80!black}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{headline}{%
+\begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+\end{beamercolorbox}
+\begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+\end{beamercolorbox}%
+\begin{beamercolorbox}[ht=10pt]{subsection in head/foot}%
+    \vskip2pt\insertsubsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+\end{beamercolorbox}%
+\begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+\end{beamercolorbox}
+}
+
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+%%%%% Contents each new sec and subsec
+\AtBeginSection[]
+{
+  %\ifnumcomp{\value{section}}{=}{1}{}{
+    \begin{frame}[c]{Plan}
+      \centering
+      \tableofcontents[
+          currentsection,
+          hideothersubsections
+          %subsectionstyle=show/hide
+      ]
+    \end{frame}
+  %}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}[c]{Plan}
+    \tableofcontents[
+      currentsection,
+      sectionstyle=show/shaded,
+      subsectionstyle=show/shaded/hide
+    ]
+  \end{frame}
+}

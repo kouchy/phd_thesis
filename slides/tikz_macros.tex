@@ -1,0 +1,45 @@
+%!TEX root = ./slides.tex
+
+% TikZ maccro -----------------------------------------------------------------
+\newcommand{\Cloud}[3]{
+\begin{scope}[shift={#1},scale=#3]
+  \draw[fill=white] (-1.6,-0.7) .. controls (-2.3,-1.1)
+  and (-2.7,0.3) .. (-1.7,0.3)coordinate(asy1) .. controls (-1.6,0.7)
+  and (-1.2,0.9) .. (-0.8,0.7) .. controls (-0.5,1.5)
+  and (0.6,1.3) .. (0.7,0.5) .. controls (1.5,0.4)
+  and (1.2,-1) .. (0.4,-0.6)coordinate(asy2) .. controls (0.2,-1)
+  and (-0.2,-1) .. (-0.5,-0.7) .. controls (-0.9,-1)
+  and (-1.3,-1) .. cycle;
+  \node at ($(asy1)!0.5!(asy2)$) {#2};
+\end{scope}
+}
+
+\newcommand{\Phone}[3]{
+\begin{scope}[shift={#1},scale=#2]
+  \draw[black,rounded corners=1pt, thick, fill=white]  (0,0) rectangle (0.9,1.8);
+  \draw[black, thick]  (0.7,1.8) -- (0.7,2.1);
+\end{scope}
+}
+
+\newcommand{\PhoneGroup}[3]{
+\begin{scope}[shift={#1},scale=#2]
+  \Phone{(0,0)}{1.0};
+  \Phone{(0.5,-0.5)}{1.0};
+  \Phone{(0.2,-1.0)}{1.0};
+\end{scope}
+}
+
+\newcommand{\SmartPhone}[3]{
+\begin{scope}[shift={#1},scale=#2]
+  \draw[black,rounded corners=1pt, thick, fill=white]  (0,0) rectangle (1.25,2);
+  \draw[black,rounded corners=1pt]  (0.625-0.2, 0.10) rectangle (0.625+0.2,0.10+0.15);
+\end{scope}
+}
+
+\newcommand{\SmartPhoneGroup}[3]{
+\begin{scope}[shift={#1},scale=#2]
+  \SmartPhone{(0,0)}{1.0};
+  \SmartPhone{(0.8,-0.5)}{1.0};
+  \SmartPhone{(0.2,-1.0)}{1.0};
+\end{scope}
+}
