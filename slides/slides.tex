@@ -108,6 +108,676 @@
 \end{frame}
 
 \begin{frame}{Polar Coding Scheme}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \path[use as bounding box] (-2.0, 0) rectangle (11.7, 5.0);
+
+    \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
+    \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
+    \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ hid3/.style    ={draw=white, text=white, align=center} }
+
+    \node[style={txt,hid3}        ] (sen) at ( 0,   4) {Source\\Encoder};
+    \node[style=txtplain, thick   ] (enc) at ( 4,   4) {Polar\\Encoder};
+    \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
+    \Cloud{(11,2)}{}{0.65};
+    \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
+    \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
+    \node[style=rxtplain          ] (dec) at ( 4,   0) {Polar\\Decoder};
+    \node[style={rxt,hid3}        ] (sde) at ( 0,   0) {Source\\Decoder};
+
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
+
+    \draw[<-,>=latex, style=hid3] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
+    \draw[->,>=latex            ] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
+    \draw[-                     ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-                     ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex            ] (rx.east)  -- (10,  0) node [midway,  above           ] {$\bm{y}$};
+    \draw[->,>=latex, style=hid3] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
+    \draw[->,>=latex            ] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
+    \draw[->,>=latex            ] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
+    \draw[- ,>=latex, style=hid3] (sen.west) -- (-1.5,4);
+    \draw[- ,>=latex            ] (mod.east) -- (10.5,4);
+    \draw[- ,>=latex            ] (dem.east) -- ( 9.6,0);
+    \draw[- ,>=latex, style=hid3] (sde.west) -- (-1.5,0);
+  \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Polar Encoder}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ zoom/.style={draw=Paired-1, dash dot} }
+
+    \node[style=txtplain] (enc) at (0,4.0) {Polar\\Encoder};
+
+    \draw[<-,>=latex] (enc) --++ (-2.5,0) node [midway, above] {$\bm{u}$};
+    \draw[->,>=latex] (enc) --++ ( 2.5,0) node [midway, above] {$\bm{c}$};
+
+    \draw[zoom,-,>=latex] (enc.south west) --++ (-4.25, -1.0);
+    \draw[zoom,-,>=latex] (enc.south east) --++ (+4.25, -1.0);
+
+    \only<1>{
+    \draw[zoom, fill=Paired-1!20] (-5.5,2.5) rectangle (5.5,-2.5);
+    }
+    \only<2->{
+    \draw[zoom,                 ] (-5.5,2.5) rectangle (5.5,-2.5);
+    }
+
+    \only<2>{
+    \node (g) at (0,0)
+    {$
+    \begin{bmatrix}
+    \\
+    \\
+    \\
+    u_0\\
+    \\
+    u_1\\
+    u_2\\
+    u_3\\
+    \end{bmatrix}^{T}
+    \times
+    \begin{bmatrix}
+    1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+    1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+    1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+    1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
+    1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+    1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+    1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+    1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    c_0\\
+    c_1\\
+    c_2\\
+    c_3\\
+    c_4\\
+    c_5\\
+    c_6\\
+    c_7\\
+    \end{bmatrix}^{T}
+    $};
+    }
+
+    \only<3>{
+    \node (g) at (0,0)
+    {$
+    \begin{bmatrix}
+    \textcolor{Paired-1}{0}\\
+    \textcolor{Paired-1}{0}\\
+    \textcolor{Paired-1}{0}\\
+    u_0\\
+    \textcolor{Paired-1}{0}\\
+    u_1\\
+    u_2\\
+    u_3\\
+    \end{bmatrix}^{T}
+    \times
+    \begin{bmatrix}
+    1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+    1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+    1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+    1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
+    1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+    1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+    1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+    1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    c_0\\
+    c_1\\
+    c_2\\
+    c_3\\
+    c_4\\
+    c_5\\
+    c_6\\
+    c_7\\
+    \end{bmatrix}^{T}
+    $};
+    }
+
+    \only<4->{
+
+    \tikzset{XOR/.style={draw,circle, minimum height=0.35cm,append after command={
+            [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+            (\tikzlastnode.north) edge (\tikzlastnode.south)
+            (\tikzlastnode.east) edge (\tikzlastnode.west)
+            }
+        }
+    }
+
+    \tikzset{DOT/.style={circle,fill,inner sep=1.2pt} }
+
+    \newcommand\startx{-3.15}
+    \newcommand\startyg{0}
+    \newcommand\sed{0.50}
+    \newcommand\stasep{1.00}
+    \newcommand\xorsep{0.35}
+
+    \node[XOR] (g3_x0) at (\startx,                 \startyg+1.75)       {};
+    \node      (g3_e0) at (\startx,                 \startyg+1.25) [DOT] {};
+
+    \node[XOR] (g3_x1) at (\startx,                 \startyg+0.75)       {};
+    \node      (g3_e1) at (\startx,                 \startyg+0.25) [DOT] {};
+
+    % ---
+
+    \node[XOR] (g3_x2) at (\startx+\stasep,         \startyg+1.75)       {};
+    \node[XOR] (g3_x3) at (\startx+\stasep+\xorsep, \startyg+1.25)       {};
+
+    \node      (g3_e2) at (\startx+\stasep,         \startyg+0.75) [DOT] {};
+    \node      (g3_e3) at (\startx+\stasep+\xorsep, \startyg+0.25) [DOT] {};
+
+    % -----
+
+    \node[XOR] (g3_x4) at (\startx,                 \startyg-0.25)       {};
+    \node      (g3_e4) at (\startx,                 \startyg-0.75) [DOT] {};
+
+    \node[XOR] (g3_x5) at (\startx,                 \startyg-1.25)       {};
+    \node      (g3_e5) at (\startx,                 \startyg-1.75) [DOT] {};
+
+    % ---
+
+    \node[XOR] (g3_x6) at (\startx+\stasep,         \startyg-0.25)       {};
+    \node[XOR] (g3_x7) at (\startx+\stasep+\xorsep, \startyg-0.75)       {};
+
+    \node      (g3_e6) at (\startx+\stasep,         \startyg-1.25) [DOT] {};
+    \node      (g3_e7) at (\startx+\stasep+\xorsep, \startyg-1.75) [DOT] {};
+
+    % ----------
+
+    \node[XOR] (g3_x8)  at (\startx+\stasep+\stasep+\xorsep,                         \startyg+1.75)       {};
+    \node[XOR] (g3_x9)  at (\startx+\stasep+\stasep+\xorsep+\xorsep,                 \startyg+1.25)       {};
+    \node[XOR] (g3_x10) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep,         \startyg+0.75)       {};
+    \node[XOR] (g3_x11) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep, \startyg+0.25)       {};
+
+    \node      (g3_e8)  at (\startx+\stasep+\stasep+\xorsep,                         \startyg-0.25) [DOT] {};
+    \node      (g3_e9)  at (\startx+\stasep+\stasep+\xorsep+\xorsep,                 \startyg-0.75) [DOT] {};
+    \node      (g3_e10) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep,         \startyg-1.25) [DOT] {};
+    \node      (g3_e11) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep, \startyg-1.75) [DOT] {};
+
+    \draw[-,>=latex] (\startx-\sed, \startyg+1.75) node[left] {$\textcolor{Paired-1}{0} = v_0$} -- (g3_x0);
+    \draw[-,>=latex] (\startx-\sed, \startyg+1.25) node[left] {$\textcolor{Paired-1}{0} = v_1$} -- (g3_e0);
+    \draw[-,>=latex] (g3_x0)                       -- (g3_e0);
+    \draw[-,>=latex] (g3_x0)                       -- (g3_x2);
+    \draw[-,>=latex] (g3_e0)                       -- (g3_x3);
+
+    \draw[-,>=latex] (\startx-\sed, \startyg+0.75) node[left] {$\textcolor{Paired-1}{0} = v_2$} -- (g3_x1);
+    \draw[-,>=latex] (\startx-\sed, \startyg+0.25) node[left] {$u_0 = v_3$} -- (g3_e1);
+    \draw[-,>=latex] (g3_x1)                       -- (g3_e1);
+    \draw[-,>=latex] (g3_x1)                       -- (g3_e2);
+    \draw[-,>=latex] (g3_e1)                       -- (g3_e3);
+    \draw[-,>=latex] (g3_e2)                       -- (g3_x2);
+    \draw[-,>=latex] (g3_e3)                       -- (g3_x3);
+    \draw[-,>=latex] (g3_x2)                       -- (g3_x8);
+    \draw[-,>=latex] (g3_x3)                       -- (g3_x9);
+    \draw[-,>=latex] (g3_e2)                       -- (g3_x10);
+    \draw[-,>=latex] (g3_e3)                       -- (g3_x11);
+
+    \draw[-,>=latex] (\startx-\sed, \startyg-0.25) node[left] {$\textcolor{Paired-1}{0} = v_4$} -- (g3_x4);
+    \draw[-,>=latex] (\startx-\sed, \startyg-0.75) node[left] {$u_1 = v_5$} -- (g3_e4);
+    \draw[-,>=latex] (g3_x4)                       -- (g3_e4);
+    \draw[-,>=latex] (g3_x4)                       -- (g3_x6);
+    \draw[-,>=latex] (g3_e4)                       -- (g3_x7);
+
+    \draw[-,>=latex] (\startx-\sed, \startyg-1.25) node[left] {$u_2 = v_6$} -- (g3_x5);
+    \draw[-,>=latex] (\startx-\sed, \startyg-1.75) node[left] {$u_3 = v_7$} -- (g3_e5);
+    \draw[-,>=latex] (g3_x5)                       -- (g3_e5);
+    \draw[-,>=latex] (g3_x5)                       -- (g3_e6);
+    \draw[-,>=latex] (g3_e5)                       -- (g3_e7);
+    \draw[-,>=latex] (g3_e6)                       -- (g3_x6);
+    \draw[-,>=latex] (g3_e7)                       -- (g3_x7);
+    \draw[-,>=latex] (g3_x6)                       -- (g3_e8);
+    \draw[-,>=latex] (g3_x7)                       -- (g3_e9);
+    \draw[-,>=latex] (g3_e6)                       -- (g3_e10);
+    \draw[-,>=latex] (g3_e7)                       -- (g3_e11);
+
+    \draw [-,>=latex] (g3_e8)                      -- (g3_x8);
+    \draw [-,>=latex] (g3_e9)                      -- (g3_x9);
+    \draw [-,>=latex] (g3_e10)                     -- (g3_x10);
+    \draw [-,>=latex] (g3_e11)                     -- (g3_x11);
+    }
+
+    \only<4>{
+    % \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) node[right] {$c_0 = v_0 \oplus v_1 \oplus v_2 \oplus v_3 \oplus v_4 \oplus v_5 \oplus v_6 \oplus v_7$} -- (g3_x8);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) node[right] {$c_0 = v_0 \oplus v_1 \oplus ... \oplus v_6 \oplus v_7$} -- (g3_x8);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.25) node[right] {$c_1 = v_1 \oplus v_3 \oplus v_5 \oplus v_7$} -- (g3_x9);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+0.75) node[right] {$c_2 = v_2 \oplus v_3 \oplus v_6 \oplus v_7$} -- (g3_x10);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+0.25) node[right] {$c_3 = v_3 \oplus v_7$} -- (g3_x11);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-0.25) node[right] {$c_4 = v_4 \oplus v_5 \oplus v_6 \oplus v_7$} -- (g3_e8);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-0.75) node[right] {$c_5 = v_5 \oplus v_7$} -- (g3_e9);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-1.25) node[right] {$c_6 = v_6 \oplus v_7$} -- (g3_e10);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-1.75) node[right] {$c_7 = v_7 = u_3$} -- (g3_e11);
+    }
+
+    \only<5>{
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) -- (g3_x8);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.25) -- (g3_x9);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+0.75) -- (g3_x10);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+0.25) -- (g3_x11);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-0.25) -- (g3_e8);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-0.75) -- (g3_e9);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-1.25) -- (g3_e10);
+    \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-1.75) -- (g3_e11);
+
+    \node[draw=Paired-1, scale=0.725, rounded corners=2pt, dashed, fit=(g3_x0) (g3_e0)] (g3_l3_1) {};
+    \node[draw=Paired-1, scale=0.725, rounded corners=2pt, dashed, fit=(g3_x1) (g3_e1)] (g2_l3_2) {};
+    \node[draw=Paired-1, scale=0.725, rounded corners=2pt, dashed, fit=(g3_x4) (g3_e4)] (g3_l3_3) {};
+    \node[draw=Paired-1, scale=0.725, rounded corners=2pt, dashed, fit=(g3_x5) (g3_e5)] (g2_l3_4) {};
+
+    \node[draw=Paired-3, scale=0.925, minimum width=1.45cm, rounded corners=2pt, dashed, fit=(g3_x0) (g3_x2) (g3_x3) (g3_e2) (g3_e3)] (g3_l1_1) {};
+    \node[draw=Paired-3, scale=0.925, minimum width=1.45cm, rounded corners=2pt, dashed, fit=(g3_x4) (g3_x6) (g3_x7) (g3_e6) (g3_e7)] (g3_l1_2) {};
+
+    \node[draw=Paired-5, scale=1.040, minimum width=2.2cm, rounded corners=2pt, dashed, fit=(g3_x0) (g3_e5) (g3_x8) (g3_x11) (g3_e8) (g3_e11)] (g3_l1_1) {};
+
+    \renewcommand\startx{1.75}
+
+    \node[draw=black, fill=white, text=black, circle, minimum width=0.5cm, scale=0.8] (g3_n0) at (\startx, \startyg+1.75) {$v_0$};
+    \node[draw=black, fill=white, text=black, circle, minimum width=0.3cm, scale=0.8] (g3_n1) at (\startx, \startyg+1.25) {$v_1$};
+    \node[draw=black, fill=white, text=black, circle, minimum width=0.3cm, scale=0.8] (g3_n2) at (\startx, \startyg+0.75) {$v_2$};
+    \node[draw=black, fill=black, text=white, circle, minimum width=0.3cm, scale=0.8] (g3_n3) at (\startx, \startyg+0.25) {$v_3$};
+    \node[draw=black, fill=white, text=black, circle, minimum width=0.3cm, scale=0.8] (g3_n4) at (\startx, \startyg-0.25) {$v_4$};
+    \node[draw=black, fill=black, text=white, circle, minimum width=0.3cm, scale=0.8] (g3_n5) at (\startx, \startyg-0.75) {$v_5$};
+    \node[draw=black, fill=black, text=white, circle, minimum width=0.3cm, scale=0.8] (g3_n6) at (\startx, \startyg-1.25) {$v_6$};
+    \node[draw=black, fill=black, text=white, circle, minimum width=0.3cm, scale=0.8] (g3_n7) at (\startx, \startyg-1.75) {$v_7$};
+
+    \node[draw=Paired-1, fill=Paired-1!10, circle, minimum width=0.5cm, scale=0.8] (g3_n8) at (\startx+\stasep, \startyg+1.5) {$n_0^2$};
+    \node[draw=Paired-1, fill=Paired-1!10, circle, minimum width=0.5cm, scale=0.8] (g3_n9) at (\startx+\stasep, \startyg+0.5) {$n_1^2$};
+    \node[draw=Paired-1, fill=Paired-1!10, circle, minimum width=0.5cm, scale=0.8] (g3_n10) at (\startx+\stasep, \startyg-0.5) {$n_2^2$};
+    \node[draw=Paired-1, fill=Paired-1!10, circle, minimum width=0.5cm, scale=0.8] (g3_n11) at (\startx+\stasep, \startyg-1.5) {$n_3^2$};
+
+    \node[draw=Paired-3, fill=Paired-3!10, circle, minimum width=0.5cm, scale=0.8] (g3_n12) at (\startx+\stasep+\stasep, \startyg+1.00) {$n_0^1$};
+    \node[draw=Paired-3, fill=Paired-3!10, circle, minimum width=0.5cm, scale=0.8] (g3_n13) at (\startx+\stasep+\stasep, \startyg-1.00) {$n_1^1$};
+
+    \node[draw=Paired-5, fill=Paired-5!10, circle, minimum width=0.5cm, scale=0.8] (g3_n14) at (\startx+\stasep+\stasep+\stasep, \startyg+0.00) {$n_0^0$};
+
+    \draw [-,>=latex] (g3_n14) -- (g3_n13);
+    \draw [-,>=latex] (g3_n14) -- (g3_n12);
+    \draw [-,>=latex] (g3_n13) -- (g3_n11);
+    \draw [-,>=latex] (g3_n13) -- (g3_n10);
+    \draw [-,>=latex] (g3_n12) -- (g3_n9);
+    \draw [-,>=latex] (g3_n12) -- (g3_n8);
+    \draw [-,>=latex] (g3_n11) -- (g3_n7);
+    \draw [-,>=latex] (g3_n11) -- (g3_n6);
+    \draw [-,>=latex] (g3_n10) -- (g3_n5);
+    \draw [-,>=latex] (g3_n10) -- (g3_n4);
+    \draw [-,>=latex] (g3_n9)  -- (g3_n3);
+    \draw [-,>=latex] (g3_n9)  -- (g3_n2);
+    \draw [-,>=latex] (g3_n8)  -- (g3_n1);
+    \draw [-,>=latex] (g3_n8)  -- (g3_n0);
+    }
+
+  \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Polar Decoder}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \path[use as bounding box] (-2.0, 0) rectangle (11.7, 5.0);
+
+    \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
+    \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
+    \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ hid3/.style    ={draw=white, text=white, align=center} }
+
+    \node[style={txt,hid3}        ] (sen) at ( 0,   4) {Source\\Encoder};
+    \node[style=txtplain          ] (enc) at ( 4,   4) {Polar\\Encoder};
+    \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
+    \Cloud{(11,2)}{}{0.65};
+    \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
+    \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
+    \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
+    \node[style={rxt,hid3}        ] (sde) at ( 0,   0) {Source\\Decoder};
+
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
+
+    \draw[<-,>=latex, style=hid3] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
+    \draw[->,>=latex            ] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
+    \draw[-                     ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-                     ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex            ] (rx.east)  -- (10,  0) node [midway,  above           ] {$\bm{y}$};
+    \draw[->,>=latex, style=hid3] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
+    \draw[->,>=latex            ] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
+    \draw[->,>=latex            ] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
+    \draw[- ,>=latex, style=hid3] (sen.west) -- (-1.5,4);
+    \draw[- ,>=latex            ] (mod.east) -- (10.5,4);
+    \draw[- ,>=latex            ] (dem.east) -- ( 9.6,0);
+    \draw[- ,>=latex, style=hid3] (sde.west) -- (-1.5,0);
+  \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Polar Decoder: Successive Cancellation Algorithm}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \tikzset{ txtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ zoom/.style={draw=Paired-3, dash dot} }
+
+    \node[style=txtplain] (dec) at (2.6,8.9) {Polar\\Decoder};
+
+    \draw[<-,>=latex] (dec) --++ ( 2.5,0) node [midway, above] {$\bm{l}$};
+    \draw[->,>=latex] (dec) --++ (-2.5,0) node [midway, above] {$\bm{\hat{u}}$};
+
+    \draw[zoom,-,>=latex] (dec.south west) --++ (-3.55, -1.0);
+    \draw[zoom,-,>=latex] (dec.south east) --++ (+3.55, -1.0);
+
+    \only<1>{
+    \draw[zoom, fill=Paired-3!20] (-2.2,7.4) rectangle (7.4,-1.0);
+    }
+    \only<2->{
+    \draw[zoom                  ] (-2.2,7.4) rectangle (7.4,-1.0);
+    }
+
+    \only<2->{
+    \draw[fill=Gray!20, draw=none] ( 1.015, 6.96) rectangle (4.215,  6.445);
+    \draw[fill=Gray!20, draw=none] (-0.200, 0.01) rectangle (0.195, -0.505);
+    \draw[fill=Gray!20, draw=none] ( 0.550, 0.01) rectangle (0.945, -0.505);
+    \draw[fill=Gray!20, draw=none] ( 1.300, 0.01) rectangle (1.700, -0.505);
+    \draw[fill=Gray!20, draw=none] ( 2.800, 0.01) rectangle (3.200, -0.505);
+    }
+
+    \only<3->{
+    \draw[fill=Gray!20, draw=none] (0.325, 4.81) rectangle (1.925, 4.295);
+    }
+
+    \only<3>{
+    \draw[fill=Paired-7!20, draw=none] (1.015, 6.96) rectangle (2.615, 6.445);
+    \draw[fill=Paired-9!20, draw=none] (2.615, 6.96) rectangle (4.215, 6.445);
+    \draw[fill=Paired-5!20, draw=none] (0.325, 4.81) rectangle (1.925, 4.295);
+    }
+
+    \only<4->{
+    \draw[fill=Gray!20, draw=none] (-0.025, 2.66) rectangle (0.775, 2.145);
+    }
+
+    \only<4>{
+    \draw[fill=Paired-7!20, draw=none] (0.325, 4.81) rectangle (1.125, 4.295);
+    \draw[fill=Paired-9!20, draw=none] (1.125, 4.81) rectangle (1.925, 4.295);
+    \draw[fill=Paired-5!20, draw=none] (-0.025, 2.66) rectangle (0.775, 2.145);
+    }
+
+    \only<5->{
+    \draw[fill=Gray!20, draw=none] (-0.2, 0.51) rectangle (0.195, -0.005);
+    }
+
+    \only<5>{
+    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.66) rectangle (0.375, 2.145);
+    \draw[fill=Paired-9!20, draw=none] (0.375, 2.66) rectangle (0.775, 2.145);
+    \draw[fill=Paired-5!20, draw=none] (-0.2, 0.51) rectangle (0.195, -0.005);
+    }
+
+    \only<6->{
+    \draw[fill=gray!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
+    }
+
+    \only<6>{
+    \draw[fill=Paired-7!20, draw=none] (-0.2, 0.01) rectangle (0.195, -0.505);
+    \draw[fill=Paired-3!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
+    }
+
+    \only<7->{
+    \draw[fill=gray!20, draw=none] ( 0.550, 0.51) rectangle (0.945, 0.005);
+    }
+
+    \only<7>{
+    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.66) rectangle (0.375, 2.145);
+    \draw[fill=Paired-9!20, draw=none] (0.375, 2.66) rectangle (0.775, 2.145);
+    \draw[fill=Paired-11!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
+    \draw[fill=Paired-1!20, draw=none] ( 0.550, 0.51) rectangle (0.945, 0.005);
+    }
+
+    \only<8->{
+    \draw[fill=gray!20, draw=none] ( 0.375, 2.16) rectangle (0.775,  1.645);
+    }
+
+    \only<8>{
+      \draw[fill=Paired-7!20, draw=none] ( 0.550, 0.01) rectangle (0.945, -0.505);
+      \draw[fill=Paired-9!20, draw=none] (-0.025, 2.16) rectangle (0.375,  1.645);
+      \draw[fill=Paired-3!20, draw=none] ( 0.375, 2.16) rectangle (0.775,  1.645);
+    }
+
+    \only<9->{
+    \draw[fill=gray!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    }
+
+    \only<9>{
+    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.16) rectangle (0.775,  1.645);
+    \draw[fill=Paired-3!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    }
+
+    \only<10->{
+    \draw[fill=gray!20, draw=none] (1.475, 2.66) rectangle (2.275, 2.145);
+    }
+
+    \only<10>{
+    \draw[fill=Paired-7!20, draw=none] (0.325, 4.81) rectangle (1.125, 4.295);
+    \draw[fill=Paired-9!20, draw=none] (1.125, 4.81) rectangle (1.925, 4.295);
+    \draw[fill=Paired-11!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    \draw[fill=Paired-1!20, draw=none] (1.475, 2.66) rectangle (2.275, 2.145);
+    }
+
+    \only<11->{
+    \draw[fill=gray!20, draw=none] (1.300, 0.51) rectangle (1.700, 0.005);
+    }
+
+    \only<11>{
+    \draw[fill=Paired-7!20, draw=none] (1.475, 2.66) rectangle (1.875, 2.145);
+    \draw[fill=Paired-9!20, draw=none] (1.875, 2.66) rectangle (2.275, 2.145);
+    \draw[fill=Paired-5!20, draw=none] (1.300, 0.51) rectangle (1.700, 0.005);
+    }
+
+    \only<12->{
+    \draw[fill=gray!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    }
+
+    \only<12>{
+    \draw[fill=Paired-7!20, draw=none] (1.300, 0.01) rectangle (1.700,-0.505);
+    \draw[fill=Paired-3!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    }
+
+    \only<13->{
+    \draw[fill=gray!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
+    }
+
+    \only<13>{
+    \draw[fill=Paired-7!20, draw=none] (1.475, 2.66) rectangle (1.875, 2.145);
+    \draw[fill=Paired-9!20, draw=none] (1.875, 2.66) rectangle (2.275, 2.145);
+    \draw[fill=Paired-11!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    \draw[fill=Paired-1!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
+    }
+
+    \only<14->{
+    \draw[fill=gray!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
+    }
+
+    \only<14>{
+    \draw[fill=Paired-7!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
+    \draw[fill=gray!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
+    }
+
+    \only<15->{
+    \draw[fill=gray!20, draw=none] (1.875, 2.16) rectangle (2.275, 1.645);
+    }
+
+    \only<15>{
+    \draw[fill=Paired-7!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
+    \draw[fill=Paired-9!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    \draw[fill=Paired-3!20, draw=none] (1.875, 2.16) rectangle (2.275, 1.645);
+    }
+
+    \only<16->{
+    \draw[fill=gray!20, draw=none] (1.125, 4.31) rectangle (1.925, 3.795);
+    }
+
+    \only<16>{
+    \draw[fill=Paired-7!20, draw=none] (1.475, 2.16) rectangle (2.275, 1.645);
+    \draw[fill=Paired-9!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    \draw[fill=Paired-3!20, draw=none] (1.125, 4.31) rectangle (1.925, 3.795);
+    }
+
+    \only<17->{
+    \draw[fill=gray!20, draw=none] (1.015, 6.46) rectangle (2.615, 5.945);
+    }
+
+    \only<17>{
+    \draw[fill=Paired-7!20, draw=none] (0.325, 4.31) rectangle (1.925, 3.795);
+    \draw[fill=Paired-3!20, draw=none] (1.015, 6.46) rectangle (2.615, 5.945);
+    }
+
+    \only<2->{
+    \newcommand\La{4} % number of layers in the tree
+    \newcommand\VS{2.15} % vertical space between the tree layer
+
+    \pgfmathtruncatemacro\Ll{\La -1}
+
+    \foreach \l in {\Ll,...,0} {
+
+      \pgfmathtruncatemacro\ll{2^\l-1}
+      \pgfmathtruncatemacro\rl{\La-\l}
+      \pgfmathtruncatemacro\rlmo{\rl -1}
+      \pgfmathtruncatemacro\ee{2^\rlmo}
+      \pgfmathtruncatemacro\eemo{\ee-1}
+
+      ["\ifthenelse{\l=0}{}
+      {
+        \draw[dashed] (-2.00, \rlmo*\VS+\VS/2) -- (7.25, \rlmo*\VS+\VS/2);
+      }", sloped]
+
+      \node[text width=1.5cm, text centered] at (6.4, \rlmo*\VS) {\l};
+
+      \foreach \g in {0,...,\ll} {
+
+        \ifthenelse{\l=\Ll}{}
+        {
+          \draw (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \eemo/2*0.4, \rlmo*\VS) node{\tiny{\textbullet}};
+        }
+
+        \foreach \e in {0,...,\eemo} {
+          \only<18->{
+          \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, fill=gray!20] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+          }
+          \draw[-, line width=0.25pt] (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4 -0.20, \rlmo*\VS) -- (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4 +0.20, \rlmo*\VS);
+          \ifthenelse{\e=0 \AND \g=0}
+          {
+            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, label={[black]left:\small{$\ee$ (LLR, $\hat{s}$)}}] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+          }
+          {
+            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+          }
+        }
+
+        \only<18->{
+        \ifthenelse{\l=\Ll}{}
+        {
+          \pgfmathtruncatemacro\ln{\l+1}
+          \pgfmathtruncatemacro\gn{\g*2}
+          \pgfmathtruncatemacro\gnpo{\g*2+1}
+          \pgfmathtruncatemacro\eee{\eemo/2}
+          \pgfmathtruncatemacro\eeemo{\eee-1}
+          \pgfmathtruncatemacro\eemt{\eemo-1}
+          \ifthenelse{\l<2}
+          {
+            \draw[->,>=latex', line width=1.0pt, Paired-5        ] (l\l_g\g_e1.south)          -- (l\ln_g\gn_e1.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+            \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemt.south)      -- (l\ln_g\gnpo_e\eeemo.north)    node [midway, text=Paired-1, fill=white] {\small{$g$}};
+            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     -- (l\ln_g\gn_e0.north west)      node [midway, fill=white] {\small{$h$}};
+            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) -- (l\ln_g\gnpo_e\eee.north east) node [midway, fill=white] {\small{$h$}};
+          }
+          {
+            \draw[->,>=latex', line width=1.0pt, Paired-5        ] (l\l_g\g_e0.south)          --                (l\ln_g\gn_e0.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+            \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemo.south)      --                (l\ln_g\gnpo_e\eee.north)      node [midway, text=Paired-1, fill=white] {\small{$g$}};
+            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     to[bend right=30] (l\ln_g\gn_e0.north west)      node [] {};
+            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) to[bend left=30]  (l\ln_g\gnpo_e\eee.north east) node [] {};
+          }
+        }
+        }
+      }
+    }
+
+    \only<3->{
+    \draw[->,>=latex', line width=1.0pt, Paired-5] (l0_g0_e1.south) -- (l1_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    }
+    \only<4->{
+    \draw[->,>=latex', line width=1.0pt, Paired-5] (l1_g0_e1.south) -- (l2_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    }
+    \only<5->{
+    \draw[->,>=latex', line width=1.0pt, Paired-5] (l2_g0_e0.south) -- (l3_g0_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    }
+    \only<6->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g0_e0.south west) to[bend right=30] (l3_g0_e0.north west) node [midway, text=Paired-3, fill=white, yshift=+1.1cm, xshift=-0.55cm] {\small{$h$}};
+    }
+    \only<7->{
+    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l2_g0_e1.south) -- (l3_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    }
+    \only<8->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g0_e1.south east) to[bend left=30] (l3_g1_e0.north east) node [] {};
+    }
+    \only<9->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l1_g0_e0.south west) -- (l2_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
+    }
+    \only<10->{
+    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l1_g0_e2.south) -- (l2_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    }
+    \only<11->{
+    \draw[->,>=latex', line width=1.0pt, Paired-5] (l2_g1_e0.south) -- (l3_g2_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    }
+    \only<12->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g1_e0.south west) to[bend right=30] (l3_g2_e0.north west) node [] {};
+    }
+    \only<13->{
+    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l2_g1_e1.south) -- (l3_g3_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    }
+    \only<15->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g1_e1.south east) to[bend left=30] (l3_g3_e0.north east) node [] {};
+    }
+    \only<16->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l1_g0_e3.south east) -- (l2_g1_e1.north east) node [midway, fill=white] {\small{$h$}};
+    }
+    \only<17->{
+    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l0_g0_e0.south west) -- (l1_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
+    }
+
+    \pgfmathtruncatemacro\H{\VS*\La}
+    \pgfmathtruncatemacro\HH{7.9}
+    \draw[->,>=latex] (7.00, \HH) -- (7.00, -0.55) node [midway, text=black, fill=white,rotate=90] {\small{Layer (tree depth)}};
+
+    \node[text width=1.5cm, text centered] at (1.225, 6.7) {$l_0$};
+    \node[text width=1.5cm, text centered] at (1.625, 6.7) {$l_1$};
+    \node[text width=1.5cm, text centered] at (2.025, 6.7) {$l_2$};
+    \node[text width=1.5cm, text centered] at (2.425, 6.7) {$l_3$};
+    \node[text width=1.5cm, text centered] at (2.825, 6.7) {$l_4$};
+    \node[text width=1.5cm, text centered] at (3.225, 6.7) {$l_5$};
+    \node[text width=1.5cm, text centered] at (3.625, 6.7) {$l_6$};
+    \node[text width=1.5cm, text centered] at (4.025, 6.7) {$l_7$};
+
+    \node[text width=1.5cm, text centered] at (0.00, -0.225) {$\textcolor{Paired-1}{0}$};
+    \node[text width=1.5cm, text centered] at (0.75, -0.225) {$\textcolor{Paired-1}{0}$};
+    \node[text width=1.5cm, text centered] at (1.50, -0.225) {$\textcolor{Paired-1}{0}$};
+    \node[text width=1.5cm, text centered] at (2.25, -0.225) {$\hat{u}_0$};
+    \node[text width=1.5cm, text centered] at (3.00, -0.225) {$\textcolor{Paired-1}{0}$};
+    \node[text width=1.5cm, text centered] at (3.75, -0.225) {$\hat{u}_1$};
+    \node[text width=1.5cm, text centered] at (4.50, -0.225) {$\hat{u}_2$};
+    \node[text width=1.5cm, text centered] at (5.25, -0.225) {$\hat{u}_3$};
+    }
+  \end{tikzpicture}
+  \end{figure}
 \end{frame}
 
 \subsection[Functional Simulation]{Functional Simulation}
