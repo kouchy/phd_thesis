@@ -19,6 +19,11 @@
 
 \section[Context]{Context and Objectives}
 
+\subsection[Introduction]{Introduction}
+
+\begin{frame}{Introduction}
+\end{frame}
+
 \subsection[Channel Coding]{Channel Coding}
 
 \begin{frame}{Digital Communication Systems}
@@ -470,6 +475,9 @@
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
     \tikzset{ txtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ zoom/.style={draw=Paired-3, dash dot} }
+    \tikzset{ f/.style ={draw=Paired-5, line width=0.75pt, text=Paired-5} }
+    \tikzset{ g/.style ={draw=Paired-1, line width=0.75pt, text=Paired-1} }
+    \tikzset{ h/.style ={draw=Paired-3, line width=0.75pt, text=Paired-3} }
 
     \node[style=txtplain] (dec) at (2.6,8.9) {Polar\\Decoder};
 
@@ -695,16 +703,16 @@
           \pgfmathtruncatemacro\eemt{\eemo-1}
           \ifthenelse{\l<2}
           {
-            \draw[->,>=latex', line width=1.0pt, Paired-5        ] (l\l_g\g_e1.south)          -- (l\ln_g\gn_e1.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
-            \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemt.south)      -- (l\ln_g\gnpo_e\eeemo.north)    node [midway, text=Paired-1, fill=white] {\small{$g$}};
-            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     -- (l\ln_g\gn_e0.north west)      node [midway, fill=white] {\small{$h$}};
-            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) -- (l\ln_g\gnpo_e\eee.north east) node [midway, fill=white] {\small{$h$}};
+            \draw[->,>=latex, f] (l\l_g\g_e1.south)          -- (l\ln_g\gn_e1.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+            \draw[->,>=latex, g] (l\l_g\g_e\eemt.south)      -- (l\ln_g\gnpo_e\eeemo.north)    node [midway, text=Paired-1, fill=white] {\small{$g$}};
+            \draw[<-,>=latex, h] (l\l_g\g_e0.south west)     -- (l\ln_g\gn_e0.north west)      node [midway, fill=white] {\small{$h$}};
+            \draw[<-,>=latex, h] (l\l_g\g_e\eemo.south east) -- (l\ln_g\gnpo_e\eee.north east) node [midway, fill=white] {\small{$h$}};
           }
           {
-            \draw[->,>=latex', line width=1.0pt, Paired-5        ] (l\l_g\g_e0.south)          --                (l\ln_g\gn_e0.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
-            \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l\l_g\g_e\eemo.south)      --                (l\ln_g\gnpo_e\eee.north)      node [midway, text=Paired-1, fill=white] {\small{$g$}};
-            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e0.south west)     to[bend right=30] (l\ln_g\gn_e0.north west)      node [] {};
-            \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l\l_g\g_e\eemo.south east) to[bend left=30]  (l\ln_g\gnpo_e\eee.north east) node [] {};
+            \draw[->,>=latex, f] (l\l_g\g_e0.south)          --                (l\ln_g\gn_e0.north)           node [midway, text=Paired-5, fill=white] {\small{$f$}};
+            \draw[->,>=latex, g] (l\l_g\g_e\eemo.south)      --                (l\ln_g\gnpo_e\eee.north)      node [midway, text=Paired-1, fill=white] {\small{$g$}};
+            \draw[<-,>=latex, h] (l\l_g\g_e0.south west)     to[bend right=30] (l\ln_g\gn_e0.north west)      node [] {};
+            \draw[<-,>=latex, h] (l\l_g\g_e\eemo.south east) to[bend left=30]  (l\ln_g\gnpo_e\eee.north east) node [] {};
           }
         }
         }
@@ -712,46 +720,46 @@
     }
 
     \only<3->{
-    \draw[->,>=latex', line width=1.0pt, Paired-5] (l0_g0_e1.south) -- (l1_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    \draw[->,>=latex,f] (l0_g0_e1.south) -- (l1_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
     }
     \only<4->{
-    \draw[->,>=latex', line width=1.0pt, Paired-5] (l1_g0_e1.south) -- (l2_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    \draw[->,>=latex,f] (l1_g0_e1.south) -- (l2_g0_e1.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
     }
     \only<5->{
-    \draw[->,>=latex', line width=1.0pt, Paired-5] (l2_g0_e0.south) -- (l3_g0_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    \draw[->,>=latex,f] (l2_g0_e0.south) -- (l3_g0_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
     }
     \only<6->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g0_e0.south west) to[bend right=30] (l3_g0_e0.north west) node [midway, text=Paired-3, fill=white, yshift=+1.1cm, xshift=-0.55cm] {\small{$h$}};
+    \draw[<-,>=latex,h] (l2_g0_e0.south west) to[bend right=30] (l3_g0_e0.north west) node [midway, text=Paired-3, fill=white, yshift=+1.1cm, xshift=-0.55cm] {\small{$h$}};
     }
     \only<7->{
-    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l2_g0_e1.south) -- (l3_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    \draw[->,>=latex,g] (l2_g0_e1.south) -- (l3_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
     \only<8->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g0_e1.south east) to[bend left=30] (l3_g1_e0.north east) node [] {};
+    \draw[<-,>=latex,h] (l2_g0_e1.south east) to[bend left=30] (l3_g1_e0.north east) node [] {};
     }
     \only<9->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l1_g0_e0.south west) -- (l2_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
+    \draw[<-,>=latex,h] (l1_g0_e0.south west) -- (l2_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
     }
     \only<10->{
-    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l1_g0_e2.south) -- (l2_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    \draw[->,>=latex,g] (l1_g0_e2.south) -- (l2_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
     \only<11->{
-    \draw[->,>=latex', line width=1.0pt, Paired-5] (l2_g1_e0.south) -- (l3_g2_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    \draw[->,>=latex,f] (l2_g1_e0.south) -- (l3_g2_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
     }
     \only<12->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g1_e0.south west) to[bend right=30] (l3_g2_e0.north west) node [] {};
+    \draw[<-,>=latex,h] (l2_g1_e0.south west) to[bend right=30] (l3_g2_e0.north west) node [] {};
     }
     \only<13->{
-    \draw[->,>=latex', line width=1.0pt, Paired-1, dashed] (l2_g1_e1.south) -- (l3_g3_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
+    \draw[->,>=latex,g] (l2_g1_e1.south) -- (l3_g3_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
     \only<15->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l2_g1_e1.south east) to[bend left=30] (l3_g3_e0.north east) node [] {};
+    \draw[<-,>=latex,h] (l2_g1_e1.south east) to[bend left=30] (l3_g3_e0.north east) node [] {};
     }
     \only<16->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l1_g0_e3.south east) -- (l2_g1_e1.north east) node [midway, fill=white] {\small{$h$}};
+    \draw[<-,>=latex,h] (l1_g0_e3.south east) -- (l2_g1_e1.north east) node [midway, fill=white] {\small{$h$}};
     }
     \only<17->{
-    \draw[<-,>=latex', line width=1.0pt, Paired-3, dotted] (l0_g0_e0.south west) -- (l1_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
+    \draw[<-,>=latex,h] (l0_g0_e0.south west) -- (l1_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
     }
 
     \pgfmathtruncatemacro\H{\VS*\La}
@@ -775,6 +783,149 @@
     \node[text width=1.5cm, text centered] at (3.75, -0.225) {$\hat{u}_1$};
     \node[text width=1.5cm, text centered] at (4.50, -0.225) {$\hat{u}_2$};
     \node[text width=1.5cm, text centered] at (5.25, -0.225) {$\hat{u}_3$};
+    }
+  \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Polar Decoder: Simplified Successive Cancellation Algorithm}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \path[use as bounding box] (-0.5,5.25) rectangle (14.0,-0.5);
+
+    \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+    \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+    \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+    \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+    \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+    \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+    \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+    \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+    \tikzset{ f/.style ={draw=Paired-5, text=Paired-5} }
+    \tikzset{ g/.style ={draw=Paired-1, text=Paired-1} }
+    \tikzset{ h/.style ={draw=Paired-3, text=Paired-3} }
+
+    \node[frzn                                           ] (l3_g0) at (0.0, 0.0) {};
+    \node[frzn                                           ] (l3_g1) at (1.0, 0.0) {};
+    \node[frzn                                           ] (l3_g2) at (2.0, 0.0) {};
+    \node[info                                           ] (l3_g3) at (3.0, 0.0) {};
+    \node[frzn                                           ] (l3_g4) at (4.0, 0.0) {};
+    \node[info                                           ] (l3_g5) at (5.0, 0.0) {};
+    \node[info                                           ] (l3_g6) at (6.0, 0.0) {};
+    \node[info                                           ] (l3_g7) at (7.0, 0.0) {};
+    \only<1>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l2_g0) at (0.5, 1.5) {};
+    }
+    \only<2->{
+    \node[r0,  label={[black]above:\small{\texttt{R0}}}  ] (l2_g0) at (0.5, 1.5) {};
+    }
+    \only<1-2>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l2_g1) at (2.5, 1.5) {};
+    }
+    \only<3->{
+    \node[rep, label={[black]above:\small{\texttt{REP}}} ] (l2_g1) at (2.5, 1.5) {};
+    }
+    \only<1-3>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l2_g2) at (4.5, 1.5) {};
+    }
+    \only<4->{
+    \node[rep, label={[black]above:\small{\texttt{REP}}} ] (l2_g2) at (4.5, 1.5) {};
+    }
+    \only<1-4>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l2_g3) at (6.5, 1.5) {};
+    }
+    \only<5->{
+    \node[r1,  label={[black]above:\small{\texttt{R1}}}  ] (l2_g3) at (6.5, 1.5) {};
+    }
+    \only<1-5>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l1_g0) at (1.5, 3.0) {};
+    }
+    \only<6->{
+    \node[rep, label={[black]above:\small{\texttt{REP}}} ] (l1_g0) at (1.5, 3.0) {};
+    }
+    \only<1-6>{
+    \node[any, label={[black]above:\small{\texttt{?}}}   ] (l1_g1) at (5.5, 3.0) {};
+    }
+    \only<7->{
+    \node[spc4, label={[black]above:\small{\texttt{SPC}}}] (l1_g1) at (5.5, 3.0) {};
+    }
+    \node[any,  label={[black]above:\small{\texttt{?}}}  ] (l0_g0) at (3.5, 4.5) {};
+
+    \only<1>{
+    \draw[f,->,>=latex] (l2_g0) -- (l3_g0) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+    \draw[g,->,>=latex] (l2_g0) -- (l3_g1) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+    \draw[h,->,>=latex] (l2_g0) to [out=180,in=120,looseness=8] (l2_g0) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+    }
+    \only<2->{
+    \draw[->,>=latex] (l2_g0) -- (l3_g0) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l2_g0) -- (l3_g1) node [midway, text=black, sloped] {|};
+    }
+    \only<1-2>{
+    \draw[f,->,>=latex] (l2_g1) -- (l3_g2) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+    \draw[g,->,>=latex] (l2_g1) -- (l3_g3) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+    \draw[h,->,>=latex] (l2_g1) to [out=  0,in= 60,looseness=8] (l2_g1) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+    }
+    \only<3->{
+    \draw[->,>=latex] (l2_g1) -- (l3_g2) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l2_g1) -- (l3_g3) node [midway, text=black, sloped] {|};
+    }
+    \only<1-3>{
+    \draw[f,->,>=latex] (l2_g2) -- (l3_g4) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+    \draw[g,->,>=latex] (l2_g2) -- (l3_g5) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+    \draw[h,->,>=latex] (l2_g2) to [out=180,in=120,looseness=8] (l2_g2) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+    }
+    \only<4->{
+    \draw[->,>=latex] (l2_g2) -- (l3_g4) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l2_g2) -- (l3_g5) node [midway, text=black, sloped] {|};
+    }
+    \only<1-4>{
+    \draw[f,->,>=latex] (l2_g3) -- (l3_g6) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+    \draw[g,->,>=latex] (l2_g3) -- (l3_g7) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+    \draw[h,->,>=latex] (l2_g3) to [out=  0,in= 60,looseness=8] (l2_g3) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+    }
+    \only<5->{
+    \draw[->,>=latex] (l2_g3) -- (l3_g6) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l2_g3) -- (l3_g7) node [midway, text=black, sloped] {|};
+    }
+    \only<1-5>{
+    \draw[f,->,>=latex] (l1_g0) -- (l2_g0) node [midway, above, text=black] {$f$};
+    \draw[g,->,>=latex] (l1_g0) -- (l2_g1) node [midway, above, text=black] {$g$};
+    \draw[h,->,>=latex] (l1_g0) to [out=180,in=120,looseness=8] (l1_g0) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+    }
+    \only<6->{
+    \draw[->,>=latex] (l1_g0) -- (l2_g0) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l1_g0) -- (l2_g1) node [midway, text=black, sloped] {|};
+    }
+    \only<1-6>{
+    \draw[f,->,>=latex] (l1_g1) -- (l2_g2) node [midway, above, text=black] {$f$};
+    \draw[g,->,>=latex] (l1_g1) -- (l2_g3) node [midway, above, text=black] {$g$};
+    \draw[h,->,>=latex] (l1_g1) to [out=  0,in= 60,looseness=8] (l1_g1) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+    }
+    \only<7->{
+    \draw[->,>=latex] (l1_g1) -- (l2_g2) node [midway, text=black, sloped] {|};
+    \draw[->,>=latex] (l1_g1) -- (l2_g3) node [midway, text=black, sloped] {|};
+    }
+
+    \draw[f,->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black] {$f$};
+    \draw[g,->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black] {$g$};
+
+    \draw[h,->,>=latex] (l0_g0) to [out=0,in=60,looseness=8] (l0_g0) node [right, text=black, xshift=0.75cm, yshift=0.4cm] {$h$};
+
+    \only<8->{
+    \draw[->,>=latex, black, line width=1.0pt] (7.5, 2.25) -> (8.5, 2.25);
+
+    \node[rep,  label={[black]above:\small{\texttt{REP}}}] (l1_g0_cut) at ( 9.5, 1.5) {};
+    \node[spc4, label={[black]above:\small{\texttt{SPC}}}] (l1_g1_cut) at (13.5, 1.5) {};
+    \node[any,  label={[black]above:\small{\texttt{?}}}  ] (l0_g0_cut) at (11.5, 3.0) {};
+
+    \draw[f,->,>=latex] (l0_g0_cut) -- (l1_g0_cut) node [midway, above, text=black] {$f$};
+    \draw[g,->,>=latex] (l0_g0_cut) -- (l1_g1_cut) node [midway, above, text=black] {$g$};
+    \draw[h,->,>=latex] (l0_g0_cut) to [out=0,in=60,looseness=8] (l0_g0_cut) node [right, text=black, xshift=0.75cm, yshift=0.4cm] {$h$};
+
+    \draw[->,>=latex] (l1_g0_cut) to [out=-120,in=-60,looseness=8] (l1_g0_cut) node [left, text=black, xshift=0.4cm, yshift=-1.15cm] {$rep$};
+    \draw[->,>=latex] (l1_g1_cut) to [out=-120,in=-60,looseness=8] (l1_g1_cut) node [left, text=black, xshift=0.4cm, yshift=-1.15cm] {$spc$};
     }
   \end{tikzpicture}
   \end{figure}
