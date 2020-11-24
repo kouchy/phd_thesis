@@ -39,7 +39,6 @@
     },
 }
 \SetAlFnt{\footnotesize}
-% \DecimalMathComma
 
 % Beamer template -------------------------------------------------------------
 \input{../settings/colors}
@@ -76,7 +75,7 @@
 \newcommand*\oldmacro{}%
 \let\oldmacro\insertshorttitle%
 \renewcommand*\insertshorttitle{%
- \oldmacro\hfill%
+ \oldmacro\hspace{0pt plus 1 filll}%
 \insertframenumber\,/\,\inserttotalframenumber}
 \setbeamertemplate{footline}[frame number]
 \setbeamersize{text margin left=10pt,text margin right=10pt}
