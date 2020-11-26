@@ -439,7 +439,7 @@
   \begin{itemize}
     \item BPSK: binary phase-shift keying modulation
     \item AWGN: additive white Gaussian noise
-      \vspace*{.5em}
+      \\\vspace*{.5em}
       {\color{bleuUni}\Large\MVRightarrow} Commonly used to evaluate error correcting codes
   \end{itemize}
   }
@@ -487,21 +487,20 @@
 \end{frame}
 
 \begin{frame}{Contributions}
-  \vfill
   \begin{enumerate}
-    \item<1-> Portable and efficient low level description of the signal processing algorithms
+    \item<1-> Portable and efficient low level description of the signal processing algorithms~\textcolor{bluecite}{\cite{Cassagne2018}}
     \begin{itemize}
       \item High throughput and low latency on single-core CPU
       \item Portability
     \end{itemize}
     \vspace{.5em}
-    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)
+    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\textcolor{bluecite}{\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}}
     \begin{itemize}
       \item High throughput and low latency on single core and multi-core CPUs
       \item Flexibility
     \end{itemize}
     \vspace{.5em}
-    \item<3-> Open-source library and functional simulator dedicated to the digital communication systems
+    \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\textcolor{bluecite}{\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}}
     \begin{itemize}
       \item Simulation time
       \item Algorithmic heterogeneity
@@ -513,7 +512,6 @@
       \item High throughput and low latency on multi-core CPUs
     \end{itemize}
   \end{enumerate}
-  \vfill
 \end{frame}
 
 \section[Optimization Strategies]{Optimization Strategies}
@@ -588,7 +586,7 @@
         \begin{overprint}
         \onslide<1>
         \begin{minted}[linenos]{cpp}
-template<>
+template<> // 'mipp::reg' is an alias of '__mm256' type
 mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
 }
@@ -597,9 +595,9 @@ mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
   return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
 }
         \end{minted}
-        \onslide<2>
+        \onslide<2->
         \begin{minted}[linenos, highlightlines={3,7}]{cpp}
-template<>
+template<> // 'mipp::reg' is an alias of '__mm256' type
 mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
 }
@@ -903,61 +901,60 @@ void addVector(const std::vector<T> &A,
   \end{figure}
 \end{frame}
 
-\subsection[Vectorization Strategies]{Vectorization Strategies}
-
 \subsection[Polar Decoders]{Polar Decoders}
 
-\begin{frame}{Polar Coding Scheme}
+\begin{frame}{Polar Codes}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-    \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
-     % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
+    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
 
     \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
     \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    \tikzset{ hid3/.style    ={draw=white, text=white, align=center} }
 
-    \node[style={txt,hid3}        ] (sen) at ( 0,   4) {Source\\Encoder};
     \node[style=txtplain, thick   ] (enc) at ( 4,   4) {Polar\\Encoder};
     \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
     \Cloud{(11,2)}{}{0.65};
     \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
     \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
-    \node[style=rxtplain          ] (dec) at ( 4,   0) {Polar\\Decoder};
-    \node[style={rxt,hid3}        ] (sde) at ( 0,   0) {Source\\Decoder};
+    \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
 
     \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
     \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
 
-    \draw[<-,>=latex, style=hid3] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
-    \draw[->,>=latex            ] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
-    \draw[-                     ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-                     ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex            ] (rx.east)  -- (10,  0) node [midway,  above           ] {$\bm{y}$};
-    \draw[->,>=latex, style=hid3] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
-    \draw[->,>=latex            ] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
-    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
-    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
-    \draw[->,>=latex            ] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
-    \draw[- ,>=latex, style=hid3] (sen.west) -- (-1.5,4);
-    \draw[- ,>=latex            ] (mod.east) -- (10.5,4);
-    \draw[- ,>=latex            ] (dem.east) -- ( 9.6,0);
-    \draw[- ,>=latex, style=hid3] (sde.west) -- (-1.5,0);
+    \draw[<-,>=latex] (enc.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex] (enc)      --   (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex] (tx.east)  --   (10,  4) node [midway,  above           ] {$\bm{x}$};
+    \draw[-         ] ( 9.9,4)   --   (10.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-         ] (10  ,0)   --   (10.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex] (rx.east)  --   (10,  0) node [midway,  above           ] {$\bm{y}$};
+    \draw[->,>=latex] (dem)      --   (dec)    node [midway,  above           ] {$\bm{l}$};
+    \draw[->,>=latex] (dec.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{\hat{u}}$};
+    \draw[- ,>=latex] (mod.east) --   (10.5,4);
+    \draw[- ,>=latex] (dem.east) --   ( 9.6,0);
   \end{tikzpicture}
   \end{figure}
+
+  \begin{itemize}
+    \item<2-> \textbf{Polar codes} have been discovered by \Arikan in 2009~\textcolor{bluecite}{\cite{Arikan2009}}
+    \item<3-> First code proven to achieve the channel capacity (asymptotically)
+  \end{itemize}
+  \only<2->{
+  \enumcite{Arikan2009}
+  }
 \end{frame}
 
-\begin{frame}{Polar Encoder}
+\begin{frame}{Polar Coding Scheme}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ zoom/.style={draw=Paired-1, dash dot} }
 
-    \node[style=txtplain] (enc) at (0,4.0) {Polar\\Encoder};
+    \node[style=txtplain] (enc) at (0,4.0) {Polar\\Encoder};,
 
     \draw[<-,>=latex] (enc) --++ (-2.5,0) node [midway, above] {$\bm{u}$};
     \draw[->,>=latex] (enc) --++ ( 2.5,0) node [midway, above] {$\bm{c}$};
@@ -1218,54 +1215,67 @@ void addVector(const std::vector<T> &A,
     \draw [-,>=latex] (g3_n8)  -- (g3_n1);
     \draw [-,>=latex] (g3_n8)  -- (g3_n0);
     }
-
   \end{tikzpicture}
   \end{figure}
+
+  \begin{itemize}
+    \item<1-> $\bm{u}$ is the initial message of $K$ bits and $\bm{c}$ is the codeword of $N$ bits ($K < N$)
+    \item<2-> Generator matrix $\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes m}; \bm{\mathcal{K}} =
+      \begin{bmatrix}
+      1 & 0 \\
+      1 & 1
+      \end{bmatrix}; N = 2^{m}$
+    \item<3-> \textcolor{Paired-1}{Frozen bits} $= N - K$ bits set to \textcolor{Paired-1}{zero}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Polar Decoder}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-    \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
 
     \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
     \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    \tikzset{ hid3/.style    ={draw=white, text=white, align=center} }
 
-    \node[style={txt,hid3}        ] (sen) at ( 0,   4) {Source\\Encoder};
-    \node[style=txtplain          ] (enc) at ( 4,   4) {Polar\\Encoder};
+    \node[style=txtplain,         ] (enc) at ( 4,   4) {Polar\\Encoder};
     \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
     \Cloud{(11,2)}{}{0.65};
     \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
     \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
     \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
-    \node[style={rxt,hid3}        ] (sde) at ( 0,   0) {Source\\Decoder};
 
     \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
     \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
 
-    \draw[<-,>=latex, style=hid3] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
-    \draw[->,>=latex            ] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
-    \draw[-                     ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-                     ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex            ] (rx.east)  -- (10,  0) node [midway,  above           ] {$\bm{y}$};
-    \draw[->,>=latex, style=hid3] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
-    \draw[->,>=latex            ] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
-    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
-    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
-    \draw[->,>=latex            ] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
-    \draw[- ,>=latex, style=hid3] (sen.west) -- (-1.5,4);
-    \draw[- ,>=latex            ] (mod.east) -- (10.5,4);
-    \draw[- ,>=latex            ] (dem.east) -- ( 9.6,0);
-    \draw[- ,>=latex, style=hid3] (sde.west) -- (-1.5,0);
+    \draw[<-,>=latex] (enc.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex] (enc)      --   (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex] (tx.east)  --   (10,  4) node [midway,  above           ] {$\bm{x}$};
+    \draw[-         ] ( 9.9,4)   --   (10.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-         ] (10  ,0)   --   (10.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex] (rx.east)  --   (10,  0) node [midway,  above           ] {$\bm{y}$};
+    \draw[->,>=latex] (dem)      --   (dec)    node [midway,  above           ] {$\bm{l}$};
+    \draw[->,>=latex] (dec.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{\hat{u}}$};
+    \draw[- ,>=latex] (mod.east) --   (10.5,4);
+    \draw[- ,>=latex] (dem.east) --   ( 9.6,0);
   \end{tikzpicture}
   \end{figure}
+
+  \begin{itemize}
+    \item<1-> Compute intensive processing
+    \item<2-> $\bm{l}$ is an input vector $N$ Log Likelihood Ratios (LLRs)
+    \item<2-> $\bm{\hat{u}}$ is an output vector of $K$ bits
+    \item<3-> Many algorithms with various complexities and decoding performances
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Polar Decoder: Successive Cancellation Algorithm}
+  \begin{columns}[T] % align columns
+  \begin{column}{.5\textwidth}
+  \vspace{-0.3cm}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1582,6 +1592,66 @@ void addVector(const std::vector<T> &A,
     }
   \end{tikzpicture}
   \end{figure}
+  \end{column}
+  \begin{column}{.50\textwidth}
+  \vspace{-0.4cm}
+  \begin{itemize}
+    \item<1-> Algorithm proposed by \Arikan~\textcolor{bluecite}{\cite{Arikan2009}}
+    \item<2-> Traversal of a binary tree
+    \item<2-> Computational complexity: $O(N \times \log(N))$
+  \end{itemize}
+
+  \only<3->{
+  \vspace{0.2cm}
+  ~~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~~~\left\{\begin{array}{l c l}
+  f(l_a,l_b)                  &\approx& \sign(l_a.l_b).\min(|l_a|,|l_b|)\\
+  g(l_a,l_b,\hat{s})          &=&       (1-2s)l_a+l_b\\
+  h(\hat{s}_{a}, \hat{s}_{b}) &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \centering
+  \only<18->{
+  \scalebox{.6}{
+  \begin{algorithm}[H]
+    \caption{Decoder SC.}\label{alg:ctx_polar_scl_decoder}
+
+    \SetKwProg{Fn}{Function}{}{}
+
+    \Fn{$DecoderSC()$}
+    {
+      \uIf{$not~a~leaf$}
+      {
+        $f()$
+
+        $DecoderSC()$
+
+        $g()$
+
+        $DecoderSC()$
+
+        $h()$
+      }
+      \Else
+      {
+        $hardDecide()$
+      }
+    }
+  \end{algorithm}
+  }
+  }
+
+  \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Polar Decoder: Simplified Successive Cancellation Algorithm}
@@ -1753,12 +1823,49 @@ void addVector(const std::vector<T> &A,
 
 \section[eDSL for the SDR]{Embedded Domain Specific Language for the Software-defined Radio}
 
-\subsection[Description of the Proposed Embedded Domain Specific Language]{Description of the Proposed Embedded Domain Specific Language}
+\subsection[Existing Solutions]{Existing Solutions}
 
-\subsection[Implementation Strategies]{Implementation Strategies}
+\subsection[Description of the Proposed Embedded Domain Specific Language]{Description of the Proposed Embedded Domain Specific Language}
 
 \subsection[Application on the DVB-S2 Standard]{Application on the DVB-S2 Standard}
 
 \section[Conclusion]{Conclusion}
+
+\appendix
+
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+
+\section[References]{References}
+
+\subsection[Bibliography]{Bibliography}
+
+\begin{frame}[allowframebreaks]{Bibliography}
+  \renewcommand*{\bibfont}{\scriptsize}
+	\printbibliography[heading=none, title={Bibliography}, notkeyword={Cassagne}]
+\end{frame}
+
+\subsection[Personal Publications]{Personal Publications}
+
+\begin{frame}[allowframebreaks]{Personal Publications}
+\renewcommand*{\bibfont}{\scriptsize}
+\underline{International Journals:}
+
+\vspace{0.2cm}
+\newrefcontext[labelprefix={IJ}]
+\printbibliography[heading=none, title={International Journals}, keyword=Cassagne, resetnumbers=true, type=article]
+\vspace{0.3cm}
+\underline{International Conferences:}
+
+\vspace{0.2cm}
+\newrefcontext[labelprefix={IC}]
+\printbibliography[heading=none, title={International Conferences}, keyword=Cassagne, notkeyword=poster, type=inproceedings]
+\vspace{0.3cm}
+\underline{National Conferences and Posters:}
+
+\vspace{0.2cm}
+\newrefcontext[labelprefix={NC}]
+\printbibliography[heading=none, title={National Conferences and Posters}, keyword=Cassagne, keyword=poster, nottype=article, type=inproceedings]
+\end{frame}
 
 \end{document}

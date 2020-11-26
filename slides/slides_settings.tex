@@ -24,12 +24,24 @@
 \usepackage{amssymb}
 \usepackage{marvosym} % grosse fleche
 \usepackage{calc}
-\usepackage[english, onelanguage, ruled, linesnumbered, vlined]{algorithm2e}
+\usepackage[english,onelanguage,ruled,linesnumbered,vlined]{algorithm2e}
 \usepackage{bm}
 \usepackage{pifont}
 \usepackage{minted} % beautiful source code
 \usepackage{tcolorbox}
 \usepackage{etoolbox}
+\usepackage[
+  labelnumber  = true,
+  backend      = biber,
+  % style        = alphabetic,
+  % citestyle    = alphabetic,
+  maxnames     = 6,
+  defernumbers = true,
+  isbn         = false,
+  doi          = true,
+  url          = true,
+  backref      = true]{biblatex}
+\addbibresource{../tail/bibliography.bib}
 
 % Parameters ------------------------------------------------------------------
 \pgfplotsset{compat=newest}
@@ -46,7 +58,8 @@
     hatch thickness/.store in=\hatchthickness,
     hatch thickness=0.5pt,
 }
-\SetAlFnt{\footnotesize}
+% \SetAlFnt{\footnotesize}
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
 
 % package 'minted'
 \setminted{bgcolor=marronUni,fontsize=\fontsize{8}{9.2},tabsize=4,numbers=left,framesep=0pt,numbersep=2pt,xleftmargin=3.5mm,xrightmargin=3.5mm,highlightcolor=marronUni!90} % package 'minted'
@@ -90,6 +103,15 @@
 }
 
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+% biblatex
+% separate multi-citations by a comma instead of a semicolon in 'biblatex'
+\renewcommand*{\multicitedelim}{\addcomma\addspace}
+% \renewcommand\mkbibacro[1]{{\footnotesize\MakeUppercase{#1}}}
+\definecolor{bluecite}{HTML}{009DE0}
+\setbeamertemplate{bibliography item}{\textcolor{black}{\insertbiblabel}}
+\newcommand{\enumcite}[1]{{\scriptsize\textcolor{bluecite}{\cite{#1}}\quad \fullcite{#1}}}
+\newcommand{\citeblue}[1]{{\textcolor{bluecite}{\cite{#1}}}}
 
 % Beamer template -------------------------------------------------------------
 \input{../settings/colors}
@@ -217,3 +239,5 @@
 
 \renewcommand{\footnotesize}{\fontsize{7}{8.4}}
 % % \renewcommand{\footnotesize}{\scriptsize}
+
+\DeclareMathOperator*{\sign}{sign}
