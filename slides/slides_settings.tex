@@ -26,6 +26,10 @@
 \usepackage{calc}
 \usepackage[english, onelanguage, ruled, linesnumbered, vlined]{algorithm2e}
 \usepackage{bm}
+\usepackage{pifont}
+\usepackage{minted} % beautiful source code
+\usepackage{tcolorbox}
+\usepackage{etoolbox}
 
 % Parameters ------------------------------------------------------------------
 \pgfplotsset{compat=newest}
@@ -37,8 +41,55 @@
     alt/.code args={<#1>#2#3}{%
       \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
     },
+    hatch distance/.store in=\hatchdistance,
+    hatch distance=7pt,
+    hatch thickness/.store in=\hatchthickness,
+    hatch thickness=0.5pt,
 }
 \SetAlFnt{\footnotesize}
+
+% package 'minted'
+\setminted{bgcolor=marronUni,fontsize=\fontsize{8}{9.2},tabsize=4,numbers=left,framesep=0pt,numbersep=2pt,xleftmargin=3.5mm,xrightmargin=3.5mm,highlightcolor=marronUni!90} % package 'minted'
+\usemintedstyle{monokai} % friendly fruity
+% https://tex.stackexchange.com/questions/252263/alignment-of-minted-line-numbers
+% \newlength{\mintednumbersep}
+% \AtBeginDocument{%
+%   \sbox0{\tiny00}%
+%   \setlength\mintednumbersep{\parindent}%
+%   \addtolength\mintednumbersep{-\wd0}%
+% }
+\BeforeBeginEnvironment{minted}{\begin{tcolorbox}[colback=marronUni, colframe=black, arc=0.5mm, boxsep=0mm, boxrule=0.0mm, left=0mm, right=0mm, top=0mm, bottom=0mm]}
+\AfterEndEnvironment{minted}{\end{tcolorbox}}
+\renewcommand{\theFancyVerbLine}{\textcolor[rgb]{1,1,1}{\tiny{\arabic{FancyVerbLine}}}}
+% \renewcommand{\theFancyVerbLine}{\sffamily\textcolor[rgb]{1,1,1}{\footnotesize\oldstylenums{\arabic{FancyVerbLine}}}}
+
+% new shapes for pgfplot
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north east}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north west}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{\hatchdistance}{0pt}}
+    \pgfpathlineto{\pgfqpoint{0pt}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
 
 % Beamer template -------------------------------------------------------------
 \input{../settings/colors}
@@ -138,3 +189,31 @@
     ]
   \end{frame}
 }
+
+
+% MIPP ------------------------------------------------------------------------
+
+\newcommand{\MIPP}{MIPP\xspace}
+\newcommand{\longMIPP}{MyIntrinsics++\xspace}
+\newcommand{\TSIMD}{T-SIMD\xspace}
+\newcommand{\xsimd}{xsimd\xspace}
+\newcommand{\simdpp}{simdpp\xspace}
+\newcommand{\Vc}{Vc\xspace}
+\newcommand{\VCL}{VCL\xspace}
+\newcommand{\BoostSIMD}{Boost.SIMD\xspace}
+\newcommand{\bSIMD}{bSIMD\xspace}
+
+\newcommand{\Cxx}{\texttt{C++}\xspace}
+\newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
+\newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
+
+% \setlength{\textfloatsep}{5pt}
+% \setlength{\parsep}{0pt}
+% \setlength{\parskip}{0pt}
+
+\newcommand{\cmark}{\textcolor{btfGreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{btfRed}{\ding{55}}}
+\newcommand{\Arikan}{Ar{\i}kan\xspace}
+
+\renewcommand{\footnotesize}{\fontsize{7}{8.4}}
+% % \renewcommand{\footnotesize}{\scriptsize}
