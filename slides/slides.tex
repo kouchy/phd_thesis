@@ -34,7 +34,7 @@
     \item Needs validation of more robust and more complex systems
     \item Needs to flexibility to adapt to many parameters
     \item New challenge: implement digital communication systems in software
-      \vspace*{.5em}
+      \\\vspace*{.5em}
       {\color{bleuUni}\Large\MVRightarrow} \textbf{Require high performance implementations}
   \end{itemize}
 \end{frame}
@@ -488,19 +488,19 @@
 
 \begin{frame}{Contributions}
   \begin{enumerate}
-    \item<1-> Portable and efficient low level description of the signal processing algorithms~\textcolor{bluecite}{\cite{Cassagne2018}}
+    \item<1-> Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
     \begin{itemize}
       \item High throughput and low latency on single-core CPU
       \item Portability
     \end{itemize}
     \vspace{.5em}
-    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\textcolor{bluecite}{\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}}
+    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
     \begin{itemize}
       \item High throughput and low latency on single core and multi-core CPUs
       \item Flexibility
     \end{itemize}
     \vspace{.5em}
-    \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\textcolor{bluecite}{\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}}
+    \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}
     \begin{itemize}
       \item Simulation time
       \item Algorithmic heterogeneity
@@ -533,7 +533,7 @@
       \item<2-> Whenever possible, \textbf{one statement = one intrinsic}
       \item<2-> One variable = one register allocation
     \end{itemize}
-    % \item<3-> Open-source: \textcolor{blue}{\url{https://github.com/aff3ct/MIPP}}
+    % \item<3-> Open-source: \url{https://github.com/aff3ct/MIPP}
   \end{itemize}
   \vspace{0.3cm}
   \pause[3]
@@ -753,20 +753,20 @@ void addVector(const std::vector<T> &A,
   \centering
   \label{tab:comp}
   {\small\resizebox{1.0\linewidth}{!}{
-  \begin{tabular}{|r|r||c|c|c|c||c|c|c|c|c|c||c|c|}
+  \begin{tabular}{|r|r|r||c|c|c|c||c|c|c|c|c|c||c|c|}
   \hline
-  \multicolumn{2}{|c||}{\multirow{2}{*}{\textbf{General Information}}}              & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                                    & \multicolumn{6}{c||}{\multirow{2}{*}{\textbf{Data Type}}}                    & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Features}}} \\
-  \multicolumn{2}{|c||}{}                                                           & \multicolumn{4}{c||}{}                                                                             & \multicolumn{6}{c||}{}                                                       & \multicolumn{2}{c|}{}                                   \\ \hline
-  \multicolumn{2}{|r||}{\textbf{Name}}                                              & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} & \textbf{\texttt{AVX-512}} & \textbf{\texttt{NEON}} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c||}{\textbf{Integer}} & \textbf{Math}  & \textbf{\Cxx}                          \\ \cline{7-12}
-  \multicolumn{2}{|r||}{}                                                           & 128-bit               & 256-bit               & 512-bit                   & 128-bit                & 64      & 32                        & 64     & 32     & 16     & 8           & \textbf{Func.} & \textbf{Technique}                     \\ \hline \hline
-  \multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Library}}} & \textbf{\MIPP}      & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
-                                                              & \textbf{\VCL}       & \cmark                & \cmark                & \cmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
-                                                              & \textbf{\simdpp}    & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \xmark         & Expr. templ.                           \\ %\cline{2-19}
-                                                              & \textbf{\TSIMD}     & \cmark                & \cmark                & \xmark                    & \cmark                 & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark      & \xmark         & Op. overload.                          \\ %\cline{2-19}
-                                                              & \textbf{\Vc}        & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
-                                                              & \textbf{\xsimd}     & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
-                                                              & \textbf{\BoostSIMD} & \cmark                & \xmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ %\cline{2-19}
-                                                              & \textbf{\bSIMD}     & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ \hline
+  \multicolumn{3}{|c||}{\multirow{2}{*}{\textbf{General Information}}}                                    & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                                    & \multicolumn{6}{c||}{\multirow{2}{*}{\textbf{Data Type}}}                    & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Features}}} \\
+  \multicolumn{3}{|c||}{}                                                                                 & \multicolumn{4}{c||}{}                                                                             & \multicolumn{6}{c||}{}                                                       & \multicolumn{2}{c|}{}                                   \\ \hline
+  \multicolumn{2}{|r|}{\textbf{Name}} & \multicolumn{1}{r||}{\textbf{Ref.}}                               & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} & \textbf{\texttt{AVX-512}} & \textbf{\texttt{NEON}} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c||}{\textbf{Integer}} & \textbf{Math}  & \textbf{\Cxx}                          \\ \cline{8-13}
+  \multicolumn{2}{|r|}{} & \multicolumn{1}{r||}{}                                                         & 128-bit               & 256-bit               & 512-bit                   & 128-bit                & 64      & 32                        & 64     & 32     & 16     & 8           & \textbf{Func.} & \textbf{Technique}                     \\ \hline \hline
+  \multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Library}}} & \textbf{\MIPP}      & \cite{Cassagne2018} & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\VCL}       & \cite{Fog}          & \cmark                & \cmark                & \cmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\simdpp}    & \cite{Kanapickas}   & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \xmark         & Expr. templ.                           \\ %\cline{2-19}
+                                                              & \textbf{\TSIMD}     & \cite{Moller2016}   & \cmark                & \cmark                & \xmark                    & \cmark                 & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark      & \xmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\Vc}        & \cite{Kretz2012}    & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\xsimd}     & \cite{Mabille}      & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\BoostSIMD} & \cite{Esterie2012}  & \cmark                & \xmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ %\cline{2-19}
+                                                              & \textbf{\bSIMD}     & \cite{Esterie2012a} & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ \hline
   \end{tabular}
   }}
   \caption*{Main \Cxx SIMD wrappers/libraries and their characteristics in 2018.}
@@ -779,7 +779,7 @@ void addVector(const std::vector<T> &A,
   \begin{itemize}
     \item Experiments
     \begin{itemize}
-    \item Comparison to \textbf{related works} on Mandelbrot set
+    \item Comparison to \textbf{related works} on the Mandelbrot set
     \end{itemize}
     \item Tests are \textbf{mono-threaded}
     \item GNU \Cxx compiler version 5
@@ -813,7 +813,7 @@ void addVector(const std::vector<T> &A,
   \begin{itemize}
     \item \textbf{Computational intensive} kernel
     \item Need to manage an \textbf{early termination}
-    \item Benchmark \Cxx source code is freely available\footnote{Full code is available online: \textcolor{Paired-1}{\url{https://gitlab.inria.fr/acassagn/mandelbrot}}}
+    \item Benchmark \Cxx source code is freely available\footnote{Full code is available online: \url{https://gitlab.inria.fr/acassagn/mandelbrot}}
   \end{itemize}
   \pause
   % \vspace{-0.4cm}
@@ -939,8 +939,9 @@ void addVector(const std::vector<T> &A,
   \end{figure}
 
   \begin{itemize}
-    \item<2-> \textbf{Polar codes} have been discovered by \Arikan in 2009~\textcolor{bluecite}{\cite{Arikan2009}}
-    \item<3-> First code proven to achieve the channel capacity (asymptotically)
+    \item<2-> \textbf{Polar codes} have been discovered by \Arikan in 2009~\cite{Arikan2009}
+    \item<3-> \textbf{Adopted in the 5G standard} for control channels
+    % \item<3-> First code proven to achieve the channel capacity (asymptotically)
   \end{itemize}
   \only<2->{
   \enumcite{Arikan2009}
@@ -1339,122 +1340,98 @@ void addVector(const std::vector<T> &A,
     }
 
     \only<6->{
-    \draw[fill=gray!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
-    }
-
-    \only<6>{
-    \draw[fill=Paired-7!20, draw=none] (-0.2, 0.01) rectangle (0.195, -0.505);
-    \draw[fill=Paired-3!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
-    }
-
-    \only<7->{
     \draw[fill=gray!20, draw=none] ( 0.550, 0.51) rectangle (0.945, 0.005);
     }
 
-    \only<7>{
+    \only<6>{
     \draw[fill=Paired-7!20, draw=none] (-0.025, 2.66) rectangle (0.375, 2.145);
     \draw[fill=Paired-9!20, draw=none] (0.375, 2.66) rectangle (0.775, 2.145);
-    \draw[fill=Paired-11!20, draw=none] (-0.025, 2.16) rectangle (0.375, 1.645);
+    \draw[fill=Paired-11!20, draw=none] (-0.200, 0.01) rectangle (0.195, -0.505);
     \draw[fill=Paired-1!20, draw=none] ( 0.550, 0.51) rectangle (0.945, 0.005);
     }
 
-    \only<8->{
+    \only<7->{
+    \draw[fill=gray!20, draw=none] (-0.025, 2.16) rectangle (0.375,  1.645);
     \draw[fill=gray!20, draw=none] ( 0.375, 2.16) rectangle (0.775,  1.645);
     }
 
-    \only<8>{
-      \draw[fill=Paired-7!20, draw=none] ( 0.550, 0.01) rectangle (0.945, -0.505);
-      \draw[fill=Paired-9!20, draw=none] (-0.025, 2.16) rectangle (0.375,  1.645);
-      \draw[fill=Paired-3!20, draw=none] ( 0.375, 2.16) rectangle (0.775,  1.645);
+    \only<7>{
+    \draw[fill=Paired-7!20, draw=none] (-0.200, 0.01) rectangle (0.195, -0.505);
+    \draw[fill=Paired-9!20, draw=none] ( 0.550, 0.01) rectangle (0.945, -0.505);
+    \draw[fill=Paired-3!20, draw=none] (-0.025, 2.16) rectangle (0.375,  1.645);
+    \draw[fill=Paired-3!20, draw=none] ( 0.375, 2.16) rectangle (0.775,  1.645);
     }
 
-    \only<9->{
-    \draw[fill=gray!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
-    }
-
-    \only<9>{
-    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.16) rectangle (0.775,  1.645);
-    \draw[fill=Paired-3!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
-    }
-
-    \only<10->{
+    \only<8->{
     \draw[fill=gray!20, draw=none] (1.475, 2.66) rectangle (2.275, 2.145);
     }
 
-    \only<10>{
+    \only<8>{
     \draw[fill=Paired-7!20, draw=none] (0.325, 4.81) rectangle (1.125, 4.295);
     \draw[fill=Paired-9!20, draw=none] (1.125, 4.81) rectangle (1.925, 4.295);
-    \draw[fill=Paired-11!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    \draw[fill=Paired-11!20, draw=none] (-0.025, 2.16) rectangle (0.775,  1.645);
     \draw[fill=Paired-1!20, draw=none] (1.475, 2.66) rectangle (2.275, 2.145);
     }
 
-    \only<11->{
+    \only<9->{
     \draw[fill=gray!20, draw=none] (1.300, 0.51) rectangle (1.700, 0.005);
     }
 
-    \only<11>{
+    \only<9>{
     \draw[fill=Paired-7!20, draw=none] (1.475, 2.66) rectangle (1.875, 2.145);
     \draw[fill=Paired-9!20, draw=none] (1.875, 2.66) rectangle (2.275, 2.145);
     \draw[fill=Paired-5!20, draw=none] (1.300, 0.51) rectangle (1.700, 0.005);
     }
 
-    \only<12->{
-    \draw[fill=gray!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
-    }
-
-    \only<12>{
-    \draw[fill=Paired-7!20, draw=none] (1.300, 0.01) rectangle (1.700,-0.505);
-    \draw[fill=Paired-3!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
-    }
-
-    \only<13->{
+    \only<10->{
     \draw[fill=gray!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
     }
 
-    \only<13>{
+    \only<10>{
     \draw[fill=Paired-7!20, draw=none] (1.475, 2.66) rectangle (1.875, 2.145);
     \draw[fill=Paired-9!20, draw=none] (1.875, 2.66) rectangle (2.275, 2.145);
-    \draw[fill=Paired-11!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    \draw[fill=Paired-11!20, draw=none] ( 1.300, 0.01) rectangle (1.700, -0.505);
     \draw[fill=Paired-1!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
     }
 
-    \only<14->{
+    \only<11->{
     \draw[fill=gray!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
     }
 
-    \only<14>{
+    \only<11>{
     \draw[fill=Paired-7!20, draw=none] (2.050, 0.51) rectangle (2.450, 0.005);
     \draw[fill=gray!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
     }
 
-    \only<15->{
-    \draw[fill=gray!20, draw=none] (1.875, 2.16) rectangle (2.275, 1.645);
+    \only<12->{
+    \draw[fill=gray!20, draw=none] (1.475, 2.16) rectangle (2.275, 1.645);
     }
 
-    \only<15>{
-    \draw[fill=Paired-7!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
-    \draw[fill=Paired-9!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
+    \only<12>{
+    \draw[fill=Paired-7!20, draw=none] ( 1.300, 0.01) rectangle (1.700, -0.505);
+    \draw[fill=Paired-9!20, draw=none] (2.050, 0.01) rectangle (2.450,-0.495);
+    \draw[fill=Paired-3!20, draw=none] (1.475, 2.16) rectangle (1.875, 1.645);
     \draw[fill=Paired-3!20, draw=none] (1.875, 2.16) rectangle (2.275, 1.645);
     }
 
-    \only<16->{
-    \draw[fill=gray!20, draw=none] (1.125, 4.31) rectangle (1.925, 3.795);
+    \only<13->{
+    \draw[fill=gray!20, draw=none] (0.325, 4.31) rectangle (1.925, 3.795);
     }
 
-    \only<16>{
-    \draw[fill=Paired-7!20, draw=none] (1.475, 2.16) rectangle (2.275, 1.645);
-    \draw[fill=Paired-9!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
+    \only<13>{
+    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.16) rectangle (0.775,  1.645);
+    \draw[fill=Paired-9!20, draw=none] (1.475, 2.16) rectangle (2.275, 1.645);
+    \draw[fill=Paired-3!20, draw=none] (0.325, 4.31) rectangle (1.125, 3.795);
     \draw[fill=Paired-3!20, draw=none] (1.125, 4.31) rectangle (1.925, 3.795);
     }
 
-    \only<17->{
-    \draw[fill=gray!20, draw=none] (1.015, 6.46) rectangle (2.615, 5.945);
+    \only<14>{
+    \draw[fill=Paired-7!20, draw=none] (1.015, 6.96) rectangle (2.615, 6.445);
+    \draw[fill=Paired-9!20, draw=none] (2.615, 6.96) rectangle (4.215, 6.445);
+    \draw[fill=Paired-11!20, draw=none] (0.325, 4.31) rectangle (1.925, 3.795);
+    \draw[fill=Paired-1!20, draw=none] (0.325+3, 4.81) rectangle (1.925+3, 4.295);
     }
 
-    \only<17>{
-    \draw[fill=Paired-7!20, draw=none] (0.325, 4.31) rectangle (1.925, 3.795);
-    \draw[fill=Paired-3!20, draw=none] (1.015, 6.46) rectangle (2.615, 5.945);
-    }
 
     \only<2->{
     \newcommand\La{4} % number of layers in the tree
@@ -1480,13 +1457,13 @@ void addVector(const std::vector<T> &A,
       \foreach \g in {0,...,\ll} {
 
         \foreach \e in {0,...,\eemo} {
-          \only<18->{
+          \only<15->{
           \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, fill=gray!20] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
           }
           \draw[-, line width=0.25pt] (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4 -0.20, \rlmo*\VS) -- (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4 +0.20, \rlmo*\VS);
           \ifthenelse{\e=0 \AND \g=0}
           {
-            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, label={[black]left:\small{$\ee$ (LLR, $\hat{s}$)}}] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, label={[black]left:\small{$\ee$ ($\lambda$, $\hat{s}$)}}] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
           }
           {
             \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
@@ -1498,7 +1475,7 @@ void addVector(const std::vector<T> &A,
           \draw (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \eemo/2*0.4, \rlmo*\VS) node{\tiny{\textbullet}};
         }
 
-        \only<18->{
+        \only<15->{
         \ifthenelse{\l=\Ll}{}
         {
           \pgfmathtruncatemacro\ln{\l+1}
@@ -1535,37 +1512,31 @@ void addVector(const std::vector<T> &A,
     \draw[->,>=latex,f] (l2_g0_e0.south) -- (l3_g0_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
     }
     \only<6->{
-    \draw[<-,>=latex,h] (l2_g0_e0.south west) to[bend right=30] (l3_g0_e0.north west) node [midway, text=Paired-3, fill=white, yshift=+1.1cm, xshift=-0.55cm] {\small{$h$}};
-    }
-    \only<7->{
     \draw[->,>=latex,g] (l2_g0_e1.south) -- (l3_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
-    \only<8->{
+    \only<7->{
+    \draw[<-,>=latex,h] (l2_g0_e0.south west) to[bend right=30] (l3_g0_e0.north west) node [midway, text=Paired-3, fill=white, yshift=+1.1cm, xshift=-0.55cm] {\small{$h$}};
     \draw[<-,>=latex,h] (l2_g0_e1.south east) to[bend left=30] (l3_g1_e0.north east) node [] {};
     }
-    \only<9->{
-    \draw[<-,>=latex,h] (l1_g0_e0.south west) -- (l2_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
-    }
-    \only<10->{
+    \only<8->{
     \draw[->,>=latex,g] (l1_g0_e2.south) -- (l2_g1_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
-    \only<11->{
+    \only<9->{
     \draw[->,>=latex,f] (l2_g1_e0.south) -- (l3_g2_e0.north) node [midway, text=Paired-5, fill=white] {\small{$f$}};
+    }
+    \only<10->{
+    \draw[->,>=latex,g] (l2_g1_e1.south) -- (l3_g3_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
     \only<12->{
     \draw[<-,>=latex,h] (l2_g1_e0.south west) to[bend right=30] (l3_g2_e0.north west) node [] {};
-    }
-    \only<13->{
-    \draw[->,>=latex,g] (l2_g1_e1.south) -- (l3_g3_e0.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
-    }
-    \only<15->{
     \draw[<-,>=latex,h] (l2_g1_e1.south east) to[bend left=30] (l3_g3_e0.north east) node [] {};
     }
-    \only<16->{
+    \only<13->{
+    \draw[<-,>=latex,h] (l1_g0_e0.south west) -- (l2_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
     \draw[<-,>=latex,h] (l1_g0_e3.south east) -- (l2_g1_e1.north east) node [midway, fill=white] {\small{$h$}};
     }
-    \only<17->{
-    \draw[<-,>=latex,h] (l0_g0_e0.south west) -- (l1_g0_e0.north west) node [midway, fill=white] {\small{$h$}};
+    \only<14->{
+    \draw[->,>=latex,g] (l0_g0_e6.south) -- (l1_g1_e2.north) node [midway, text=Paired-1, fill=white] {\small{$g$}};
     }
 
     \pgfmathtruncatemacro\H{\VS*\La}
@@ -1596,23 +1567,59 @@ void addVector(const std::vector<T> &A,
   \begin{column}{.50\textwidth}
   \vspace{-0.4cm}
   \begin{itemize}
-    \item<1-> Algorithm proposed by \Arikan~\textcolor{bluecite}{\cite{Arikan2009}}
+    \item<1-> Algorithm proposed by \Arikan~\cite{Arikan2009}
     \item<2-> Traversal of a binary tree
     \item<2-> Computational complexity: $O(N \times \log(N))$
   \end{itemize}
 
-  \only<3->{
+  \only<3-5>{
   \vspace{0.2cm}
-  ~~~~~\underline{Polar functions:}
+  ~~~~\underline{Polar functions:}
 
   \vspace{-0.4cm}
   {\small
   \begin{eqnarray*}
   \setlength\arraycolsep{1.5pt}
-  ~~~~\left\{\begin{array}{l c l}
-  f(l_a,l_b)                  &\approx& \sign(l_a.l_b).\min(|l_a|,|l_b|)\\
-  g(l_a,l_b,\hat{s})          &=&       (1-2s)l_a+l_b\\
-  h(\hat{s}_{a}, \hat{s}_{b}) &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b) &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  \textcolor{white}{g(\lambda_a,\lambda_b,\hat{s})} &\textcolor{white}{=}& \textcolor{white}{(1-2\hat{s})\lambda_a+\lambda_b}\\
+  &&
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<6>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  &&
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<7->{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
   \end{array}\right.
   \label{eq:ctx_polar_f_g_h}
   \end{eqnarray*}
@@ -1620,30 +1627,30 @@ void addVector(const std::vector<T> &A,
   }
 
   \centering
-  \only<18->{
+  \only<15->{
   \scalebox{.6}{
   \begin{algorithm}[H]
     \caption{Decoder SC.}\label{alg:ctx_polar_scl_decoder}
 
     \SetKwProg{Fn}{Function}{}{}
 
-    \Fn{$DecoderSC()$}
+    \Fn{$\DecoderSC()$}
     {
-      \uIf{$not~a~leaf$}
+      \uIf{$\text{not a leaf}$}
       {
-        $f()$
+        $f()$ \Comment*[r]{multiple elements}
 
-        $DecoderSC()$
+        $\DecoderSC()$ \Comment*[r]{left call}
 
-        $g()$
+        $g()$ \Comment*[r]{multiple elements}
 
-        $DecoderSC()$
+        $\DecoderSC()$ \Comment*[r]{right call}
 
-        $h()$
+        $h()$ \Comment*[r]{multiple elements}
       }
-      \Else
+      \Else(\Comment*[f]{a leaf node})
       {
-        $hardDecide()$
+        $\hardDecide() \text{~or \underline{frozen bit}}~;$
       }
     }
   \end{algorithm}

@@ -44,6 +44,10 @@
 \addbibresource{../tail/bibliography.bib}
 
 % Parameters ------------------------------------------------------------------
+% \renewcommand{\scriptsize}{\fontsize{5}{6}}
+\renewcommand{\footnotesize}{\fontsize{7}{8.4}}
+% % \renewcommand{\footnotesize}{\scriptsize}
+
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc}
@@ -110,8 +114,23 @@
 % \renewcommand\mkbibacro[1]{{\footnotesize\MakeUppercase{#1}}}
 \definecolor{bluecite}{HTML}{009DE0}
 \setbeamertemplate{bibliography item}{\textcolor{black}{\insertbiblabel}}
-\newcommand{\enumcite}[1]{{\scriptsize\textcolor{bluecite}{\cite{#1}}\quad \fullcite{#1}}}
-\newcommand{\citeblue}[1]{{\textcolor{bluecite}{\cite{#1}}}}
+\newcommand{\enumcite}[1]{{\scriptsize\cite{#1}\quad \fullcite{#1}}}
+
+% package 'hyperref'
+\hypersetup{
+  colorlinks,
+  allcolors=.,
+  citecolor  = bluecite,
+  urlcolor=bluecite,
+}
+% package 'url'
+\urlstyle{tt}
+
+
+\SetKwComment{Comment}{$\triangleright$\ }{} % package 'algorithm2e'
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{Comment}{#1}} % package 'algorithm2e'
+\SetCommentSty{mycommfont} % package 'algorithm2e'
+
 
 % Beamer template -------------------------------------------------------------
 \input{../settings/colors}
@@ -229,15 +248,10 @@
 \newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
 \newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
 
-% \setlength{\textfloatsep}{5pt}
-% \setlength{\parsep}{0pt}
-% \setlength{\parskip}{0pt}
-
 \newcommand{\cmark}{\textcolor{btfGreen}{\ding{51}}}
 \newcommand{\xmark}{\textcolor{btfRed}{\ding{55}}}
 \newcommand{\Arikan}{Ar{\i}kan\xspace}
 
-\renewcommand{\footnotesize}{\fontsize{7}{8.4}}
-% % \renewcommand{\footnotesize}{\scriptsize}
-
 \DeclareMathOperator*{\sign}{sign}
+\DeclareMathOperator*{\DecoderSC}{DecoderSC}
+\DeclareMathOperator*{\hardDecide}{h_d}
