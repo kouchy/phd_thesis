@@ -1020,8 +1020,9 @@ former software polar decoder implementations. The proposed polar decoders are
 based on specific building blocks included from the Polar
 API~\cite{Cassagne2015c,Cassagne2016b}. These blocks are fast optimized
 implementations of the $f$, $g$, $h$ (and their variants) polar intrinsic
-functions. Listing~\ref{lst:opt_polar_api} details the SIMD implementation of
-these functions. These implementations are based on \MIPP. Consequently, the
+functions defined in Equation~\ref{eq:ctx_polar_f_g_h}.
+Listing~\ref{lst:opt_polar_api} details the SIMD implementation of these
+functions. These implementations are based on \MIPP. Consequently, the
 description is clear, portable, multi-format (32-bit floating-point, 16-bit and
 8-bit fixed-points) and as fast as an architecture specific code. The
 \verb|mipp::Reg<B>| and \verb|mipp::Reg<R>| types correspond to SIMD registers.
