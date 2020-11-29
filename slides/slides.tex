@@ -9,7 +9,7 @@
 \titlegraphic{\includegraphics[height=.9cm]{../head/pic/inr_logo_rouge.png} \hfil %
               \includegraphics[height=.9cm]{../head/pic/ims.png} \hfil %
               \includegraphics[height=.9cm]{../head/pic/ub.jpg}}
-\date{8 décembre 2020}
+\date{December 8, 2020}
 
 \begin{document}
 
@@ -493,20 +493,20 @@
       \item High throughput and low latency on single-core CPU
       \item Portability
     \end{itemize}
-    \vspace{.5em}
+    \vspace{.3em}
     \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
     \begin{itemize}
       \item High throughput and low latency on single core and multi-core CPUs
       \item Flexibility
     \end{itemize}
-    \vspace{.5em}
+    \vspace{.3em}
     \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}
     \begin{itemize}
       \item Simulation time
       \item Algorithmic heterogeneity
       \item Reproducibility
     \end{itemize}
-    \vspace{.5em}
+    \vspace{.3em}
     \item<4-> Embedded domain specific language (eDSL) for the SDR
     \begin{itemize}
       \item High throughput and low latency on multi-core CPUs
@@ -514,9 +514,9 @@
   \end{enumerate}
 \end{frame}
 
-\section[Optimization Strategies]{Optimization Strategies}
+\section[MIPP]{\MIPP: A \Cxx Wrapper for SIMD Instructions}
 
-\subsection[\MIPP: A \Cxx Wrapper for SIMD Instructions]{\MIPP: A \Cxx Wrapper for SIMD Instructions}
+\subsection[Proposal]{Proposal}
 
 \begin{frame}{Proposal: \longMIPP (\MIPP)}
   \vfill
@@ -546,7 +546,9 @@
   \vfill
 \end{frame}
 
-\begin{frame}{\MIPP: Programming Interfaces}
+\subsection[Programming Interfaces]{Programming Interfaces}
+
+\begin{frame}{Programming Interfaces}
   \vfill
   \begin{itemize}
     \item The Low-Level \MIPP Interface (low)
@@ -568,7 +570,7 @@
   \vfill
 \end{frame}
 
-\begin{frame}[containsverbatim,fragile]{\MIPP: Low Level Interface (low)}
+\begin{frame}[containsverbatim,fragile]{Low Level Interface (low)}
   \vfill
   Similar to SIMD intrinsics: Untyped registers, typed operations
   \vspace{0.3cm}
@@ -618,7 +620,7 @@ mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
   \vfill
 \end{frame}
 
-\begin{frame}[fragile]{\MIPP: Medium Level Interface (med.)}
+\begin{frame}[fragile]{Medium Level Interface (med.)}
   \vfill
   Typed registers, polymorphic operations
   \vspace{0.3cm}
@@ -648,7 +650,7 @@ mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
   \vfill
 \end{frame}
 
-\begin{frame}[fragile]{\MIPP: Medium Level Interface, Hello World!}
+\begin{frame}[fragile]{Hello World!}
   \vspace{-2mm}
   \begin{columns}[t]
     \begin{column}[T]{8.6cm}
@@ -739,7 +741,9 @@ void addVector(const std::vector<T> &A,
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Related works: SIMD Wrappers}
+\subsection[Related works]{Related works}
+
+\begin{frame}[fragile]{SIMD Wrappers}
   \vfill
   Two main strategies:
   \begin{enumerate}
@@ -774,7 +778,7 @@ void addVector(const std::vector<T> &A,
   \vfill
 \end{frame}
 
-\begin{frame}{Related works: Experimentation Protocol}
+\begin{frame}{Experimentation Protocol}
   \vfill
   \begin{itemize}
     \item Experiments
@@ -807,7 +811,7 @@ void addVector(const std::vector<T> &A,
   \vfill
 \end{frame}
 
-\begin{frame}{Related works: Comparison on the Mandelbrot Set}
+\begin{frame}{Comparison on the Mandelbrot Set}
   % \small
   % \vspace{-0.3cm}
   \begin{itemize}
@@ -901,7 +905,9 @@ void addVector(const std::vector<T> &A,
   \end{figure}
 \end{frame}
 
-\subsection[Polar Decoders]{Polar Decoders}
+\section[Polar Decoders]{Polar Decoders}
+
+\subsection[Polar Codes]{Polar Codes}
 
 \begin{frame}{Polar Codes}
   \begin{figure}[!h]
@@ -948,7 +954,7 @@ void addVector(const std::vector<T> &A,
   }
 \end{frame}
 
-\begin{frame}{Polar Coding Scheme}
+\begin{frame}{Coding Scheme}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1230,7 +1236,7 @@ void addVector(const std::vector<T> &A,
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Polar Decoder}
+\begin{frame}{Decoders}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1273,7 +1279,9 @@ void addVector(const std::vector<T> &A,
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Polar Decoder: Successive Cancellation Algorithm}
+\subsection[Successive Cancellation Algorithm]{Successive Cancellation Algorithm}
+
+\begin{frame}{Successive Cancellation (SC) Algorithm}
   \begin{columns}[T] % align columns
   \begin{column}{.5\textwidth}
   \vspace{-0.3cm}
@@ -1581,7 +1589,7 @@ void addVector(const std::vector<T> &A,
   \begin{eqnarray*}
   \setlength\arraycolsep{1.5pt}
   ~~\left\{\begin{array}{l c l}
-  f(\lambda_a,\lambda_b) &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  \highlight[Paired-5!20]{f(\lambda_a,\lambda_b)} &\approx& \sign(\highlight[Paired-7!20]{\lambda_a}.\highlight[Paired-9!20]{\lambda_b}).\min(|\highlight[Paired-7!20]{\lambda_a}|,|\highlight[Paired-9!20]{\lambda_b}|)\\
   \textcolor{white}{g(\lambda_a,\lambda_b,\hat{s})} &\textcolor{white}{=}& \textcolor{white}{(1-2\hat{s})\lambda_a+\lambda_b}\\
   &&
   \end{array}\right.
@@ -1600,7 +1608,7 @@ void addVector(const std::vector<T> &A,
   \setlength\arraycolsep{1.5pt}
   ~~\left\{\begin{array}{l c l}
   f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
-  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  \highlight[Paired-1!20]{g(\lambda_a,\lambda_b,\hat{s})} &=&       (1-2\highlight[Paired-11!20]{\hat{s}})\highlight[Paired-7!20]{\lambda_a}+\highlight[Paired-9!20]{\lambda_b}\\
   &&
   \end{array}\right.
   \label{eq:ctx_polar_f_g_h}
@@ -1608,7 +1616,133 @@ void addVector(const std::vector<T> &A,
   }
   }
 
-  \only<7->{
+  \only<7>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  \highlight[Paired-3!20]{h(\hat{s}_{a}, \hat{s}_{b})}    &=&       (\highlight[Paired-7!20]{\hat{s}_{a}} \oplus \highlight[Paired-9!20]{\hat{s}_{b}}, \highlight[Paired-9!20]{\hat{s}_{b}}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<8>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  \highlight[Paired-1!20]{g(\lambda_a,\lambda_b,\hat{s})} &=&       (1-2\highlight[Paired-11!20]{\hat{s}})\highlight[Paired-7!20]{\lambda_a}+\highlight[Paired-9!20]{\lambda_b}\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<9>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  \highlight[Paired-5!20]{f(\lambda_a,\lambda_b)} &\approx& \sign(\highlight[Paired-7!20]{\lambda_a}.\highlight[Paired-9!20]{\lambda_b}).\min(|\highlight[Paired-7!20]{\lambda_a}|,|\highlight[Paired-9!20]{\lambda_b}|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<10>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  \highlight[Paired-1!20]{g(\lambda_a,\lambda_b,\hat{s})} &=&       (1-2\highlight[Paired-11!20]{\hat{s}})\highlight[Paired-7!20]{\lambda_a}+\highlight[Paired-9!20]{\lambda_b}\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<11>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<12-13>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  g(\lambda_a,\lambda_b,\hat{s}) &=&       (1-2\hat{s})\lambda_a+\lambda_b\\
+  \highlight[Paired-3!20]{h(\hat{s}_{a}, \hat{s}_{b})}    &=&       (\highlight[Paired-7!20]{\hat{s}_{a}} \oplus \highlight[Paired-9!20]{\hat{s}_{b}}, \highlight[Paired-9!20]{\hat{s}_{b}}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<14>{
+  \vspace{0.2cm}
+  ~~~~\underline{Polar functions:}
+
+  \vspace{-0.4cm}
+  {\small
+  \begin{eqnarray*}
+  \setlength\arraycolsep{1.5pt}
+  ~~\left\{\begin{array}{l c l}
+  f(\lambda_a,\lambda_b)         &\approx& \sign(\lambda_a.\lambda_b).\min(|\lambda_a|,|\lambda_b|)\\
+  \highlight[Paired-1!20]{g(\lambda_a,\lambda_b,\hat{s})} &=&       (1-2\highlight[Paired-11!20]{\hat{s}})\highlight[Paired-7!20]{\lambda_a}+\highlight[Paired-9!20]{\lambda_b}\\
+  h(\hat{s}_{a}, \hat{s}_{b})    &=&       (\hat{s}_{a} \oplus \hat{s}_{b}, \hat{s}_{b}).
+  \end{array}\right.
+  \label{eq:ctx_polar_f_g_h}
+  \end{eqnarray*}
+  }
+  }
+
+  \only<15->{
   \vspace{0.2cm}
   ~~~~\underline{Polar functions:}
 
@@ -1629,6 +1763,7 @@ void addVector(const std::vector<T> &A,
   \centering
   \only<15->{
   \scalebox{.6}{
+  \setcounter{algocf}{0}
   \begin{algorithm}[H]
     \caption{Decoder SC.}\label{alg:ctx_polar_scl_decoder}
 
@@ -1661,7 +1796,158 @@ void addVector(const std::vector<T> &A,
   \end{columns}
 \end{frame}
 
-\begin{frame}{Polar Decoder: Simplified Successive Cancellation Algorithm}
+\begin{frame}{SC Intrinsic Parallelism}
+  \begin{columns}[T] % align columns
+  \begin{column}{.5\textwidth}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    \tikzset{ txtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ zoom/.style={draw=Paired-3, dash dot} }
+    \tikzset{ f/.style ={draw=Paired-5, line width=0.75pt, text=Paired-5} }
+    \tikzset{ g/.style ={draw=Paired-1, line width=0.75pt, text=Paired-1} }
+    \tikzset{ h/.style ={draw=Paired-3, line width=0.75pt, text=Paired-3} }
+
+    \node[style=txtplain] (dec) at (2.6,8.9) {Polar\\Decoder};
+
+    \draw[<-,>=latex] (dec) --++ ( 2.5,0) node [midway, above] {$\bm{l}$};
+    \draw[->,>=latex] (dec) --++ (-2.5,0) node [midway, above] {$\bm{\hat{u}}$};
+
+    \draw[zoom,-,>=latex] (dec.south west) --++ (-3.55, -1.0);
+    \draw[zoom,-,>=latex] (dec.south east) --++ (+3.55, -1.0);
+
+    \draw[zoom                  ] (-2.2,7.4) rectangle (7.4,-1.0);
+
+    \draw[fill=Gray!20, draw=none] ( 1.015, 6.96) rectangle (4.215,  5.945);
+
+    \only<2->{
+    \draw[fill=Gray!20, draw=none] (0.325, 4.81) rectangle (1.925, 3.795);
+    }
+
+    \only<2>{
+    \draw[fill=Paired-7!20, draw=none] (1.015, 6.96) rectangle (2.615, 5.945);
+    \draw[fill=Paired-9!20, draw=none] (2.615, 6.96) rectangle (4.215, 5.945);
+    \draw[fill=Paired-5!20, draw=none] (0.325, 4.81) rectangle (1.925, 3.795);
+    }
+
+    \only<3->{
+    \draw[fill=Gray!20, draw=none] (-0.025, 2.66) rectangle (0.775, 1.645);
+    }
+
+    \only<3>{
+    \draw[fill=Paired-7!20, draw=none] (0.325, 4.81) rectangle (1.125, 3.795);
+    \draw[fill=Paired-9!20, draw=none] (1.125, 4.81) rectangle (1.925, 3.795);
+    \draw[fill=Paired-5!20, draw=none] (-0.025, 2.66) rectangle (0.775, 1.645);
+    }
+
+    \only<4->{
+    \draw[fill=Gray!20, draw=none] (-0.2, 0.51) rectangle (0.195, -0.505);
+    }
+
+    \only<4>{
+    \draw[fill=Paired-7!20, draw=none] (-0.025, 2.66) rectangle (0.375, 1.645);
+    \draw[fill=Paired-9!20, draw=none] (0.375, 2.66) rectangle (0.775, 1.645);
+    \draw[fill=Paired-5!20, draw=none] (-0.2, 0.51) rectangle (0.195, -0.505);
+    }
+
+    \newcommand\La{4} % number of layers in the tree
+    \newcommand\VS{2.15} % vertical space between the tree layer
+
+    \pgfmathtruncatemacro\Ll{\La -1}
+
+    \foreach \l in {\Ll,...,0} {
+
+      \pgfmathtruncatemacro\ll{2^\l-1}
+      \pgfmathtruncatemacro\rl{\La-\l}
+      \pgfmathtruncatemacro\rlmo{\rl -1}
+      \pgfmathtruncatemacro\ee{2^\rlmo}
+      \pgfmathtruncatemacro\eemo{\ee-1}
+
+      ["\ifthenelse{\l=0}{}
+      {
+        \draw[dashed] (-2.00, \rlmo*\VS+\VS/2) -- (7.25, \rlmo*\VS+\VS/2);
+      }", sloped]
+
+      \node[text width=1.5cm, text centered] at (6.4, \rlmo*\VS) {\l};
+
+      \foreach \g in {0,...,\ll} {
+
+        \foreach \e in {0,...,\eemo} {
+          \ifthenelse{\e=0 \AND \g=0}
+          {
+            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black, label={[black]left:\small{$\ee$ ($\lambda$)}}] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+          }
+          {
+            \node[draw=black, minimum height=1.0cm, minimum width=0.4cm, text=black] (l\l_g\g_e\e) at (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \e*0.4, \rlmo*\VS) {};
+          }
+        }
+
+        \ifthenelse{\l=\Ll}{}
+        {
+          \draw (0.2*\eemo/2*1.75 + \ee*\g/2*1.5 + \eemo/2*0.4, \rlmo*\VS) node{\tiny{\textbullet}};
+        }
+      }
+    }
+
+    \only<2->{
+    \draw[-,>=latex,f] (l0_g0_e0.south) --++ (0,-0.10) -| (l0_g0_e4.south);
+    \draw[-,>=latex,f] (l0_g0_e1.south) --++ (0,-0.20) -| (l0_g0_e5.south);
+    \draw[-,>=latex,f] (l0_g0_e2.south) --++ (0,-0.30) -| (l0_g0_e6.south);
+    \draw[-,>=latex,f] (l0_g0_e3.south) --++ (0,-0.40) -| (l0_g0_e7.south);
+    \draw[->,>=latex,f] (1.4, 5.845) -- (l1_g0_e0.north);
+    \draw[->,>=latex,f] (1.8, 5.745) -- (l1_g0_e1.north);
+    \draw[->,>=latex,f] (2.2, 5.645) -- (l1_g0_e2.north);
+    \draw[->,>=latex,f] (2.6, 5.545) -- (l1_g0_e3.north);
+    }
+    \only<3->{
+    \draw[-,>=latex,f] (l1_g0_e0.south) --++ (0,-0.10) -| (l1_g0_e2.south);
+    \draw[-,>=latex,f] (l1_g0_e1.south) --++ (0,-0.20) -| (l1_g0_e3.south);
+    \draw[->,>=latex,f] (1.4-0.675, 5.845-2.15) -- (l2_g0_e0.north);
+    \draw[->,>=latex,f] (1.8-0.675, 5.745-2.15) -- (l2_g0_e1.north);
+    }
+    \only<4->{
+    \draw[-,>=latex,f] (l2_g0_e0.south) --++ (0,-0.10) -| (l2_g0_e1.south);
+    \draw[->,>=latex,f] (1.4-1.025, 5.845-2.15-2.15) -- (l3_g0_e0.north);
+    }
+
+    \pgfmathtruncatemacro\H{\VS*\La}
+    \pgfmathtruncatemacro\HH{7.9}
+    \draw[->,>=latex] (7.00, \HH) -- (7.00, -0.55) node [midway, text=black, fill=white,rotate=90] {\small{Layer (tree depth)}};
+
+    \node[text width=1.5cm, text centered] at (1.225, 6.45) {$l_0$};
+    \node[text width=1.5cm, text centered] at (1.625, 6.45) {$l_1$};
+    \node[text width=1.5cm, text centered] at (2.025, 6.45) {$l_2$};
+    \node[text width=1.5cm, text centered] at (2.425, 6.45) {$l_3$};
+    \node[text width=1.5cm, text centered] at (2.825, 6.45) {$l_4$};
+    \node[text width=1.5cm, text centered] at (3.225, 6.45) {$l_5$};
+    \node[text width=1.5cm, text centered] at (3.625, 6.45) {$l_6$};
+    \node[text width=1.5cm, text centered] at (4.025, 6.45) {$l_7$};
+  \end{tikzpicture}
+  \end{figure}
+  \end{column}
+  \begin{column}{.50\textwidth}
+  \vspace{0.5cm}
+  \begin{itemize}
+    \item SC intrinsic parallelism decreases with the tree depth
+    \begin{itemize}
+      \item Intra-frame parallelism
+    \end{itemize}
+    \vspace{0.3cm}
+    \item<5-> Regular memory access pattern
+      \begin{itemize}
+        \item Good for the SIMD paradigm
+      \end{itemize}
+    \vspace{0.3cm}
+    \item<6-> \underline{Problem:} limited SIMD efficiency near the leaves
+    \vspace{0.3cm}
+    \item<7-> \underline{Solution 1:} reduce the number of nodes that have a limited amount of parallelism
+  \end{itemize}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Simplified Successive Cancellation (SSC) Algorithm}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1676,9 +1962,9 @@ void addVector(const std::vector<T> &A,
     \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
     \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
 
-    \tikzset{ f/.style ={draw=Paired-5, text=Paired-5} }
-    \tikzset{ g/.style ={draw=Paired-1, text=Paired-1} }
-    \tikzset{ h/.style ={draw=Paired-3, text=Paired-3} }
+    \tikzset{ f/.style ={draw=black, text=black} }
+    \tikzset{ g/.style ={draw=black, text=black} }
+    \tikzset{ h/.style ={draw=black, text=black} }
 
     \node[frzn                                           ] (l3_g0) at (0.0, 0.0) {};
     \node[frzn                                           ] (l3_g1) at (1.0, 0.0) {};
@@ -1802,21 +2088,879 @@ void addVector(const std::vector<T> &A,
     }
   \end{tikzpicture}
   \end{figure}
+
+  \begin{itemize}
+    \item SC simplifications have been proposed in the literature~\cite{Alamdar-Yazdi2011,Sarkis2014a}
+    \begin{itemize}
+      \item Introducing new type of nodes => tree pruning
+      \item<8-> Drastically reduce the number of nodes with a low level of parallelism
+    \end{itemize}
+  \end{itemize}
+  \vfill
+  \enumcite{Alamdar-Yazdi2011}
 \end{frame}
 
-\begin{frame}{Polar Decoder: Successive Cancellation List Algorithm}
+\begin{frame}{SC SIMDization Strategies}
+  \begin{columns}[t]
+    \begin{column}[T]{6.0cm}
+      \underline{Intra-frame SIMD strategy:}
+      \begin{figure}[htp]
+        \centering
+        \includegraphics[scale=0.625]{figs/intra-simd}
+        %\caption{Intra frame SIMD strategy}
+        \label{fig:intra-simd}
+      \end{figure}
+    \end{column}
+    \begin{column}[T]{6.0cm}
+      \underline{Inter-frame SIMD strategy:}
+      \begin{figure}[htp]
+        \centering
+        \includegraphics[scale=0.625]{figs/inter-simd}
+        %\caption{Inter frame SIMD strategy}
+        \label{fig:inter-simd}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% \begin{frame}{Polar Decoder: SC SIMDization Strategies}
+%  \begin{columns}[t]
+%    \begin{column}[T]{6.0cm}
+%      Intra frame SIMD strategy:\\
+%      ~~~$+$ low latency\\
+%      ~~~$-$ leafs can't be vectorized
+%    \end{column}
+%    \begin{column}[T]{6.0cm}
+%      Inter frame SIMD strategy:\\
+%      ~~~$+$ high throughput\\
+%      ~~~$-$ high latency
+%    \end{column}
+%  \end{columns}
+% \end{frame}
+
+\begin{frame}[containsverbatim,fragile]{Polar Application Programming Interface (Polar API)}
+  \vspace{-0.2cm}
   \begin{itemize}
-    \item Based on the Successive Cancellation decoder
-    \item Maintains a finite list of $L$ possible decoding trees
-    \item Chooses the most likely tree according to a metric
-    \item Decoding performance are better for short to medium size codewords
-    \item Can be combined with a CRC code to discriminate the metric
-      \\\vspace*{.5em}
-      {\color{bleuUni}\Large\MVRightarrow} Decoding performance is, again, improved
+    \item Polar functions like $f$, $g$ and $h$ are implemented with \MIPP
+    \item Efficient implementation compatible with NEON, SSE, AVX and AVX-512
+    \item Mostly independent from the vectorization strategy (intra-/inter-frame)
+  \end{itemize}
+  \begin{minted}[linenos]{cpp}
+template <typename R>
+mipp::<R> f(const mipp::<R> la, const mipp::<R> lb) {
+  return mipp::copysign(mipp::min(mipp::abs(la), mipp::abs(lb)),
+                        mipp::sign(la, lb));
+} // f(la, lb) = sign(la.lb).min(|la|, |lb|)
+
+template <typename B, typename R>
+mipp::<R> g(const mipp::<R> la, const mipp::<R> lb, const mipp::<B> s) {
+  return mipp::copysign(la, s) + lb;
+} // g(la, lb, sa) = (1-2s)la + lb
+
+template <typename B>
+mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
+  return sa ^ sb;
+} // h(sa, sb) = sa XOR sb
+  \end{minted}
+\end{frame}
+
+\begin{frame}{SC Dynamic Versus Generated Implementation}
+  \vspace{-0.4cm}
+  \begin{columns}[t]
+    \begin{column}[T]{6.0cm}
+      \centering
+      \scalebox{.65}{
+      \setcounter{algocf}{0}
+      \begin{algorithm}[H]
+        \caption{Decoder SC Dynamic.}
+
+        \SetKwProg{Fn}{Function}{}{}
+
+        \Fn{$\DecoderSC()$}
+        {
+          \uIf{$\text{not a leaf}$}
+          {
+            $f()$ \Comment*[r]{multiple elements}
+
+            $\DecoderSC()$ \Comment*[r]{left call}
+
+            $g()$ \Comment*[r]{multiple elements}
+
+            $\DecoderSC()$ \Comment*[r]{right call}
+
+            $h()$ \Comment*[r]{multiple elements}
+          }
+          \Else(\Comment*[f]{a leaf node})
+          {
+            $\hardDecide() \text{~or \underline{frozen bit}}~;$
+          }
+        }
+      \end{algorithm}
+      }
+
+      \only<1-2>{
+      \begin{figure}[!h]
+      \centering
+      \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+        % \path[use as bounding box] (-0.5,5.25) rectangle (14.0,-0.5);
+
+        \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+        \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+        \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=white, fill=black                                                                                } }
+        \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+        \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+        \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+        \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+        \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+        \tikzset{ f/.style ={draw=black, text=black} }
+        \tikzset{ g/.style ={draw=black, text=black} }
+        \tikzset{ h/.style ={draw=black, text=black} }
+
+        \only<1>{
+        \node[frzn] (l3_g0) at (0.0, 0.0) {};
+        \node[frzn] (l3_g1) at (1.0, 0.0) {};
+        \node[frzn] (l3_g2) at (2.0, 0.0) {};
+        \node[info] (l3_g3) at (3.0, 0.0) {};
+        \node[frzn] (l3_g4) at (4.0, 0.0) {};
+        \node[info] (l3_g5) at (5.0, 0.0) {};
+        \node[info] (l3_g6) at (6.0, 0.0) {};
+        \node[info] (l3_g7) at (7.0, 0.0) {};
+        \node[any ] (l2_g0) at (0.5, 1.5) {};
+        \node[any ] (l2_g1) at (2.5, 1.5) {};
+        \node[any ] (l2_g2) at (4.5, 1.5) {};
+        \node[any ] (l2_g3) at (6.5, 1.5) {};
+        \node[any ] (l1_g0) at (1.5, 3.0) {};
+        \node[any ] (l1_g1) at (5.5, 3.0) {};
+        \node[any ] (l0_g0) at (3.5, 4.5) {};
+        }
+
+        \only<2->{
+        \node[frzn] (l3_g0) at (0.0, 0.0) {\small{4}};
+        \node[frzn] (l3_g1) at (1.0, 0.0) {\small{5}};
+        \node[frzn] (l3_g2) at (2.0, 0.0) {\small{7}};
+        \node[info] (l3_g3) at (3.0, 0.0) {\small{8}};
+        \node[frzn] (l3_g4) at (4.0, 0.0) {};
+        \node[info] (l3_g5) at (5.0, 0.0) {};
+        \node[info] (l3_g6) at (6.0, 0.0) {};
+        \node[info] (l3_g7) at (7.0, 0.0) {};
+        \node[any ] (l2_g0) at (0.5, 1.5) {\small{3}};
+        \node[any ] (l2_g1) at (2.5, 1.5) {\small{6}};
+        \node[any ] (l2_g2) at (4.5, 1.5) {};
+        \node[any ] (l2_g3) at (6.5, 1.5) {};
+        \node[any ] (l1_g0) at (1.5, 3.0) {\small{2}};
+        \node[any ] (l1_g1) at (5.5, 3.0) {\small{9}};
+        \node[any ] (l0_g0) at (3.5, 4.5) {\small{1}};
+        }
+
+        \draw[f,->,>=latex] (l2_g0) -- (l3_g0) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+        \draw[g,->,>=latex] (l2_g0) -- (l3_g1) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+        \draw[h,->,>=latex] (l2_g0) to [out=180,in=120,looseness=8] (l2_g0) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l2_g1) -- (l3_g2) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+        \draw[g,->,>=latex] (l2_g1) -- (l3_g3) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+        \draw[h,->,>=latex] (l2_g1) to [out=  0,in= 60,looseness=8] (l2_g1) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l2_g2) -- (l3_g4) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+        \draw[g,->,>=latex] (l2_g2) -- (l3_g5) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+        \draw[h,->,>=latex] (l2_g2) to [out=180,in=120,looseness=8] (l2_g2) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l2_g3) -- (l3_g6) node [midway, above, text=black, xshift=-0.1cm, yshift=-0.1cm] {$f$};
+        \draw[g,->,>=latex] (l2_g3) -- (l3_g7) node [midway, above, text=black, xshift=+0.1cm, yshift=-0.1cm] {$g$};
+        \draw[h,->,>=latex] (l2_g3) to [out=  0,in= 60,looseness=8] (l2_g3) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l1_g0) -- (l2_g0) node [midway, above, text=black] {$f$};
+        \draw[g,->,>=latex] (l1_g0) -- (l2_g1) node [midway, above, text=black] {$g$};
+        \draw[h,->,>=latex] (l1_g0) to [out=180,in=120,looseness=8] (l1_g0) node [right, text=black, xshift=-1.25cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l1_g1) -- (l2_g2) node [midway, above, text=black] {$f$};
+        \draw[g,->,>=latex] (l1_g1) -- (l2_g3) node [midway, above, text=black] {$g$};
+        \draw[h,->,>=latex] (l1_g1) to [out=  0,in= 60,looseness=8] (l1_g1) node [right, text=black, xshift= 0.75cm, yshift=0.4cm] {$h$};
+        \draw[f,->,>=latex] (l0_g0) -- (l1_g0) node [midway, above, text=black] {$f$};
+        \draw[g,->,>=latex] (l0_g0) -- (l1_g1) node [midway, above, text=black] {$g$};
+        \draw[h,->,>=latex] (l0_g0) to [out=0,in=60,looseness=8] (l0_g0) node [right, text=black, xshift=0.75cm, yshift=0.4cm] {$h$};
+      \end{tikzpicture}
+      \end{figure}
+      }
+    \end{column}
+    \begin{column}[T]{6.0cm}
+      \pause
+      \centering
+      \scalebox{.65}{
+      \setcounter{algocf}{1}
+      \begin{algorithm}[H]
+        \caption{Decoder SC Generated.}
+
+        \SetKwProg{Fn}{Function}{}{}
+
+        \Fn{$\DecoderSC()$}
+        {
+          $f()$ \Comment*[r]{1 -> 2 [4 elmts]}
+
+          $f()$ \Comment*[r]{2 -> 3 [2 elmts]}
+
+          $f()$ \Comment*[r]{3 -> 4 [1 elmts]}
+
+          $g()$ \Comment*[r]{3 -> 5 [1 elmts]}
+
+          $h()$ \Comment*[r]{(4, 5) -> 3 [2 elmts]}
+
+          $g()$ \Comment*[r]{2 -> 6 [2 elmts]}
+
+          $f()$ \Comment*[r]{6 -> 7 [1 elmts]}
+
+          $g()$ \Comment*[r]{6 -> 8 [1 elmts]}
+
+          $\hardDecide()$ \Comment*[r]{8 -> 8 [1 elmts]}
+
+          $h()$ \Comment*[r]{(7, 8) -> 6 [2 elmts]}
+
+          $h()$ \Comment*[r]{(3, 6) -> 2 [4 elmts]}
+
+          $g()$ \Comment*[r]{1 -> 9 [4 elmts]}
+
+          $...$
+        }
+      \end{algorithm}
+      }
+    \end{column}
+  \end{columns}
+
+  \only<3->{
+  \vspace{0.3cm}
+  \begin{columns}
+    \begin{column}[T]{6.0cm}
+      \begin{itemize}
+        \item High flexibility, same code can:
+        \begin{itemize}
+          \item Adapt to many code rate $R = K/N$
+          \item Adapt to many frozen bits configurations
+        \end{itemize}
+        \item Overhead because of recursive calls
+      \end{itemize}
+    \end{column}
+    \begin{column}[T]{6.0cm}
+      \only<4->{
+      \begin{itemize}
+        \item Reduced flexibility, the code is generated for:
+        \begin{itemize}
+          \item Fixed code rate $R = K/N$
+          \item Fixed frozen bits positions
+        \end{itemize}
+        \item No recursive call overhead: Higher throughput and lower latency
+      \end{itemize}
+      }
+    \end{column}
+  \end{columns}
+  }
+\end{frame}
+
+\subsection[Source Code Generation]{Source Code Generation}
+
+\begin{frame}{Issue}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}%[scale=0.50, every node/.style={transform shape}]
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=1.0\linewidth, height=0.7\linewidth,
+                 ymode = log,
+                 log basis y={2},
+                 xticklabel style={black!70}, yticklabel style={black!70},
+                 xlabel=Codeword size ($N$), ylabel=Decoder binary size (KB), grid=both, grid style={gray!30},
+                 xmin=6, xmax=16,
+                 xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
+                 % yticklabels={2,4,8,16,32,64,128,256,512,1024,2048,4096},
+                 yticklabels={2,8,32,128,512,2048},
+                 grid style={dashed, gray!30},
+                 %ymin=-5, ymax=102,
+                 % tick align=outside, tickpos=left,
+                 %label style={font=\large},
+                 % tick label style={font=\large},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line1}
+        \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line2}
+        \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line3}
+        \addplot[mark=none,     Paired-7,               dashed                      ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+    \end{axis}
+
+    \matrix [draw,
+             matrix of nodes,
+             anchor=north,
+             inner sep=2.3pt,
+             fill=white,
+             ampersand replacement=\&] at (2.3,6.5)
+    {
+        \ref{plot:line2} \& 32-bit \& intra-frame \\
+        \ref{plot:line3} \& ~8-bit \& intra-frame \\
+        \ref{plot:line1} \& 32-bit \& inter-frame \\
+        \ref{plot:line4} \&        \& L1I size    \\
+    };
+  \end{tikzpicture}
+  }
+  \end{figure}
+  \begin{itemize}
+    \item \underline{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
+    \pause
+    \vspace{0.2cm}
+    \item \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
+    \pause
+    \vspace{0.2cm}
+    \item \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Sub-tree Folding Algorithm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.4}{
+    \begin{tikzpicture}[baseline]
+      \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+      \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+      \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+      \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+      \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+      \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+      \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+      \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+      \path[use as bounding box] (-0.5, +1.25) rectangle (14.5, -1.3);
+
+      \node[any,  label={[black,align=center]above:\small{Any}}                              ] (any)  at ( 0.0, 0.0) {};
+      \node[frzn, label={[black,align=center]above:\small{Frozen bit}\\\small{(leaf)}}       ] (frz)  at ( 2.0, 0.0) {};
+      \node[info, label={[black,align=center]above:\small{Info. bit}\\\small{(leaf)}}        ] (ufrz) at ( 4.0, 0.0) {};
+      \node[r0,   label={[black,align=center]above:\small{\texttt{R0}}}                      ] (r0)   at ( 6.0, 0.0) {};
+      \node[r1,   label={[black,align=center]above:\small{\texttt{R1}}}                      ] (r1)   at ( 8.0, 0.0) {};
+      \node[rep,  label={[black,align=center]above:\small{\texttt{REP}}}                     ] (rep)  at (10.0, 0.0) {};
+      \node[spc4, label={[black,align=center]above:\small{\texttt{SPC}$_\text{\texttt{4}}$}} ] (spc4) at (12.0, 0.0) {};
+      \node[spc,  label={[black,align=center]above:\small{\texttt{SPC}$_\text{\texttt{4+}}$}}] (spc)  at (14.0, 0.0) {};
+
+      \draw[<-,>=latex        ] (2.5, -1.25) -- ( 5.5, -1.25) node [midway, above, text=black] {\small{Left edge ($f$)}};
+      \draw[->,>=latex, dashed] (8.5, -1.25) -- (11.5, -1.25) node [midway, above, text=black] {\small{Right edge ($g$)}};
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+  \begin{columns}
+  \begin{column}[T]{5.0cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.4}{
+    \begin{tikzpicture}[baseline]
+      \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+      \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+      \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+      \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+      \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+      \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+      \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+      \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+      \node[any] (l0_n0)  at ( 6.5, 6.0) {};
+
+      \node[any] (l1_n0)  at ( 4.5, 5.0) {};
+      \node[any] (l1_n1)  at ( 8.5, 5.0) {};
+
+      \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
+      \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
+
+      \node[any] (l2_n0)  at ( 1.5, 4.0) {};
+      \node[any] (l2_n1)  at ( 4.5, 4.0) {};
+      \node[any] (l2_n2)  at ( 8.5, 4.0) {};
+      \node[any] (l2_n3)  at (11.5, 4.0) {};
+
+      \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
+      \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
+      \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
+      \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
+
+      \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
+      \node[any] (l3_n1)  at ( 1.5, 3.0) {};
+      \node[any] (l3_n2)  at ( 4.0, 3.0) {};
+      \node[any] (l3_n3)  at ( 5.0, 3.0) {};
+      \node[any] (l3_n4)  at ( 8.0, 3.0) {};
+      \node[any] (l3_n5)  at ( 9.0, 3.0) {};
+      \node[any] (l3_n6)  at (11.5, 3.0) {};
+      \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
+
+      \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
+      \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
+      \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
+      \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
+      \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
+      \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
+      \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
+      \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+
+      \node[r0 ] (l4_n0)  at ( 0.5, 2.0) {};
+      \node[any] (l4_n1)  at ( 1.5, 2.0) {};
+      \node[r0 ] (l4_n2)  at ( 3.0, 2.0) {};
+      \node[any] (l4_n3)  at ( 4.0, 2.0) {};
+      \node[any] (l4_n4)  at ( 5.0, 2.0) {};
+      \node[spc] (l4_n5)  at ( 6.0, 2.0) {};
+      \node[rep] (l4_n6)  at ( 7.0, 2.0) {};
+      \node[any] (l4_n7)  at ( 8.0, 2.0) {};
+      \node[any] (l4_n8)  at ( 9.0, 2.0) {};
+      \node[r1 ] (l4_n9)  at (10.0, 2.0) {};
+      \node[any] (l4_n10) at (11.5, 2.0) {};
+      \node[r1 ] (l4_n11) at (12.5, 2.0) {};
+
+      \draw[->,>=latex        ] (l3_n1) -- (l4_n0);
+      \draw[->,>=latex, dashed] (l3_n1) -- (l4_n1);
+      \draw[->,>=latex        ] (l3_n2) -- (l4_n2);
+      \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
+      \draw[->,>=latex        ] (l3_n3) -- (l4_n4);
+      \draw[->,>=latex, dashed] (l3_n3) -- (l4_n5);
+      \draw[->,>=latex        ] (l3_n4) -- (l4_n6);
+      \draw[->,>=latex, dashed] (l3_n4) -- (l4_n7);
+      \draw[->,>=latex        ] (l3_n5) -- (l4_n8);
+      \draw[->,>=latex, dashed] (l3_n5) -- (l4_n9);
+      \draw[->,>=latex        ] (l3_n6) -- (l4_n10);
+      \draw[->,>=latex, dashed] (l3_n6) -- (l4_n11);
+
+      \node[r0  ] (l5_n0)  at ( 0.5, 1.0) {};
+      \node[any ] (l5_n1)  at ( 1.5, 1.0) {};
+      \node[rep ] (l5_n2)  at ( 3.0, 1.0) {};
+      \node[spc4] (l5_n3)  at ( 4.0, 1.0) {};
+      \node[rep ] (l5_n4)  at ( 5.0, 1.0) {};
+      \node[spc4] (l5_n5)  at ( 6.0, 1.0) {};
+      \node[rep ] (l5_n6)  at ( 7.0, 1.0) {};
+      \node[spc4] (l5_n7)  at ( 8.0, 1.0) {};
+      \node[rep ] (l5_n8)  at ( 9.0, 1.0) {};
+      \node[spc4] (l5_n9)  at (10.0, 1.0) {};
+      \node[any ] (l5_n10) at (11.5, 1.0) {};
+      \node[r1  ] (l5_n11) at (12.5, 1.0) {};
+
+      \draw[->,>=latex        ] (l4_n1)  -- (l5_n0);
+      \draw[->,>=latex, dashed] (l4_n1)  -- (l5_n1);
+      \draw[->,>=latex        ] (l4_n3)  -- (l5_n2);
+      \draw[->,>=latex, dashed] (l4_n3)  -- (l5_n3);
+      \draw[->,>=latex        ] (l4_n4)  -- (l5_n4);
+      \draw[->,>=latex, dashed] (l4_n4)  -- (l5_n5);
+      \draw[->,>=latex        ] (l4_n7)  -- (l5_n6);
+      \draw[->,>=latex, dashed] (l4_n7)  -- (l5_n7);
+      \draw[->,>=latex        ] (l4_n8)  -- (l5_n8);
+      \draw[->,>=latex, dashed] (l4_n8)  -- (l5_n9);
+      \draw[->,>=latex        ] (l4_n10) -- (l5_n10);
+      \draw[->,>=latex, dashed] (l4_n10) -- (l5_n11);
+
+      \node[r0] (l6_n0) at ( 1.0, 0.0) {};
+      \node[r1] (l6_n1) at ( 2.0, 0.0) {};
+      \node[r0] (l6_n2) at (11.0, 0.0) {};
+      \node[r1] (l6_n3) at (12.0, 0.0) {};
+
+      \draw[->,>=latex        ] (l5_n1)  -- (l6_n0);
+      \draw[->,>=latex, dashed] (l5_n1)  -- (l6_n1);
+      \draw[->,>=latex        ] (l5_n10) -- (l6_n2);
+      \draw[->,>=latex, dashed] (l5_n10) -- (l6_n3);
+
+      \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
+      \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n10) (l6_n2) (l6_n3)] {};
+
+      \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n4) (l5_n4) (l5_n5)] {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n7) (l5_n6) (l5_n7)] {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n8) (l5_n8) (l5_n9)] {};
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \end{column}
+  \begin{column}[T]{1.0cm}
+    \vspace{2cm}
+    \centering
+    {\color{black}\Large\MVRightarrow}
+  \end{column}
+  \begin{column}[T]{5.0cm}
+    \begin{figure}[!h]
+    \centering
+    \scalebox{.4}{
+    \begin{tikzpicture}[baseline]
+      \tikzset{ any/.style ={draw=gray,     circle, minimum height=0.6cm, text=black, fill=gray!40                                                                              } }
+      \tikzset{ frzn/.style={draw=black,    circle, minimum height=0.6cm, text=black                                                                                            } }
+      \tikzset{ info/.style={draw=black,    circle, minimum height=0.6cm, text=black, fill=black                                                                                } }
+      \tikzset{ r0/.style  ={draw=Paired-1, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-1!40}, pattern=north west lines, pattern color=black!80!Paired-1!70} }
+      \tikzset{ r1/.style  ={draw=Paired-3, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-3!40}, pattern=north east lines, pattern color=black!80!Paired-3!70} }
+      \tikzset{ rep/.style ={draw=Paired-7, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-7!40}, pattern=crosshatch dots,  pattern color=black!80!Paired-7!70} }
+      \tikzset{ spc4/.style={draw=Paired-5, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-5!40}, pattern=horizontal lines, pattern color=black!80!Paired-5!70} }
+      \tikzset{ spc/.style ={draw=Paired-9, circle, minimum height=0.6cm, text=black, preaction={fill=Paired-9!40}, pattern=grid,             pattern color=black!80!Paired-9!70} }
+
+      \node[any] (l0_n0)  at ( 6.5, 6.0) {};
+
+      \node[any] (l1_n0)  at ( 4.5, 5.0) {};
+      \node[any] (l1_n1)  at ( 8.5, 5.0) {};
+
+      \draw[->,>=latex        ] (l0_n0) -- (l1_n0);
+      \draw[->,>=latex, dashed] (l0_n0) -- (l1_n1);
+
+      \node[any] (l2_n0)  at ( 1.5, 4.0) {};
+      \node[any] (l2_n1)  at ( 4.5, 4.0) {};
+      \node[any] (l2_n2)  at ( 8.5, 4.0) {};
+      \node[any] (l2_n3)  at (11.5, 4.0) {};
+
+      \draw[->,>=latex        ] (l1_n0) -- (l2_n0);
+      \draw[->,>=latex, dashed] (l1_n0) -- (l2_n1);
+      \draw[->,>=latex        ] (l1_n1) -- (l2_n2);
+      \draw[->,>=latex, dashed] (l1_n1) -- (l2_n3);
+
+      \node[r0 ] (l3_n0)  at ( 0.5, 3.0) {};
+      \node[any] (l3_n1)  at ( 1.5, 3.0) {};
+      \node[any] (l3_n2)  at ( 4.0, 3.0) {};
+      \node[any] (l3_n3)  at ( 5.0, 3.0) {};
+      \node[any] (l3_n4)  at ( 8.0, 3.0) {};
+      \node[any] (l3_n5)  at ( 9.0, 3.0) {};
+      \node[any] (l3_n6)  at (11.5, 3.0) {};
+      \node[r1 ] (l3_n7)  at (12.5, 3.0) {};
+
+      \draw[->,>=latex        ] (l2_n0) -- (l3_n0);
+      \draw[->,>=latex, dashed] (l2_n0) -- (l3_n1);
+      \draw[->,>=latex        ] (l2_n1) -- (l3_n2);
+      \draw[->,>=latex, dashed] (l2_n1) -- (l3_n3);
+      \draw[->,>=latex        ] (l2_n2) -- (l3_n4);
+      \draw[->,>=latex, dashed] (l2_n2) -- (l3_n5);
+      \draw[->,>=latex        ] (l2_n3) -- (l3_n6);
+      \draw[->,>=latex, dashed] (l2_n3) -- (l3_n7);
+
+      \node[any] (l4_n0) at ( 1.50, 2.0) {};
+      \node[r0 ] (l4_n1) at ( 2.75, 2.0) {};
+      \node[spc] (l4_n2) at ( 5.00, 2.0) {};
+      \node[any] (l4_n3) at ( 6.50, 2.0) {};
+      \node[rep] (l4_n4) at ( 8.00, 2.0) {};
+      \node[r1 ] (l4_n5) at (10.25, 2.0) {};
+      \node[any] (l4_n6) at (11.50, 2.0) {};
+
+      \draw[->,>=latex, dashed] (l3_n1) -- (l4_n0);
+      \draw[->,>=latex        ] (l3_n1) -- (l4_n1);
+      \draw[->,>=latex        ] (l3_n2) -- (l4_n1);
+      \draw[->,>=latex, dashed] (l3_n2) -- (l4_n3);
+      \draw[->,>=latex, dashed] (l3_n3) -- (l4_n2);
+      \draw[->,>=latex        ] (l3_n3) -- (l4_n3);
+      \draw[->,>=latex, dashed] (l3_n4) -- (l4_n3);
+      \draw[->,>=latex        ] (l3_n4) -- (l4_n4);
+      \draw[->,>=latex        ] (l3_n5) -- (l4_n3);
+      \draw[->,>=latex, dashed] (l3_n5) -- (l4_n5);
+      \draw[->,>=latex, dashed] (l3_n6) -- (l4_n5);
+      \draw[->,>=latex        ] (l3_n6) -- (l4_n6);
+
+      \node[r0  ] (l5_n0)  at ( 0.50, 1.0) {};
+      \node[any ] (l5_n1)  at ( 1.50, 1.0) {};
+      \node[rep ] (l5_n2)  at ( 6.00, 1.0) {};
+      \node[spc4] (l5_n3)  at ( 7.00, 1.0) {};
+      \node[r1  ] (l5_n4)  at (12.50, 1.0) {};
+
+      \draw[->,>=latex        ] (l4_n0) -- (l5_n0);
+      \draw[->,>=latex, dashed] (l4_n0) -- (l5_n1);
+      \draw[->,>=latex        ] (l4_n3) -- (l5_n2);
+      \draw[->,>=latex, dashed] (l4_n3) -- (l5_n3);
+      % \draw[->,>=latex        ] (l4_n6) -- (l5_n1);
+      \draw[->,>=latex        ] (l4_n6) to[out=230,in=0] (l5_n1);
+      \draw[->,>=latex, dashed] (l4_n6) -- (l5_n4);
+
+      \node[r0] (l6_n0) at ( 1.0, 0.0) {};
+      \node[r1] (l6_n1) at ( 2.0, 0.0) {};
+
+      \draw[->,>=latex        ] (l5_n1) -- (l6_n0);
+      \draw[->,>=latex, dashed] (l5_n1) -- (l6_n1);
+
+      \node[draw=Paired-5, rounded corners=2pt, dashed, fit=(l5_n1) (l6_n0) (l6_n1)] {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, fit=(l4_n3) (l5_n2) (l5_n3)] {};
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \end{column}
+  \end{columns}
+  \vfill
+  \begin{itemize}
+    \item Find similar sub-patterns and create functions for them
+    \item Compromise between the number of functions calls and the binary size
+    \item Threshold to avoid functions that contain a too small number of Polar functions
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+  \vspace{-0.5cm}
+  \begin{columns}
+  \begin{column}[T]{6.0cm}
+    \begin{figure}[!h]
+      \centering
+      \scalebox{.5}{
+      \begin{tikzpicture}%[scale=0.50, every node/.style={transform shape}]
+      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   ymode = log,
+                   log basis y={2},
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   xlabel=Codeword size ($N$), ylabel=Decoder binary size (KB), grid=both, grid style={gray!30},
+                   xmin=6, xmax=16,
+                   xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
+                   % yticklabels={2,4,8,16,32,64,128,256,512,1024,2048,4096},
+                   yticklabels={2,8,32,128,512,2048},
+                   grid style={dashed, gray!30},
+                   %ymin=-5, ymax=102,
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   % tick label style={font=\large},
+                   legend pos=south east, legend columns=1]
+          \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line1}
+          \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line2}
+          \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line3}
+          \addplot[mark=none,     Paired-7,               dashed                      ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+      \end{axis}
+
+      \matrix[draw,
+              matrix of nodes,
+              anchor=north,
+              inner sep=2.3pt,
+              fill=white,
+              ampersand replacement=\&] at (2.3,6.5)
+      {
+          \ref{plot:line2} \& 32-bit \& intra-frame \\
+          \ref{plot:line3} \& ~8-bit \& intra-frame \\
+          \ref{plot:line1} \& 32-bit \& inter-frame \\
+          \ref{plot:line4} \&        \& L1I size    \\
+      };
+    \end{tikzpicture}
+    }
+    \caption*{Without compression}
+    \end{figure}
+  \end{column}
+  \begin{column}[T]{6.0cm}
+    \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                 width=2.0\linewidth, height=1.4\linewidth,
+                 ymode = log,
+                 log basis y={2},
+                 xticklabel style={black!70}, yticklabel style={black!70},
+                 xlabel=Codeword size ($N$), ylabel=Decoder binary size (KB), grid=both, grid style={gray!30},
+                 xmin=6, xmax=16,
+                 xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
+                 yticklabels={0,1,2,4,8,16,32,64},
+                 grid style={dashed, gray!30},
+                 %ymin=-5, ymax=102,
+                 % tick align=outside, tickpos=left,
+                 %label style={font=\large},
+                 % tick label style={font=\large},
+                 legend pos=south east, legend columns=1]
+        \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line1}
+        \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line2}
+        \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line3}
+        \addplot[mark=none,     Paired-7,    dashed                                 ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+
+        \node[anchor=west] (source) at (axis cs:11.8,3.5){\textbullet\ Enable sub-tree folding};
+        \draw[->,thick] (axis cs:12, 4) -- (axis cs:12, 6.5);
+    \end{axis}
+    \end{tikzpicture}
+    }
+    \caption*{With compression}
+    \end{figure}
+  \end{column}
+  \end{columns}
+  \vfill
+  \begin{itemize}
+    \item \underline{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
+    \vspace{0.2cm}
+    \item \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
+    \vspace{0.2cm}
+    \item \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
+  \end{itemize}
+\end{frame}
+
+\subsection[Propositions]{Propositions}
+
+\begin{frame}{Propositions}
+  \vfill
+  \underline{Propositions:}
+
+  \vspace{0.3cm}
+  \begin{enumerate}
+    \item High performance implementation of the \textbf{dynamic SC scheduling}
+    \begin{itemize}
+      \item Support intra-/inter-frame SIMDization thanks to the Polar API
+      \item Compatible with tree pruning techniques
+      \item Fine tuned implementation with \textbf{template meta-programming techniques}
+    \end{itemize}
+    \pause
+    \vspace{0.3cm}
+    \item Polar ECC Decoder \textbf{Generation Environment} (P-EDGE)
+    \begin{itemize}
+      \item Support intra-/inter-frame SIMDization thanks to the Polar API
+      \item Compatible with tree pruning techniques
+      \item Source code generation environment for \textbf{highest possible performances}
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+% \begin{frame}{Polar Decoder: Successive Cancellation List Algorithm}
+%   \begin{itemize}
+%     \item Based on the Successive Cancellation decoder
+%     \item Maintains a finite list of $L$ possible decoding trees
+%     \item Chooses the most likely tree according to a metric
+%     \item Decoding performance are better for short to medium size codewords
+%     \item Can be combined with a CRC code to discriminate the metric
+%       \\\vspace*{.5em}
+%       {\color{bleuUni}\Large\MVRightarrow} Decoding performance is, again, improved
+%   \end{itemize}
+% \end{frame}
+
 \subsection[Evaluations and Comparisons]{Evaluations and Comparisons}
+
+\begin{frame}{Experimentation Protocol}
+
+  \begin{table}[htp]
+    \centering
+    % \caption
+    %   [Specification of the x86 platforms for the polar decoders experiments.]
+    %   {Specification of the x86 platforms.}
+    % \label{tab:eval_polar_sc_specs_x86}
+    {\small\resizebox{1.0\linewidth}{!}{
+    \begin{tabular}{c | c c c}
+                                  & \textbf{E3-1225}        & \textbf{i7-2600}        & \textbf{i7-4850HQ}         \\
+    \hline
+    \hline
+    \multirow{1}{*}{\textbf{CPU}} & Intel\R Xeon\TM E3-1225 & Intel\R Core\TM i7-2600 & Intel\R Core\TM  i7-4850HQ \\
+    \textbf{Cores/Freq.}          & 4 cores, 3.1-3.4 Ghz    & 4 cores, 3.4-3.8 GHz    & 4 cores, 2.3-3.5 GHz       \\
+    \textbf{Arch.}                & \emph{Sandy Bridge}     & \emph{Sandy Bridge}     & \emph{Crystal Well}        \\
+    \textbf{Process}              & 32 nm                   & 32 nm                   & 22 nm                      \\
+    \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 & L3 8 MB                 & L3 6 MB                    \\
+    \end{tabular}
+    }}
+  \end{table}
+
+  \begin{itemize}
+    \item GCC flags and version
+    \item Focus on the generated decoders (intra and inter)
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Impact of the Tree Pruning}
+  \begin{columns}
+  \begin{column}[T]{6cm}
+    \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}[every axis/.style={
+                        /pgfplots/table/ignore chars={|}, %footnotesize,
+                        width=2.0\linewidth, height=1.40\linewidth,
+                        xticklabel style={black!70}, yticklabel style={black!70},
+                        % tick align=outside, tickpos=left,
+                        ybar stacked, bar width=14pt,
+                        legend style={at={(0.39,0.95)}, anchor=north}, legend columns=-1,
+                        ylabel={Coded throughput (Mb/s)}, xlabel={Code rate ($R = K / N$)},
+                        ymajorgrids, grid style={gray!30}, grid style={dashed, gray!50}, xmin=0.05, xmax=0.45, xtick=data, ymin=0, ymax=550.0,
+                        x tick label style={rotate=-45}, xticklabels={1/5, 1/2, 5/6, 9/10}}]
+
+      \begin{axis}[]
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}              ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        \only<2->{
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        }
+        \only<3->{
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        }
+        \only<4->{
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        }
+        \only<6->{
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        }
+        \only<5->{
+        \addplot+[draw=Paired-9, fill=Paired-9!40, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{9}-\thisrowno{8}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat};
+        }
+        \only<1-5>{
+        \legend{\texttt{ref}\text{ }, \texttt{R0}\text{ }, \texttt{R1}\text{ }, \texttt{REP}\text{ }, $\texttt{SPC}_\text{\texttt{4+}}$}
+        }
+        \only<6>{
+        \legend{\texttt{ref}\text{ }, \texttt{R0}\text{ }, \texttt{R1}\text{ }, \texttt{REP}\text{ }, $\texttt{SPC}_\text{\texttt{4}}$\text{ } , $\texttt{SPC}_\text{\texttt{4+}}$}
+        }
+      \end{axis}
+
+      \only<6->{
+      \begin{axis}[bar shift=-20pt, hide axis]
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}              ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4.dat};
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4.dat};
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4.dat};
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4.dat};
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4.dat};
+      \end{axis}
+      }
+
+      \only<7->{
+      \begin{axis}[bar shift=+20pt,hide axis]
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}               ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-9, fill=Paired-9!40, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{9}-\thisrowno{8} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \addplot+[draw=Paired-9, fill=Paired-9!10, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{10}-\thisrowno{9}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat};
+        \legend{\texttt{ref}\text{ }, \texttt{R0}\text{ }, \texttt{R1}\text{ }, \texttt{REP}\text{ }, $\texttt{SPC}_\text{\texttt{4}}$\text{ } , $\texttt{SPC}_\text{\texttt{4+}}$ , $\texttt{SPC}_\text{\texttt{16-}}$}
+      \end{axis}
+      }
+    \end{tikzpicture}
+    }
+    \end{figure}
+  \end{column}
+  \begin{column}[T]{6cm}
+    \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}[every axis/.style={
+                        /pgfplots/table/ignore chars={|}, %footnotesize,
+                        width=2.0\linewidth, height=1.40\linewidth,
+                        xticklabel style={black!70}, yticklabel style={black!70},
+                        % tick align=outside, tickpos=left,
+                        ybar stacked, bar width=14pt,
+                        legend style={at={(0.39,0.95)}, anchor=north}, legend columns=-1,
+                        ylabel={Coded throughput (Mb/s)}, xlabel={Code rate ($R = K / N$)},
+                        ymajorgrids, grid style={gray!30}, grid style={dashed, gray!50}, xmin=0.05, xmax=0.45, xtick=data, ymin=0, ymax=1900.0,
+                        x tick label style={rotate=-45}, xticklabels={1/5, 1/2, 5/6, 9/10}}]
+
+      \begin{axis}
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}              ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        \only<2->{
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        }
+        \only<3->{
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        }
+        \only<4->{
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        }
+        \only<5->{
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        \addplot+[draw=Paired-9, fill=Paired-9!40, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{9}-\thisrowno{8}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat};
+        }
+      \end{axis}
+
+      \only<6->{
+      \begin{axis}[bar shift=-20pt, hide axis]
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}              ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat};
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat};
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat};
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat};
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat};
+      \end{axis}
+      }
+
+      \only<7->{
+      \begin{axis}[bar shift=+20pt,hide axis]
+        \addplot+[draw=black,    fill=black!50                                                                                 ] table [x=R, y expr=\thisrowno{4}               ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west  lines}] table [x=R, y expr=\thisrowno{5}-\thisrowno{4} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-3, fill=Paired-3!40, postaction={pattern color = black!80!Paired-3!70, pattern=north east  lines}] table [x=R, y expr=\thisrowno{6}-\thisrowno{5} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-7, fill=Paired-7!40, postaction={pattern color = black!80!Paired-7!70, pattern=crosshatch  dots} ] table [x=R, y expr=\thisrowno{7}-\thisrowno{6} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=horizontal lines} ] table [x=R, y expr=\thisrowno{8}-\thisrowno{7} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-9, fill=Paired-9!40, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{9}-\thisrowno{8} ] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+        \addplot+[draw=Paired-9, fill=Paired-9!10, postaction={pattern color = black!80!Paired-9!70, pattern=grid}             ] table [x=R, y expr=\thisrowno{10}-\thisrowno{9}] {../main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc16-.dat};
+      \end{axis}
+      }
+    \end{tikzpicture}
+    }
+    \end{figure}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Generated Decoder Comparison with State-of-the-Art}
+\end{frame}
 
 \section[AFF3CT]{AFF3CT: A Fast Forward Error Correction Toolbox}
 

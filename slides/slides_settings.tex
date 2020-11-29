@@ -14,6 +14,7 @@
 \usepackage{makecell}
 \usepackage{pgfplots}
 \usepackage{tikz}
+\usepackage{environ}
 \usepackage{circuitikz}
 \usepackage{tikz-timing} % package pour les chronogrammes
 \usepackage{caption}
@@ -49,6 +50,7 @@
 % % \renewcommand{\footnotesize}{\scriptsize}
 
 \pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc}
 \tikzset{
@@ -220,16 +222,16 @@
   %}
 }
 
-\AtBeginSubsection[]
-{
-  \begin{frame}[c]{Plan}
-    \tableofcontents[
-      currentsection,
-      sectionstyle=show/shaded,
-      subsectionstyle=show/shaded/hide
-    ]
-  \end{frame}
-}
+% \AtBeginSubsection[]
+% {
+%   \begin{frame}[c]{Plan}
+%     \tableofcontents[
+%       currentsection,
+%       sectionstyle=show/shaded,
+%       subsectionstyle=show/shaded/hide
+%     ]
+%   \end{frame}
+% }
 
 
 % MIPP ------------------------------------------------------------------------
@@ -255,3 +257,14 @@
 \DeclareMathOperator*{\sign}{sign}
 \DeclareMathOperator*{\DecoderSC}{DecoderSC}
 \DeclareMathOperator*{\hardDecide}{h_d}
+
+% \newcommand{\highlight}[2]{\colorbox{#1}{\ensuremath{#2}}}
+
+\newcommand{\highlight}[2][yellow]{\mathchoice%
+  {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\displaystyle#2$}}}%
+  {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\textstyle#2$}}}%
+  {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\scriptstyle#2$}}}%
+  {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\scriptscriptstyle#2$}}}}%
+
+\newcommand{\R}{\textsuperscript{\textregistered}\xspace}
+\newcommand{\TM}{\textsuperscript{\texttrademark}\xspace}
