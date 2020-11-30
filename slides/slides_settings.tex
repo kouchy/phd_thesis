@@ -52,7 +52,8 @@
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{colorbrewer}
 \usepgfplotslibrary{groupplots}
-\usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc}
+\usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc, spy}
+
 \tikzset{
     invisible/.style={opacity=0},
     visible on/.style={alt={#1{}{invisible}}},
@@ -245,6 +246,7 @@
 \newcommand{\VCL}{VCL\xspace}
 \newcommand{\BoostSIMD}{Boost.SIMD\xspace}
 \newcommand{\bSIMD}{bSIMD\xspace}
+\newcommand{\AFFECT}{AFF3CT\xspace}
 
 \newcommand{\Cxx}{\texttt{C++}\xspace}
 \newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}

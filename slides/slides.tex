@@ -19,6 +19,12 @@
   \titlepage
 \end{frame}
 
+\begin{frame}[c]
+  \tableofcontents[
+      subsectionstyle=hide,
+  ]
+\end{frame}
+
 \section[Introduction]{Introduction \& Context}
 
 \subsection[Introduction]{Introduction}
@@ -27,7 +33,7 @@
   \begin{figure}[htp]
   \centering
   \includegraphics[scale=0.35]{pics/5G_crop}
-\end{figure}
+  \end{figure}
   \begin{itemize}
     \item Nowadays digital communication systems are everywhere
     \item Real-time systems are traditionally implemented in hardware
@@ -490,7 +496,7 @@
   \begin{enumerate}
     \item<1-> Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
     \begin{itemize}
-      \item High throughput and low latency on single-core CPU
+      \item High throughput and low latency on single-core CPUs
       \item Portability
     \end{itemize}
     \vspace{.3em}
@@ -521,22 +527,24 @@
 \begin{frame}{Proposal: \longMIPP (\MIPP)}
   \vfill
   \begin{itemize}
-    \item<1-> SIMD \textbf{\Cxx wrapper}
+    \item<1-> Single Instruction Multiple Data (SIMD) paradigm
+    \vspace{0.3cm}
+    \item<2-> SIMD \textbf{\Cxx wrapper}
     \begin{itemize}
-      \item<1-> Maximizes code portability
-      \item<1-> \textbf{Improves expressiveness} over intrinsics
-      \item<1-> \textbf{No dependencies} to other libraries
+      \item<2-> Maximizes code portability
+      \item<2-> \textbf{Improves expressiveness} over intrinsics
+      \item<2-> \textbf{No dependencies} to other libraries
     \end{itemize}
     \vspace{0.3cm}
-    \item<2-> Programming model \textbf{close to intrinsics}
+    \item<3-> Programming model \textbf{close to intrinsics}
     \begin{itemize}
-      \item<2-> Whenever possible, \textbf{one statement = one intrinsic}
-      \item<2-> One variable = one register allocation
+      \item<3-> Whenever possible, \textbf{one statement = one intrinsic}
+      \item<3-> One variable = one register allocation
     \end{itemize}
-    % \item<3-> Open-source: \url{https://github.com/aff3ct/MIPP}
+    % \item<4-> Open-source: \url{https://github.com/aff3ct/MIPP}
   \end{itemize}
   \vspace{0.3cm}
-  \pause[3]
+  \pause[4]
   \begin{figure}[htp]
     \centering
     \includegraphics[width=0.5\textwidth]{pics/mipp}
@@ -905,7 +913,7 @@ void addVector(const std::vector<T> &A,
   \end{figure}
 \end{frame}
 
-\section[Polar Decoders]{Polar Decoders}
+\section[Polar Decoders]{Software Polar Decoders}
 
 \subsection[Polar Codes]{Polar Codes}
 
@@ -1577,7 +1585,7 @@ void addVector(const std::vector<T> &A,
   \begin{itemize}
     \item<1-> Algorithm proposed by \Arikan~\cite{Arikan2009}
     \item<2-> Traversal of a binary tree
-    \item<2-> Computational complexity: $O(N \times \log(N))$
+    \item<2-> Computational complexity: $\mathcal{O}(N \times \log(N))$
   \end{itemize}
 
   \only<3-5>{
@@ -2144,6 +2152,7 @@ void addVector(const std::vector<T> &A,
     \item Polar functions like $f$, $g$ and $h$ are implemented with \MIPP
     \item Efficient implementation compatible with NEON, SSE, AVX and AVX-512
     \item Mostly independent from the vectorization strategy (intra-/inter-frame)
+    %\item Supports both floating-point and fixed-point representations
   \end{itemize}
   \begin{minted}[linenos]{cpp}
 template <typename R>
@@ -2802,36 +2811,55 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
 
 \subsection[Evaluations and Comparisons]{Evaluations and Comparisons}
 
-\begin{frame}{Experimentation Protocol}
+\begin{frame}[fragile]{Experimentation Protocol}
 
+  \begin{itemize}
+    \item Compiler
+    \begin{itemize}
+      \item GCC version 4.8
+      \item Optimization flags: \verb|-O3 -funroll-loops|
+    \end{itemize}
+    \item Focus on the \textbf{SC generated decoders}
+    \begin{itemize}
+      \item Intra-frame SIMD: 32-bit floating-point representation + \verb|AVX| instructions
+      \item Inter-frame SIMD: 8-bit fixed-point representation + \verb|SSE4.2| instructions
+    \end{itemize}
+    \item Single core performance
+  \end{itemize}
+  \vfill
   \begin{table}[htp]
     \centering
     % \caption
     %   [Specification of the x86 platforms for the polar decoders experiments.]
     %   {Specification of the x86 platforms.}
     % \label{tab:eval_polar_sc_specs_x86}
-    {\small\resizebox{1.0\linewidth}{!}{
-    \begin{tabular}{c | c c c}
-                                  & \textbf{E3-1225}        & \textbf{i7-2600}        & \textbf{i7-4850HQ}         \\
+    % {\small\resizebox{1.0\linewidth}{!}{
+    % \begin{tabular}{c | c c c}
+    %                               & \textbf{E3-1225}        & \textbf{i7-2600}        & \textbf{i7-4850HQ}         \\
+    % \hline
+    % \hline
+    % \multirow{1}{*}{\textbf{CPU}} & Intel\R Xeon\TM E3-1225 & Intel\R Core\TM i7-2600 & Intel\R Core\TM  i7-4850HQ \\
+    % \textbf{Cores/Freq.}          & 4 cores, 3.1-3.4 Ghz    & 4 cores, 3.4-3.8 GHz    & 4 cores, 2.3-3.5 GHz       \\
+    % \textbf{Arch.}                & \emph{Sandy Bridge}     & \emph{Sandy Bridge}     & \emph{Crystal Well}        \\
+    % \textbf{Process}              & 32 nm                   & 32 nm                   & 22 nm                      \\
+    % \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 & L3 8 MB                 & L3 6 MB                    \\
+    % \end{tabular}
+    % }}
+    % {\small\resizebox{1.0\linewidth}{!}{
+    \begin{tabular}{c | c }
+    \multirow{1}{*}{\textbf{CPU}} & Intel\R Xeon\TM E3-1225 \\
     \hline
-    \hline
-    \multirow{1}{*}{\textbf{CPU}} & Intel\R Xeon\TM E3-1225 & Intel\R Core\TM i7-2600 & Intel\R Core\TM  i7-4850HQ \\
-    \textbf{Cores/Freq.}          & 4 cores, 3.1-3.4 Ghz    & 4 cores, 3.4-3.8 GHz    & 4 cores, 2.3-3.5 GHz       \\
-    \textbf{Arch.}                & \emph{Sandy Bridge}     & \emph{Sandy Bridge}     & \emph{Crystal Well}        \\
-    \textbf{Process}              & 32 nm                   & 32 nm                   & 22 nm                      \\
-    \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 & L3 8 MB                 & L3 6 MB                    \\
+    \textbf{Cores/Freq.}          & 4 cores, 3.1-3.4 Ghz    \\
+    \textbf{Arch.}                & \emph{Sandy Bridge}     \\
+    \textbf{Process}              & 32 nm                   \\
+    \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 \\
     \end{tabular}
-    }}
+    % }}
   \end{table}
-
-  \begin{itemize}
-    \item GCC flags and version
-    \item Focus on the generated decoders (intra and inter)
-  \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Impact of the Tree Pruning}
+\begin{frame}{Impact of the Tree Pruning on the Decoding Speed}
   \begin{columns}
   \begin{column}[T]{6cm}
     \begin{figure}[!h]
@@ -2897,6 +2925,7 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
       }
     \end{tikzpicture}
     }
+    \caption*{Intra-frame SIMD}
     \end{figure}
   \end{column}
   \begin{column}[T]{6cm}
@@ -2954,33 +2983,1532 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
       }
     \end{tikzpicture}
     }
+    \caption*{Inter-frame SIMD}
     \end{figure}
+  \end{column}
+  \end{columns}
+  \vfill
+  \begin{itemize}
+    \item Frame size $N = 2048$, compression techniques off
+    \item<7-> High level of flexibility: tree pruning rules can be switched on/off
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Throughput Performance Comparisons, Higher is Better}
+  \vspace{-0.5cm}
+  \begin{columns}
+  \begin{column}[T]{6cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}
+      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   xmode = log,
+                   log basis x={2},
+                   xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
+                   xmin=4, xmax=65536,
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   % tick label style={font=\large},
+                   grid style={dashed, gray!30},
+                   legend pos=south east, legend columns=1]
+          \addplot[mark=square, Paired-1,    semithick                                   ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:intra_line1}
+          \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}     ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:intra_line3}
+          \addplot[mark=x,      Paired-3,    semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r5_6.dat}; \label{plot:intra_line2}
+          \addplot[mark=star,   Paired-3!70, semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r1_2.dat}; \label{plot:intra_line4}
+      \end{axis}
+
+      \matrix [draw,
+               matrix of nodes,
+               anchor=north,
+               inner sep=2.3pt,
+               fill=white,
+               column 1/.style={anchor=base east},
+               ampersand replacement=\&] at (7.85,2.0)
+      {
+                            \& $R = 5/6$              \& $R = 1/2$              \\
+          this work         \& \ref{plot:intra_line1} \& \ref{plot:intra_line3} \\
+          \cite{Sarkis2014} \& \ref{plot:intra_line2} \& \ref{plot:intra_line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \caption*{Intra-frame SIMD}
+  \end{figure}
+  \end{column}
+  \begin{column}[T]{6cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}
+      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   xmode = log,
+                   log basis x={2},
+                   xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
+                   xmin=4, xmax=65536,
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   % tick label style={font=\large},
+                   grid style={dashed, gray!30},
+                   legend pos=south east, legend columns=1]
+          \addplot[mark=square, Paired-5,    semithick                              ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r5_6.dat}; \label{plot:inter_line1}
+          \addplot[mark=o,      Paired-3,    semithick                              ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r5_6.dat }; \label{plot:inter_line2}
+          \addplot[mark=square, Paired-5!70, semithick, dashed, mark options={solid}] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r1_2.dat}; \label{plot:inter_line3}
+          \addplot[mark=o,      Paired-3!70, semithick, dashed, mark options={solid}] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r1_2.dat }; \label{plot:inter_line4}
+      \end{axis}
+
+      \matrix [draw,
+               matrix of nodes,
+               anchor=north,
+               inner sep=2.3pt,
+               fill=white,
+               column 1/.style={anchor=base east},
+               ampersand replacement=\&] at (4.3,2.0)
+      {
+                            \& $R = 5/6$              \& $R = 1/2$              \\
+          this work         \& \ref{plot:inter_line1} \& \ref{plot:inter_line3} \\
+          \cite{LeGal2015a} \& \ref{plot:inter_line2} \& \ref{plot:inter_line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \caption*{Inter-frame SIMD}
+  \end{figure}
+  \end{column}
+  \end{columns}
+  \vfill
+  \enumcite{Sarkis2014}
+
+  \enumcite{LeGal2015a}
+\end{frame}
+
+\begin{frame}{Latency Performance Comparisons, Lower is Better}
+  \vspace{-0.5cm}
+  \begin{columns}
+  \begin{column}[T]{6cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}
+      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   xmode = log,
+                   ymode = log,
+                   log basis x={2},
+                   xlabel=Codeword size ($N$), ylabel=Latency ($\mu$s), grid=both, grid style={gray!30},
+                   xmin=256, xmax=32768, ymin=0.4, ymax=800,
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   % tick label style={font=\large},
+                   grid style={dashed, gray!30},
+                   legend pos=south east, legend columns=1]
+          \addplot[mark=square, Paired-1,    semithick                                   ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:intra_line1}
+          \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}     ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:intra_line3}
+          \addplot[mark=x,      Paired-3,    semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r5_6.dat}; \label{plot:intra_line2}
+          \addplot[mark=star,   Paired-3!70, semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r1_2.dat}; \label{plot:intra_line4}
+      \end{axis}
+
+      \matrix [draw,
+               matrix of nodes,
+               anchor=north,
+               inner sep=2.3pt,
+               fill=white,
+               column 1/.style={anchor=base east},
+               ampersand replacement=\&] at (7.85,2.0)
+      {
+                            \& $R = 5/6$              \& $R = 1/2$              \\
+          this work         \& \ref{plot:intra_line1} \& \ref{plot:intra_line3} \\
+          \cite{Sarkis2014} \& \ref{plot:intra_line2} \& \ref{plot:intra_line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \caption*{Intra-frame SIMD}
+  \end{figure}
+  \end{column}
+  \begin{column}[T]{6cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.5}{
+    \begin{tikzpicture}
+      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   xmode = log,
+                   ymode = log,
+                   log basis x={2},
+                   xlabel=Codeword size ($N$), ylabel=Latency ($\mu$s), grid=both, grid style={gray!30},
+                   xmin=256, xmax=32768, ymin=0.4, ymax=800,
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   % tick label style={font=\large},
+                   grid style={dashed, gray!30},
+                   legend pos=south east, legend columns=1]
+          \addplot[mark=square, Paired-5,    semithick                              ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r5_6.dat}; \label{plot:inter_line1}
+          \addplot[mark=o,      Paired-3,    semithick                              ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r5_6.dat }; \label{plot:inter_line2}
+          \addplot[mark=square, Paired-5!70, semithick, dashed, mark options={solid}] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r1_2.dat}; \label{plot:inter_line3}
+          \addplot[mark=o,      Paired-3!70, semithick, dashed, mark options={solid}] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r1_2.dat }; \label{plot:inter_line4}
+      \end{axis}
+
+      \matrix [draw,
+               matrix of nodes,
+               anchor=north,
+               inner sep=2.3pt,
+               fill=white,
+               column 1/.style={anchor=base east},
+               ampersand replacement=\&] at (7.85,2.0)
+      {
+                            \& $R = 5/6$              \& $R = 1/2$              \\
+          this work         \& \ref{plot:inter_line1} \& \ref{plot:inter_line3} \\
+          \cite{LeGal2015a} \& \ref{plot:inter_line2} \& \ref{plot:inter_line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \caption*{Inter-frame SIMD}
+  \end{figure}
+  \end{column}
+  \end{columns}
+  \vfill
+  \enumcite{Sarkis2014}
+
+  \enumcite{LeGal2015a}
+\end{frame}
+
+\section[\AFFECT]{\AFFECT: A Fast Forward Error Correction Toolbox}
+
+\subsection[Philosophy]{Philosophy}
+
+\begin{frame}{Observations}
+  \vfill
+  \begin{enumerate}
+    \item Signal processing community not used to share source codes
+    \begin{itemize}
+      \item A non-negligible part of the researchers time is spent in reproducing State-of-the-Art results
+    \end{itemize}
+    \vspace{0.3cm}
+    \pause
+    \item Existing open-source codes are often written with high-level language (MATLAB/Python)
+    \begin{itemize}
+      \item Speed limitations for low error rate simulations and real-time applications
+    \end{itemize}
+    \vspace{0.3cm}
+    \pause
+    \item Some high performance open-source codes are available
+    \begin{itemize}
+      \item Targets a reduce set of signal processing algorithms, hard to use in other contexts
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+\begin{frame}{Proposition}
+  \vfill
+  \underline{\AFFECT: A Fast Forward Error Correction Toolbox:}
+
+  \vspace{0.3cm}
+  \begin{enumerate}
+    \item An \Cxx open-source toolbox made to ease the reproduction of scientific results
+    \vspace{0.3cm}
+    \pause
+    \item Focus on high performance implementations for high speed simulations and real-time applications
+    \vspace{0.3cm}
+    \pause
+    \item Manage the algorithmic heterogeneity of the signal processing algorithms in a single library
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+\subsection[Library]{Library of Digital Communication Algorithms}
+
+\begin{frame}{Features}
+  \vfill
+  \underline{Today in \AFFECT:}
+
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Channel codes: Polar, LDPC, Turbo, Turbo Product, BCH, RS, RA, Repetition
+    \vspace{0.1cm}
+    \item Channel models: BSC, BEC, Optical, AWGN, Rayleigh
+    \vspace{0.1cm}
+    \item Digital modulations: PSK, QAM, PAM, OOK, CPM, SCMA
+  \end{itemize}
+  \vfill
+  \underline{Coming soon in \AFFECT:}
+
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Synchronization processing tasks
+    \vspace{0.1cm}
+    \item MATLAB interface
+    \vspace{0.1cm}
+    \item Python interface
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile,containsverbatim]{Simple Communication Chain}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.65}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \path[use as bounding box] (-1.4, 4.65) rectangle (12.65, -0.65);
+      % \draw (-1.4, 4.65) rectangle (12.65, -0.65);
+
+      \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1} }
+      \tikzset{ mdl/.style ={draw=Paired-3, rounded corners=2pt,} }
+      \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+      \only<1->{
+      \node[tsk ] (src) at ( 0, 4) {generate};
+      \node[sout] (src_so) at (0+1.25, 4) {};
+      }
+      \only<2->{
+      \node[tsk ] (enc) at ( 4, 4) {encode};
+      \node[sin ] (enc_si) at (4-1.25, 4) {};
+      \node[sout] (enc_so) at (4+1.25, 4) {};
+      }
+      \only<3->{
+      \node[tsk ] (mod) at ( 8, 4) {modulate};
+      \node[sin ] (mod_si) at (8-1.25, 4) {};
+      \node[sout] (mod_so) at (8+1.25, 4) {};
+      }
+      \only<4->{
+      \node[tsk ] (chn) at (11.25, 2) {add\_noise};
+      \node[sin ] (chn_si) at (11.25, 2.5) {};
+      \node[sout] (chn_so) at (11.25, 1.5) {};
+      }
+      \only<3->{
+      \node[tsk ] (dem) at ( 8, 0) {demodulate};
+      \node[sout] (dem_so) at (8-1.25, 0) {};
+      \node[sin ] (dem_si) at (8+1.25, 0) {};
+      }
+      \only<5->{
+      \node[tsk ] (dec) at ( 4, 0) {decode};
+      \node[sin ] (dec_so) at (4-1.25, 0) {};
+      \node[sout] (dec_si) at (4+1.25, 0) {};
+      }
+      \only<6->{
+      \node[tsk ] (mnt) at ( 0, 0) {check\_errrors};
+      \node[sin ] (mnt_si1) at (0+1.25, +0.2) {};
+      \node[sin ] (mnt_si2) at (0+1.25, -0.2) {};
+      }
+
+      \only<1->{
+      \node[mdl, label={[Paired-3]below:Source (Src)},  dashed, fit=(src) (src_so)] {};
+      }
+      \only<2->{
+      \node[mdl, label={[Paired-3]below:Encoder (Enc)}, dashed, fit=(enc) (enc_si) (enc_so)] {};
+      }
+      \only<3->{
+      \node[mdl, label={[Paired-3]center:Modem (Mdm)},  dashed, fit=(mod) (dem) (mod_si) (mod_so) (dem_si) (dem_so)] {};
+      }
+      \only<4->{
+      \node[mdl, label={[Paired-3]below:Channel (Chn)}, dashed, fit=(chn) (chn_si) (chn_so)] {};
+      }
+      \only<5->{
+      \node[mdl, label={[Paired-3]above:Decoder (Dec)}, dashed, fit=(dec) (dec_si) (dec_so)] {};
+      }
+      \only<6->{
+      \node[mdl, label={[Paired-3]above:Monitor (Mnt)}, dashed, fit=(mnt) (mnt_si1) (mnt_si2)] {};
+      }
+
+      \only<7->{
+      \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {$\bm{u}$};
+      }
+      \only<8->{
+      \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {$\bm{c}$};
+      }
+      \only<9->{
+      \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {$\bm{x}$};
+      }
+      \only<10->{
+      \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {$\bm{y}$};
+      }
+      \only<11->{
+      \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {$\bm{l}$};
+      }
+      \only<12->{
+      \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {$\bm{\hat{u}}$};
+      }
+      \only<13->{
+      \draw[->,>=latex] (src_so.east) -- (2,4) |- (mnt_si1.east) node [midway, above] {};
+      }
+
+      \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (-1+0.0, 1.7) {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (-1+0.0, 2.3) {};
+      \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (-1+3.5, 1.7) {};
+      \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (-1+3.5, 2.3) {};
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+  \begin{overprint}
+  \onslide<1>
+  \begin{minted}[linenos, highlightlines={2}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+  \end{minted}
+  \onslide<2>
+  \begin{minted}[linenos, highlightlines={3}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+  \end{minted}
+  \onslide<3>
+  \begin{minted}[linenos, highlightlines={4}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+  \end{minted}
+  \onslide<4>
+  \begin{minted}[linenos, highlightlines={5}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+  \end{minted}
+  \onslide<5>
+  \begin{minted}[linenos, highlightlines={6}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+aff3ct::module::Decoder_repetiton<>  Dec(K, N);
+  \end{minted}
+  \onslide<6>
+  \begin{minted}[linenos, highlightlines={7}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+aff3ct::module::Decoder_repetiton<>  Dec(K, N);
+aff3ct::module::Monitor_BFER<>       Mnt(K, E);
+  \end{minted}
+  \onslide<7>
+  \begin{minted}[linenos, highlightlines={2}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+  \end{minted}
+  \onslide<8>
+  \begin{minted}[linenos, highlightlines={3}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+  \end{minted}
+  \onslide<9>
+  \begin{minted}[linenos, highlightlines={4}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+  \end{minted}
+  \onslide<10>
+  \begin{minted}[linenos, highlightlines={5}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+  \end{minted}
+  \onslide<11>
+  \begin{minted}[linenos, highlightlines={6}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+  \end{minted}
+  \onslide<12>
+  \begin{minted}[linenos, highlightlines={7}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
+  \end{minted}
+  \onslide<13>
+  \begin{minted}[linenos, highlightlines={8}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
+Mnt[sck::check_errors::u1].bind(Src[sck::generate   ::u]);
+  \end{minted}
+  \onslide<14>
+  \begin{minted}[linenos]{cpp}
+// build a sequence of tasks (= a chain) from the previous binding
+aff3ct::tools::Sequence comm_chain(Src[tsk::generate    ], // first task
+                                   Mnt[tsk::check_errors]; // last task
+
+// execute the communication chain
+comm_chain.exec([&Mnt]() {
+  return Mnt.is_done(); // stops when 'is_done()' returns 'true'
+});
+  \end{minted}
+  \end{overprint}
+\end{frame}
+
+\subsection[Simulator]{Simulation of Digital Communication Algorithms}
+
+\begin{frame}{Features}
+  \vfill
+  \begin{itemize}
+    \item Estimation of the BER/FER via Monte Carlo simulations
+    \begin{itemize}
+      \item Can require very long simulation time (hours to months)
+    \end{itemize}
+    \vspace{0.5cm}
+    \item Take advantage of parallel architectures
+    \begin{itemize}
+      \item Multi-threaded execution (\Cxy{11} threads)
+      \item Multi-node execution (Message Passing Interface, MPI)
+    \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}{Example of Use Case}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.50}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \node[draw=Paired-5, dashed, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-5, align=center] (azcw) at ( 0, 0) {All-zero\\Codeword};
+
+      \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center] (chn) at ( 3.5, 0) {AWGN\\Channel};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dem) at ( 7.0, 0) {BPSK\\Demodulator};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (qnt) at (10.5, 0) {32 to 8-bit\\Quantizer};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dec) at (14.0, 0) {[F/P]A-SSCL\\Decoder};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (crc) at (17.5, 0) {CRC\\Extractor};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3              ] (mnt) at (21.0, 0) {Monitor};
+
+      \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver}, minimum height=2cm, dashed, fit=(dem) (dec) (mnt)] {};
+
+      \draw[->,>=latex, dashed] (azcw) -- (chn) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (chn)  -- (dem) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (dem)  -- (qnt) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (qnt)  -- (dec) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (dec)  -- (crc) node [midway, below] {$K_1$};
+      \draw[->,>=latex        ] (crc)  -- (mnt) node [midway, below] {$K_2$};
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+  \begin{columns}
+  \begin{column}[T]{8cm}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.65}{
+    \begin{tikzpicture}
+      \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                        height=1.125\textwidth,  width=0.75\textwidth,
+                        xticklabel style={black!70}, yticklabel style={black!70},
+                        % group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
+                        group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
+                        ymode = log, xmin=2.5, xmax=4.5, xtick={0,0.5,...,4.5},
+                        xlabel=$E_b/N_0 \text{(dB)}$, grid=both, grid style={gray!30},
+                        %tick align=outside, tickpos=left,
+                        legend pos=south west]
+        \nextgroupplot[ylabel=Frame Error Rate]
+        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
+        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
+        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line3}
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line4}
+        % \legend{\texttt{FA-SCL} $L=\textrm{ }8$,
+        %         \texttt{FA-SCL} $L=32$,
+        %         \texttt{PA-SCL} $L=\textrm{ }8$,
+        %         \texttt{PA-SCL} $L=32$}
+
+        % create a (dummy) coordinate where we want to place the legend
+        %
+        % (The matrix cannot be placed inside the `axis' environment
+        %  directly, because then a catcode error is raised.
+        %  I guess that this is caused by the `matrix of nodes' feature)
+        % \coordinate (legend) at (axis description cs:0.97,0.03);
+        \coordinate (legend) at (axis description cs:0.61,0.03);
+
+        \nextgroupplot[ylabel=Information throughput (Mb/s), log basis y={2}, log ticks with fixed point, grid style={dashed, gray!30}]
+        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
+      \end{groupplot}
+      % create the legend matrix which is placed at the created (dummy) coordinate
+      % and recall the plot specification using the `\ref' command
+      %
+      % adapt the style of that node to your needs
+      % (e.g. if you like different spacings between the rows or columns
+      %  or a fill color)
+      \matrix [
+          draw,
+          matrix of nodes,
+          anchor=south east,
+          fill=white,
+          ampersand replacement=\&
+      ] at (legend) {
+          $L$        \& FA               \& PA               \\
+          \small{8}  \& \ref{plot:line1} \& \ref{plot:line3} \\
+          \small{32} \& \ref{plot:line2} \& \ref{plot:line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \end{column}
+  \begin{column}[T]{4cm}
+    \vspace{0.2cm}
+    \begin{itemize}
+      \item $N = 2048$
+      \item $K_1 = 1755$
+      \item $K_2 = 1723$
+      \vspace{0.3cm}
+      \item Adaptive SSCL decoders
+      \item Based on SSC decoder
+      \item $L$ decoding trees
+      \item Early termination criteria with a CRC
+    \end{itemize}
   \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Generated Decoder Comparison with State-of-the-Art}
+\begin{frame}{Evaluation}
+
+\begin{table}[htp]
+  \vspace{-0.7cm}
+  \centering
+  % \caption
+  %   [Specifications of the target processors for the \AFFECT simulator
+  %    experiments.]
+  %   {Specifications of the target processors.}
+  % \label{tab:eval_simu_cpus_specs}
+  {\resizebox{\linewidth}{!}{
+  \begin{tabular}{l  l | l | l | c | c | c | c | c}
+  \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
+          &                                           & \textbf{Name}      & \textbf{Size}         &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
+  \hline
+  \hline
+  ARM\R   & ThunderX2\R CN9975                        & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
+  Intel\R & Xeon Phi\TM 7230                          & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
+  Intel\R & Xeon\TM E5-2680 v3                        & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
+  Intel\R & Xeon\TM Gold 6140                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
+% Intel\R & Xeon\TM Gold 6142                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
+  Intel\R & Xeon\TM Gold 6240                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
+% AMD\R   & EPYC\TM 7452                              & \texttt{AVX2}      & 256-bit               & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
+  AMD\R   & EPYC\TM 7702                              & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
+  \end{tabular}
+  }}
+
+  \begin{columns}
+    \begin{column}[T]{6cm}
+      \vspace{0.79cm}
+      \begin{figure}
+      \centering
+      \scalebox{.50}{
+      \begin{tikzpicture}
+
+        \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                     width=2.0\linewidth, height=1.4\linewidth,
+                     xticklabel style={black!70}, yticklabel style={black!70},
+                     xlabel=Number of threads, ylabel=Speedup, grid=both, grid style={gray!30},
+                     xmin=1, xmax=256, xtick={1,32,64,...,256}, ytick={1,16,32,...,96},
+                     ymin=-5, ymax=102,
+                     grid style={dashed, gray!30},
+                     % tick align=outside, tickpos=left,
+                     %label style={font=\large},
+                     %tick label style={font=\large},
+                     legend pos=south east, legend columns=1]
+            \addplot[mark=pentagon, Paired-5,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 28.219] {../main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt}; \label{plot:lline1}
+            \addplot[mark=triangle, Paired-3,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 26.892] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt    }; \label{plot:lline2}
+            \addplot[mark=o,        Paired-1,    semithick] table [x=t, y expr=\thisrow{Mbps}/164.946] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6140.txt   }; \label{plot:lline3}
+            \addplot[mark=otimes,   Paired-1!60, semithick] table [x=t, y expr=\thisrow{Mbps}/126.409] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6240.txt   }; \label{plot:lline4}
+            \addplot[mark=square,   Paired-7,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 81.759] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt   }; \label{plot:lline5}
+            \addplot[mark=+,        Paired-9,    semithick] table [x=t, y expr=\thisrow{Mbps}/113.040] {../main/chapter4/fig/simu/speedup/dat/AMD_EPYC_7702.txt          }; \label{plot:lline6}
+            \addplot[mark=none,     black!65              ] coordinates {(0,0) (512,512)};
+
+            \path (16.2, 12.4) coordinate (X);
+        \end{axis}
+
+        \matrix[draw,
+                matrix of nodes,
+                anchor=south west,
+                inner sep=2.3pt,
+                column 2/.style={anchor=base east},
+                fill=white,
+                ampersand replacement=\&]
+                at (5.60,0.18)
+                % at (10.80,4.0955)
+        {
+            \ref{plot:lline1} \& $2 \times$ThunderX2 CN9975 \\
+            \ref{plot:lline2} \& $1 \times$Xeon Phi 7230    \\
+            \ref{plot:lline5} \& $2 \times$Xeon E5-2680 v3  \\
+            \ref{plot:lline3} \& $2 \times$Xeon Gold 6140   \\
+            \ref{plot:lline4} \& $2 \times$Xeon Gold 6240   \\
+            \ref{plot:lline6} \& $2 \times$EPYC 7702        \\
+        };
+
+        % \matrix [draw,
+        %          matrix of nodes,
+        %          anchor=south west,
+        %          fill=white] at (3.10,0.15)
+        % {
+        %                      & \bf{\small{CPU Name}}    & \bf{\small{Cores}} & \bf{\small{SMT}} & \bf{\small{Soc.}} \\
+        %     \ref{plot:line1} & \small{ThunderX2 CN9975} & \small{56}         & \small{4}        & \small{2}         \\
+        %     \ref{plot:line2} & \small{Xeon Phi 7230}    & \small{64}         & \small{4}        & \small{1}         \\
+        %     \ref{plot:line6} & \small{Ryzen 7 2700X}    & \small{8}          & \small{2}        & \small{1}         \\
+        %     \ref{plot:line5} & \small{Xeon E5-2680 v3}  & \small{24}         & \small{1}        & \small{2}         \\
+        %     \ref{plot:line3} & \small{Xeon Gold 6140}   & \small{36}         & \small{2}        & \small{2}         \\
+        %     \ref{plot:line4} & \small{Xeon Gold 6142}   & \small{32}         & \small{1}        & \small{2}         \\
+        % };
+
+        % \end{scope}
+      \end{tikzpicture}
+      }
+      \end{figure}
+    \end{column}
+    \begin{column}[T]{6cm}
+      \begin{figure}
+      \centering
+      \scalebox{.50}{
+      \begin{tikzpicture}
+      \path[use as bounding box] (-1.55, -1.05) rectangle (10.45, 8.4);
+      % \draw (-1.55, -1.05) rectangle (10.45, 8.4);
+      \begin{axis}[ybar,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   bar width=6pt,
+                   legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
+                   legend cell align=right,
+                   area legend,
+                   ylabel={Info. throughput (Mb/s)},
+                   symbolic x coords={1T1SMT,NT1SMT,NT2SMT,NT3SMT,NT4SMT},
+                   xticklabel style={align=center},
+                   xticklabels={Single thread\\1-way SMT,
+                                All threads\\1-way SMT,
+                                All threads\\2-way SMT,
+                                All threads\\3-way SMT,
+                                All threads\\4-way SMT},
+                   xtick=data,
+                   ymajorgrids, grid style={dashed, gray!30},
+                   ymin=0,
+                   ymax=5900,
+                   nodes near coords,
+                   nodes near coords align={vertical},
+                   % every node near coord/.style={font=\small},
+                   every node near coord/.append style={rotate=90, anchor=west, font=\footnotesize},
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   %tick label style={font=\large},
+                   restrict y to domain*=0:6500, % Cut values off at 14
+                   visualization depends on=rawy\as\rawy, % Save the unclipped values
+                   after end axis/.code={ % Draw line indicating break
+                      \draw [ultra thick, white, decoration={snake, amplitude=1pt}, decorate] (rel axis cs:0,1.05) -- (rel axis cs:1,1.05);
+                   },
+                   nodes near coords={%
+                    \pgfmathprintnumber{\rawy}% Print unclipped values
+                   },
+                   axis lines*=left,
+                   clip=false
+                  ]
+
+          % ThunderX2 CN9975
+          \addplot[black!25!Paired-5,fill=Paired-5!40,draw=Paired-5,
+                   postaction={pattern color = black!50!Paired-5!70,
+                               pattern=crosshatch dots}
+                  ]
+                  coordinates {(1T1SMT,28) (NT1SMT,1573) (NT2SMT,2148) (NT3SMT,2446) (NT4SMT,2604)};
+          \label{plot1}
+
+          % Xeon Phi 7230
+          \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
+                    postaction={pattern color = black!50!Paired-3!70,
+                                pattern=horizontal lines}
+                   ]
+                   coordinates {(1T1SMT,27) (NT1SMT,1716) (NT2SMT,2196) (NT3SMT,2208) (NT4SMT,2159)};
+          \label{plot2}
+
+          % Xeon E5-2680 v3
+          \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
+                   postaction={pattern color = black!50!Paired-7!70,
+                               pattern=grid}
+                  ]
+                  coordinates {(1T1SMT,82) (NT1SMT,1950)};
+          \label{plot4}
+
+          % Xeon Gold 6140
+          \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
+                   postaction={pattern color = black!50!Paired-1!70,
+                               pattern=flexible hatch north west}
+                  ]
+                  coordinates {(1T1SMT,165) (NT1SMT,3533) (NT2SMT,5436)};
+          \label{plot5}
+
+          % Xeon Gold 6240
+          \addplot[black!25!Paired-1!60,fill=Paired-1!20,draw=Paired-1!60,
+                   postaction={pattern color = black!50!Paired-1!50,
+                               pattern=flexible hatch north east}
+                  ]
+                  coordinates {(1T1SMT,126) (NT1SMT,4294)};
+          \label{plot6}
+
+          % EPYC 7702
+          \addplot[black!25!Paired-9,fill=Paired-9!40,draw=Paired-9,
+                   postaction={pattern color = black!50!Paired-9!70,
+                               pattern=none}
+                  ]
+                  coordinates {(1T1SMT,113) (NT1SMT,11145)};
+          \label{plot3}
+
+          \legend{$2 \times$ThunderX2 CN9975,
+                  $1 \times$Xeon Phi 7230,
+                  $2 \times$Xeon E5-2680 v3,
+                  $2 \times$Xeon Gold 6140,
+                  $2 \times$Xeon Gold 6240,
+                  $2 \times$EPYC 7702,}
+      \end{axis}
+      \end{tikzpicture}
+      }
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+\end{table}
+
 \end{frame}
 
-\section[AFF3CT]{AFF3CT: A Fast Forward Error Correction Toolbox}
-
-\subsection[Philosophy]{Philosophy}
-
-\subsection[Library of Digital Communication Algorithms]{Library of Digital Communication Algorithms}
-
-\subsection[Simulation of Digital Communication Algorithms]{Simulation of Digital Communication Algorithms}
-
 \subsection[Impact and Community]{Impact and Community}
+
+\begin{frame}{Impact and Community}
+  \vfill
+  \begin{enumerate}
+    \item Used in academic contexts
+    \begin{itemize}
+      \item ANR NAND
+      \item Idex CPU
+    \end{itemize}
+    \vspace{0.3cm}
+    \item Used in industrial context
+    \begin{itemize}
+      \item Airbus
+      \item Thales
+      \item CNES
+    \end{itemize}
+    \vspace{0.3cm}
+    \item Open-source code
+    \begin{itemize}
+      \item Living community\footnote{\AFFECT issue tracker: \url{https://github.com/aff3ct/aff3ct/issues}}
+      \item Reproducible BER/FER results\footnote{\AFFECT BER/FER comparator: \url{https://aff3ct.github.io/comparator.html}}
+      \item Continue Integration and Delivery\footnote{\AFFECT CI/CD: \url{https://gitlab.com/aff3ct/aff3ct/pipelines}}
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{frame}
 
 \section[eDSL for the SDR]{Embedded Domain Specific Language for the Software-defined Radio}
 
 \subsection[Existing Solutions]{Existing Solutions}
 
-\subsection[Description of the Proposed Embedded Domain Specific Language]{Description of the Proposed Embedded Domain Specific Language}
+\begin{frame}{Existing Solutions}
+  \vfill
+  \begin{itemize}
+    \item Dedicated languages based on the dataflow model~\cite{Dennis1980,Engels1994}
+    \item GNU Radio~\cite{GNURadio}
+  \end{itemize}
+  \vfill
+\end{frame}
 
-\subsection[Application on the DVB-S2 Standard]{Application on the DVB-S2 Standard}
+\subsection[Proposed eDSL]{Description of the Proposed Embedded Domain Specific Language}
+
+\begin{frame}{Proposed eDSL}
+  \vfill
+  \begin{itemize}
+    \item Concepts:
+    \begin{itemize}
+      \item Close to cyclo-static dataflow model but not stateless
+      \item Domain specific language embedded in \Cxx
+      \item Compilation is performed at runtime, meta-programming technique is avoided
+    \end{itemize}
+    \vspace{0.3cm}
+    \item Objectives:
+    \begin{itemize}
+      \item High performance eDSL
+      \item Integrate the eDSL with \AFFECT and its fast implementations
+      \item Easy to understand, to use and to modify for new users
+    \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}{Tasks and Sequence}
+  \vfill
+  \begin{columns}
+    \begin{column}[T]{6cm}
+    \begin{figure}[!h]
+      \centering
+      \scalebox{.65}{
+      \begin{tikzpicture}%[scale=\tikzscale]
+          \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+          \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+          \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt} }
+          \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+          \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+          \draw[->,>=latex,dotted,white] (-1.25,0) -- (-0.5,0.0) node [midway, above] {};
+          \draw[->,>=latex,dotted,white] (6.5,0) -- (6+1.25,0) node [midway, above] {};
+
+          \node[tsk ] (t1) at (0.0, 0.00) {$t_1$};
+          \node[sout] (t1_so) at (0.0+0.5, 0) {};
+          \node[tsk ] (t2) at (2.0, 0.00) {$t_2$};
+          \node[sin ] (t2_si) at (2.0-0.5, 0) {};
+          \node[sout] (t2_so) at (2.0+0.5, 0) {};
+          \node[tsk ] (t3) at (4.0, 0.00) {$t_3$};
+          \node[sin ] (t3_si) at (4.0-0.5, 0) {};
+          \node[sout] (t3_so) at (4.0+0.5, 0) {};
+          \node[tsk ] (t4) at (6.0, 0.00) {$t_4$};
+          \node[sin ] (t4_si) at (6.0-0.5, 0) {};
+
+          \draw[->,>=latex] (t1_so) -- (t2_si) node [midway, above] {};
+          \draw[->,>=latex] (t2_so) -- (t3_si) node [midway, above] {};
+          \draw[->,>=latex] (t3_so) -- (t4_si) node [midway, above] {};
+
+          \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (t4)] {};
+
+          \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (+0.0, 1.9) {};
+      %   \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (+0.0, 1.9) {};
+          \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (+4.0, 1.3) {};
+          \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (+4.0, 1.9) {};
+      \end{tikzpicture}
+      }
+    \end{figure}
+    \end{column}
+    \begin{column}[T]{6cm}
+    \begin{figure}[!h]
+      \centering
+      \scalebox{.65}{
+      \begin{tikzpicture}%[scale=\tikzscale]
+        \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+        \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+        \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt, minimum height=1.5cm} }
+        \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+        \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+        \node[tsk ] (t1)    at (0.0    , +1.00) {$t_1$};
+        \node[sin ] (t1_si) at (0.0-0.5, +1.00) {};
+        \node[sout] (t1_so) at (0.0+0.5, +1.00) {};
+
+        \node[tsk ] (t2)     at (2.0    ,  0.00) {$t_2$};
+        \node[sin ] (t2_si) at (2.0-0.5,  0.00) {};
+        \node[sout] (t2_so) at (2.0+0.5,  0.00) {};
+
+        \node[tsk ] (t3)    at (0.0    , -1.00) {$t_3$};
+        \node[sin ] (t3_si) at (0.0-0.5, -1.00) {};
+        \node[sout] (t3_so) at (0.0+0.5, -1.00) {};
+
+        \node[tsk ] (t4)     at (4.0    ,  0.00) {$t_4$};
+        \node[sin ] (t4_si1) at (4.0-0.5,  0.25) {};
+        \node[sin ] (t4_si2) at (4.0-0.5, -0.25) {};
+        \node[sout] (t4_so)  at (4.0+0.5,  0.00) {};
+
+        \node[tsk ] (t5)    at (6.0,     +1.00) {$t_5$};
+        \node[sin ] (t5_si) at (6.0-0.5, +1.00) {};
+        \node[sout] (t5_so) at (6.0+0.5, +1.00) {};
+
+        \node[tsk ] (t6)    at (6.0,     -1.00) {$t_6$};
+        \node[sin ] (t6_si) at (6.0-0.5, -1.00) {};
+        \node[sout] (t6_so) at (6.0+0.5, -1.00) {};
+
+        \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
+        \draw[->,>=latex] (t2_so) -- (t4_si1) node [midway, above] {};
+        \draw[->,>=latex] (t3_so) -- (3,-1) |- (t4_si2) node [midway, above] {};
+        \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
+        \draw[->,>=latex] (t4_so) -- (t6_si)  node [midway, above] {};
+
+        \draw[->,>=latex,dotted] (-1.25,+1) -- (t1_si) node [midway, above] {};
+        \draw[->,>=latex,dotted] (-1.25,-1) -- (t3_si) node [midway, above] {};
+
+        \draw[->,>=latex,dotted] (t5_so) -- (6+1.25,+1) node [midway, above] {};
+        \draw[->,>=latex,dotted] (t6_so) -- (6+1.25,-1) node [midway, above] {};
+
+        \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1_si) (t1) (t2) (t3) (t5_so)] {};
+      \end{tikzpicture}
+      }
+    \end{figure}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{itemize}
+    \item A sequence is build from an initial and a final list of tasks
+    \item The tasks scheduling order inside a sequence is determined at the construction
+    \begin{itemize}
+      \item Could be resolved at compilation time
+      \item But small overhead at runtime
+    \end{itemize}
+    \item Binding rules
+    \begin{itemize}
+      \item All the input sockets of a task have to be bound to execute a task
+      \item An input socket has to be bound to a single output socket
+      \item An output socket can be bound to many input sockets
+    \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}{Parallelization Techniques}
+  \begin{columns}
+    \begin{column}[T]{6cm}
+    \underline{Sequence duplication:}
+
+    \vspace{0.2cm}
+    \begin{figure}[!h]
+      \centering
+      \scalebox{.45}{
+      \begin{tikzpicture}%[scale=\tikzscale]
+        \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+        \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+        \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt} }
+        \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+        \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+        \draw[->,>=latex,dotted,white] (-1.25,0) -- (-0.5,0.0) node [midway, above] {};
+        \draw[->,>=latex,dotted,white] (6.5,0) -- (6+1.25,0) node [midway, above] {};
+
+        \newcommand\thr{0}
+
+        \thread{(-1,\thr-0.5)}{1}{th1};
+        \node[tsk ] (t1)    at (0.0    , \thr) {$t_1^1$};
+        \node[sout] (t1_so) at (0.0+0.5, \thr) {};
+        \node[tsk ] (t2)    at (2.0    , \thr) {$t_2^1$};
+        \node[sin ] (t2_si) at (2.0-0.5, \thr) {};
+        \node[sout] (t2_so) at (2.0+0.5, \thr) {};
+        \node[tsk ] (t3)    at (4.0    , \thr) {$t_3^1$};
+        \node[sin ] (t3_si) at (4.0-0.5, \thr) {};
+        \node[sout] (t3_so) at (4.0+0.5, \thr) {};
+        \node[tsk ] (t4)    at (6.0    , \thr) {$t_4^1$};
+        \node[sin ] (t4_si) at (6.0-0.5, \thr) {};
+
+        \draw[->,>=latex] (t1_so) -- (t2_si) node [midway, above] {};
+        \draw[->,>=latex] (t2_so) -- (t3_si) node [midway, above] {};
+        \draw[->,>=latex] (t3_so) -- (t4_si) node [midway, above] {};
+
+        \newcommand\tthr{-1.5}
+
+        \thread{(-1,-2)}{1}{th2};
+        \node[tsk ] (tt1)    at (0.0    , \tthr) {$t_1^2$};
+        \node[sout] (tt1_so) at (0.0+0.5, \tthr) {};
+        \node[tsk ] (tt2)    at (2.0    , \tthr) {$t_2^2$};
+        \node[sin ] (tt2_si) at (2.0-0.5, \tthr) {};
+        \node[sout] (tt2_so) at (2.0+0.5, \tthr) {};
+        \node[tsk ] (tt3)    at (4.0    , \tthr) {$t_3^2$};
+        \node[sin ] (tt3_si) at (4.0-0.5, \tthr) {};
+        \node[sout] (tt3_so) at (4.0+0.5, \tthr) {};
+        \node[tsk ] (tt4)    at (6.0    , \tthr) {$t_4^2$};
+        \node[sin ] (tt4_si) at (6.0-0.5, \tthr) {};
+
+        \draw[->,>=latex] (tt1_so) -- (tt2_si) node [midway, above] {};
+        \draw[->,>=latex] (tt2_so) -- (tt3_si) node [midway, above] {};
+        \draw[->,>=latex] (tt3_so) -- (tt4_si) node [midway, above] {};
+
+        \newcommand\tttthr{-3.5}
+
+        \thread{(-1,-4)}{1}{tht};
+        \node[tsk ] (tttt1)    at (0.0    , \tttthr) {$t_1^t$};
+        \node[sout] (tttt1_so) at (0.0+0.5, \tttthr) {};
+        \node[tsk ] (tttt2)    at (2.0    , \tttthr) {$t_2^t$};
+        \node[sin ] (tttt2_si) at (2.0-0.5, \tttthr) {};
+        \node[sout] (tttt2_so) at (2.0+0.5, \tttthr) {};
+        \node[tsk ] (tttt3)    at (4.0    , \tttthr) {$t_3^t$};
+        \node[sin ] (tttt3_si) at (4.0-0.5, \tttthr) {};
+        \node[sout] (tttt3_so) at (4.0+0.5, \tttthr) {};
+        \node[tsk ] (tttt4)    at (6.0    , \tttthr) {$t_4^t$};
+        \node[sin ] (tttt4_si) at (6.0-0.5, \tttthr) {};
+
+        \draw[->,>=latex] (tttt1_so) -- (tttt2_si) node [midway, above] {};
+        \draw[->,>=latex] (tttt2_so) -- (tttt3_si) node [midway, above] {};
+        \draw[->,>=latex] (tttt3_so) -- (tttt4_si) node [midway, above] {};
+
+        \draw[-,>=latex,dotted] (tt1) -- (tttt1) node [midway, above] {};
+        \draw[-,>=latex,dotted] (tt2) -- (tttt2) node [midway, above] {};
+        \draw[-,>=latex,dotted] (tt3) -- (tttt3) node [midway, above] {};
+        \draw[-,>=latex,dotted] (tt4) -- (tttt4) node [midway, above] {};
+
+        \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (tttt1) (t4) (th1)] {};
+      \end{tikzpicture}
+      }
+    \end{figure}
+    \end{column}
+    \begin{column}[T]{6cm}
+    \underline{Sequence pipelining:}
+
+    \vspace{0.2cm}
+    \begin{figure}[!h]
+      \centering
+      \scalebox{.45}{
+      \begin{tikzpicture}%[scale=\tikzscale]
+        \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+        \tikzset{ stsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
+        \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+        \tikzset{ seq/.style ={draw=Paired-11,  dashed, rounded corners=2pt} }
+        % \tikzset{ pip/.style ={draw=Dark2-1,  dashed, rounded corners=2pt} }
+        \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+        \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+        \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+        \newcommand\thr{0}
+
+        \node[stsk] (t1)    at ( 0.0    , \thr) {$t_1$};
+        \node[sout] (t1_so) at ( 0.0+0.5, \thr) {};
+        \node[tsk ] (t2)    at ( 2.0    , \thr) {$t_2$};
+        \node[sin ] (t2_si) at ( 2.0-0.5, \thr) {};
+        \node[sout] (t2_so) at ( 2.0+0.5, \thr) {};
+        \node[tsk ] (t3)    at ( 4.0    , \thr) {$t_3$};
+        \node[sin ] (t3_si) at ( 4.0-0.5, \thr) {};
+        \node[sout] (t3_so) at ( 4.0+0.5, \thr) {};
+        \node[tsk ] (t4)    at ( 6.0    , \thr) {$t_4$};
+        \node[sin ] (t4_si) at ( 6.0-0.5, \thr) {};
+        \node[sout] (t4_so) at ( 6.0+0.5, \thr) {};
+        \node[stsk] (t5)    at ( 8.0    , \thr) {$t_5$};
+        \node[sin ] (t5_si) at ( 8.0-0.5, \thr) {};
+        \node[sout] (t5_so) at ( 8.0+0.5, \thr) {};
+        \node[stsk] (t6)    at (10.0    , \thr) {$t_6$};
+        \node[sin ] (t6_si) at (10.0-0.5, \thr) {};
+
+        \draw[->,>=latex] (t1_so) -- (t2_si) node [midway, above] {};
+        \draw[->,>=latex] (t2_so) -- (t3_si) node [midway, above] {};
+        \draw[->,>=latex] (t3_so) -- (t4_si) node [midway, above] {};
+        \draw[->,>=latex] (t4_so) -- (t5_si) node [midway, above] {};
+        \draw[->,>=latex] (t5_so) -- (t6_si) node [midway, above] {};
+
+        \Thread{0.00}{0.7}{th1}
+        \Thread{3.25}{0.7}{th2}
+        \Thread{3.75}{0.7}{th3}
+        \Thread{4.25}{0.7}{th4}
+        \Thread{4.75}{0.7}{th5}
+        \Thread{9.00}{0.7}{th6}
+
+        \node[seq, label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so)                  ] (seq1) {};
+        \node[seq, label={[Paired-11]below:Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
+        \node[seq, label={[Paired-11]below:Stage 3}, fit=(t5_si) (t5) (t6)             ] (seq3) {};
+
+        \node[pip, minimum height=2.5cm, minimum width=12.0cm, label={[Dark2-8]below:Pipeline}, fit=(seq1) (seq2) (seq3)] {};
+
+        % \thread{(2.4,+1.0)}{0.5}{thl};
+        % \node at (3.2,+1.25) {thread};
+      \end{tikzpicture}
+      }
+    \end{figure}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  \begin{columns}
+    \begin{column}[T]{6cm}
+      \begin{itemize}
+        \item Put each duplicated sequence on a thread
+        \item Preserve the cache locality if the same thread remains on the same core
+      \end{itemize}
+    \end{column}
+    \begin{column}[T]{6cm}
+      \begin{itemize}
+        \item Some tasks cannot be duplicated because of sequential dependency on themselves
+        \item Splitting a sequence in stages allow to parallelize the overall application
+        \item Duplicating a stage remains possible if all the containing tasks are not sequential
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\subsection[DVB-S2 Standard]{Application on the DVB-S2 Standard}
+
+\begin{frame}{Objectives}
+  \vspace{-0.1cm}
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.25]{pics/demo_dvbs2}
+  \end{figure}
+  \begin{itemize}
+    \item Implement a full DVB-S2 transceiver (streaming video)
+    \item Two Universal Software Radio Peripherals (USRPs) N320 for the RF
+    \item One middle class computer for the transmitter (Tx) BB processing => SDR
+    \item One server class computer for the receiver (Rx) BB processing => SDR
+  \end{itemize}
+  \vfill
+  \begin{table}[htp]
+    \centering
+    \resizebox{1.0\linewidth}{!}{
+    % \begin{tabular}{c c c c c c c c}
+    %   \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{PLH}}}$ & \textbf{Interleaver}\\
+    %   \hline \hline
+    %   MODCOD 1 &  QPSK & 3/5 &  9552 &  9720 & 16200 & 16740 & no\\
+    %   MODCOD 2 &  QPSK & 8/9 & 14232 & 14400 & 16200 & 16740 & no\\
+    %   MODCOD 3 & 8-PSK & 8/9 & 14232 & 14400 & 16200 & 16740 & column/row\\
+    % \end{tabular}
+    \begin{tabular}{c c c c c c c}
+      \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{\mathcal{T}_i}$ (Rx, Seq.)\\
+      \hline \hline
+      \textcolor{Paired-1}{MODCOD 1} &  QPSK & 3/5 &  9552 &  9720 & 16200 & 3.4 Mb/s\\
+      \textcolor{Paired-3}{MODCOD 2} &  QPSK & 8/9 & 14232 & 14400 & 16200 & 4.1 Mb/s\\
+      \textcolor{Paired-5}{MODCOD 3} & 8-PSK & 8/9 & 14232 & 14400 & 16200 & 4.0 Mb/s\\
+    \end{tabular}
+    }
+    \caption*{Selected DVB-S2 configurations (MODCOD).}
+  \end{table}
+  \vfill
+
+\end{frame}
+
+\begin{frame}{Transmitter}
+  \vfill
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.50}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+      \tikzset{ stsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
+      \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+      \tikzset{ seq/.style ={draw=Paired-11, dashed, rounded corners=2pt} }
+      \tikzset{ mdl/.style ={draw=Paired-3,  dashed, rounded corners=2pt} }
+      \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+      \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+      \node[stsk                    , align=center] (t1) at (0.0, 2.0) {~generate~~\\($t^{\text{Tx}}_1$)};
+      \node[tsk , right=2.00cm of t1, align=center] (t2)               {~scramble~~\\($t^{\text{Tx}}_2$)};
+      \node[tsk , right=1.25cm of t2, align=center] (t3)               {~encode~~\\($t^{\text{Tx}}_3$)};
+      \node[tsk , right=1.25cm of t3, align=center] (t4)               {~encode~~\\($t^{\text{Tx}}_4$)};
+      \node[tsk , right=1.25cm of t4, align=center] (t5)               {~interleave~~\\($t^{\text{Tx}}_5$)};
+      \node[tsk,  below=1.00cm of t2, align=center] (t6)               {~modulate~~\\($t^{\text{Tx}}_6$)};
+      \node[tsk , right=1.25cm of t6, align=center] (t7)               {~insert~~\\($t^{\text{Tx}}_7$)};
+      \node[tsk , right=1.25cm of t7, align=center] (t8)               {~scramble~~\\($t^{\text{Tx}}_8$)};
+      \node[stsk, right=4.60cm of t8, align=center] (t9)               {~filter~~\\($t^{\text{Tx}}_9$)};
+      \node[stsk, right=1.00cm of t9, align=center] (t10)              {~send~~\\($t^{\text{Tx}}_{10}$)};
+
+      \node[sout, at=(t1.east) ] (t1_so)  {};
+      \node[sin,  at=(t2.west) ] (t2_si)  {};
+      \node[sout, at=(t2.east) ] (t2_so)  {};
+      \node[sin,  at=(t3.west) ] (t3_si)  {};
+      \node[sout, at=(t3.east) ] (t3_so)  {};
+      \node[sin,  at=(t4.west) ] (t4_si)  {};
+      \node[sout, at=(t4.east) ] (t4_so)  {};
+      \node[sin,  at=(t5.west) ] (t5_si)  {};
+      \node[sout, at=(t5.east) ] (t5_so)  {};
+      \node[sin,  at=(t6.west) ] (t6_si)  {};
+      \node[sout, at=(t6.east) ] (t6_so)  {};
+      \node[sin,  at=(t7.west) ] (t7_si)  {};
+      \node[sout, at=(t7.east) ] (t7_so)  {};
+      \node[sin,  at=(t8.west) ] (t8_si)  {};
+      \node[sout, at=(t8.east) ] (t8_so)  {};
+      \node[sin,  at=(t9.west) ] (t9_si)  {};
+      \node[sout, at=(t9.east) ] (t9_so)  {};
+      \node[sin,  at=(t10.west)] (t10_si) {};
+
+      \node[mdl, label={[Paired-3]above:Source Binary File},  fit=(t1)           (t1_so)] (m1) {};
+      \node[mdl, label={[Paired-3]above:Scrambler Binary},    fit=(t2)  (t2_si)  (t2_so)] (m2) {};
+      \node[mdl, label={[Paired-3]above:Encoder BCH},         fit=(t3)  (t3_si)  (t3_so)] (m3) {};
+      \node[mdl, label={[Paired-3]above:Encoder LDPC},        fit=(t4)  (t4_si)  (t4_so)] (m4) {};
+      \node[mdl, label={[Paired-3]above:Interleaver},         fit=(t5)  (t5_si)  (t5_so)] (m5) {};
+      \node[mdl, label={[Paired-3]above:Modem PSK},           fit=(t6)  (t6_si)  (t6_so)] (m6) {};
+      \node[mdl, label={[Paired-3]above:Framer PLH},          fit=(t7)  (t7_si)  (t7_so)] (m7) {};
+      \node[mdl, label={[Paired-3]above:Scrambler Symbol},    fit=(t8)  (t8_si)  (t8_so)] (m8) {};
+      \node[mdl, label={[Paired-3]above:Filter Shaping},      fit=(t9)  (t9_si)  (t9_so)] (m9) {};
+      \node[mdl, label={[Paired-3]above:Radio},               fit=(t10) (t10_si)        ] (m9) {};
+
+      \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
+      \draw[->,>=latex] (t2_so) -- (t3_si)  node [midway, above] {};
+      \draw[->,>=latex] (t3_so) -- (t4_si)  node [midway, above] {};
+      \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
+      \draw[->,>=latex] (t5_so) -- (13.9,2.0) -- (13.9,1.15) -- (2.25,1.15) -- (2.25,0) -- (t6_si)  node [midway, above] {};
+      \draw[->,>=latex] (t6_so) -- (t7_si)  node [midway, above] {};
+      \draw[->,>=latex] (t7_so) -- (t8_si)  node [midway, above] {};
+      \draw[->,>=latex] (t8_so) -- (t9_si)  node [midway, above] {};
+      \draw[->,>=latex] (t9_so) -- (t10_si) node [midway, above] {};
+      \draw[black, -] (t10.east)--++(0:1.0cm) node[antenna, label={[above,yshift=+2.15cm]USRP}] {};
+
+      \node[seq, minimum height=2.5cm, minimum width=3.5cm,  label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so)                                      ] (seq1) {};
+      \node[seq, minimum height=4.5cm, minimum width=12.0cm, label={[Paired-11]below:Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t5) (t6) (t7) (t8) (t8_so)] (seq2) {};
+      \node[seq, minimum height=2.5cm, minimum width=4.5cm,  label={[Paired-11]below:Stage 3}, fit=(t9_si) (t10)                                     ] (seq3) {};
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \vfill
+\end{frame}
+
+\begin{frame}{Receiver}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.40}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
+      \tikzset{ stsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
+      \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+      \tikzset{ seq/.style ={draw=Paired-11, dashed, rounded corners=2pt} }
+      \tikzset{ mdl/.style ={draw=Paired-3,  dashed, rounded corners=2pt} }
+      \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+      \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+      \node[stsk                     , align=center] (t1) at ( 0.0, 2.0) {~receive~~\\($t^{\text{Rx}}_1$)};
+      \node[tsk , right=2.00cm of t1 , align=center] (t2)                {~imultiply~~\\($t^{\text{Rx}}_2$)};
+      \node[stsk, right=1.00cm of t2 , align=center] (t3)                {~synchronize~~\\($t^{\text{Rx}}_3$)};
+      \node[stsk, right=1.00cm of t3 , align=center] (t4)                {~filter~~\\($t^{\text{Rx}}_4$)};
+      \node[stsk, below=3.50cm of t2 , align=center] (t5)                {~synchronize~~\\($t^{\text{Rx}}_5$)};
+      \node[stsk, right=2.00cm of t5 , align=center] (t6)                {~extract~~\\($t^{\text{Rx}}_6$)};
+      \node[tsk , right=1.00cm of t6 , align=center] (t7)                {~imultiply~~\\($t^{\text{Rx}}_7$)};
+      \node[stsk, right=1.00cm of t7 , align=center] (t8)                {~synchronize~~\\($t^{\text{Rx}}_8$)};
+      \node[tsk , below=3.50cm of t5 , align=center] (t9)                {~descramble~~\\($t^{\text{Rx}}_9$)};
+      \node[stsk, right=1.00cm of t9 , align=center] (t10)               {~synchronize~~\\($t^{\text{Rx}}_{10}$)};
+      \node[tsk , right=1.00cm of t10, align=center] (t11)               {~synchronize~~\\($t^{\text{Rx}}_{11}$)};
+      \node[tsk , right=3.00cm of t11, align=center] (t12)               {~remove~~\\($t^{\text{Rx}}_{12}$)};
+      \node[tsk , right=1.00cm of t12, align=center] (t13)               {~estimate~~\\($t^{\text{Rx}}_{13}$)};
+      \node[tsk , below=3.50cm of t9 , align=center] (t14)               {~demodulate~~\\($t^{\text{Rx}}_{14}$)};
+      \node[tsk , right=1.00cm of t14, align=center] (t15)               {~deinterleave~~\\($t^{\text{Rx}}_{15}$)};
+      \node[tsk , right=1.00cm of t15, align=center] (t16)               {~decode SIHO~~\\($t^{\text{Rx}}_{16}$)};
+      \node[tsk , right=1.00cm of t16, align=center] (t17)               {~decode HIHO~~\\($t^{\text{Rx}}_{17}$)};
+      \node[tsk , right=1.00cm of t17, align=center] (t18)               {~descramble~~\\($t^{\text{Rx}}_{18}$)};
+      \node[stsk, right=2.00cm of t18, align=center] (t19)               {~send~~\\($t^{\text{Rx}}_{19}$)};
+
+      \node[sout, at=(t1.east)                ] (t1_so)  {};
+      \node[sin,  at=(t2.west)                ] (t2_si)  {};
+      \node[sout, at=(t2.east)                ] (t2_so)  {};
+      \node[sin,  at=(t3.west)                ] (t3_si)  {};
+      \node[sout, at=(t3.east)                ] (t3_so)  {};
+      \node[sin,  at=(t4.west)                ] (t4_si)  {};
+      \node[sout, at=(t4.east)                ] (t4_so)  {};
+      \node[sin,  at=(t5.west)                ] (t5_si)  {};
+      \node[sout, at=(t5.east), yshift=+0.25cm] (t5_so1) {};
+      \node[sout, at=(t5.east), yshift=-0.25cm] (t5_so2) {};
+      \node[sin,  at=(t6.west), yshift=+0.25cm] (t6_si1) {};
+      \node[sin,  at=(t6.west), yshift=-0.25cm] (t6_si2) {};
+      \node[sout, at=(t6.east)                ] (t6_so)  {};
+      \node[sin,  at=(t7.west)                ] (t7_si)  {};
+      \node[sout, at=(t7.east)                ] (t7_so)  {};
+      \node[sin,  at=(t8.west)                ] (t8_si)  {};
+      \node[sout, at=(t8.east), yshift=+0.25cm] (t8_so1) {};
+      \node[sout, at=(t8.east), yshift=-0.25cm] (t8_so2) {};
+      \node[sin,  at=(t9.west)                ] (t9_si)  {};
+      \node[sout, at=(t9.east)                ] (t9_so)  {};
+      \node[sin,  at=(t10.west)               ] (t10_si) {};
+      \node[sout, at=(t10.east)               ] (t10_so) {};
+      \node[sin,  at=(t11.west)               ] (t11_si) {};
+      \node[sout, at=(t11.east)               ] (t11_so) {};
+      \node[sin,  at=(t12.west)               ] (t12_si) {};
+      \node[sout, at=(t12.east)               ] (t12_so) {};
+      \node[sin,  at=(t13.west)               ] (t13_si) {};
+      \node[sout, at=(t13.east)               ] (t13_so) {};
+      \node[sin,  at=(t14.west)               ] (t14_si) {};
+      \node[sout, at=(t14.east)               ] (t14_so) {};
+      \node[sin,  at=(t15.west)               ] (t15_si) {};
+      \node[sout, at=(t15.east)               ] (t15_so) {};
+      \node[sin,  at=(t16.west)               ] (t16_si) {};
+      \node[sout, at=(t16.east)               ] (t16_so) {};
+      \node[sin,  at=(t17.west)               ] (t17_si) {};
+      \node[sout, at=(t17.east)               ] (t17_so) {};
+      \node[sin,  at=(t18.west)               ] (t18_si) {};
+      \node[sout, at=(t18.east)               ] (t18_so) {};
+      \node[sin,  at=(t19.west)               ] (t19_si) {};
+
+      \draw[black, -] (t1.west)--++(0:-1.0cm) node[antenna, label={[above,yshift=+2.15cm]USRP}] {};
+      \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
+      \draw[->,>=latex] (t2_so) -- (t3_si)  node [midway, above] {};
+      \draw[->,>=latex] (t3_so) -- (t4_si)  node [midway, above] {};
+      % \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
+      \draw[->,>=latex] (t4_so) -| (11.0,-0.5) -- (1.5,-0.5) |- (t5_si)  node [midway, above] {};
+      \draw[->,>=latex] (t5_so1) -- (t6_si1)  node [midway, above] {};
+      \draw[->,>=latex] (t5_so2) -- (t6_si2)  node [midway, above] {};
+      % \draw[->,>=latex] (t5_so) -- (13.9,2.0) -- (13.9,1.15) -- (2.25,1.15) -- (2.25,0) -- (t6_si)  node [midway, above] {};
+      \draw[->,>=latex] (t6_so) -- (t7_si)  node [midway, above] {};
+      \draw[->,>=latex] (t7_so) -- (t8_si)  node [midway, above] {};
+      % \draw[->,>=latex] (t8_so) -- (t9_si)  node [midway, above] {};
+      \draw[->,>=latex] (t8_so1) -| (15.5,-5.0) -- (1.5,-5.0) |- (t9_si)  node [midway, above] {};
+      \draw[->,>=latex] (t9_so) -- (t10_si) node [midway, above] {};
+      \draw[->,>=latex] (t10_so) -- (t11_si) node [midway, above] {};
+      \draw[->,>=latex] (t11_so) -- (t12_si) node [midway, above] {};
+      \draw[->,>=latex] (t12_so) -- (t13_si) node [midway, above] {};
+      % \draw[->,>=latex] (t13_so) -- (t14_si) node [midway, above] {};
+      \draw[->,>=latex] (t13_so) -| (19.5,-9.5) -- (1.5,-9.5) |- (t14_si)  node [midway, above] {};
+
+      \draw[->,>=latex] (t14_so) -- (t15_si) node [midway, above] {};
+      \draw[->,>=latex] (t15_so) -- (t16_si) node [midway, above] {};
+      \draw[->,>=latex] (t16_so) -- (t17_si) node [midway, above] {};
+      \draw[->,>=latex] (t17_so) -- (t18_si) node [midway, above] {};
+      \draw[->,>=latex] (t18_so) -- (t19_si) node [midway, above] {};
+
+      \node[seq, minimum height=3.5cm, minimum width=3.2cm,   label={[Paired-11]below:Stage 1}, fit=(t1)  (t1_so)                                                          ] (seq1) {};
+      \node[seq, minimum height=3.5cm, minimum width=8.5cm,   label={[Paired-11]below:Stage 2}, fit=(t2)  (t2_si)  (t2_so)  (t3)  (t3_si)  (t3_so)  (t4)  (t4_si)  (t4_so) ] (seq2) {};
+      \node[seq, minimum height=3.5cm, minimum width=3.5cm,   label={[Paired-11]below:Stage 3}, fit=(t5)  (t5_si)  (t5_so1)                                                ] (seq3) {};
+      \node[seq, minimum height=3.5cm, minimum width=9.0cm,   label={[Paired-11]below:Stage 4}, fit=(t6)  (t6_si1) (t6_so)  (t7)  (t7_si)  (t7_so)  (t8)  (t8_si)  (t8_so1)] (seq4) {};
+      \node[seq, minimum height=3.5cm, minimum width=10.0cm,  label={[Paired-11]below:Stage 5}, fit=(t9)  (t9_si)  (t9_so)  (t10) (t10_si) (t10_so) (t11) (t11_si) (t11_so)] (seq5) {};
+      \node[seq, minimum height=3.5cm, minimum width=6.5cm,   label={[Paired-11]below:Stage 6}, fit=(t12) (t12_si) (t12_so) (t13) (t13_si) (t13_so)                        ] (seq6) {};
+      \node[seq, minimum height=3.5cm, minimum width=17.0cm,  label={[Paired-11]below:Stage 7}, fit=(t14_si) (t18_so)                                                      ] (seq7) {};
+      \node[seq, minimum height=3.5cm, minimum width=3.2cm,   label={[Paired-11]below:Stage 8}, fit=(t19_si) (t19)                                                         ] (seq8) {};
+
+      \node[mdl, label={[Paired-3, align=center]above:Radio},                          fit=(t1)           (t1_so)     ] (m1)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Multiplier AGC},                 fit=(t2)  (t2_si)  (t2_so)     ] (m2)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Freq. Coarse},     fit=(t3)  (t3_si)  (t3_so)     ] (m3)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Filter\\Matched},                fit=(t4)  (t4_si)  (t4_so)     ] (m4)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Synchronizer Timing\\(Gardner)}, fit=(t5)  (t5_si)  (t6) (t6_so)] (m5)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Multiplier AGC},                 fit=(t7)  (t7_si)  (t7_so)     ] (m6)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Frame},            fit=(t8)  (t8_si)  (t8_so1)    ] (m7)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Scrambler Symbol},               fit=(t9)  (t9_si)  (t9_so)     ] (m8)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Freq. Fine L\&R},  fit=(t10) (t10_si) (t10_so)    ] (m9)  {};
+      \node[mdl, label={[Paired-3, align=center]above:Synchronizer\\Freq. Fine P/F},   fit=(t11) (t11_si) (t11_so)    ] (m10) {};
+      \node[mdl, label={[Paired-3, align=center]above:Framer PLH},                     fit=(t12) (t12_si) (t12_so)    ] (m11) {};
+      \node[mdl, label={[Paired-3, align=center]above:Noise Estimator},                fit=(t13) (t13_si) (t13_so)    ] (m12) {};
+      \node[mdl, label={[Paired-3, align=center]above:Modem PSK},                      fit=(t14) (t14_si) (t14_so)    ] (m13) {};
+      \node[mdl, label={[Paired-3, align=center]above:Interleaver},                    fit=(t15) (t15_si) (t15_so)    ] (m14) {};
+      \node[mdl, label={[Paired-3, align=center]above:Decoder LDPC},                   fit=(t16) (t16_si) (t16_so)    ] (m15) {};
+      \node[mdl, label={[Paired-3, align=center]above:Decoder BCH},                    fit=(t17) (t17_si) (t17_so)    ] (m16) {};
+      \node[mdl, label={[Paired-3, align=center]above:Scrambler Binary},               fit=(t18) (t18_si) (t18_so)    ] (m17) {};
+      \node[mdl, label={[Paired-3, align=center]above:Sink Binary File},               fit=(t19) (t19_si)             ] (m18) {};
+
+
+      % \draw[-,>=latex, very thick] (12.55,-6.0) -- (12.55,-8) node [midway, above] {};
+      % \draw[-,>=latex, very thick] (12.65,-6.0) -- (12.65,-8) node [midway, above] {};
+      % \draw[-,>=latex, very thick] (14.55,2.0) -- (14.55,1.5) node [midway, above] {};
+      % \draw[-,>=latex, very thick] (14.65,2.0) -- (14.65,1.5) node [midway, above] {};
+      % \node at (17.00,1.75) {End of the learning phase 3};
+    \end{tikzpicture}
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Evaluations}
+  \vspace{-0.2cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.40}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+    \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                      height=0.77\textwidth, width=1.0\textwidth,
+                      xticklabel style={black!70}, yticklabel style={black!70},
+                      group style={group name=scl_2048, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.0cm},
+                      ymode = log,
+                      % ymin=0.000000001, ymax=0.05,
+                      % xmin=0, xmax=2,
+                      % xtick={0,0.5,...,4.5},
+                      xlabel=$E_b/N_0~\text{(dB)}$,
+                      grid=both, grid style={gray!30},
+                      %tick align=outside, tickpos=left,
+                      legend pos=north east]
+      \nextgroupplot[ylabel=BER]
+
+      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:llline1}
+      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_sim.txt}; \label{plot:llline2}
+      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:llline3}
+
+      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:llline4}
+      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_sim.txt}; \label{plot:llline5}
+      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:llline6}
+
+      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:llline7}
+      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_sim.txt}; \label{plot:llline8}
+      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:llline9}
+
+      \coordinate (legend) at (axis description cs:1.375,1.05);
+
+      \nextgroupplot[ylabel=FER]
+
+      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:llline1}
+      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_sim.txt}; \label{plot:llline2}
+      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:llline3}
+
+      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:llline4}
+      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_sim.txt}; \label{plot:llline5}
+      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:llline6}
+
+      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:llline7}
+      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_sim.txt}; \label{plot:llline8}
+      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:llline9}
+    \end{groupplot}
+
+    \matrix [
+        draw,
+        matrix of nodes,
+        anchor=south east,
+        fill=white,
+        ampersand replacement=\&
+    ] at (legend) {
+                 \& \textcolor{Paired-1}{MODCOD1} \& \textcolor{Paired-3}{MODCOD2} \& \textcolor{Paired-5}{MODCOD3} \\
+        AWGN     \& \ref{plot:llline1} \& \ref{plot:llline4} \& \ref{plot:llline7} \\
+        AWGN$^+$ \& \ref{plot:llline2} \& \ref{plot:llline5} \& \ref{plot:llline8} \\
+        Real     \& \ref{plot:llline3} \& \ref{plot:llline6} \& \ref{plot:llline9} \\
+    };
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+
+% Decoding Performance
+
+% Achieved Throughputs
+
+  \begin{table}[htp]
+    \centering
+    % \caption
+    %   [Throughput performance depending of the selected DVB-S2 configuration.]
+    %   {Throughput performance depending of the selected DVB-S2 configuration.}
+    % \label{tab:sdr_dvbs2_thr_modcod}
+    {\small\resizebox{.5\linewidth}{!}{
+    \begin{tabular}{c | c c | c c}
+      \multirow{3}{*}{\textbf{Config.}} & \multicolumn{4}{c }{\textbf{Throughput} (Mb/s)} \\
+                                        & \multicolumn{2}{c |}{\textbf{Sequential}} & \multicolumn{2}{c }{\textbf{Parallel}} \\
+                                        & \textbf{Info.} & \textbf{Coded} & \textbf{Info.} & \textbf{Coded} \\
+      \hline \hline
+      \textcolor{Paired-1}{MODCOD 1} &  3.4 & 5.7 & 37 & 62 \\
+      \textcolor{Paired-3}{MODCOD 2} &  4.1 & 4.6 & 55 & 62 \\
+      \textcolor{Paired-5}{MODCOD 3} &  4.0 & 4.5 & 80 & 90 \\
+    \end{tabular}
+    }}
+  \end{table}
+
+\end{frame}
 
 \section[Conclusion]{Conclusion}
+
+\subsection[Conclusion]{Conclusion}
+
+\begin{frame}{Conclusion}
+  \vfill
+  \begin{enumerate}
+    \item<1-> \MIPP: Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
+    \vspace{.3em}
+    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
+    \vspace{.3em}
+    \item<3-> \AFFECT: Open-source library and functional simulator dedicated to the digital communication systems~\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}
+    \vspace{.3em}
+    \item<4-> DVB-S2: Embedded domain specific language (eDSL) for the SDR
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+\subsection[Perspectives]{Perspectives}
+
+\begin{frame}{Perspectives}
+  \vfill
+  \begin{itemize}
+    \item<1-> Multi-kernel polar codes
+    \vspace{.3em}
+    \item<2-> Add GPU/FPGA compute tasks
+    \vspace{.3em}
+    \item<3-> ???
+    \vspace{.3em}
+    \item<4-> ???
+  \end{itemize}
+  \vfill
+\end{frame}
 
 \appendix
 
