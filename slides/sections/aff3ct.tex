@@ -1,0 +1,641 @@
+%!TEX root = ./slides.tex
+
+\section[\AFFECT]{\AFFECT: A Fast Forward Error Correction Toolbox}
+
+\subsection[Philosophy]{Philosophy}
+
+\begin{frame}{Observations}
+  \vfill
+  \begin{enumerate}
+    \item Signal processing community not used to share source codes
+    \begin{itemize}
+      \item A non-negligible part of the researchers time is spent in reproducing State-of-the-Art results
+    \end{itemize}
+    \vspace{0.3cm}
+    \pause
+    \item Existing open-source codes are often written with high-level language (MATLAB/Python)
+    \begin{itemize}
+      \item Speed limitations for low error rate simulations and real-time applications
+    \end{itemize}
+    \vspace{0.3cm}
+    \pause
+    \item Some high performance open-source codes are available
+    \begin{itemize}
+      \item Targets a reduce set of signal processing algorithms, hard to use in other contexts
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+\begin{frame}{Proposition}
+  \vfill
+  \underline{\AFFECT: A Fast Forward Error Correction Toolbox:}
+
+  \vspace{0.3cm}
+  \begin{enumerate}
+    \item An \Cxx open-source toolbox made to ease the reproduction of scientific results
+    \vspace{0.3cm}
+    \pause
+    \item Focus on high performance implementations for high speed simulations and real-time applications
+    \vspace{0.3cm}
+    \pause
+    \item Manage the algorithmic heterogeneity of the signal processing algorithms in a single library
+  \end{enumerate}
+  \vfill
+\end{frame}
+
+\subsection[Library]{Library of Digital Communication Algorithms}
+
+\begin{frame}{Features}
+  \vfill
+  \underline{Today in \AFFECT:}
+
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Channel codes: Polar, LDPC, Turbo, Turbo Product, BCH, RS, RA, Repetition
+    \vspace{0.1cm}
+    \item Channel models: BSC, BEC, Optical, AWGN, Rayleigh
+    \vspace{0.1cm}
+    \item Digital modulations: PSK, QAM, PAM, OOK, CPM, SCMA
+  \end{itemize}
+  \vfill
+  \underline{Coming soon in \AFFECT:}
+
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Synchronization processing tasks
+    \vspace{0.1cm}
+    \item MATLAB interface
+    \vspace{0.1cm}
+    \item Python interface
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile,containsverbatim]{Simple Communication Chain}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.65}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \path[use as bounding box] (-1.4, 4.65) rectangle (12.65, -0.65);
+      % \draw (-1.4, 4.65) rectangle (12.65, -0.65);
+
+      \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1} }
+      \tikzset{ mdl/.style ={draw=Paired-3, rounded corners=2pt,} }
+      \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+      \only<1->{
+      \node[tsk ] (src) at ( 0, 4) {generate};
+      \node[sout] (src_so) at (0+1.25, 4) {};
+      }
+      \only<2->{
+      \node[tsk ] (enc) at ( 4, 4) {encode};
+      \node[sin ] (enc_si) at (4-1.25, 4) {};
+      \node[sout] (enc_so) at (4+1.25, 4) {};
+      }
+      \only<3->{
+      \node[tsk ] (mod) at ( 8, 4) {modulate};
+      \node[sin ] (mod_si) at (8-1.25, 4) {};
+      \node[sout] (mod_so) at (8+1.25, 4) {};
+      }
+      \only<4->{
+      \node[tsk ] (chn) at (11.25, 2) {add\_noise};
+      \node[sin ] (chn_si) at (11.25, 2.5) {};
+      \node[sout] (chn_so) at (11.25, 1.5) {};
+      }
+      \only<3->{
+      \node[tsk ] (dem) at ( 8, 0) {demodulate};
+      \node[sout] (dem_so) at (8-1.25, 0) {};
+      \node[sin ] (dem_si) at (8+1.25, 0) {};
+      }
+      \only<5->{
+      \node[tsk ] (dec) at ( 4, 0) {decode};
+      \node[sin ] (dec_so) at (4-1.25, 0) {};
+      \node[sout] (dec_si) at (4+1.25, 0) {};
+      }
+      \only<6->{
+      \node[tsk ] (mnt) at ( 0, 0) {check\_errrors};
+      \node[sin ] (mnt_si1) at (0+1.25, +0.2) {};
+      \node[sin ] (mnt_si2) at (0+1.25, -0.2) {};
+      }
+
+      \only<1->{
+      \node[mdl, label={[Paired-3]below:Source (Src)},  dashed, fit=(src) (src_so)] {};
+      }
+      \only<2->{
+      \node[mdl, label={[Paired-3]below:Encoder (Enc)}, dashed, fit=(enc) (enc_si) (enc_so)] {};
+      }
+      \only<3->{
+      \node[mdl, label={[Paired-3]center:Modem (Mdm)},  dashed, fit=(mod) (dem) (mod_si) (mod_so) (dem_si) (dem_so)] {};
+      }
+      \only<4->{
+      \node[mdl, label={[Paired-3]below:Channel (Chn)}, dashed, fit=(chn) (chn_si) (chn_so)] {};
+      }
+      \only<5->{
+      \node[mdl, label={[Paired-3]above:Decoder (Dec)}, dashed, fit=(dec) (dec_si) (dec_so)] {};
+      }
+      \only<6->{
+      \node[mdl, label={[Paired-3]above:Monitor (Mnt)}, dashed, fit=(mnt) (mnt_si1) (mnt_si2)] {};
+      }
+
+      \only<7->{
+      \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {$\bm{u}$};
+      }
+      \only<8->{
+      \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {$\bm{c}$};
+      }
+      \only<9->{
+      \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {$\bm{x}$};
+      }
+      \only<10->{
+      \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {$\bm{y}$};
+      }
+      \only<11->{
+      \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {$\bm{l}$};
+      }
+      \only<12->{
+      \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {$\bm{\hat{u}}$};
+      }
+      \only<13->{
+      \draw[->,>=latex] (src_so.east) -- (2,4) |- (mnt_si1.east) node [midway, above] {};
+      }
+
+      \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (-1+0.0, 1.7) {};
+      \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (-1+0.0, 2.3) {};
+      \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (-1+3.5, 1.7) {};
+      \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (-1+3.5, 2.3) {};
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+  \begin{overprint}
+  \onslide<1>
+  \begin{minted}[linenos, highlightlines={2}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+  \end{minted}
+  \onslide<2>
+  \begin{minted}[linenos, highlightlines={3}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+  \end{minted}
+  \onslide<3>
+  \begin{minted}[linenos, highlightlines={4}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+  \end{minted}
+  \onslide<4>
+  \begin{minted}[linenos, highlightlines={5}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+  \end{minted}
+  \onslide<5>
+  \begin{minted}[linenos, highlightlines={6}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+aff3ct::module::Decoder_repetiton<>  Dec(K, N);
+  \end{minted}
+  \onslide<6>
+  \begin{minted}[linenos, highlightlines={7}]{cpp}
+// allocate the module objects
+aff3ct::module::Source_random<>      Src(K   );
+aff3ct::module::Encoder_repetition<> Enc(K, N);
+aff3ct::module::Modem_BPSK<>         Mdm(N   );
+aff3ct::module::Channel_AWGN<>       Chn(N   );
+aff3ct::module::Decoder_repetiton<>  Dec(K, N);
+aff3ct::module::Monitor_BFER<>       Mnt(K, E);
+  \end{minted}
+  \onslide<7>
+  \begin{minted}[linenos, highlightlines={2}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+  \end{minted}
+  \onslide<8>
+  \begin{minted}[linenos, highlightlines={3}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+  \end{minted}
+  \onslide<9>
+  \begin{minted}[linenos, highlightlines={4}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+  \end{minted}
+  \onslide<10>
+  \begin{minted}[linenos, highlightlines={5}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+  \end{minted}
+  \onslide<11>
+  \begin{minted}[linenos, highlightlines={6}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+  \end{minted}
+  \onslide<12>
+  \begin{minted}[linenos, highlightlines={7}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
+  \end{minted}
+  \onslide<13>
+  \begin{minted}[linenos, highlightlines={8}]{cpp}
+// bind the sockets over the tasks
+Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
+Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
+Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
+Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
+Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
+Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
+Mnt[sck::check_errors::u1].bind(Src[sck::generate   ::u]);
+  \end{minted}
+  \onslide<14>
+  \begin{minted}[linenos]{cpp}
+// build a sequence of tasks (= a chain) from the previous binding
+aff3ct::tools::Sequence comm_chain(Src[tsk::generate    ], // first task
+                                   Mnt[tsk::check_errors]; // last task
+
+// execute the communication chain
+comm_chain.exec([&Mnt]() {
+  return Mnt.is_done(); // stops when 'is_done()' returns 'true'
+});
+  \end{minted}
+  \end{overprint}
+\end{frame}
+
+\subsection[Simulator]{Simulation of Digital Communication Algorithms}
+
+\begin{frame}{Features}
+  \vfill
+  \begin{itemize}
+    \item Estimation of the BER/FER via Monte Carlo simulations
+    \begin{itemize}
+      \item Can require very long simulation time (hours to months)
+    \end{itemize}
+    \vspace{0.5cm}
+    \item Take advantage of parallel architectures
+    \begin{itemize}
+      \item Multi-threaded execution (\Cxy{11} threads)
+      \item Multi-node execution (Message Passing Interface, MPI)
+    \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}{Example of Use Case}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.50}{
+    \begin{tikzpicture}%[scale=\tikzscale]
+      \node[draw=Paired-5, dashed, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-5, align=center] (azcw) at ( 0, 0) {All-zero\\Codeword};
+
+      \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center] (chn) at ( 3.5, 0) {AWGN\\Channel};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dem) at ( 7.0, 0) {BPSK\\Demodulator};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (qnt) at (10.5, 0) {32 to 8-bit\\Quantizer};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dec) at (14.0, 0) {[F/P]A-SSCL\\Decoder};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (crc) at (17.5, 0) {CRC\\Extractor};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3              ] (mnt) at (21.0, 0) {Monitor};
+
+      \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver}, minimum height=2cm, dashed, fit=(dem) (dec) (mnt)] {};
+
+      \draw[->,>=latex, dashed] (azcw) -- (chn) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (chn)  -- (dem) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (dem)  -- (qnt) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (qnt)  -- (dec) node [midway, below] {$N$};
+      \draw[->,>=latex        ] (dec)  -- (crc) node [midway, below] {$K_1$};
+      \draw[->,>=latex        ] (crc)  -- (mnt) node [midway, below] {$K_2$};
+    \end{tikzpicture}
+    }
+  \end{figure}
+
+  \begin{columns}
+  \begin{column}[T]{8cm}
+  \vspace{-0.3cm}
+  \begin{figure}[!h]
+    \centering
+    \scalebox{.65}{
+    \begin{tikzpicture}
+      \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
+                        height=1.125\textwidth,  width=0.75\textwidth,
+                        xticklabel style={black!70}, yticklabel style={black!70},
+                        % group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
+                        group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
+                        ymode = log, xmin=2.5, xmax=4.5, xtick={0,0.5,...,4.5},
+                        xlabel=$E_b/N_0 \text{(dB)}$, grid=both, grid style={gray!30},
+                        %tick align=outside, tickpos=left,
+                        legend pos=south west]
+        \nextgroupplot[ylabel=Frame Error Rate]
+        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
+        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
+        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line3}
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line4}
+        % \legend{\texttt{FA-SCL} $L=\textrm{ }8$,
+        %         \texttt{FA-SCL} $L=32$,
+        %         \texttt{PA-SCL} $L=\textrm{ }8$,
+        %         \texttt{PA-SCL} $L=32$}
+
+        % create a (dummy) coordinate where we want to place the legend
+        %
+        % (The matrix cannot be placed inside the `axis' environment
+        %  directly, because then a catcode error is raised.
+        %  I guess that this is caused by the `matrix of nodes' feature)
+        % \coordinate (legend) at (axis description cs:0.97,0.03);
+        \coordinate (legend) at (axis description cs:0.61,0.03);
+
+        \nextgroupplot[ylabel=Information throughput (Mb/s), log basis y={2}, log ticks with fixed point, grid style={dashed, gray!30}]
+        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
+      \end{groupplot}
+      % create the legend matrix which is placed at the created (dummy) coordinate
+      % and recall the plot specification using the `\ref' command
+      %
+      % adapt the style of that node to your needs
+      % (e.g. if you like different spacings between the rows or columns
+      %  or a fill color)
+      \matrix [
+          draw,
+          matrix of nodes,
+          anchor=south east,
+          fill=white,
+          ampersand replacement=\&
+      ] at (legend) {
+          $L$        \& FA               \& PA               \\
+          \small{8}  \& \ref{plot:line1} \& \ref{plot:line3} \\
+          \small{32} \& \ref{plot:line2} \& \ref{plot:line4} \\
+      };
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \end{column}
+  \begin{column}[T]{4cm}
+    \vspace{0.2cm}
+    \begin{itemize}
+      \item $N = 2048$
+      \item $K_1 = 1755$
+      \item $K_2 = 1723$
+      \vspace{0.3cm}
+      \item Adaptive SSCL decoders
+      \item Based on SSC decoder
+      \item $L$ decoding trees
+      \item Early termination criteria with a CRC
+    \end{itemize}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Evaluation}
+
+\begin{table}[htp]
+  \vspace{-0.7cm}
+  \centering
+  % \caption
+  %   [Specifications of the target processors for the \AFFECT simulator
+  %    experiments.]
+  %   {Specifications of the target processors.}
+  % \label{tab:eval_simu_cpus_specs}
+  {\resizebox{\linewidth}{!}{
+  \begin{tabular}{l  l | l | l | c | c | c | c | c}
+  \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
+          &                                           & \textbf{Name}      & \textbf{Size}         &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
+  \hline
+  \hline
+  ARM\R   & ThunderX2\R CN9975                        & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
+  Intel\R & Xeon Phi\TM 7230                          & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
+  Intel\R & Xeon\TM E5-2680 v3                        & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
+  Intel\R & Xeon\TM Gold 6140                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
+% Intel\R & Xeon\TM Gold 6142                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
+  Intel\R & Xeon\TM Gold 6240                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
+% AMD\R   & EPYC\TM 7452                              & \texttt{AVX2}      & 256-bit               & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
+  AMD\R   & EPYC\TM 7702                              & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
+  \end{tabular}
+  }}
+
+  \begin{columns}
+    \begin{column}[T]{6cm}
+      \vspace{0.79cm}
+      \begin{figure}
+      \centering
+      \scalebox{.50}{
+      \begin{tikzpicture}
+
+        \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+                     width=2.0\linewidth, height=1.4\linewidth,
+                     xticklabel style={black!70}, yticklabel style={black!70},
+                     xlabel=Number of threads, ylabel=Speedup, grid=both, grid style={gray!30},
+                     xmin=1, xmax=256, xtick={1,32,64,...,256}, ytick={1,16,32,...,96},
+                     ymin=-5, ymax=102,
+                     grid style={dashed, gray!30},
+                     % tick align=outside, tickpos=left,
+                     %label style={font=\large},
+                     %tick label style={font=\large},
+                     legend pos=south east, legend columns=1]
+            \addplot[mark=pentagon, Paired-5,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 28.219] {../main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt}; \label{plot:lline1}
+            \addplot[mark=triangle, Paired-3,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 26.892] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt    }; \label{plot:lline2}
+            \addplot[mark=o,        Paired-1,    semithick] table [x=t, y expr=\thisrow{Mbps}/164.946] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6140.txt   }; \label{plot:lline3}
+            \addplot[mark=otimes,   Paired-1!60, semithick] table [x=t, y expr=\thisrow{Mbps}/126.409] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6240.txt   }; \label{plot:lline4}
+            \addplot[mark=square,   Paired-7,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 81.759] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt   }; \label{plot:lline5}
+            \addplot[mark=+,        Paired-9,    semithick] table [x=t, y expr=\thisrow{Mbps}/113.040] {../main/chapter4/fig/simu/speedup/dat/AMD_EPYC_7702.txt          }; \label{plot:lline6}
+            \addplot[mark=none,     black!65              ] coordinates {(0,0) (512,512)};
+
+            \path (16.2, 12.4) coordinate (X);
+        \end{axis}
+
+        \matrix[draw,
+                matrix of nodes,
+                anchor=south west,
+                inner sep=2.3pt,
+                column 2/.style={anchor=base east},
+                fill=white,
+                ampersand replacement=\&]
+                at (5.60,0.18)
+                % at (10.80,4.0955)
+        {
+            \ref{plot:lline1} \& $2 \times$ThunderX2 CN9975 \\
+            \ref{plot:lline2} \& $1 \times$Xeon Phi 7230    \\
+            \ref{plot:lline5} \& $2 \times$Xeon E5-2680 v3  \\
+            \ref{plot:lline3} \& $2 \times$Xeon Gold 6140   \\
+            \ref{plot:lline4} \& $2 \times$Xeon Gold 6240   \\
+            \ref{plot:lline6} \& $2 \times$EPYC 7702        \\
+        };
+
+        % \matrix [draw,
+        %          matrix of nodes,
+        %          anchor=south west,
+        %          fill=white] at (3.10,0.15)
+        % {
+        %                      & \bf{\small{CPU Name}}    & \bf{\small{Cores}} & \bf{\small{SMT}} & \bf{\small{Soc.}} \\
+        %     \ref{plot:line1} & \small{ThunderX2 CN9975} & \small{56}         & \small{4}        & \small{2}         \\
+        %     \ref{plot:line2} & \small{Xeon Phi 7230}    & \small{64}         & \small{4}        & \small{1}         \\
+        %     \ref{plot:line6} & \small{Ryzen 7 2700X}    & \small{8}          & \small{2}        & \small{1}         \\
+        %     \ref{plot:line5} & \small{Xeon E5-2680 v3}  & \small{24}         & \small{1}        & \small{2}         \\
+        %     \ref{plot:line3} & \small{Xeon Gold 6140}   & \small{36}         & \small{2}        & \small{2}         \\
+        %     \ref{plot:line4} & \small{Xeon Gold 6142}   & \small{32}         & \small{1}        & \small{2}         \\
+        % };
+
+        % \end{scope}
+      \end{tikzpicture}
+      }
+      \end{figure}
+    \end{column}
+    \begin{column}[T]{6cm}
+      \begin{figure}
+      \centering
+      \scalebox{.50}{
+      \begin{tikzpicture}
+      \path[use as bounding box] (-1.55, -1.05) rectangle (10.45, 8.4);
+      % \draw (-1.55, -1.05) rectangle (10.45, 8.4);
+      \begin{axis}[ybar,
+                   width=2.0\linewidth, height=1.4\linewidth,
+                   xticklabel style={black!70}, yticklabel style={black!70},
+                   bar width=6pt,
+                   legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
+                   legend cell align=right,
+                   area legend,
+                   ylabel={Info. throughput (Mb/s)},
+                   symbolic x coords={1T1SMT,NT1SMT,NT2SMT,NT3SMT,NT4SMT},
+                   xticklabel style={align=center},
+                   xticklabels={Single thread\\1-way SMT,
+                                All threads\\1-way SMT,
+                                All threads\\2-way SMT,
+                                All threads\\3-way SMT,
+                                All threads\\4-way SMT},
+                   xtick=data,
+                   ymajorgrids, grid style={dashed, gray!30},
+                   ymin=0,
+                   ymax=5900,
+                   nodes near coords,
+                   nodes near coords align={vertical},
+                   % every node near coord/.style={font=\small},
+                   every node near coord/.append style={rotate=90, anchor=west, font=\footnotesize},
+                   % tick align=outside, tickpos=left,
+                   %label style={font=\large},
+                   %tick label style={font=\large},
+                   restrict y to domain*=0:6500, % Cut values off at 14
+                   visualization depends on=rawy\as\rawy, % Save the unclipped values
+                   after end axis/.code={ % Draw line indicating break
+                      \draw [ultra thick, white, decoration={snake, amplitude=1pt}, decorate] (rel axis cs:0,1.05) -- (rel axis cs:1,1.05);
+                   },
+                   nodes near coords={%
+                    \pgfmathprintnumber{\rawy}% Print unclipped values
+                   },
+                   axis lines*=left,
+                   clip=false
+                  ]
+
+          % ThunderX2 CN9975
+          \addplot[black!25!Paired-5,fill=Paired-5!40,draw=Paired-5,
+                   postaction={pattern color = black!50!Paired-5!70,
+                               pattern=crosshatch dots}
+                  ]
+                  coordinates {(1T1SMT,28) (NT1SMT,1573) (NT2SMT,2148) (NT3SMT,2446) (NT4SMT,2604)};
+          \label{plot1}
+
+          % Xeon Phi 7230
+          \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
+                    postaction={pattern color = black!50!Paired-3!70,
+                                pattern=horizontal lines}
+                   ]
+                   coordinates {(1T1SMT,27) (NT1SMT,1716) (NT2SMT,2196) (NT3SMT,2208) (NT4SMT,2159)};
+          \label{plot2}
+
+          % Xeon E5-2680 v3
+          \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
+                   postaction={pattern color = black!50!Paired-7!70,
+                               pattern=grid}
+                  ]
+                  coordinates {(1T1SMT,82) (NT1SMT,1950)};
+          \label{plot4}
+
+          % Xeon Gold 6140
+          \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
+                   postaction={pattern color = black!50!Paired-1!70,
+                               pattern=flexible hatch north west}
+                  ]
+                  coordinates {(1T1SMT,165) (NT1SMT,3533) (NT2SMT,5436)};
+          \label{plot5}
+
+          % Xeon Gold 6240
+          \addplot[black!25!Paired-1!60,fill=Paired-1!20,draw=Paired-1!60,
+                   postaction={pattern color = black!50!Paired-1!50,
+                               pattern=flexible hatch north east}
+                  ]
+                  coordinates {(1T1SMT,126) (NT1SMT,4294)};
+          \label{plot6}
+
+          % EPYC 7702
+          \addplot[black!25!Paired-9,fill=Paired-9!40,draw=Paired-9,
+                   postaction={pattern color = black!50!Paired-9!70,
+                               pattern=none}
+                  ]
+                  coordinates {(1T1SMT,113) (NT1SMT,11145)};
+          \label{plot3}
+
+          \legend{$2 \times$ThunderX2 CN9975,
+                  $1 \times$Xeon Phi 7230,
+                  $2 \times$Xeon E5-2680 v3,
+                  $2 \times$Xeon Gold 6140,
+                  $2 \times$Xeon Gold 6240,
+                  $2 \times$EPYC 7702,}
+      \end{axis}
+      \end{tikzpicture}
+      }
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+\end{table}
+
+\end{frame}
+
+\subsection[Impact and Community]{Impact and Community}
+
+\begin{frame}{Impact and Community}
+  \vfill
+  \begin{enumerate}
+    \item Used in academic contexts
+    \begin{itemize}
+      \item ANR NAND
+      \item Idex CPU
+    \end{itemize}
+    \vspace{0.3cm}
+    \item Used in industrial context
+    \begin{itemize}
+      \item Airbus
+      \item Thales
+      \item CNES
+    \end{itemize}
+    \vspace{0.3cm}
+    \item Open-source code
+    \begin{itemize}
+      \item Living community\footnote{\AFFECT issue tracker: \url{https://github.com/aff3ct/aff3ct/issues}}
+      \item Reproducible BER/FER results\footnote{\AFFECT BER/FER comparator: \url{https://aff3ct.github.io/comparator.html}}
+      \item Continue Integration and Delivery\footnote{\AFFECT CI/CD: \url{https://gitlab.com/aff3ct/aff3ct/pipelines}}
+    \end{itemize}
+  \end{enumerate}
+  \vfill
+\end{frame}

@@ -1,0 +1,394 @@
+%!TEX root = ./slides.tex
+
+\section[MIPP]{\MIPP: A \Cxx Wrapper for SIMD Instructions}
+
+\subsection[Proposal]{Proposal}
+
+\begin{frame}{Proposal: \longMIPP (\MIPP)}
+  \vfill
+  \begin{itemize}
+    \item<1-> Single Instruction Multiple Data (SIMD) paradigm
+    \vspace{0.3cm}
+    \item<2-> SIMD \textbf{\Cxx wrapper}
+    \begin{itemize}
+      \item<2-> Maximizes code portability
+      \item<2-> \textbf{Improves expressiveness} over intrinsics
+      \item<2-> \textbf{No dependencies} to other libraries
+    \end{itemize}
+    \vspace{0.3cm}
+    \item<3-> Programming model \textbf{close to intrinsics}
+    \begin{itemize}
+      \item<3-> Whenever possible, \textbf{one statement = one intrinsic}
+      \item<3-> One variable = one register allocation
+    \end{itemize}
+    % \item<4-> Open-source: \url{https://github.com/aff3ct/MIPP}
+  \end{itemize}
+  \vspace{0.3cm}
+  \pause[4]
+  \begin{figure}[htp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{pics/mipp}
+    \caption*{\MIPP \MIPP!}
+    \label{pic:mipp}
+  \end{figure}
+  \vfill
+\end{frame}
+
+\subsection[Programming Interfaces]{Programming Interfaces}
+
+\begin{frame}{Programming Interfaces}
+  \vfill
+  \begin{itemize}
+    \item The Low-Level \MIPP Interface (low)
+    \begin{itemize}
+      \item Similar to SIMD intrinsics: \textcolor{Paired-5}{Untyped} registers, \textcolor{Paired-5}{typed} operations
+      \item Portability through \textbf{template specialization} and \textbf{function inlining}
+    \end{itemize}
+  \end{itemize}
+  \vspace{0.3cm}
+  \pause
+  \begin{itemize}
+    \item The Medium-Level \MIPP Interface (med.)
+    \begin{itemize}
+      \item \textcolor{Paired-5}{Typed} registers, \textcolor{Paired-5}{polymorphic} operations
+      \item Based on \MIPP Low Level Interface
+      \item Typing through \textbf{object encapsulation} and \textbf{operator overloading}
+    \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[containsverbatim,fragile]{Low Level Interface (low)}
+  \vfill
+  Similar to SIMD intrinsics: Untyped registers, typed operations
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Abstract SIMD \textbf{data register} (\verb|mipp::reg|)
+    \begin{itemize}
+      \item \textbf{The number of elements} in a register: \texttt{mipp::N<\textcolor{Paired-1}{T}>()}
+    \end{itemize}
+    \item Abstract SIMD \textbf{mask register} (\verb|mipp::msk|)
+    \item Intrinsic functions wrapped into \MIPP functions
+    \begin{itemize}
+      \begin{columns}[t]
+        \begin{column}[T]{10.5cm}
+        \vspace{-1mm}
+        \begin{overprint}
+        \onslide<1>
+        \begin{minted}[linenos]{cpp}
+template<> // 'mipp::reg' is an alias of '__mm256' type
+mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+}
+template<>
+mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+}
+        \end{minted}
+        \onslide<2->
+        \begin{minted}[linenos, highlightlines={3,7}]{cpp}
+template<> // 'mipp::reg' is an alias of '__mm256' type
+mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+}
+template<>
+mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+}
+        \end{minted}
+        \end{overprint}
+      \end{column}
+      \end{columns}
+      \pause
+      \item \textbf{C++ template specialization technique}
+    \end{itemize}
+    \pause
+    \item \textbf{Instruction set selection} based on preprocessor definitions
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile]{Medium Level Interface (med.)}
+  \vfill
+  Typed registers, polymorphic operations
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item \textcolor{Paired-5}{Typed}, portable SIMD \textbf{data register} (\texttt{mipp::Reg<\textcolor{Paired-1}{T}>})
+    \begin{itemize}
+      \item Contains a \MIPP low data register (\verb|mipp::reg|)
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \textcolor{Paired-5}{Typed}, portable SIMD \textbf{mask register} (\texttt{mipp::Msk<\textcolor{Paired-1}{N}>})
+    \begin{itemize}
+      \item Contains a \MIPP low mask register (\verb|mipp::msk|)
+    \end{itemize}
+    \vspace{0.2cm}
+    \item Supports \textcolor{Paired-5}{\textbf{operator overloading}}
+    \begin{itemize}
+      \item \texttt{mipp::Reg<\textcolor{Paired-1}{float}> a = 1.f, b = 2.f; \textcolor{Paired-1}{auto} c = a + b;}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item Eases the \textcolor{Paired-5}{\textbf{register initializations}} (broadcasts, sets and loads)
+    \begin{itemize}
+      \item \texttt{mipp::Reg<\textcolor{Paired-1}{int}> a = 1, b = \{1, 2, 3, 4\}, c = ptr;}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item Defines an \textbf{aligned memory allocator} for the \texttt{std::vector<\textcolor{Paired-1}{T},\textcolor{Paired-1}{A}>} class (\texttt{mipp::vector<\textcolor{Paired-1}{T}>})
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile]{Hello World!}
+  \vspace{-2mm}
+  \begin{columns}[t]
+    \begin{column}[T]{8.6cm}
+      \begin{overprint}
+      \onslide<1>
+      \begin{minted}[linenos]{cpp}
+template <typename T>
+void addVector(const std::vector<T> &A,
+               const std::vector<T> &B,
+                     std::vector<T> &C)
+{
+	// N elements per SIMD register (static)
+	constexpr int N = mipp::N<T>();
+	for (int i = 0; i < A.size(); i += N)
+	{
+		mipp::Reg<T> rA = &A[i];   // SIMD load
+		mipp::Reg<T> rB = &B[i];   // SIMD load
+		mipp::Reg<T> rC = rA + rB; // SIMD addition
+		rC.store(&C[i]);           // SIMD store
+	}
+}
+      \end{minted}
+      \onslide<2>
+      \begin{minted}[linenos, highlightlines={10-13}]{cpp}
+template <typename T>
+void addVector(const std::vector<T> &A,
+               const std::vector<T> &B,
+                     std::vector<T> &C)
+{
+	// N elements per SIMD register (static)
+	constexpr int N = mipp::N<T>();
+	for (int i = 0; i < A.size(); i += N)
+	{
+		mipp::Reg<T> rA = &A[i];   // SIMD load
+		mipp::Reg<T> rB = &B[i];   // SIMD load
+		mipp::Reg<T> rC = rA + rB; // SIMD addition
+		rC.store(&C[i]);           // SIMD store
+	}
+}
+      \end{minted}
+      \onslide<3>
+      \begin{minted}[linenos, highlightlines={2-4,7,10-12}]{cpp}
+template <typename T>
+void addVector(const std::vector<T> &A,
+               const std::vector<T> &B,
+                     std::vector<T> &C)
+{
+	// N elements per SIMD register (static)
+	constexpr int N = mipp::N<T>();
+	for (int i = 0; i < A.size(); i += N)
+	{
+		mipp::Reg<T> rA = &A[i];   // SIMD load
+		mipp::Reg<T> rB = &B[i];   // SIMD load
+		mipp::Reg<T> rC = rA + rB; // SIMD addition
+		rC.store(&C[i]);           // SIMD store
+	}
+}
+      \end{minted}
+      \onslide<4>
+      \begin{minted}[linenos]{cpp}
+template <typename T>
+void addVector(const std::vector<T> &A,
+               const std::vector<T> &B,
+                     std::vector<T> &C)
+{
+	// N elements per SIMD register (static)
+	constexpr int N = mipp::N<T>();
+	for (int i = 0; i < A.size(); i += N)
+	{
+		mipp::Reg<T> rA = &A[i];   // SIMD load
+		mipp::Reg<T> rB = &B[i];   // SIMD load
+		mipp::Reg<T> rC = rA + rB; // SIMD addition
+		rC.store(&C[i]);           // SIMD store
+	}
+}
+      \end{minted}
+      \end{overprint}
+    \end{column}
+  \end{columns}
+  \pause
+  \begin{itemize}
+    \item \MIPP operates at \textbf{register level}
+    \pause
+    \item Same code can \textbf{work on various data types} and \textbf{instruction sets}
+    \pause
+    	\\\vspace*{.5em}
+      {\color{bleuUni}\Large\MVRightarrow} Good for \textbf{readability}, \textbf{flexibility} and \textbf{portability}!
+  \end{itemize}
+\end{frame}
+
+\subsection[Related works]{Related works}
+
+\begin{frame}[fragile]{SIMD Wrappers}
+  \vfill
+  Two main strategies:
+  \begin{enumerate}
+    \item \textbf{operator overloading} (used in \MIPP)
+    \item \textbf{expression templates}, can automatically match instructions like Fused Multiply–Add (FMA, $d = a \times b + c$)
+  \end{enumerate}
+  % prendre la marge à gauche
+  \begin{table}[htp]
+  % \renewcommand{\arraystretch}{0.95}
+  \tabcolsep=6pt
+  \centering
+  \label{tab:comp}
+  {\small\resizebox{1.0\linewidth}{!}{
+  \begin{tabular}{|r|r|r||c|c|c|c||c|c|c|c|c|c||c|c|}
+  \hline
+  \multicolumn{3}{|c||}{\multirow{2}{*}{\textbf{General Information}}}                                    & \multicolumn{4}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                                    & \multicolumn{6}{c||}{\multirow{2}{*}{\textbf{Data Type}}}                    & \multicolumn{2}{c|}{\multirow{2}{*}{\textbf{Features}}} \\
+  \multicolumn{3}{|c||}{}                                                                                 & \multicolumn{4}{c||}{}                                                                             & \multicolumn{6}{c||}{}                                                       & \multicolumn{2}{c|}{}                                   \\ \hline
+  \multicolumn{2}{|r|}{\textbf{Name}} & \multicolumn{1}{r||}{\textbf{Ref.}}                               & \textbf{\texttt{SSE}} & \textbf{\texttt{AVX}} & \textbf{\texttt{AVX-512}} & \textbf{\texttt{NEON}} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c||}{\textbf{Integer}} & \textbf{Math}  & \textbf{\Cxx}                          \\ \cline{8-13}
+  \multicolumn{2}{|r|}{} & \multicolumn{1}{r||}{}                                                         & 128-bit               & 256-bit               & 512-bit                   & 128-bit                & 64      & 32                        & 64     & 32     & 16     & 8           & \textbf{Func.} & \textbf{Technique}                     \\ \hline \hline
+  \multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Library}}} & \textbf{\MIPP}      & \cite{Cassagne2018} & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\VCL}       & \cite{Fog}          & \cmark                & \cmark                & \cmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\simdpp}    & \cite{Kanapickas}   & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \xmark         & Expr. templ.                           \\ %\cline{2-19}
+                                                              & \textbf{\TSIMD}     & \cite{Moller2016}   & \cmark                & \cmark                & \xmark                    & \cmark                 & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark      & \xmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\Vc}        & \cite{Kretz2012}    & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\xsimd}     & \cite{Mabille}      & \cmark                & \cmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark      & \cmark         & Op. overload.                          \\ %\cline{2-19}
+                                                              & \textbf{\BoostSIMD} & \cite{Esterie2012}  & \cmark                & \xmark                & \xmark                    & \xmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ %\cline{2-19}
+                                                              & \textbf{\bSIMD}     & \cite{Esterie2012a} & \cmark                & \cmark                & \cmark                    & \cmark                 & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark      & \cmark         & Expr. templ.                           \\ \hline
+  \end{tabular}
+  }}
+  \caption*{Main \Cxx SIMD wrappers/libraries and their characteristics in 2018.}
+  \end{table}
+  \vfill
+\end{frame}
+
+\begin{frame}{Experimentation Protocol}
+  \vfill
+  \begin{itemize}
+    \item Experiments
+    \begin{itemize}
+    \item Comparison to \textbf{related works} on the Mandelbrot set
+    \end{itemize}
+    \item Tests are \textbf{mono-threaded}
+    \item GNU \Cxx compiler version 5
+  \end{itemize}
+  \vfill
+  \begin{table}[htp]
+    \tabcolsep=6pt
+    \centering
+    % \caption{Specifications of the target processors}
+    \label{tab:targets}
+    % {\small\resizebox{\linewidth}{!}{
+    \begin{tabular}{c|c|c|c}
+    \textbf{Instr. set}             & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE / AVX}} & \textbf{\texttt{AVX-512}} \\ \hline
+    \textbf{Name}                   & \textbf{Exynos5422}    & \textbf{Core i5-5300U}      & \textbf{Xeon Phi 7230}    \\ \hline
+    \textbf{Year}                   & 2014                   & 2015                        & 2016                      \\ \hline
+    \textbf{Vendor}                 & Samsung                & Intel                       & Intel                     \\ \hline
+    \multirow{2}{*}{\textbf{Arch.}} & ARMv7                  & x86-64                      & Knights                   \\
+                                    & Cortex A15             & Broadwell                   & Landing                   \\ \hline
+    \textbf{Cores/Freq.}            & 4/2.0 GHz              & 2/2.3 GHz                   & 64/1.3 GHz                \\ \hline
+    \textbf{LLC}                    & 2 MB L2                & 3 MB L3                     & 32 MB L2                  \\ \hline
+    \textbf{TDP}                    & $\sim$4 W              & 15 W                        & 215 W                     \\
+    \end{tabular}
+    % }}
+  \end{table}
+  \vfill
+\end{frame}
+
+\begin{frame}{Comparison on the Mandelbrot Set}
+  % \small
+  % \vspace{-0.3cm}
+  \begin{itemize}
+    \item \textbf{Computational intensive} kernel
+    \item Need to manage an \textbf{early termination}
+    \item Benchmark \Cxx source code is freely available\footnote{Full code is available online: \url{https://gitlab.inria.fr/acassagn/mandelbrot}}
+  \end{itemize}
+  \pause
+  % \vspace{-0.4cm}
+  \begin{figure}[htp]
+    \centering
+    % \caption*{Float 32-bit}
+    % \includegraphics[width=0.8\textwidth]{graphs/mandelbrot_speedup}
+    \begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+    \begin{axis}[ybar,
+                 width=1.0\linewidth, height=0.500\linewidth,
+                 bar width=4pt,
+                 legend style={at={(0.985,0.975)}, anchor=north east,legend columns=1},
+                 legend cell align=right,
+                 area legend,
+                 ylabel={Speeedup}, ytick={0,2,...,14},
+                 symbolic x coords={intr,mippl,mippm,vcl,simdpp,tsimd,vc,xsimd,boost},
+                 xticklabel style={black!70}, yticklabel style={black!70},
+                 xticklabels={Intrinsics,
+                              MIPP low,
+                              MIPP med.,
+                              VCL,
+                              simdpp,
+                              T-SIMD,
+                              Vc,
+                              xsimd,
+                              Boost.SIMD},
+                 xtick=data,
+                 ymajorgrids,
+                 grid style={dashed, gray!30},
+                 ymin=0,
+                 ymax=15,
+                 %nodes near coords,
+                 %nodes near coords align={vertical},
+                 every node near coord/.append style={rotate=90, anchor=west},
+                 x tick label style={rotate=-45},
+                 %label style={font=\large},
+                 %tick label style={font=\large},
+                 % tick align=outside, tickpos=left,
+                ]
+
+        % NEON
+        \addplot[black!25!Paired-5,fill=Paired-5!40,draw=Paired-5,
+                 postaction={pattern color = black!50!Paired-5!70,
+                             pattern=crosshatch dots}
+                ]
+                coordinates {(intr,3.52) (mippl,3.52) (mippm,3.45) (vcl,0) (simdpp,2.44) (tsimd,3.37) (vc,0) (xsimd,0) (boost,0)};
+        \label{plot1}
+
+        % SSE
+        \only<3->{
+        \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
+                  postaction={pattern color = black!50!Paired-3!70,
+                              pattern=horizontal lines}
+                 ]
+                 coordinates {(intr,3.74) (mippl,3.75) (mippm,3.70) (vcl,3.67) (simdpp,3.28) (tsimd,3.39) (vc,1.17) (xsimd,3.40) (boost,1.03)};
+        \label{plot2}
+        }
+
+        % AVX
+        \only<4->{
+        \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
+                 postaction={pattern color = black!50!Paired-7!70,
+                             pattern=grid}
+                ]
+                coordinates {(intr,6.98) (mippl,6.76) (mippm,6.76) (vcl,6.98) (simdpp,5.92) (tsimd,5.48) (vc,6.81) (xsimd,6.99) (boost,0.83)};
+        \label{plot4}
+        }
+
+        % AVX-512
+        \only<5->{
+        \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
+                 postaction={pattern color = black!50!Paired-1!70,
+                             pattern=flexible hatch north west}
+                ]
+                coordinates {(intr,14.30) (mippl,14.30) (mippm,14.30) (vcl,14.30) (simdpp,7.84) (tsimd,5.49) (vc,5.16) (boost,0.84)};
+        \label{plot5}
+        }
+
+        \legend{\texttt{NEON},
+                \texttt{SSE},
+                \texttt{AVX},
+                \texttt{AVX-512}}
+    \end{axis}
+    \end{tikzpicture}
+  \end{figure}
+\end{frame}
