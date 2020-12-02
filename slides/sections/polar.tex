@@ -1,4 +1,4 @@
-%!TEX root = ./slides.tex
+%!TEX root = ../slides.tex
 
 \section[Polar Decoders]{Software Polar Decoders}
 
@@ -71,83 +71,83 @@
     \draw[zoom,                 ] (-5.5,2.5) rectangle (5.5,-2.5);
     }
 
-    \only<2>{
-    \node (g) at (0,0)
-    {$
-    \begin{bmatrix}
-    \\
-    \\
-    \\
-    u_0\\
-    \\
-    u_1\\
-    u_2\\
-    u_3\\
-    \end{bmatrix}^{T}
-    \times
-    \begin{bmatrix}
-    1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-    1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-    1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-    1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
-    1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
-    1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
-    1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
-    1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    c_0\\
-    c_1\\
-    c_2\\
-    c_3\\
-    c_4\\
-    c_5\\
-    c_6\\
-    c_7\\
-    \end{bmatrix}^{T}
-    $};
-    }
+    % \only<2>{
+    % \node (g) at (0,0)
+    % {$
+    % \begin{bmatrix}
+    % \\
+    % \\
+    % \\
+    % u_0\\
+    % \\
+    % u_1\\
+    % u_2\\
+    % u_3\\
+    % \end{bmatrix}^{T}
+    % \times
+    % \begin{bmatrix}
+    % 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
+    % 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+    % 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+    % 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+    % 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+    % \end{bmatrix}
+    % =
+    % \begin{bmatrix}
+    % c_0\\
+    % c_1\\
+    % c_2\\
+    % c_3\\
+    % c_4\\
+    % c_5\\
+    % c_6\\
+    % c_7\\
+    % \end{bmatrix}^{T}
+    % $};
+    % }
 
-    \only<3>{
-    \node (g) at (0,0)
-    {$
-    \begin{bmatrix}
-    \textcolor{Paired-1}{0}\\
-    \textcolor{Paired-1}{0}\\
-    \textcolor{Paired-1}{0}\\
-    u_0\\
-    \textcolor{Paired-1}{0}\\
-    u_1\\
-    u_2\\
-    u_3\\
-    \end{bmatrix}^{T}
-    \times
-    \begin{bmatrix}
-    1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-    1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-    1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-    1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
-    1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
-    1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
-    1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
-    1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-    c_0\\
-    c_1\\
-    c_2\\
-    c_3\\
-    c_4\\
-    c_5\\
-    c_6\\
-    c_7\\
-    \end{bmatrix}^{T}
-    $};
-    }
+    % \only<3>{
+    % \node (g) at (0,0)
+    % {$
+    % \begin{bmatrix}
+    % \textcolor{Paired-1}{0}\\
+    % \textcolor{Paired-1}{0}\\
+    % \textcolor{Paired-1}{0}\\
+    % u_0\\
+    % \textcolor{Paired-1}{0}\\
+    % u_1\\
+    % u_2\\
+    % u_3\\
+    % \end{bmatrix}^{T}
+    % \times
+    % \begin{bmatrix}
+    % 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+    % 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
+    % 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+    % 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+    % 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+    % 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+    % \end{bmatrix}
+    % =
+    % \begin{bmatrix}
+    % c_0\\
+    % c_1\\
+    % c_2\\
+    % c_3\\
+    % c_4\\
+    % c_5\\
+    % c_6\\
+    % c_7\\
+    % \end{bmatrix}^{T}
+    % $};
+    % }
 
-    \only<4->{
+    \only<2->{
 
     \tikzset{XOR/.style={draw,circle, minimum height=0.35cm,append after command={
             [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
@@ -207,13 +207,24 @@
     \node      (g3_e10) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep,         \startyg-1.25) [DOT] {};
     \node      (g3_e11) at (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep, \startyg-1.75) [DOT] {};
 
+    \only<1-2>{
+    \draw[-,>=latex] (\startx-\sed, \startyg+1.75) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_0$} -- (g3_x0);
+    \draw[-,>=latex] (\startx-\sed, \startyg+1.25) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_1$} -- (g3_e0);
+    }
+    \only<3->{
     \draw[-,>=latex] (\startx-\sed, \startyg+1.75) node[left] {$\textcolor{Paired-1}{0} = v_0$} -- (g3_x0);
     \draw[-,>=latex] (\startx-\sed, \startyg+1.25) node[left] {$\textcolor{Paired-1}{0} = v_1$} -- (g3_e0);
+    }
     \draw[-,>=latex] (g3_x0)                       -- (g3_e0);
     \draw[-,>=latex] (g3_x0)                       -- (g3_x2);
     \draw[-,>=latex] (g3_e0)                       -- (g3_x3);
 
+    \only<1-2>{
+    \draw[-,>=latex] (\startx-\sed, \startyg+0.75) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_2$} -- (g3_x1);
+    }
+    \only<3->{
     \draw[-,>=latex] (\startx-\sed, \startyg+0.75) node[left] {$\textcolor{Paired-1}{0} = v_2$} -- (g3_x1);
+    }
     \draw[-,>=latex] (\startx-\sed, \startyg+0.25) node[left] {$u_0 = v_3$} -- (g3_e1);
     \draw[-,>=latex] (g3_x1)                       -- (g3_e1);
     \draw[-,>=latex] (g3_x1)                       -- (g3_e2);
@@ -225,7 +236,12 @@
     \draw[-,>=latex] (g3_e2)                       -- (g3_x10);
     \draw[-,>=latex] (g3_e3)                       -- (g3_x11);
 
+    \only<1-2>{
+    \draw[-,>=latex] (\startx-\sed, \startyg-0.25) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_4$} -- (g3_x4);
+    }
+    \only<3->{
     \draw[-,>=latex] (\startx-\sed, \startyg-0.25) node[left] {$\textcolor{Paired-1}{0} = v_4$} -- (g3_x4);
+    }
     \draw[-,>=latex] (\startx-\sed, \startyg-0.75) node[left] {$u_1 = v_5$} -- (g3_e4);
     \draw[-,>=latex] (g3_x4)                       -- (g3_e4);
     \draw[-,>=latex] (g3_x4)                       -- (g3_x6);
@@ -249,7 +265,7 @@
     \draw [-,>=latex] (g3_e11)                     -- (g3_x11);
     }
 
-    \only<4>{
+    \only<2-3>{
     % \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) node[right] {$c_0 = v_0 \oplus v_1 \oplus v_2 \oplus v_3 \oplus v_4 \oplus v_5 \oplus v_6 \oplus v_7$} -- (g3_x8);
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) node[right] {$c_0 = v_0 \oplus v_1 \oplus ... \oplus v_6 \oplus v_7$} -- (g3_x8);
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.25) node[right] {$c_1 = v_1 \oplus v_3 \oplus v_5 \oplus v_7$} -- (g3_x9);
@@ -261,7 +277,7 @@
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg-1.75) node[right] {$c_7 = v_7 = u_3$} -- (g3_e11);
     }
 
-    \only<5>{
+    \only<4>{
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.75) -- (g3_x8);
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+1.25) -- (g3_x9);
     \draw[-,>=latex] (\startx+\stasep+\stasep+\xorsep+\xorsep+\xorsep+\xorsep+\sed, \startyg+0.75) -- (g3_x10);
@@ -322,57 +338,58 @@
 
   \begin{itemize}
     \item<1-> $\bm{u}$ is the initial message of $K$ bits and $\bm{c}$ is the codeword of $N$ bits ($K < N$)
-    \item<2-> Generator matrix $\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes m}; \bm{\mathcal{K}} =
-      \begin{bmatrix}
-      1 & 0 \\
-      1 & 1
-      \end{bmatrix}; N = 2^{m}$
+    % \item<2-> Generator matrix $\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes m}; \bm{\mathcal{K}} =
+    %   \begin{bmatrix}
+    %   1 & 0 \\
+    %   1 & 1
+    %   \end{bmatrix}; N = 2^{m}$
     \item<3-> \textcolor{Paired-1}{Frozen bits} $= N - K$ bits set to \textcolor{Paired-1}{zero}
+    \item<4-> Binary tree structure
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Decoders}
-  \begin{figure}[!h]
-  \centering
-  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
-    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
+% \begin{frame}{Decoders}
+%   \begin{figure}[!h]
+%   \centering
+%   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+%     % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+%     % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
 
-    \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
-    \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
-    \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+%     \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
+%     \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
+%     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+%     \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
 
-    \node[style=txtplain,         ] (enc) at ( 4,   4) {Polar\\Encoder};
-    \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
-    \Cloud{(11,2)}{}{0.65};
-    \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
-    \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
-    \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
+%     \node[style=txtplain,         ] (enc) at ( 4,   4) {Polar\\Encoder};
+%     \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
+%     \Cloud{(11,2)}{}{0.65};
+%     \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
+%     \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
+%     \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
 
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
+%     \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
+%     \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
 
-    \draw[<-,>=latex] (enc.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{u}$};
-    \draw[->,>=latex] (enc)      --   (mod)    node [midway,  above           ] {$\bm{c}$};
-    \draw[->,>=latex] (tx.east)  --   (10,  4) node [midway,  above           ] {$\bm{x}$};
-    \draw[-         ] ( 9.9,4)   --   (10.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-         ] (10  ,0)   --   (10.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex] (rx.east)  --   (10,  0) node [midway,  above           ] {$\bm{y}$};
-    \draw[->,>=latex] (dem)      --   (dec)    node [midway,  above           ] {$\bm{l}$};
-    \draw[->,>=latex] (dec.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{\hat{u}}$};
-    \draw[- ,>=latex] (mod.east) --   (10.5,4);
-    \draw[- ,>=latex] (dem.east) --   ( 9.6,0);
-  \end{tikzpicture}
-  \end{figure}
+%     \draw[<-,>=latex] (enc.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{u}$};
+%     \draw[->,>=latex] (enc)      --   (mod)    node [midway,  above           ] {$\bm{c}$};
+%     \draw[->,>=latex] (tx.east)  --   (10,  4) node [midway,  above           ] {$\bm{x}$};
+%     \draw[-         ] ( 9.9,4)   --   (10.5,4) node [antenna, above, scale=0.5] {};
+%     \draw[-         ] (10  ,0)   --   (10.5,0) node [antenna, above, scale=0.5] {};
+%     \draw[<-,>=latex] (rx.east)  --   (10,  0) node [midway,  above           ] {$\bm{y}$};
+%     \draw[->,>=latex] (dem)      --   (dec)    node [midway,  above           ] {$\bm{l}$};
+%     \draw[->,>=latex] (dec.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{\hat{u}}$};
+%     \draw[- ,>=latex] (mod.east) --   (10.5,4);
+%     \draw[- ,>=latex] (dem.east) --   ( 9.6,0);
+%   \end{tikzpicture}
+%   \end{figure}
 
-  \begin{itemize}
-    \item<1-> Compute intensive processing
-    \item<2-> $\bm{l}$ is an input vector $N$ Log Likelihood Ratios (LLRs)
-    \item<2-> $\bm{\hat{u}}$ is an output vector of $K$ bits
-    \item<3-> Many algorithms with various complexities and decoding performances
-  \end{itemize}
-\end{frame}
+%   \begin{itemize}
+%     \item<1-> Compute intensive processing
+%     \item<2-> $\bm{l}$ is an input vector $N$ Log Likelihood Ratios (LLRs)
+%     \item<2-> $\bm{\hat{u}}$ is an output vector of $K$ bits
+%     \item<3-> Many algorithms with various complexities and decoding performances
+%   \end{itemize}
+% \end{frame}
 
 \subsection[Successive Cancellation Algorithm]{Successive Cancellation Algorithm}
 
@@ -534,7 +551,6 @@
     \draw[fill=Paired-11!20, draw=none] (0.325, 4.31) rectangle (1.925, 3.795);
     \draw[fill=Paired-1!20, draw=none] (0.325+3, 4.81) rectangle (1.925+3, 4.295);
     }
-
 
     \only<2->{
     \newcommand\La{4} % number of layers in the tree
@@ -1043,6 +1059,7 @@
 \end{frame}
 
 \begin{frame}{Simplified Successive Cancellation (SSC) Algorithm}
+  \vspace{-0.2cm}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1188,7 +1205,8 @@
     \item SC simplifications have been proposed in the literature~\cite{Alamdar-Yazdi2011,Sarkis2014a}
     \begin{itemize}
       \item Introducing new type of nodes => tree pruning
-      \item<8-> Drastically reduce the number of nodes with a low level of parallelism
+      % \item<8-> Drastically reduce the number of nodes with a low level of parallelism
+      \item<8-> Drastically reduce the number of nodes: \textbf{from 2047 nodes to 291 nodes} ($N = 1024$ and $R = 1/2$)
     \end{itemize}
   \end{itemize}
   \vfill
@@ -1196,42 +1214,172 @@
 \end{frame}
 
 \begin{frame}{SC SIMDization Strategies}
+  \vfill
   \begin{columns}[t]
-    \begin{column}[T]{6.0cm}
+    \begin{column}[T]{5.0cm}
       \underline{Intra-frame SIMD strategy:}
-      \begin{figure}[htp]
-        \centering
-        \includegraphics[scale=0.625]{figs/intra-simd}
-        %\caption{Intra frame SIMD strategy}
-        \label{fig:intra-simd}
+      \begin{figure}[!h]
+      \centering
+      \scalebox{.65}{
+      \begin{tikzpicture}
+        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20         } }
+        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20         } }
+        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20         } }
+        \tikzset{ lh/.style ={draw=white, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white               } }
+
+        \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=Paired-5, text=Paired-5]
+        \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+
+        \newcommand\vs{3.0}
+        \newcommand\lft{0.0}
+        \newcommand\ctr{4.9}
+        \newcommand\rth{9.8}
+
+        \node[lh] (hack) at (\lft+0.0, -\vs+0.6) {};
+
+        \node[la] (r0_e0) at (\lft+0.0, -\vs) {\footnotesize{$\lambda_{a}^0$}};
+        \node[la] (r0_e1) at (\lft+0.7, -\vs) {\footnotesize{$\lambda_{a}^1$}};
+        \node[la] (r0_e2) at (\lft+1.4, -\vs) {\footnotesize{$\lambda_{a}^2$}};
+        \node[la] (r0_e3) at (\lft+2.1, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+        \node[lb] (r0_e4) at (\lft+2.8, -\vs) {\footnotesize{$\lambda_{b}^0$}};
+        \node[lb] (r0_e5) at (\lft+3.5, -\vs) {\footnotesize{$\lambda_{b}^1$}};
+        \node[lb] (r0_e6) at (\lft+4.2, -\vs) {\footnotesize{$\lambda_{b}^2$}};
+        \node[lb] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+
+        \node[instr] (instr0) at (\lft+2.45, -\vs-\vs+1.5) {\footnotesize{$\lambda_{c}^i = f(\lambda_{a}^i, \lambda_{b}^i)$}};
+
+        \draw[lnk] (r0_e1.south east) |- (instr0.west);
+        \draw[lnk] (r0_e6.south west) |- (instr0.east);
+        \draw[lnk] (instr0.south) -- (2.45,-\vs-\vs+0.35);
+
+        \node[lc] (r0_e0) at (\lft+1.4, -\vs-\vs) {\footnotesize{$\lambda_{c}^0$}};
+        \node[lc] (r0_e1) at (\lft+2.1, -\vs-\vs) {\footnotesize{$\lambda_{c}^1$}};
+        \node[lc] (r0_e2) at (\lft+2.8, -\vs-\vs) {\footnotesize{$\lambda_{c}^2$}};
+        \node[lc] (r0_e3) at (\lft+3.5, -\vs-\vs) {\footnotesize{$\lambda_{c}^3$}};
+      \end{tikzpicture}
+      }
       \end{figure}
     \end{column}
-    \begin{column}[T]{6.0cm}
+    \begin{column}[T]{5.0cm}
       \underline{Inter-frame SIMD strategy:}
-      \begin{figure}[htp]
-        \centering
-        \includegraphics[scale=0.625]{figs/inter-simd}
-        %\caption{Inter frame SIMD strategy}
-        \label{fig:inter-simd}
+      \begin{figure}[!h]
+      \centering
+      \scalebox{.65}{
+      \begin{tikzpicture}
+        \tikzset{ e/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40             } }
+        \tikzset{ en/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40         } }
+        \tikzset{ ens/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40         } }
+        \tikzset{ enn/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40!Paired-5!40 } }
+        \tikzset{ ep/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!40         } }
+        \tikzset{ eps/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-8!40         } }
+        \tikzset{ ept/.style={            minimum width=0.7cm, minimum height=0.7cm] } }
+
+        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20         } }
+        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20         } }
+        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20         } }
+
+        \tikzset{ lah/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
+        \tikzset{ lbh/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
+        \tikzset{ lch/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
+
+        \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
+        \tikzstyle{shf}=[black!20]
+        \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=Paired-5, text=Paired-5]
+
+        \newcommand\vs{3.0}
+        \newcommand\lft{0.0}
+        \newcommand\ctr{4.9}
+        \newcommand\rth{9.8}
+
+        \newcommand\shfx{0.45}
+        \newcommand\shfy{0.20}
+
+        \node[la ] (r3_e0) at (\lft+0.0+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lah] (r3_e1) at (\lft+0.7+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lah] (r3_e2) at (\lft+1.4+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lah] (r3_e3) at (\lft+2.1+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lb ] (r3_e4) at (\lft+2.8+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lbh] (r3_e5) at (\lft+3.5+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lbh] (r3_e6) at (\lft+4.2+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+        \node[lbh] (r3_e7) at (\lft+4.9+\shfx+\shfx+\shfx, -\vs+\shfy+\shfy+\shfy) {};
+
+        \node[la ] (r2_e0) at (\lft+0.0+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lah] (r2_e1) at (\lft+0.7+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lah] (r2_e2) at (\lft+1.4+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lah] (r2_e3) at (\lft+2.1+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lb ] (r2_e4) at (\lft+2.8+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lbh] (r2_e5) at (\lft+3.5+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lbh] (r2_e6) at (\lft+4.2+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+        \node[lbh] (r2_e7) at (\lft+4.9+\shfx+\shfx, -\vs+\shfy+\shfy) {};
+
+        \node[la ] (r1_e0) at (\lft+0.0+\shfx, -\vs+\shfy) {};
+        \node[lah] (r1_e1) at (\lft+0.7+\shfx, -\vs+\shfy) {};
+        \node[lah] (r1_e2) at (\lft+1.4+\shfx, -\vs+\shfy) {};
+        \node[lah] (r1_e3) at (\lft+2.1+\shfx, -\vs+\shfy) {};
+        \node[lb ] (r1_e4) at (\lft+2.8+\shfx, -\vs+\shfy) {};
+        \node[lbh] (r1_e5) at (\lft+3.5+\shfx, -\vs+\shfy) {};
+        \node[lbh] (r1_e6) at (\lft+4.2+\shfx, -\vs+\shfy) {};
+        \node[lbh] (r1_e7) at (\lft+4.9+\shfx, -\vs+\shfy) {};
+
+        \node[la ] (r0_e0) at (\lft+0.0, -\vs) {\footnotesize{$\lambda_{a}^0$}};
+        \node[lah] (r0_e1) at (\lft+0.7, -\vs) {\footnotesize{$\lambda_{a}^1$}};
+        \node[lah] (r0_e2) at (\lft+1.4, -\vs) {\footnotesize{$\lambda_{a}^2$}};
+        \node[lah] (r0_e3) at (\lft+2.1, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+        \node[lb ] (r0_e4) at (\lft+2.8, -\vs) {\footnotesize{$\lambda_{b}^0$}};
+        \node[lbh] (r0_e5) at (\lft+3.5, -\vs) {\footnotesize{$\lambda_{b}^1$}};
+        \node[lbh] (r0_e6) at (\lft+4.2, -\vs) {\footnotesize{$\lambda_{b}^2$}};
+        \node[lbh] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+
+        \node[instr] (instr0) at (\lft+1.4, -\vs-\vs+1.5) {\footnotesize{$\lambda_{c}^0 = f(\lambda_{a}^0, \lambda_{b}^0)$}};
+
+        \draw[lnk] (r0_e0.south) |- (instr0.west);
+        \draw[lnk] (r0_e4.south) |- (instr0.east);
+        \draw[lnk] (instr0.south) -- (\lft+1.4,-\vs-\vs+0.35);
+
+        \draw[<->,>=stealth,rounded corners=3pt] (\lft+4.9+0.6, -\vs-0.35) -- (\lft+4.9+\shfx+\shfx+\shfx+0.60, -\vs+\shfy+\shfy+\shfy-0.35) node [midway, text=black, fill=none, sloped, yshift=-0.2cm] {\footnotesize{n frames}};
+
+        \node[lc ] (r3_e0) at (\lft+1.4+\shfx+\shfx+\shfx, -\vs-\vs+\shfy+\shfy+\shfy) {};
+        \node[lch] (r3_e1) at (\lft+2.1+\shfx+\shfx+\shfx, -\vs-\vs+\shfy+\shfy+\shfy) {};
+        \node[lch] (r3_e2) at (\lft+2.8+\shfx+\shfx+\shfx, -\vs-\vs+\shfy+\shfy+\shfy) {};
+        \node[lch] (r3_e3) at (\lft+3.5+\shfx+\shfx+\shfx, -\vs-\vs+\shfy+\shfy+\shfy) {};
+
+        \node[lc ] (r2_e0) at (\lft+1.4+\shfx+\shfx, -\vs-\vs+\shfy+\shfy) {};
+        \node[lch] (r2_e1) at (\lft+2.1+\shfx+\shfx, -\vs-\vs+\shfy+\shfy) {};
+        \node[lch] (r2_e2) at (\lft+2.8+\shfx+\shfx, -\vs-\vs+\shfy+\shfy) {};
+        \node[lch] (r2_e3) at (\lft+3.5+\shfx+\shfx, -\vs-\vs+\shfy+\shfy) {};
+
+        \node[lc ] (r1_e0) at (\lft+1.4+\shfx, -\vs-\vs+\shfy) {};
+        \node[lch] (r1_e1) at (\lft+2.1+\shfx, -\vs-\vs+\shfy) {};
+        \node[lch] (r1_e2) at (\lft+2.8+\shfx, -\vs-\vs+\shfy) {};
+        \node[lch] (r1_e3) at (\lft+3.5+\shfx, -\vs-\vs+\shfy) {};
+
+        \node[lc ] (r0_e0) at (\lft+1.4, -\vs-\vs) {\footnotesize{$\lambda_{c}^0$}};
+        \node[lch] (r0_e1) at (\lft+2.1, -\vs-\vs) {\footnotesize{$\lambda_{c}^1$}};
+        \node[lch] (r0_e2) at (\lft+2.8, -\vs-\vs) {\footnotesize{$\lambda_{c}^2$}};
+        \node[lch] (r0_e3) at (\lft+3.5, -\vs-\vs) {\footnotesize{$\lambda_{c}^3$}};
+      \end{tikzpicture}
+      }
       \end{figure}
     \end{column}
   \end{columns}
+  \vfill
+  \pause
+  \begin{columns}[t]
+    \begin{column}[T]{5.0cm}
+      \begin{itemize}
+        \item $+$ low latency
+        \item $-$ leafs can't be vectorized
+      \end{itemize}
+    \end{column}
+    \begin{column}[T]{5.0cm}
+      \begin{itemize}
+        \item $+$ high throughput
+        \item $-$ high latency
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vfill
 \end{frame}
-
-% \begin{frame}{Polar Decoder: SC SIMDization Strategies}
-%  \begin{columns}[t]
-%    \begin{column}[T]{6.0cm}
-%      Intra frame SIMD strategy:\\
-%      ~~~$+$ low latency\\
-%      ~~~$-$ leafs can't be vectorized
-%    \end{column}
-%    \begin{column}[T]{6.0cm}
-%      Inter frame SIMD strategy:\\
-%      ~~~$+$ high throughput\\
-%      ~~~$-$ high latency
-%    \end{column}
-%  \end{columns}
-% \end{frame}
 
 \begin{frame}[containsverbatim,fragile]{Polar Application Programming Interface (Polar API)}
   \vspace{-0.2cm}

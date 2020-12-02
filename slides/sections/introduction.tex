@@ -1,4 +1,4 @@
-%!TEX root = ./slides.tex
+%!TEX root = ../slides.tex
 
 \section[Introduction]{Introduction \& Context}
 
@@ -37,30 +37,39 @@
     \tikzset{ txt/.style={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
     \tikzset{ rxt/.style={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
     }
+    \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
+    \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
+
     \node[style={txt}] (sen) at (0,4) {Source\\Encoder};
     \node[style=txt] (enc) at (4,4) {Channel\\Encoder};
     \node[style=txt] (mod) at (8,4) {Digital\\Modulator};
+
+    \node[style=rftx] (rftx) at (10.5,4) {\textbf{RF}};
+
     \Cloud{(11,2)}{}{0.65};
     \node[text=black] (chn) at (10.7,2) {Channel};
+
+    \node[style=rfrx] (rfrx) at (10.5,0) {\textbf{RF}};
+
     \node[style=rxt] (dem) at (8,0) {Digital\\Demodulator};
 
     \node[style=rxt] (dec) at (4,0) {Channel\\Decoder};
     \node[style={rxt}] (sde) at (0,0) {Source\\Decoder};
 
     \only<1>{
-    \node[draw=Paired-1, fill=Paired-1!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod), align=center, label=center: {\large\textbf{Transmission chain}}] (tx) {};
-    \node[draw=Paired-3, fill=Paired-3!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde), align=center, label=center: {\large\textbf{Reception chain}}] (rx) {};
+    \node[draw=Paired-1, fill=Paired-1!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod), align=center, label=center: {\large\textbf{Digital transmission chain (BB)}}] (tx) {};
+    \node[draw=Paired-3, fill=Paired-3!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde), align=center, label=center: {\large\textbf{Digital reception chain (BB)}}] (rx) {};
     }
     \only<2->{
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
     }
 
     \draw[<-,>=latex] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
-    \draw[->,>=latex] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
-    \draw[-         ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-         ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex] (rx.east)  -- (10,  0) node [midway,  above           ] {$\bm{y}$};
+    \draw[->,>=latex] (tx.east)  -- (rftx)   node [midway,  above           ] {$\bm{x}$};
+    \draw[-         ] (rftx)   -- (11.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-         ] (rfrx)   -- (11.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex] (rx.east)  -- (rfrx)   node [midway,  above           ] {$\bm{y}$};
     \draw[->,>=latex] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
     \only<2->{
     \draw[->,>=latex] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
@@ -68,7 +77,7 @@
     \draw[->,>=latex] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
     \draw[->,>=latex] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
     \draw[- ,>=latex] (sen.west) -- (-1.5,4);
-    \draw[- ,>=latex] (mod.east) -- (10.5,4);
+    \draw[- ,>=latex] (mod.east) -- ( 9.5,4);
     \draw[- ,>=latex] (dem.east) -- ( 9.6,0);
     \draw[- ,>=latex] (sde.west) -- (-1.5,0);
     }
@@ -88,7 +97,7 @@
   components traditionally implemented in hardware are instead implemented by
   means of software.
 
-  \vspace*{.5em}
+  \vfill
   \only<2->{
   \underline{Evolution of the mobile phone networks:}
   }
@@ -221,11 +230,13 @@
     }
   \end{column}
   \end{columns}
-  \vspace*{.5em}
+  \vfill
   \begin{itemize}
-    \item<2-> Base station = Radio Frequency (RF) + Base Band (BB) processing
-    \item<4-> Virtualization of the BB processing = Cloud Radio Access Network (C-RAN)
-    \item<4-> SDR is considered in the Fifth Generation of Mobile Phone Networks (5G)
+    % \item<2-> Base station = Radio Frequency (RF) + Base Band (BB) processing
+    % \item<4-> Virtualization of the BB processing = Cloud Radio Access Network (C-RAN)
+    \item<4-> BB virtualization = Cloud Radio Access Network (C-RAN)
+    % \item<4-> SDR is considered in the Fifth Generation of Mobile Phone Networks (5G)
+    \item<4-> SDR considered for 5G
   \end{itemize}
 \end{frame}
 
@@ -469,16 +480,16 @@
 
 \begin{frame}{Contributions}
   \begin{enumerate}
-    \item<1-> Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
-    \begin{itemize}
-      \item High throughput and low latency on single-core CPUs
-      \item Portability
-    \end{itemize}
-    \vspace{.3em}
-    \item<2-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
+    \item<1-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
     \begin{itemize}
       \item High throughput and low latency on single core and multi-core CPUs
       \item Flexibility
+    \end{itemize}
+    \vspace{.3em}
+    \item<2-> Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
+    \begin{itemize}
+      \item High throughput and low latency on single-core CPUs
+      \item Portability
     \end{itemize}
     \vspace{.3em}
     \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}

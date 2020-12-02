@@ -1,48 +1,92 @@
-%!TEX root = ./slides.tex
+%!TEX root = ../slides.tex
 
 \section[MIPP]{\MIPP: A \Cxx Wrapper for SIMD Instructions}
 
 \subsection[Proposal]{Proposal}
 
 \begin{frame}{Proposal: \longMIPP (\MIPP)}
-  \vfill
+  % \vfill
+  \underline{Objectives:}
+
+  \vspace{0.2cm}
+  \begin{enumerate}
+    \item Efficient software implementations of signal processing algorithms
+    \item Portable source code
+    \item Flexible source code
+  \end{enumerate}
+  \vspace{0.3cm}
+  \pause
+  \underline{Proposal:}
+
+  \vspace{0.2cm}
   \begin{itemize}
-    \item<1-> Single Instruction Multiple Data (SIMD) paradigm
-    \vspace{0.3cm}
-    \item<2-> SIMD \textbf{\Cxx wrapper}
+    \item<2-> Use Single Instruction Multiple Data (SIMD) paradigm
+    % \vspace{0.1cm}
+    \item<3-> SIMD \textbf{\Cxx wrapper}
     \begin{itemize}
-      \item<2-> Maximizes code portability
-      \item<2-> \textbf{Improves expressiveness} over intrinsics
-      \item<2-> \textbf{No dependencies} to other libraries
+      \item<3-> Maximizes code portability
+      \item<3-> \textbf{Improves expressiveness} over intrinsics
+      \item<3-> \textbf{No dependencies} to other libraries
     \end{itemize}
-    \vspace{0.3cm}
-    \item<3-> Programming model \textbf{close to intrinsics}
+    % \vspace{0.1cm}
+    \item<4-> Programming model \textbf{close to intrinsics}
     \begin{itemize}
-      \item<3-> Whenever possible, \textbf{one statement = one intrinsic}
-      \item<3-> One variable = one register allocation
+      % \item<4-> Whenever possible, \textbf{one statement = one intrinsic}
+      % \item<4-> One variable = one register allocation
+      \item<4-> \textbf{Lightweight approach} compared to existing solutions (Boost.SIMD, Eigen)
+      \item<4-> Focus on \textbf{fixed-point instructions}
     \end{itemize}
     % \item<4-> Open-source: \url{https://github.com/aff3ct/MIPP}
   \end{itemize}
-  \vspace{0.3cm}
-  \pause[4]
-  \begin{figure}[htp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{pics/mipp}
-    \caption*{\MIPP \MIPP!}
-    \label{pic:mipp}
-  \end{figure}
-  \vfill
+  % \vspace{0.3cm}
+  % \pause[5]
+  % \begin{figure}[htp]
+  %   \centering
+  %   \includegraphics[width=0.5\textwidth]{pics/mipp}
+  %   \caption*{\MIPP \MIPP!}
+  %   \label{pic:mipp}
+  % \end{figure}
+  % \vfill
 \end{frame}
 
 \subsection[Programming Interfaces]{Programming Interfaces}
 
-\begin{frame}{Programming Interfaces}
-  \vfill
+\begin{frame}[containsverbatim,fragile]{Programming Interfaces}
+  % \vfill
   \begin{itemize}
     \item The Low-Level \MIPP Interface (low)
     \begin{itemize}
       \item Similar to SIMD intrinsics: \textcolor{Paired-5}{Untyped} registers, \textcolor{Paired-5}{typed} operations
       \item Portability through \textbf{template specialization} and \textbf{function inlining}
+      \begin{columns}[t]
+        \begin{column}[T]{10.5cm}
+        \vspace{-1mm}
+        \begin{overprint}
+        \onslide<1>
+        \begin{minted}[linenos]{cpp}
+template<> // 'mipp::reg' is an alias of '__mm256' type
+inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+}
+template<>
+inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+}
+        \end{minted}
+        \onslide<2->
+        \begin{minted}[linenos, highlightlines={3,7}]{cpp}
+template<> // 'mipp::reg' is an alias of '__mm256' type
+inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+}
+template<>
+inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+}
+        \end{minted}
+        \end{overprint}
+      \end{column}
+      \end{columns}
     \end{itemize}
   \end{itemize}
   \vspace{0.3cm}
@@ -58,55 +102,55 @@
   \vfill
 \end{frame}
 
-\begin{frame}[containsverbatim,fragile]{Low Level Interface (low)}
-  \vfill
-  Similar to SIMD intrinsics: Untyped registers, typed operations
-  \vspace{0.3cm}
-  \begin{itemize}
-    \item Abstract SIMD \textbf{data register} (\verb|mipp::reg|)
-    \begin{itemize}
-      \item \textbf{The number of elements} in a register: \texttt{mipp::N<\textcolor{Paired-1}{T}>()}
-    \end{itemize}
-    \item Abstract SIMD \textbf{mask register} (\verb|mipp::msk|)
-    \item Intrinsic functions wrapped into \MIPP functions
-    \begin{itemize}
-      \begin{columns}[t]
-        \begin{column}[T]{10.5cm}
-        \vspace{-1mm}
-        \begin{overprint}
-        \onslide<1>
-        \begin{minted}[linenos]{cpp}
-template<> // 'mipp::reg' is an alias of '__mm256' type
-mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
-}
-template<>
-mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
-}
-        \end{minted}
-        \onslide<2->
-        \begin{minted}[linenos, highlightlines={3,7}]{cpp}
-template<> // 'mipp::reg' is an alias of '__mm256' type
-mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
-}
-template<>
-mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
-}
-        \end{minted}
-        \end{overprint}
-      \end{column}
-      \end{columns}
-      \pause
-      \item \textbf{C++ template specialization technique}
-    \end{itemize}
-    \pause
-    \item \textbf{Instruction set selection} based on preprocessor definitions
-  \end{itemize}
-  \vfill
-\end{frame}
+% \begin{frame}[containsverbatim,fragile]{Low Level Interface (low)}
+%   \vfill
+%   Similar to SIMD intrinsics: Untyped registers, typed operations
+%   \vspace{0.3cm}
+%   \begin{itemize}
+%     \item Abstract SIMD \textbf{data register} (\verb|mipp::reg|)
+%     \begin{itemize}
+%       \item \textbf{The number of elements} in a register: \texttt{mipp::N<\textcolor{Paired-1}{T}>()}
+%     \end{itemize}
+%     \item Abstract SIMD \textbf{mask register} (\verb|mipp::msk|)
+%     \item Intrinsic functions wrapped into \MIPP functions
+%     \begin{itemize}
+%       \begin{columns}[t]
+%         \begin{column}[T]{10.5cm}
+%         \vspace{-1mm}
+%         \begin{overprint}
+%         \onslide<1>
+%         \begin{minted}[linenos]{cpp}
+% template<> // 'mipp::reg' is an alias of '__mm256' type
+% mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+% }
+% template<>
+% mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+% }
+%         \end{minted}
+%         \onslide<2->
+%         \begin{minted}[linenos, highlightlines={3,7}]{cpp}
+% template<> // 'mipp::reg' is an alias of '__mm256' type
+% mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+% }
+% template<>
+% mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+% }
+%         \end{minted}
+%         \end{overprint}
+%       \end{column}
+%       \end{columns}
+%       \pause
+%       \item \textbf{C++ template specialization technique}
+%     \end{itemize}
+%     \pause
+%     \item \textbf{Instruction set selection} based on preprocessor definitions
+%   \end{itemize}
+%   \vfill
+% \end{frame}
 
 \begin{frame}[fragile]{Medium Level Interface (med.)}
   \vfill
