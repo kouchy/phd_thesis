@@ -1382,30 +1382,48 @@
 \end{frame}
 
 \begin{frame}[containsverbatim,fragile]{Polar Application Programming Interface (Polar API)}
-  \vspace{-0.2cm}
+  \vfill
   \begin{itemize}
-    \item Polar functions like $f$, $g$ and $h$ are implemented with \MIPP
-    \item Efficient implementation compatible with NEON, SSE, AVX and AVX-512
-    \item Mostly independent from the vectorization strategy (intra-/inter-frame)
-    %\item Supports both floating-point and fixed-point representations
+    \item Polar functions ($f$, $g$ and $h$) implemented with \textbf{a portable SIMD library}
+    \vspace{0.2cm}
+    \item Portability
+    \begin{itemize}
+      \item Same description for NEON, SSE, AVX and AVX-512
+      \item Independant from the vectorization strategy (intra-/inter-frame)
+    \end{itemize}
+    \vspace{0.2cm}
+    \pause
+    \item Flexibility
+    \begin{itemize}
+      \item Same description for real floating-point and fixed-point representation
+      \item Compatible with: \verb|double|, \verb|float|, \verb|int8_t| and \verb|int16_t| types
+    \end{itemize}
+    \vspace{0.2cm}
+    \pause
+    \item Efficiency
+    \begin{itemize}
+      \item High througput (intra-/inter-frame)
+      \item Low latency (intra-frame)
+    \end{itemize}
   \end{itemize}
-  \begin{minted}[linenos]{cpp}
-template <typename R>
-mipp::<R> f(const mipp::<R> la, const mipp::<R> lb) {
-  return mipp::copysign(mipp::min(mipp::abs(la), mipp::abs(lb)),
-                        mipp::sign(la, lb));
-} // f(la, lb) = sign(la.lb).min(|la|, |lb|)
+  \vfill
+%   \begin{minted}[linenos]{cpp}
+% template <typename R>
+% mipp::<R> f(const mipp::<R> la, const mipp::<R> lb) {
+%   return mipp::copysign(mipp::min(mipp::abs(la), mipp::abs(lb)),
+%                         mipp::sign(la, lb));
+% } // f(la, lb) = sign(la.lb).min(|la|, |lb|)
 
-template <typename B, typename R>
-mipp::<R> g(const mipp::<R> la, const mipp::<R> lb, const mipp::<B> s) {
-  return mipp::copysign(la, s) + lb;
-} // g(la, lb, sa) = (1-2s)la + lb
+% template <typename B, typename R>
+% mipp::<R> g(const mipp::<R> la, const mipp::<R> lb, const mipp::<B> s) {
+%   return mipp::copysign(la, s) + lb;
+% } // g(la, lb, sa) = (1-2s)la + lb
 
-template <typename B>
-mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
-  return sa ^ sb;
-} // h(sa, sb) = sa XOR sb
-  \end{minted}
+% template <typename B>
+% mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
+%   return sa ^ sb;
+% } // h(sa, sb) = sa XOR sb
+%   \end{minted}
 \end{frame}
 
 \begin{frame}{SC Dynamic Versus Generated Implementation}
@@ -1564,29 +1582,28 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
       }
     \end{column}
   \end{columns}
-
   \only<3->{
-  \vspace{0.3cm}
+  \vspace{1cm}
   \begin{columns}
     \begin{column}[T]{6.0cm}
       \begin{itemize}
-        \item High flexibility, same code can:
-        \begin{itemize}
-          \item Adapt to many code rate $R = K/N$
-          \item Adapt to many frozen bits configurations
-        \end{itemize}
-        \item Overhead because of recursive calls
+        \item $+$ High flexibility
+        % \begin{itemize}
+        %   \item Adapt to many code rate $R = K/N$
+        %   \item Adapt to many frozen bits configurations
+        % \end{itemize}
+        \item $-$ Recursive calls and \textit{if} overhead
       \end{itemize}
     \end{column}
     \begin{column}[T]{6.0cm}
       \only<4->{
       \begin{itemize}
-        \item Reduced flexibility, the code is generated for:
-        \begin{itemize}
-          \item Fixed code rate $R = K/N$
-          \item Fixed frozen bits positions
-        \end{itemize}
-        \item No recursive call overhead: Higher throughput and lower latency
+        \item $-$ Reduced flexibility
+        % \begin{itemize}
+        %   \item Fixed code rate $R = K/N$
+        %   \item Fixed frozen bits positions
+        % \end{itemize}
+        \item $+$ Improved throughput and latency
       \end{itemize}
       }
     \end{column}
@@ -1597,6 +1614,7 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
 \subsection[Source Code Generation]{Source Code Generation}
 
 \begin{frame}{Issue}
+  \vfill
   \begin{figure}[!h]
     \centering
     \scalebox{.5}{
@@ -1620,7 +1638,7 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
         \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line1}
         \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line2}
         \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line3}
-        \addplot[mark=none,     Paired-7,               dashed                      ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+        \addplot[mark=none,     Paired-7,               dashed, thick               ] coordinates {(6,32) (16,32)}; \label{plot:line4}
     \end{axis}
 
     \matrix [draw,
@@ -1637,16 +1655,18 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
     };
   \end{tikzpicture}
   }
+  \pause
   \end{figure}
   \begin{itemize}
     \item \underline{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
-    \pause
-    \vspace{0.2cm}
-    \item \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
-    \pause
-    \vspace{0.2cm}
-    \item \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
+  %   \pause
+  %   \vspace{0.2cm}
+  %   \item \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
+  %   \pause
+  %   \vspace{0.2cm}
+  %   \item \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
   \end{itemize}
+  \vfill
 \end{frame}
 
 \begin{frame}{Sub-tree Folding Algorithm}
@@ -1942,7 +1962,7 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
           \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line1}
           \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line2}
           \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:line3}
-          \addplot[mark=none,     Paired-7,               dashed                      ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+          \addplot[mark=none,     Paired-7,               dashed, thick               ] coordinates {(6,32) (16,32)}; \label{plot:line4}
       \end{axis}
 
       \matrix[draw,
@@ -1963,6 +1983,7 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
     \end{figure}
   \end{column}
   \begin{column}[T]{6.0cm}
+    \only<2->{
     \begin{figure}[!h]
     \centering
     \scalebox{.5}{
@@ -1985,24 +2006,27 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
         \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line1}
         \addplot[mark=triangle, Paired-1,    semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line2}
         \addplot[mark=o,        Paired-1,    semithick, dashed, mark options={solid}] table [x index=0, y index=5] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat}; \label{plot:line3}
-        \addplot[mark=none,     Paired-7,    dashed                                 ] coordinates {(6,32) (16,32)}; \label{plot:line4}
+        \addplot[mark=none,     Paired-7,    dashed, thick                          ] coordinates {(6,32) (16,32)}; \label{plot:line4}
 
+        \only<3->{
         \node[anchor=west] (source) at (axis cs:11.8,3.5){\textbullet\ Enable sub-tree folding};
         \draw[->,thick] (axis cs:12, 4) -- (axis cs:12, 6.5);
+        }
     \end{axis}
     \end{tikzpicture}
     }
     \caption*{With compression}
     \end{figure}
+    }
   \end{column}
   \end{columns}
   \vfill
   \begin{itemize}
     \item \underline{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
     \vspace{0.2cm}
-    \item \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
+    \item<2-> \underline{Solution 1:} Do not store the memory addresses offsets in the generated code
     \vspace{0.2cm}
-    \item \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
+    \item<3-> \underline{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
   \end{itemize}
 \end{frame}
 
@@ -2014,21 +2038,26 @@ mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
 
   \vspace{0.3cm}
   \begin{enumerate}
-    \item High performance implementation of the \textbf{dynamic SC scheduling}
+    \item High performance implementation of the \textbf{dynamic SC}
     \begin{itemize}
-      \item Support intra-/inter-frame SIMDization thanks to the Polar API
-      \item Compatible with tree pruning techniques
-      \item Fine tuned implementation with \textbf{template meta-programming techniques}
+      \item Fine tuned with \textbf{template meta-programming techniques}
     \end{itemize}
     \pause
     \vspace{0.3cm}
-    \item Polar ECC Decoder \textbf{Generation Environment} (P-EDGE)
+    \item Polar ECC Decoder \textbf{Generation Environment}
     \begin{itemize}
-      \item Support intra-/inter-frame SIMDization thanks to the Polar API
-      \item Compatible with tree pruning techniques
-      \item Source code generation environment for \textbf{highest possible performances}
+      \item Source code generation for \textbf{highest possible performances}
     \end{itemize}
   \end{enumerate}
+  \vfill
+  \pause
+
+  \vspace*{.5em}
+  ~~~~~{\color{bleuUni}\Large\MVRightarrow} Support intra-/inter-frame SIMDization thanks to the Polar API
+
+  \vspace*{.5em}
+  ~~~~~{\color{bleuUni}\Large\MVRightarrow} Compatible with tree pruning techniques
+
   \vfill
 \end{frame}
 

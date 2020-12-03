@@ -5,31 +5,42 @@
 \subsection[Existing Solutions]{Existing Solutions}
 
 \begin{frame}{Existing Solutions}
-  \vfill
-  \begin{itemize}
-    \item Dedicated languages based on the dataflow model~\cite{Dennis1980,Engels1994}
-    \item GNU Radio~\cite{GNURadio}
-  \end{itemize}
-  \vfill
+
 \end{frame}
 
 \subsection[Proposed eDSL]{Description of the Proposed Embedded Domain Specific Language}
 
 \begin{frame}{Proposed eDSL}
+
+  % \vfill
+  % \begin{itemize}
+  %   \item Dedicated languages based on the dataflow model~\cite{Dennis1980,Engels1994}
+  %   \item GNU Radio~\cite{GNURadio}
+  % \end{itemize}
+  % \vfill
+
   \vfill
   \begin{itemize}
-    \item Concepts:
+    \item Existing Solutions:
     \begin{itemize}
-      \item Close to cyclo-static dataflow model but not stateless
-      \item Domain specific language embedded in \Cxx
-      \item Compilation is performed at runtime, meta-programming technique is avoided
+      \item Dedicated languages based on the dataflow model~\cite{Dennis1980,Engels1994}
+      \item GNU Radio~\cite{GNURadio}
     \end{itemize}
     \vspace{0.3cm}
+    \pause
     \item Objectives:
     \begin{itemize}
       \item High performance eDSL
       \item Integrate the eDSL with \AFFECT and its fast implementations
       \item Easy to understand, to use and to modify for new users
+    \end{itemize}
+    \vspace{0.3cm}
+    \pause
+    \item Proposed eDSL:
+    \begin{itemize}
+      \item Close to cyclo-static dataflow model but not stateless
+      \item Domain specific language embedded in \Cxx
+      \item Compilation is performed at runtime, meta-programming technique is avoided
     \end{itemize}
   \end{itemize}
   \vfill

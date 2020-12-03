@@ -4,40 +4,51 @@
 
 \subsection[Philosophy]{Philosophy}
 
-\begin{frame}{Observations}
-  \vfill
-  \begin{enumerate}
-    \item Signal processing community not used to share source codes
-    \begin{itemize}
-      \item A non-negligible part of the researchers time is spent in reproducing State-of-the-Art results
-    \end{itemize}
-    \vspace{0.3cm}
-    \pause
-    \item Existing open-source codes are often written with high-level language (MATLAB/Python)
-    \begin{itemize}
-      \item Speed limitations for low error rate simulations and real-time applications
-    \end{itemize}
-    \vspace{0.3cm}
-    \pause
-    \item Some high performance open-source codes are available
-    \begin{itemize}
-      \item Targets a reduce set of signal processing algorithms, hard to use in other contexts
-    \end{itemize}
-  \end{enumerate}
-  \vfill
-\end{frame}
+% \begin{frame}{Observations}
+%   \vfill
+%   \begin{enumerate}
+%     \item Signal processing community not used to share source codes
+%     \begin{itemize}
+%       \item A non-negligible part of the researchers time is spent in reproducing State-of-the-Art results
+%     \end{itemize}
+%     \vspace{0.3cm}
+%     \pause
+%     \item Existing open-source codes are often written with high-level language (MATLAB/Python)
+%     \begin{itemize}
+%       \item Speed limitations for low error rate simulations and real-time applications
+%     \end{itemize}
+%     \vspace{0.3cm}
+%     \pause
+%     \item Some high performance open-source codes are available
+%     \begin{itemize}
+%       \item Targets a reduce set of signal processing algorithms, hard to use in other contexts
+%     \end{itemize}
+%   \end{enumerate}
+%   \vfill
+% \end{frame}
 
 \begin{frame}{Proposition}
   \vfill
+  \underline{Observations:}
+
+  \vspace{0.2cm}
+  \begin{itemize}
+    \item Signal processing community => not used to share source codes
+    \item Existing open-source codes => often written with high-level language
+    \item Some existing high performance open-source codes
+  \end{itemize}
+
+  \vfill
+  \pause
   \underline{\AFFECT: A Fast Forward Error Correction Toolbox:}
 
-  \vspace{0.3cm}
+  \vspace{0.2cm}
   \begin{enumerate}
     \item An \Cxx open-source toolbox made to ease the reproduction of scientific results
-    \vspace{0.3cm}
+    % \vspace{0.3cm}
     \pause
     \item Focus on high performance implementations for high speed simulations and real-time applications
-    \vspace{0.3cm}
+    % \vspace{0.3cm}
     \pause
     \item Manage the algorithmic heterogeneity of the signal processing algorithms in a single library
   \end{enumerate}
@@ -48,31 +59,25 @@
 
 \begin{frame}{Features}
   \vfill
-  \underline{Today in \AFFECT:}
-
-  \vspace{0.3cm}
   \begin{itemize}
-    \item Channel codes: Polar, LDPC, Turbo, Turbo Product, BCH, RS, RA, Repetition
-    \vspace{0.1cm}
+    \item Channel codes: Polar, LDPC, Turbo-code, Product-code, BCH, RS, RA, Repetition
+    \vspace{0.3cm}
     \item Channel models: BSC, BEC, Optical, AWGN, Rayleigh
-    \vspace{0.1cm}
+    \vspace{0.3cm}
     \item Digital modulations: PSK, QAM, PAM, OOK, CPM, SCMA
   \end{itemize}
   \vfill
-  \underline{Coming soon in \AFFECT:}
+  \pause
 
-  \vspace{0.3cm}
-  \begin{itemize}
-    \item Synchronization processing tasks
-    \vspace{0.1cm}
-    \item MATLAB interface
-    \vspace{0.1cm}
-    \item Python interface
-  \end{itemize}
+  \vspace*{.5em}
+  ~~~~~{\color{bleuUni}\Large\MVRightarrow} Most digital communication standards are supported
+
+  \vspace*{.5em}
+  ~~~~~{\color{bleuUni}\Large\MVRightarrow} About \textbf{40 high performance sofware decoder implementations}
   \vfill
 \end{frame}
 
-\begin{frame}[fragile,containsverbatim]{Simple Communication Chain}
+\begin{frame}[fragile,containsverbatim]{Typical Digital Communication Chain}
   \begin{figure}[!h]
     \centering
     \scalebox{.65}{
@@ -287,24 +292,24 @@ comm_chain.exec([&Mnt]() {
 
 \subsection[Simulator]{Simulation of Digital Communication Algorithms}
 
-\begin{frame}{Features}
-  \vfill
-  \begin{itemize}
-    \item Estimation of the BER/FER via Monte Carlo simulations
-    \begin{itemize}
-      \item Can require very long simulation time (hours to months)
-    \end{itemize}
-    \vspace{0.5cm}
-    \item Take advantage of parallel architectures
-    \begin{itemize}
-      \item Multi-threaded execution (\Cxy{11} threads)
-      \item Multi-node execution (Message Passing Interface, MPI)
-    \end{itemize}
-  \end{itemize}
-  \vfill
-\end{frame}
+% \begin{frame}{Features}
+%   \vfill
+%   \begin{itemize}
+%     \item Estimation of the BER/FER via Monte Carlo simulations
+%     \begin{itemize}
+%       \item Can require very long simulation time (hours to months)
+%     \end{itemize}
+%     \vspace{0.5cm}
+%     \item Take advantage of parallel architectures
+%     \begin{itemize}
+%       \item Multi-threaded execution (\Cxy{11} threads)
+%       \item Multi-node execution (Message Passing Interface, MPI)
+%     \end{itemize}
+%   \end{itemize}
+%   \vfill
+% \end{frame}
 
-\begin{frame}{Example of Use Case}
+\begin{frame}{Simulation of a 5G Receiver}
   \vspace{-0.3cm}
   \begin{figure}[!h]
     \centering
@@ -330,7 +335,7 @@ comm_chain.exec([&Mnt]() {
     \end{tikzpicture}
     }
   \end{figure}
-
+  \pause
   \begin{columns}
   \begin{column}[T]{8cm}
   \vspace{-0.3cm}
@@ -408,7 +413,7 @@ comm_chain.exec([&Mnt]() {
   \end{columns}
 \end{frame}
 
-\begin{frame}{Evaluation}
+\begin{frame}{Evaluation on Various Multi-core Architectures}
 
 \begin{table}[htp]
   \vspace{-0.7cm}
@@ -610,32 +615,4 @@ comm_chain.exec([&Mnt]() {
 
 \end{table}
 
-\end{frame}
-
-\subsection[Impact and Community]{Impact and Community}
-
-\begin{frame}{Impact and Community}
-  \vfill
-  \begin{enumerate}
-    \item Used in academic contexts
-    \begin{itemize}
-      \item ANR NAND
-      \item Idex CPU
-    \end{itemize}
-    \vspace{0.3cm}
-    \item Used in industrial context
-    \begin{itemize}
-      \item Airbus
-      \item Thales
-      \item CNES
-    \end{itemize}
-    \vspace{0.3cm}
-    \item Open-source code
-    \begin{itemize}
-      \item Living community\footnote{\AFFECT issue tracker: \url{https://github.com/aff3ct/aff3ct/issues}}
-      \item Reproducible BER/FER results\footnote{\AFFECT BER/FER comparator: \url{https://aff3ct.github.io/comparator.html}}
-      \item Continue Integration and Delivery\footnote{\AFFECT CI/CD: \url{https://gitlab.com/aff3ct/aff3ct/pipelines}}
-    \end{itemize}
-  \end{enumerate}
-  \vfill
 \end{frame}
