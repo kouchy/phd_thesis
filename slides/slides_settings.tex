@@ -208,32 +208,15 @@
 
 \setbeamertemplate{blocks}[rounded][shadow=false]
 
-%%%%% Contents each new sec and subsec
 \AtBeginSection[]
 {
-  %\ifnumcomp{\value{section}}{=}{1}{}{
-    \begin{frame}[c]{Plan}
-      \centering
-      \tableofcontents[
-          currentsection,
-          hideothersubsections
-          %subsectionstyle=show/hide
-      ]
-    \end{frame}
-  %}
+\begin{frame}[c]{Organization of the Presentation}
+  \tableofcontents[
+      currentsection,
+      subsectionstyle=hide,
+  ]
+\end{frame}
 }
-
-% \AtBeginSubsection[]
-% {
-%   \begin{frame}[c]{Plan}
-%     \tableofcontents[
-%       currentsection,
-%       sectionstyle=show/shaded,
-%       subsectionstyle=show/shaded/hide
-%     ]
-%   \end{frame}
-% }
-
 
 % MIPP ------------------------------------------------------------------------
 

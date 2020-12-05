@@ -1,106 +1,40 @@
 %!TEX root = ../slides.tex
 
-\section[Introduction]{Introduction \& Context}
+% \section[Introduction]{Introduction \& Context}
 
-\subsection[Introduction]{Introduction}
+% \subsection[Introduction]{Introduction}
 
-\begin{frame}{Introduction}
+\begin{frame}{Context}
+  \vfill
   \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.35]{pics/5G_crop}
+  \includegraphics[scale=0.45]{pics/5G}
   \end{figure}
-  \begin{itemize}
-    \item Nowadays digital communication systems are everywhere
-    \item Real-time systems are traditionally implemented in hardware
-    \item Needs validation of more robust and more complex systems
-    \item Needs to flexibility to adapt to many parameters
-    \item New challenge: implement digital communication systems in software
-      \\\vspace*{.5em}
-      {\color{bleuUni}\Large\MVRightarrow} \textbf{Require high performance implementations}
-  \end{itemize}
+  \vfill
+  % \begin{itemize}
+  %   \item Nowadays digital communication systems are everywhere
+  %   \item Real-time systems are traditionally implemented in hardware
+  %   \item Needs validation of more robust and more complex systems
+  %   \item Needs to flexibility to adapt to many parameters
+  %   \item New challenge: implement digital communication systems in software
+  %     \\\vspace*{.5em}
+  %     {\color{bleuUni}\Large\MVRightarrow} \textbf{Require high performance implementations}
+  % \end{itemize}
 \end{frame}
 
-\subsection[Applicative Contexts]{Applicative Contexts}
-
-\begin{frame}{Digital Communication Systems}
-  \begin{figure}[!h]
-  \centering
-  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-    \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
-    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
-
-    \only<1>{
-    \tikzset{ txt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    \tikzset{ rxt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    }
-    \only<2->{
-    \tikzset{ txt/.style={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
-    \tikzset{ rxt/.style={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
-    }
-    \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
-    \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
-
-    \node[style={txt}] (sen) at (0,4) {Source\\Encoder};
-    \node[style=txt] (enc) at (4,4) {Channel\\Encoder};
-    \node[style=txt] (mod) at (8,4) {Digital\\Modulator};
-
-    \node[style=rftx] (rftx) at (10.5,4) {\textbf{RF}};
-
-    \Cloud{(11,2)}{}{0.65};
-    \node[text=black] (chn) at (10.7,2) {Channel};
-
-    \node[style=rfrx] (rfrx) at (10.5,0) {\textbf{RF}};
-
-    \node[style=rxt] (dem) at (8,0) {Digital\\Demodulator};
-
-    \node[style=rxt] (dec) at (4,0) {Channel\\Decoder};
-    \node[style={rxt}] (sde) at (0,0) {Source\\Decoder};
-
-    \only<1>{
-    \node[draw=Paired-1, fill=Paired-1!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod), align=center, label=center: {\large\textbf{Digital transmission chain (BB)}}] (tx) {};
-    \node[draw=Paired-3, fill=Paired-3!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde), align=center, label=center: {\large\textbf{Digital reception chain (BB)}}] (rx) {};
-    }
-    \only<2->{
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
-    }
-
-    \draw[<-,>=latex] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
-    \draw[->,>=latex] (tx.east)  -- (rftx)   node [midway,  above           ] {$\bm{x}$};
-    \draw[-         ] (rftx)   -- (11.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-         ] (rfrx)   -- (11.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex] (rx.east)  -- (rfrx)   node [midway,  above           ] {$\bm{y}$};
-    \draw[->,>=latex] (rx.west)  -- (-2,  0) node [left,    above           ] {$\bm{\hat{m}}$};
-    \only<2->{
-    \draw[->,>=latex] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
-    \draw[->,>=latex] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
-    \draw[->,>=latex] (dem)      -- (dec)    node [midway,  above           ] {$\bm{l}$};
-    \draw[->,>=latex] (dec)      -- (sde)    node [midway,  above           ] {$\bm{\hat{u}}$};
-    \draw[- ,>=latex] (sen.west) -- (-1.5,4);
-    \draw[- ,>=latex] (mod.east) -- ( 9.5,4);
-    \draw[- ,>=latex] (dem.east) -- ( 9.6,0);
-    \draw[- ,>=latex] (sde.west) -- (-1.5,0);
-    }
-  \end{tikzpicture}
-  \end{figure}
-
-  \begin{itemize}
-    \item<1-> Channel: disturbances (noise, interferences)
-    \item<2-> Source coding: obtain the maximum conciseness in the expression of a message
-    \item<2-> Channel coding: make a message robust to channel disturbances
-  \end{itemize}
-
-\end{frame}
+% \subsection[Applicative Contexts]{Applicative Contexts}
 
 \begin{frame}{Software-defined Radio}
-  A Software-Defined Radio (SDR) is a radio communication system where
-  components traditionally implemented in hardware are instead implemented by
-  means of software.
+  % A Software-Defined Radio (SDR) is a radio communication system where
+  % components traditionally implemented in hardware are instead implemented by
+  % means of software.
+  \vspace{0.3cm}
+  \textbf{Software-Defined Radio (SDR)} = radio communication system all in software
 
   \vfill
-  \only<2->{
-  \underline{Evolution of the mobile phone networks:}
-  }
+  \pause
+  \textbf{Evolution of the mobile phone networks:}
+
   \begin{columns}[T] % align columns
   \begin{column}{.3\textwidth}
     \only<2->{
@@ -240,12 +174,85 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Digital Communication Systems}
+  \begin{figure}[!h]
+  \centering
+  \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
+    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+    \path[use as bounding box] (-2.7, -1.7) rectangle (12.0, 5.3);
+    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
+
+    \only<1>{
+    \tikzset{ txt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    \tikzset{ rxt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
+    }
+    \only<2->{
+    \tikzset{ txt/.style={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
+    \tikzset{ rxt/.style={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
+    }
+    \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
+    \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
+
+    \node[style={txt}] (sen) at (0,4) {Source\\Encoder};
+    \node[style=txt] (enc) at (4,4) {Channel\\Encoder};
+    \node[style=txt] (mod) at (8,4) {Digital\\Modulator};
+
+    \node[style=rftx] (rftx) at (10.5,4) {\textbf{RF}};
+
+    \Cloud{(11,2)}{}{0.65};
+    \node[text=black] (chn) at (10.7,2) {Channel};
+
+    \node[style=rfrx] (rfrx) at (10.5,0) {\textbf{RF}};
+
+    \node[style=rxt] (dem) at (8,0) {Digital\\Demodulator};
+
+    \node[style=rxt] (dec) at (4,0) {Channel\\Decoder};
+    \node[style={rxt}] (sde) at (0,0) {Source\\Decoder};
+
+    \only<1>{
+    \node[draw=Paired-1, fill=Paired-1!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod), align=center, label=center: {\large\textbf{Digital transmission chain (BB)}}] (tx) {};
+    \node[draw=Paired-3, fill=Paired-3!20, rounded corners=2pt, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde), align=center, label=center: {\large\textbf{Digital reception chain (BB)}}] (rx) {};
+    }
+    \only<2->{
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
+    }
+
+    \draw[<-,>=latex] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
+    \draw[->,>=latex] (tx.east)  -- (rftx)   node [midway,  above           ] {$\bm{x}$};
+    \draw[-         ] (rftx)     -- (11.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-         ] (rfrx)     -- (11.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex] (rx.east)  -- (rfrx)   node [midway,  below           ] {$\bm{y}$};
+    \draw[->,>=latex] (rx.west)  -- (-2,  0) node [left,    below           ] {$\bm{\hat{m}}$};
+    \only<2->{
+    \draw[->,>=latex] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex] (dem)      -- (dec)    node [midway,  below           ] {$\bm{l}$};
+    \draw[->,>=latex] (dec)      -- (sde)    node [midway,  below           ] {$\bm{\hat{u}}$};
+    \draw[- ,>=latex] (sen.west) -- (-1.5,4);
+    \draw[- ,>=latex] (mod.east) -- ( 9.5,4);
+    \draw[- ,>=latex] (dem.east) -- ( 9.6,0);
+    \draw[- ,>=latex] (sde.west) -- (-1.5,0);
+    }
+  \end{tikzpicture}
+  \end{figure}
+
+  \begin{itemize}
+    \item<1-> Channel: disturbances (noise, interferences)
+    \item<2-> Source coding: seek for maximum conciseness in the expression of a message
+    \item<2-> Channel coding: make a message robust to channel disturbances
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Functional Simulation}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
     \path[use as bounding box] (-2.7, -1.7) rectangle (12.0, 5.3);
     % \draw (-2.7, -1.7) rectangle (12.0, 5.3);
+
+    \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
+    \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
 
     \only<1-3>{
     \tikzset{ txt/.style={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
@@ -285,6 +292,9 @@
     \node[style=txt] (mod) at (8,4) {BPSK\\Modulator};
     }
     \only<1-2>{
+    \node[style=rftx] (rftx) at (10.5,4) {\textbf{RF}};
+    }
+    \only<1-2>{
     \Cloud{(11,2)}{}{0.65};
     }
     \only<1>{
@@ -295,6 +305,9 @@
     }
     \only<3->{
     \node[style={chn}   ] (chn) at (10.7, 2) {AWGN\\Channel};
+    }
+    \only<1-2>{
+    \node[style=rfrx] (rfrx) at (10.5,0) {\textbf{RF}};
     }
     \only<1>{
     \node[style=rxt] (dem) at (8,0) {Digital\\Demodulator};
@@ -311,16 +324,16 @@
     }
 
     \only<1>{
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(sen) (enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(dem) (dec) (sde)] (rx) {};
     }
     \only<2>{
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
     }
     \only<3>{
-    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(src) (enc) (mod)] (tx) {};
-    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(mnt) (dem) (dec)] (rx) {};
+    \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Digital transmitter (BB)}, minimum height=1.5cm, dashed, fit=(src) (enc) (mod)] (tx) {};
+    \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Digital receiver (BB)   }, minimum height=1.5cm, dashed, fit=(mnt) (dem) (dec)] (rx) {};
     }
     \only<4->{
     \node[draw=Paired-5, rounded corners=2pt, label={[Paired-5]below:Simulation chain}, minimum height=4.15cm, dashed, fit=(src) (enc) (mod) (chn) (dem) (dec) (mnt)] (sim) {};
@@ -330,13 +343,13 @@
     \draw[<-,>=latex, style=hid2] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
     }
     \only<1-2>{
-    \draw[->,>=latex            ] (tx.east)  -- (10,  4) node [midway,  above           ] {$\bm{x}$};
-    \draw[-                     ] ( 9.9,4)   -- (10.5,4) node [antenna, above, scale=0.5] {};
-    \draw[-                     ] (10  ,0)   -- (10.5,0) node [antenna, above, scale=0.5] {};
-    \draw[<-,>=latex            ] (rx.east)  -- (10,  0) node [midway,  below           ] {$\bm{y}$};
+    \draw[->,>=latex] (tx.east)  -- (rftx)   node [midway,  above           ] {$\bm{x}$};
+    \draw[-         ] (rftx)     -- (11.5,4) node [antenna, above, scale=0.5] {};
+    \draw[-         ] (rfrx)     -- (11.5,0) node [antenna, above, scale=0.5] {};
+    \draw[<-,>=latex] (rx.east)  -- (rfrx)   node [midway,  below           ] {$\bm{y}$};
     \draw[- ,>=latex, style=hid2] (sen.west) -- (-1.5,4);
-    \draw[- ,>=latex            ] (mod.east) -- (10.5,4);
-    \draw[- ,>=latex            ] (dem.east) -- ( 9.6,0);
+    \draw[- ,>=latex] (mod.east) -- ( 9.5,4);
+    \draw[- ,>=latex] (dem.east) -- ( 9.6,0);
     \draw[- ,>=latex, style=hid2] (sde.west) -- (-1.5,0);
     }
 
@@ -451,36 +464,50 @@
   }
 \end{frame}
 
-\subsection[Problematics]{Problematics and Contributions}
+% \subsection[Problematics]{Problematics and Contributions}
 
-\begin{frame}{Problematics}
+\begin{frame}{Challenges}
   \vfill
-  \underline{Software-defined Radio:}
-  \vspace*{.5em}
-  \begin{itemize}
-    \item<1-> \textbf{High throughput}: required for high resolution video streaming
-    \item<2-> \textbf{Low latency}: required for remote medical operations
-    \item<3-> \textbf{Flexibility}: the ability to adapt to many configurations
-    \item<4-> \textbf{Portability}: take advantage of the large variety of General Purpose Processors (GPPs) and operating systems
-  \end{itemize}
-  \vfill
-  \pause
-  \pause
-  \pause
-  \pause
-  \underline{Functional Simulation:}
-  \vspace*{.5em}
-  \begin{itemize}
-    \item<5-> \textbf{Simulation time}: expensive Monte Carlo simulation of the whole chain
-    \item<6-> \textbf{Algorithmic heterogeneity}: many algorithms with various characteristics
-    \item<7-> \textbf{Reproducibility}: ease the reproduction of the state-of-the-art results
-  \end{itemize}
+
+  \begin{enumerate}
+    \item Propose \textbf{fast software implementations} of digital processing algorithms
+    % \begin{item}
+    %   \item
+    % \end{item}
+    \vspace{0.3cm}
+    \item Combine \textbf{efficiency, flexibility and portability} in the implementations
+    \vspace{0.3cm}
+    \item Manage \textbf{algorithmic heterogeneity} and \textbf{reproduce state-of-the-art} results
+    \vspace{0.3cm}
+    \item Enable efficient execution of full \textbf{SDR chains on parallel architectures}
+  \end{enumerate}
+
+  % \underline{Software-defined Radio:}
+  % \vspace*{.5em}
+  % \begin{itemize}
+  %   \item<1-> \textbf{High throughput}: required for high resolution video streaming
+  %   \item<2-> \textbf{Low latency}: required for remote medical operations
+  %   \item<3-> \textbf{Flexibility}: the ability to adapt to many configurations
+  %   \item<4-> \textbf{Portability}: take advantage of the large variety of General Purpose Processors (GPPs) and operating systems
+  % \end{itemize}
+  % \vfill
+  % \pause
+  % \pause
+  % \pause
+  % \pause
+  % \underline{Functional Simulation:}
+  % \vspace*{.5em}
+  % \begin{itemize}
+  %   \item<5-> \textbf{Simulation time}: expensive Monte Carlo simulation of the whole chain
+  %   \item<6-> \textbf{Algorithmic heterogeneity}: many algorithms with various characteristics
+  %   \item<7-> \textbf{Reproducibility}: ease the reproduction of the state-of-the-art results
+  % \end{itemize}
   \vfill
 \end{frame}
 
 \begin{frame}{Contributions}
   \begin{enumerate}
-    \item<1-> Flexible high performance implementations of channel decoders (Polar, Turbo and LDPC)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
+    \item<1-> Flexible high performance implementations of channel decoders (Polar codes, Turbo codes and LDPC codes)~\cite{Cassagne2015c,Cassagne2016a,Cassagne2016b,Leonardon2019,Ghaffari2019}
     \begin{itemize}
       \item High throughput and low latency on single core and multi-core CPUs
       \item Flexibility
@@ -489,7 +516,7 @@
     \item<2-> Portable and efficient low level description of the signal processing algorithms~\cite{Cassagne2018}
     \begin{itemize}
       \item High throughput and low latency on single-core CPUs
-      \item Portability
+      \item Flexibility \& Portability
     \end{itemize}
     \vspace{.3em}
     \item<3-> Open-source library and functional simulator dedicated to the digital communication systems~\cite{Cassagne2017,Cassagne2017a,Cassagne2019a}
