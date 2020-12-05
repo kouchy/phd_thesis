@@ -27,30 +27,30 @@
 %   \vfill
 % \end{frame}
 
-\begin{frame}{Proposition}
+\begin{frame}{A Fast Forward Error Correction Toolbox}
   \vfill
-  \underline{Observations:}
+  \textbf{Observations:}
 
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{itemize}
-    \item Signal processing community => not used to share source codes
-    \item Existing open-source codes => often written with high-level language
-    \item Some existing high performance open-source codes
+    \item Signal processing community: \textbf{not used to share source codes}
+    \item Few existing open-source codes: often \textbf{written with high-level language}
+    \item \textbf{Rare high performance open-source codes}
   \end{itemize}
 
   \vfill
   \pause
-  \underline{\AFFECT: A Fast Forward Error Correction Toolbox:}
+  \textbf{\AFFECT:}
 
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{enumerate}
-    \item An \Cxx open-source toolbox made to ease the reproduction of scientific results
+    \item \Cxx \textbf{open-source toolbox}: ease the \textbf{reproduction of scientific results}
     % \vspace{0.3cm}
     \pause
-    \item Focus on high performance implementations for high speed simulations and real-time applications
+    \item Focus on high performance implementations: \textbf{high speed simulations}
     % \vspace{0.3cm}
     \pause
-    \item Manage the algorithmic heterogeneity of the signal processing algorithms in a single library
+    \item Manage the \textbf{algorithmic heterogeneity} to propose a \textbf{unified library}
   \end{enumerate}
   \vfill
 \end{frame}
@@ -60,10 +60,10 @@
 \begin{frame}{Features}
   \vfill
   \begin{itemize}
-    \item Channel codes: Polar, LDPC, Turbo codes, Product codes, BCH, RS, RA, Repetition
-    \vspace{0.3cm}
+    \item Channel codes: Polar, LDPC, Turbo codes, Product codes, RSC, CRC, BCH, RS, RA, Repetition
+    \vspace{0.1cm}
     \item Channel models: BSC, BEC, Optical, AWGN, Rayleigh
-    \vspace{0.3cm}
+    \vspace{0.1cm}
     \item Digital modulations: PSK, QAM, PAM, OOK, CPM, SCMA
   \end{itemize}
   \vfill
@@ -320,7 +320,7 @@ comm_chain.exec([&Mnt]() {
       \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center] (chn) at ( 3.5, 0) {AWGN\\Channel};
       \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dem) at ( 7.0, 0) {BPSK\\Demodulator};
       \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (qnt) at (10.5, 0) {32 to 8-bit\\Quantizer};
-      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dec) at (14.0, 0) {[F/P]A-SSCL\\Decoder};
+      \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (dec) at (14.0, 0) {FA-SSCL\\Decoder};
       \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center] (crc) at (17.5, 0) {CRC\\Extractor};
       \node[draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3              ] (mnt) at (21.0, 0) {Monitor};
 
@@ -355,8 +355,8 @@ comm_chain.exec([&Mnt]() {
         \nextgroupplot[ylabel=Frame Error Rate]
         \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
         \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
-        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line3}
-        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line4}
+        % \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line3}
+        % \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line4}
         % \legend{\texttt{FA-SCL} $L=\textrm{ }8$,
         %         \texttt{FA-SCL} $L=32$,
         %         \texttt{PA-SCL} $L=\textrm{ }8$,
@@ -373,8 +373,8 @@ comm_chain.exec([&Mnt]() {
         \nextgroupplot[ylabel=Information throughput (Mb/s), log basis y={2}, log ticks with fixed point, grid style={dashed, gray!30}]
         \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
         \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
-        \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
-        \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
+        % \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
+        % \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
       \end{groupplot}
       % create the legend matrix which is placed at the created (dummy) coordinate
       % and recall the plot specification using the `\ref' command
@@ -387,11 +387,11 @@ comm_chain.exec([&Mnt]() {
           matrix of nodes,
           anchor=south east,
           fill=white,
+          column 1/.style={anchor=base west},
           ampersand replacement=\&
       ] at (legend) {
-          $L$        \& FA               \& PA               \\
-          \small{8}  \& \ref{plot:line1} \& \ref{plot:line3} \\
-          \small{32} \& \ref{plot:line2} \& \ref{plot:line4} \\
+          $L = 8$  \& \ref{plot:line1} \\
+          $L = 32$ \& \ref{plot:line2} \\
       };
     \end{tikzpicture}
     }
@@ -429,14 +429,14 @@ comm_chain.exec([&Mnt]() {
           &                                           & \textbf{Name}      & \textbf{Size}         &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
   \hline
   \hline
-  ARM\R   & ThunderX2\R CN9975                        & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
-  Intel\R & Xeon Phi\TM 7230                          & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
-  Intel\R & Xeon\TM E5-2680 v3                        & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
-  Intel\R & Xeon\TM Gold 6140                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
+  ARM\R   & \textcolor{Paired-5}{ThunderX2\R CN9975}  & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
+  Intel\R & \textcolor{Paired-3}{Xeon Phi\TM 7230}    & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
+  Intel\R & \textcolor{Paired-7}{Xeon\TM E5-2680 v3}  & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
+  Intel\R & \textcolor{Paired-1}{Xeon\TM Gold 6140}   & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
 % Intel\R & Xeon\TM Gold 6142                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
-  Intel\R & Xeon\TM Gold 6240                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
+  Intel\R & \textcolor{Paired-1!60}{Xeon\TM Gold 6240}& \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
 % AMD\R   & EPYC\TM 7452                              & \texttt{AVX2}      & 256-bit               & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
-  AMD\R   & EPYC\TM 7702                              & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
+  AMD\R   & \textcolor{Paired-9}{EPYC\TM 7702}        & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
   \end{tabular}
   }}
 

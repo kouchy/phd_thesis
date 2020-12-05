@@ -4,21 +4,21 @@
 
 \subsection[Proposal]{Proposal}
 
-\begin{frame}{Proposal: \longMIPP (\MIPP)}
-  % \vfill
-  \underline{Objectives:}
+\begin{frame}{\longMIPP (\MIPP)}
+  \vfill
+  \textbf{Objectives:}
 
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{enumerate}
-    \item Efficient software implementations of signal processing algorithms
-    \item Portable source code
-    \item Flexible source code
+    \item Efficient software implementations of digital communication algorithms
+    \item Portable description : Adapt to various ISA
+    \item Flexible source code : Manage multiple data types
   \end{enumerate}
   \vspace{0.3cm}
   \pause
-  \underline{Proposal:}
+  \textbf{Proposal:}
 
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{itemize}
     \item<2-> Use Single Instruction Multiple Data (SIMD) paradigm
     % \vspace{0.1cm}
@@ -46,61 +46,61 @@
   %   \caption*{\MIPP \MIPP!}
   %   \label{pic:mipp}
   % \end{figure}
-  % \vfill
-\end{frame}
-
-\subsection[Programming Interfaces]{Programming Interfaces}
-
-\begin{frame}[containsverbatim,fragile]{Programming Interfaces}
-  % \vfill
-  \begin{itemize}
-    \item The Low-Level \MIPP Interface (low)
-    \begin{itemize}
-      \item Similar to SIMD intrinsics: \textcolor{Paired-5}{Untyped} registers, \textcolor{Paired-5}{typed} operations
-      \item Portability through \textbf{template specialization} and \textbf{function inlining}
-      \begin{columns}[t]
-        \begin{column}[T]{10.5cm}
-        \vspace{-1mm}
-        \begin{overprint}
-        \onslide<1>
-        \begin{minted}[linenos]{cpp}
-template<> // 'mipp::reg' is an alias of '__mm256' type
-inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
-}
-template<>
-inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
-}
-        \end{minted}
-        \onslide<2->
-        \begin{minted}[linenos, highlightlines={3,7}]{cpp}
-template<> // 'mipp::reg' is an alias of '__mm256' type
-inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
-}
-template<>
-inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
-  return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
-}
-        \end{minted}
-        \end{overprint}
-      \end{column}
-      \end{columns}
-    \end{itemize}
-  \end{itemize}
-  \vspace{0.3cm}
-  \pause
-  \begin{itemize}
-    \item The Medium-Level \MIPP Interface (med.)
-    \begin{itemize}
-      \item \textcolor{Paired-5}{Typed} registers, \textcolor{Paired-5}{polymorphic} operations
-      \item Based on \MIPP Low Level Interface
-      \item Typing through \textbf{object encapsulation} and \textbf{operator overloading}
-    \end{itemize}
-  \end{itemize}
   \vfill
 \end{frame}
+
+\subsection[Programming Interface]{Programming Interface}
+
+% \begin{frame}[containsverbatim,fragile]{Programming Interfaces}
+%   % \vfill
+%   \begin{itemize}
+%     \item The Low-Level \MIPP Interface (low)
+%     \begin{itemize}
+%       \item Similar to SIMD intrinsics: \textcolor{Paired-5}{Untyped} registers, \textcolor{Paired-5}{typed} operations
+%       \item Portability through \textbf{template specialization} and \textbf{function inlining}
+%       \begin{columns}[t]
+%         \begin{column}[T]{10.5cm}
+%         \vspace{-1mm}
+%         \begin{overprint}
+%         \onslide<1>
+%         \begin{minted}[linenos]{cpp}
+% template<> // 'mipp::reg' is an alias of '__mm256' type
+% inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+% }
+% template<>
+% inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+% }
+%         \end{minted}
+%         \onslide<2->
+%         \begin{minted}[linenos, highlightlines={3,7}]{cpp}
+% template<> // 'mipp::reg' is an alias of '__mm256' type
+% inline mipp::reg mipp::add<float>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_ps((__mm256 ) a, (__mm256 ) b);
+% }
+% template<>
+% inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
+%   return (mipp::reg) _mm256_add_pd((__mm256d) a, (__mm256d) b);
+% }
+%         \end{minted}
+%         \end{overprint}
+%       \end{column}
+%       \end{columns}
+%     \end{itemize}
+%   \end{itemize}
+%   \vspace{0.3cm}
+%   \pause
+%   \begin{itemize}
+%     \item The Medium-Level \MIPP Interface (med.)
+%     \begin{itemize}
+%       \item \textcolor{Paired-5}{Typed} registers, \textcolor{Paired-5}{polymorphic} operations
+%       \item Based on \MIPP Low Level Interface
+%       \item Typing through \textbf{object encapsulation} and \textbf{operator overloading}
+%     \end{itemize}
+%   \end{itemize}
+%   \vfill
+% \end{frame}
 
 % \begin{frame}[containsverbatim,fragile]{Low Level Interface (low)}
 %   \vfill
@@ -152,20 +152,20 @@ inline mipp::reg mipp::add<double>(mipp::reg a, mipp::reg b) {
 %   \vfill
 % \end{frame}
 
-\begin{frame}[fragile]{Medium Level Interface (med.)}
+\begin{frame}[fragile]{Features}
   \vfill
-  Typed registers, polymorphic operations
-  \vspace{0.3cm}
+  % Typed registers, polymorphic operations
+  % \vspace{0.3cm}
   \begin{itemize}
     \item \textcolor{Paired-5}{Typed}, portable SIMD \textbf{data register} (\texttt{mipp::Reg<\textcolor{Paired-1}{T}>})
-    \begin{itemize}
-      \item Contains a \MIPP low data register (\verb|mipp::reg|)
-    \end{itemize}
+    % \begin{itemize}
+    %   \item Contains a \MIPP low data register (\verb|mipp::reg|)
+    % \end{itemize}
     \vspace{0.2cm}
     \item \textcolor{Paired-5}{Typed}, portable SIMD \textbf{mask register} (\texttt{mipp::Msk<\textcolor{Paired-1}{N}>})
-    \begin{itemize}
-      \item Contains a \MIPP low mask register (\verb|mipp::msk|)
-    \end{itemize}
+    % \begin{itemize}
+    %   \item Contains a \MIPP low mask register (\verb|mipp::msk|)
+    % \end{itemize}
     \vspace{0.2cm}
     \item Supports \textcolor{Paired-5}{\textbf{operator overloading}}
     \begin{itemize}
@@ -278,6 +278,8 @@ void addVector(const std::vector<T> &A,
 \begin{frame}[fragile]{SIMD Wrappers}
   \vfill
   Two main strategies:
+
+  \vspace{0.1cm}
   \begin{enumerate}
     \item \textbf{operator overloading} (used in \MIPP)
     \item \textbf{expression templates}, can automatically match instructions like Fused Multiply–Add (FMA, $d = a \times b + c$)
@@ -365,11 +367,10 @@ void addVector(const std::vector<T> &A,
                  legend cell align=right,
                  area legend,
                  ylabel={Speeedup}, ytick={0,2,...,14},
-                 symbolic x coords={intr,mippl,mippm,vcl,simdpp,tsimd,vc,xsimd,boost},
+                 symbolic x coords={intr,mippm,vcl,simdpp,tsimd,vc,xsimd,boost},
                  xticklabel style={black!70}, yticklabel style={black!70},
                  xticklabels={Intrinsics,
-                              MIPP low,
-                              MIPP med.,
+                              MIPP,
                               VCL,
                               simdpp,
                               T-SIMD,
@@ -395,7 +396,7 @@ void addVector(const std::vector<T> &A,
                  postaction={pattern color = black!50!Paired-5!70,
                              pattern=crosshatch dots}
                 ]
-                coordinates {(intr,3.52) (mippl,3.52) (mippm,3.45) (vcl,0) (simdpp,2.44) (tsimd,3.37) (vc,0) (xsimd,0) (boost,0)};
+                coordinates {(intr,3.52) (mippm,3.45) (vcl,0) (simdpp,2.44) (tsimd,3.37) (vc,0) (xsimd,0) (boost,0)};
         \label{plot1}
 
         % SSE
@@ -404,7 +405,7 @@ void addVector(const std::vector<T> &A,
                   postaction={pattern color = black!50!Paired-3!70,
                               pattern=horizontal lines}
                  ]
-                 coordinates {(intr,3.74) (mippl,3.75) (mippm,3.70) (vcl,3.67) (simdpp,3.28) (tsimd,3.39) (vc,1.17) (xsimd,3.40) (boost,1.03)};
+                 coordinates {(intr,3.74) (mippm,3.70) (vcl,3.67) (simdpp,3.28) (tsimd,3.39) (vc,1.17) (xsimd,3.40) (boost,1.03)};
         \label{plot2}
         }
 
@@ -414,7 +415,7 @@ void addVector(const std::vector<T> &A,
                  postaction={pattern color = black!50!Paired-7!70,
                              pattern=grid}
                 ]
-                coordinates {(intr,6.98) (mippl,6.76) (mippm,6.76) (vcl,6.98) (simdpp,5.92) (tsimd,5.48) (vc,6.81) (xsimd,6.99) (boost,0.83)};
+                coordinates {(intr,6.98) (mippm,6.76) (vcl,6.98) (simdpp,5.92) (tsimd,5.48) (vc,6.81) (xsimd,6.99) (boost,0.83)};
         \label{plot4}
         }
 
@@ -424,7 +425,7 @@ void addVector(const std::vector<T> &A,
                  postaction={pattern color = black!50!Paired-1!70,
                              pattern=flexible hatch north west}
                 ]
-                coordinates {(intr,14.30) (mippl,14.30) (mippm,14.30) (vcl,14.30) (simdpp,7.84) (tsimd,5.49) (vc,5.16) (boost,0.84)};
+                coordinates {(intr,14.30) (mippm,14.30) (vcl,14.30) (simdpp,7.84) (tsimd,5.49) (vc,5.16) (boost,0.84)};
         \label{plot5}
         }
 
