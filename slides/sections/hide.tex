@@ -1,0 +1,45 @@
+%!TEX root = ../slides.tex
+
+\section[Back Slides]{Back Slides}
+
+\subsection[AFF3CT]{AFF3CT}
+
+\begin{frame}{\C/\Cxx Open Source Channel Coding Simulators/Libraries.}
+  \vspace{-0.6cm}
+  \begin{table}[htp]
+    \centering
+    % \caption{\C/\Cxx open source channel coding simulators/libraries.}
+    % \label{tab:aff3ct_fec_libraries_comparison}
+    {\resizebox{1.0\linewidth}{!}{
+    \begin{tabular}{r   r  r  r  r  r | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
+    \multirow{4}{*}{\textbf{Name}} & \multirow{4}{*}{\textbf{Ref.}} &                  &                &                & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
+                                   &                                & \textbf{Contri-} & \textbf{Code}  & \textbf{Start} &                                   &        &        &        &        &        &        &        &        &        &         \\
+                                   &                                & \textbf{butors}  & \textbf{Lines} & \textbf{Year}  &                                   &        &        &        &        &        &        &        &        &        &         \\
+                                   &                                &                  &                &                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline
+                                                                                                                                                             % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
+    {\AFFECT}                      & \cite{Cassagne2019a}           &               11 &            90k & 2016           & MIT                               & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
+    {aicodix GmbH}                 & \cite{Aicodix}                 &                1 &             7k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {eccpage}                      & \cite{ECCpage}                 &               20 &              - & 1989           & -                                 & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark  \\
+    {EZPWD}                        & \cite{EZPWDRS}                 &                2 &             6k & 2014           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {FastECC}                      & \cite{FastECC}                 &                2 &             1k & 2015           & Apache 2.0                        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {FEC-AL}                       & \cite{FEC-AL}                  &                1 &             3k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+    {FECpp}                        & \cite{FECpp}                   &                1 &             2k & 2009           & -                                 & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark  \\
+    {GNURadio}                     & \cite{GNURadio}                &              192 &           270k & 2006           & GPLv3                             & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \cmark & \xmark  \\
+    {Inan}                         & \cite{Inan-LDPC}               &                2 &            13k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {IT++}                         & \cite{ITpp}                    &               20 &           109k & 2005           & GPLv3                             & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+    {Le Gal}                       & \cite{LeGal-LDPC}              &                1 &            83k & 2015           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {Leopard}                      & \cite{Leopard}                 &                4 &             5k & 2017           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {libcorrect}                   & \cite{Libcorrect}              &                6 &             5k & 2016           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+    {Neal}                         & \cite{Neal-LDPC}               &                1 &             5k & 2006           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {OpenAir}                      & \cite{OpenAir}                 &              148 &           740k & 2013           & OAI Public                        & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {OpenFEC}                      & \cite{OpenFEC}                 &                8 &            55k & 2009           & CeCCIL-C                          & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {Schifra}                      & \cite{Schifra}                 &                1 &             7k & 2010           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+    {Siamese}                      & \cite{Siamese}                 &                1 &            11k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+    {Tavildar (Polar)}             & \cite{Tavildar-Polar}          &                1 &             2k & 2016           & -                                 & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {Tavildar (LDPC)}              & \cite{Tavildar-LDPC}           &                1 &             1k & 2016           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    {the-art-of-ecc}               & \cite{The-art-of-ecc}          &                1 &              - & 2006           & Copyright                         & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+    {TurboFEC}                     & \cite{TurboFEC}                &                2 &             4k & 2015           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+    \end{tabular}
+    }}
+  \end{table}
+\end{frame}

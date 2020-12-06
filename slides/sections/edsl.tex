@@ -7,15 +7,15 @@
 \subsection[Proposed eDSL]{Description of the Proposed Embedded Domain Specific Language}
 
 \begin{frame}{Motivations}
-  \vfill
+  % \vfill
   \begin{itemize}
     \item Existing solutions:
     \begin{itemize}
-      \item Dedicated languages based on the \textbf{dataflow model}~\cite{Dennis1980,Engels1994}
+      \item Dedicated languages~\cite{Amarasinghe2005,DeOliveiraCastro2017} based on the \textbf{dataflow model}
       \item GNU Radio~\cite{GNURadio}
     \end{itemize}
-    \vspace{0.3cm}
-    \pause
+    \vspace{0.1cm}
+    % \pause
     % \item Objectives:
     % \begin{itemize}
     %   \item High performance eDSL
@@ -24,7 +24,7 @@
     % \end{itemize}
     % \vspace{0.3cm}
     % \pause
-    \item Proposed solution:
+    \item<2-> Proposed solution:
     \begin{itemize}
       \item \Cxx Embedded Domain Specific Language (eDSL)
       \item \textbf{Interpreted language}, meta-programming technique is avoided
@@ -32,6 +32,11 @@
     \end{itemize}
   \end{itemize}
   \vfill
+  \enumcite{Amarasinghe2005}
+
+  \enumcite{DeOliveiraCastro2017}
+
+  \enumcite{GNURadio}
 \end{frame}
 
 \begin{frame}{Tasks and Sequence}
@@ -172,7 +177,9 @@
   \vfill
 \end{frame}
 
-\begin{frame}{Parallelization Techniques: Sequence Duplication}
+\subsection[Parallelization Techniques]{Parallelization Techniques}
+
+\begin{frame}{Sequence Duplication}
   \begin{figure}[!h]
     \centering
     \scalebox{.65}{
@@ -284,7 +291,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Parallelization Techniques: Pipeline}
+\begin{frame}{Pipeline}
   \vfill
   \begin{figure}[!h]
     \centering
@@ -389,7 +396,7 @@
       \node[seq, label={[Paired-11,align=center]below:Sequence 2\\= Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
       }
       \only<2->{
-      \node[seq, draw=white, label={[Paired-11,align=center]below:Sequence 2\\= Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
+      \node[seq, draw=none, label={[Paired-11,align=center]below:Sequence 2\\= Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
       \node[seq, fit=(t2_si) (t2) (t3) (pppt4) (pppt4_so)] (pseq2) {};
       }
       \node[seq, label={[Paired-11,align=center]below:Sequence 3\\= Stage 3}, fit=(t5_si) (t5) (t6)                   ] (seq3) {};
@@ -408,7 +415,7 @@
   \vfill
 \end{frame}
 
-\subsection[DVB-S2 Standard]{Application on the DVB-S2 Standard}
+\subsection[Application on the DVB-S2 Standard]{Application on the DVB-S2 Standard}
 
 \begin{frame}{Setup \& Objectives}
   \vspace{-0.1cm}
@@ -476,7 +483,7 @@
     \resizebox{1.0\linewidth}{!}{
     \begin{tabular}{c c c c c c c}
       \textbf{Config.} & \textbf{Modulation} & \textbf{Rate} $\bm{R}$ & $\bm{K_\text{\textbf{BCH}}}$ & $\bm{K_\text{\textbf{LDPC}}}$ & $\bm{N_\text{\textbf{LDPC}}}$ & $\bm{\mathcal{T}_i}$ (Rx, Seq.)\\
-      \hline \hline
+      \hline
       \textcolor{Paired-1}{MODCOD 1} &  QPSK & 3/5 &  9552 &  9720 & 16200 & 3.4 Mb/s\\
       \textcolor{Paired-3}{MODCOD 2} &  QPSK & 8/9 & 14232 & 14400 & 16200 & 4.1 Mb/s\\
       \textcolor{Paired-5}{MODCOD 3} & 8-PSK & 8/9 & 14232 & 14400 & 16200 & 4.0 Mb/s\\
@@ -767,7 +774,7 @@
     \begin{tabular}{c | c | c }
       \multirow{2}{*}{\textbf{Config.}} & \multicolumn{2}{c }{\textbf{Throughput} $\bm{\mathcal{T}_i}$ (Mb/s)} \\
                                         & \multicolumn{1}{c |}{\textbf{Sequential}} & \multicolumn{1}{c }{\textbf{Parallel}} \\
-      \hline \hline
+      \hline
       \textcolor{Paired-1}{MODCOD 1} & 3.4 & 37 \\
       \textcolor{Paired-3}{MODCOD 2} & 4.1 & 55 \\
       \textcolor{Paired-5}{MODCOD 3} & 4.0 & 80 \\

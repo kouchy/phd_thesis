@@ -329,15 +329,15 @@ void addVector(const std::vector<T> &A,
     % \caption{Specifications of the target processors}
     \label{tab:targets}
     % {\small\resizebox{\linewidth}{!}{
-    \begin{tabular}{c|c|c|c}
+    \begin{tabular}{c|c c c}
     \textbf{Instr. set}             & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE / AVX}} & \textbf{\texttt{AVX-512}} \\ \hline
-    \textbf{Name}                   & \textbf{Exynos5422}    & \textbf{Core i5-5300U}      & \textbf{Xeon Phi 7230}    \\ \hline
-    \textbf{Year}                   & 2014                   & 2015                        & 2016                      \\ \hline
-    \textbf{Vendor}                 & Samsung                & Intel                       & Intel                     \\ \hline
+    \textbf{Name}                   & \textbf{Exynos5422}    & \textbf{Core i5-5300U}      & \textbf{Xeon Phi 7230}    \\ %\hline
+    \textbf{Year}                   & 2014                   & 2015                        & 2016                      \\ %\hline
+    \textbf{Vendor}                 & Samsung                & Intel                       & Intel                     \\ %\hline
     \multirow{2}{*}{\textbf{Arch.}} & ARMv7                  & x86-64                      & Knights                   \\
-                                    & Cortex A15             & Broadwell                   & Landing                   \\ \hline
-    \textbf{Cores/Freq.}            & 4/2.0 GHz              & 2/2.3 GHz                   & 64/1.3 GHz                \\ \hline
-    \textbf{LLC}                    & 2 MB L2                & 3 MB L3                     & 32 MB L2                  \\ \hline
+                                    & Cortex A15             & Broadwell                   & Landing                   \\ %\hline
+    \textbf{Cores/Freq.}            & 4/2.0 GHz              & 2/2.3 GHz                   & 64/1.3 GHz                \\ %\hline
+    \textbf{LLC}                    & 2 MB L2                & 3 MB L3                     & 32 MB L2                  \\ %\hline
     \textbf{TDP}                    & $\sim$4 W              & 15 W                        & 215 W                     \\
     \end{tabular}
     % }}

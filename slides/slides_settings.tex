@@ -35,6 +35,7 @@
 \usepackage[
   labelnumber  = true,
   backend      = biber,
+  sorting      = none,
   % style        = alphabetic,
   % citestyle    = alphabetic,
   maxnames     = 6,
@@ -232,6 +233,7 @@
 \newcommand{\bSIMD}{bSIMD\xspace}
 \newcommand{\AFFECT}{AFF3CT\xspace}
 
+\newcommand{\C}{\texttt{C}\xspace}
 \newcommand{\Cxx}{\texttt{C++}\xspace}
 \newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
 \newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
@@ -254,3 +256,10 @@
 
 \newcommand{\R}{\textsuperscript{\textregistered}\xspace}
 \newcommand{\TM}{\textsuperscript{\texttrademark}\xspace}
+
+% add column types for big table
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newlength{\simcolwidth}
+\setlength{\simcolwidth}{0.5cm}
