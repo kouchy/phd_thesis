@@ -1248,7 +1248,7 @@
         \node[lb] (r0_e4) at (\lft+2.8, -\vs) {\footnotesize{$\lambda_{b}^0$}};
         \node[lb] (r0_e5) at (\lft+3.5, -\vs) {\footnotesize{$\lambda_{b}^1$}};
         \node[lb] (r0_e6) at (\lft+4.2, -\vs) {\footnotesize{$\lambda_{b}^2$}};
-        \node[lb] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+        \node[lb] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{b}^3$}};
 
         \node[instr] (instr0) at (\lft+2.45, -\vs-\vs+1.5) {\footnotesize{$\lambda_{c}^i = f(\lambda_{a}^i, \lambda_{b}^i)$}};
 
@@ -1332,7 +1332,7 @@
         \node[lb ] (r0_e4) at (\lft+2.8, -\vs) {\footnotesize{$\lambda_{b}^0$}};
         \node[lbh] (r0_e5) at (\lft+3.5, -\vs) {\footnotesize{$\lambda_{b}^1$}};
         \node[lbh] (r0_e6) at (\lft+4.2, -\vs) {\footnotesize{$\lambda_{b}^2$}};
-        \node[lbh] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{a}^3$}};
+        \node[lbh] (r0_e7) at (\lft+4.9, -\vs) {\footnotesize{$\lambda_{b}^3$}};
 
         \node[instr] (instr0) at (\lft+1.4, -\vs-\vs+1.5) {\footnotesize{$\lambda_{c}^0 = f(\lambda_{a}^0, \lambda_{b}^0)$}};
 
@@ -1932,9 +1932,9 @@
   \end{columns}
   \vfill
   \begin{itemize}
-    \item Find similar sub-patterns and create functions for them
-    \item Compromise between the number of functions calls and the binary size
-    \item Threshold to avoid functions that contain a too small number of Polar functions
+    \item Find similar \textbf{sub-patterns} and \textbf{create functions} for them
+    \item \textbf{Compromise} between the \textbf{number of functions calls} and the \textbf{binary size}
+    \item \textbf{Threshold} to avoid functions that contain too \textbf{few computations}
   \end{itemize}
 \end{frame}
 
@@ -2019,9 +2019,9 @@
   \begin{itemize}
     \item \textbf{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
     \vspace{0.2cm}
-    \item<2-> \textbf{Solution 1:} Do not store the memory addresses offsets in the generated code
+    \item<2-> \textbf{Solution 1:} Do not store intermediate memory address offsets
     \vspace{0.2cm}
-    \item<3-> \textbf{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
+    \item<3-> \textbf{Solution 2:} Implement a sub-tree folding algorithm
   \end{itemize}
 \end{frame}
 
