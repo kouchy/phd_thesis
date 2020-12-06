@@ -377,6 +377,11 @@ comm_chain.exec([&Mnt]() {
         % \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
         % \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
       \end{groupplot}
+      \only<1-2>{
+      \draw[white, fill=white] (5, -0.95) rectangle (11.05, 7.45);
+      }
+      \only<3->{
+      }
       % create the legend matrix which is placed at the created (dummy) coordinate
       % and recall the plot specification using the `\ref' command
       %
@@ -408,7 +413,7 @@ comm_chain.exec([&Mnt]() {
       \item Adaptive SSCL decoders
       \item Based on SSC decoder
       \item $L$ decoding trees
-      \item Early termination criteria with a CRC
+      \item<3-> Early termination criteria with a CRC
     \end{itemize}
   \end{column}
   \end{columns}
