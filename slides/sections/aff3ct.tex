@@ -33,9 +33,12 @@
 
   \vspace{0.1cm}
   \begin{itemize}
-    \item Signal processing community: \textbf{Not used to share source codes}
-    \item Few existing open-source codes: Often \textbf{written with high-level languages}
-    \item \textbf{Rare high performance open-source codes}
+    \item Signal processing community: \textbf{not used to share source codes}
+    \item Few existing open-source codes:
+    \begin{itemize}
+      \item Often \textbf{written with high-level languages}
+      \item \textbf{Rare high performance implementations}
+    \end{itemize}
   \end{itemize}
 
   \vfill
@@ -44,10 +47,10 @@
 
   \vspace{0.1cm}
   \begin{enumerate}
-    \item \Cxx \textbf{open-source toolbox}: Ease the \textbf{reproduction of scientific results}
+    \item \Cxx \textbf{open-source toolbox}: ease the \textbf{reproduction of scientific results}
     % \vspace{0.3cm}
     \pause
-    \item Focus on high performance implementations: \textbf{High speed simulations}
+    \item Focus on high performance implementations: \textbf{high speed simulations}
     % \vspace{0.3cm}
     \pause
     \item Manage the \textbf{algorithmic heterogeneity} to propose a \textbf{unified library}
@@ -96,79 +99,79 @@
       \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (-4.1, 3.3) {};
       \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (-4.1, 2.8) {};
 
-      \only<1->{
+      \only<2->{
       \node[tsk ] (src) at ( 0, 4) {generate};
       \node[sout] (src_so) at (0+1.25, 4) {};
       }
-      \only<2->{
+      \only<3->{
       \node[tsk ] (enc) at ( 4, 4) {encode};
       \node[sin ] (enc_si) at (4-1.25, 4) {};
       \node[sout] (enc_so) at (4+1.25, 4) {};
       }
-      \only<3->{
+      \only<4->{
       \node[tsk ] (mod) at ( 8, 4) {modulate};
       \node[sin ] (mod_si) at (8-1.25, 4) {};
       \node[sout] (mod_so) at (8+1.25, 4) {};
       }
-      \only<4->{
+      \only<5->{
       \node[tsk ] (chn) at (11.25, 2) {add\_noise};
       \node[sin ] (chn_si) at (11.25, 2.5) {};
       \node[sout] (chn_so) at (11.25, 1.5) {};
       }
-      \only<3->{
+      \only<4->{
       \node[tsk ] (dem) at ( 8, 0) {demodulate};
       \node[sout] (dem_so) at (8-1.25, 0) {};
       \node[sin ] (dem_si) at (8+1.25, 0) {};
       }
-      \only<5->{
+      \only<6->{
       \node[tsk ] (dec) at ( 4, 0) {decode};
       \node[sin ] (dec_so) at (4-1.25, 0) {};
       \node[sout] (dec_si) at (4+1.25, 0) {};
       }
-      \only<6->{
+      \only<7->{
       \node[tsk ] (mnt) at ( 0, 0) {check\_errrors};
       \node[sin ] (mnt_si1) at (0+1.25, +0.2) {};
       \node[sin ] (mnt_si2) at (0+1.25, -0.2) {};
       }
 
-      \only<1->{
+      \only<2->{
       \node[mdl, label={[Paired-3]below:Source (Src)},  dashed, fit=(src) (src_so)] {};
       }
-      \only<2->{
+      \only<3->{
       \node[mdl, label={[Paired-3]below:Encoder (Enc)}, dashed, fit=(enc) (enc_si) (enc_so)] {};
       }
-      \only<3->{
+      \only<4->{
       \node[mdl, label={[Paired-3]center:Modem (Mdm)},  dashed, fit=(mod) (dem) (mod_si) (mod_so) (dem_si) (dem_so)] {};
       }
-      \only<4->{
+      \only<5->{
       \node[mdl, label={[Paired-3]below:Channel (Chn)}, dashed, fit=(chn) (chn_si) (chn_so)] {};
       }
-      \only<5->{
+      \only<6->{
       \node[mdl, label={[Paired-3]above:Decoder (Dec)}, dashed, fit=(dec) (dec_si) (dec_so)] {};
       }
-      \only<6->{
+      \only<7->{
       \node[mdl, label={[Paired-3]above:Monitor (Mnt)}, dashed, fit=(mnt) (mnt_si1) (mnt_si2)] {};
       }
 
-      \only<7->{
+      \only<8->{
       \draw[->,>=latex] (src_so)               -- (enc_si)       node [midway, above] {$\bm{u}$};
       }
-      \only<8->{
+      \only<9->{
       \draw[->,>=latex] (enc_so)               -- (mod_si)       node [midway, above] {$\bm{c}$};
       }
-      \only<9->{
+      \only<10->{
       \draw[->,>=latex] (mod_so)               -| (chn_si)       node [midway, above] {$\bm{x}$};
       }
-      \only<10->{
+      \only<11->{
       \draw[->,>=latex] (chn_so)               |- (dem_si)       node [midway, below] {$\bm{y}$};
       }
-      \only<11->{
+      \only<12->{
       \draw[->,>=latex] (dem_so)               -- (dec_si)       node [midway, below] {$\bm{l}$};
       }
-      \only<12->{
+      \only<13->{
       \draw[->,>=latex] (dec_so)      -- (2,0) |- (mnt_si2)      node [midway, below] {$\bm{\hat{u}}$};
       }
-      \only<13->{
+      \only<14->{
       \draw[->,>=latex] (src_so.east) -- (2,4) |- (mnt_si1.east) node [midway, above] {};
       }
     \end{tikzpicture}
@@ -176,25 +179,25 @@
   \end{figure}
 
   \begin{overprint}
-  \onslide<1>
+  \onslide<2>
   \begin{minted}[linenos, highlightlines={2}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
   \end{minted}
-  \onslide<2>
+  \onslide<3>
   \begin{minted}[linenos, highlightlines={3}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
 aff3ct::module::Encoder_repetition<> Enc(K, N);
   \end{minted}
-  \onslide<3>
+  \onslide<4>
   \begin{minted}[linenos, highlightlines={4}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
 aff3ct::module::Encoder_repetition<> Enc(K, N);
 aff3ct::module::Modem_BPSK<>         Mdm(N   );
   \end{minted}
-  \onslide<4>
+  \onslide<5>
   \begin{minted}[linenos, highlightlines={5}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
@@ -202,7 +205,7 @@ aff3ct::module::Encoder_repetition<> Enc(K, N);
 aff3ct::module::Modem_BPSK<>         Mdm(N   );
 aff3ct::module::Channel_AWGN<>       Chn(N   );
   \end{minted}
-  \onslide<5>
+  \onslide<6>
   \begin{minted}[linenos, highlightlines={6}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
@@ -211,7 +214,7 @@ aff3ct::module::Modem_BPSK<>         Mdm(N   );
 aff3ct::module::Channel_AWGN<>       Chn(N   );
 aff3ct::module::Decoder_repetiton<>  Dec(K, N);
   \end{minted}
-  \onslide<6>
+  \onslide<7>
   \begin{minted}[linenos, highlightlines={7}]{cpp}
 // allocate the module objects
 aff3ct::module::Source_random<>      Src(K   );
@@ -221,25 +224,25 @@ aff3ct::module::Channel_AWGN<>       Chn(N   );
 aff3ct::module::Decoder_repetiton<>  Dec(K, N);
 aff3ct::module::Monitor_BFER<>       Mnt(K, E);
   \end{minted}
-  \onslide<7>
+  \onslide<8>
   \begin{minted}[linenos, highlightlines={2}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
   \end{minted}
-  \onslide<8>
+  \onslide<9>
   \begin{minted}[linenos, highlightlines={3}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
 Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
   \end{minted}
-  \onslide<9>
+  \onslide<10>
   \begin{minted}[linenos, highlightlines={4}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
 Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
 Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
   \end{minted}
-  \onslide<10>
+  \onslide<11>
   \begin{minted}[linenos, highlightlines={5}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
@@ -247,7 +250,7 @@ Mdm[sck::modulate    ::c ].bind(Enc[sck::encode     ::c]);
 Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
 Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
   \end{minted}
-  \onslide<11>
+  \onslide<12>
   \begin{minted}[linenos, highlightlines={6}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
@@ -256,7 +259,7 @@ Chn[sck::add_noise   ::x ].bind(Mdm[sck::modulate   ::x]);
 Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
 Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
   \end{minted}
-  \onslide<12>
+  \onslide<13>
   \begin{minted}[linenos, highlightlines={7}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
@@ -266,7 +269,7 @@ Mdm[sck::demodulate  ::y ].bind(Chn[sck::add_noise  ::y]);
 Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
 Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
   \end{minted}
-  \onslide<13>
+  \onslide<14>
   \begin{minted}[linenos, highlightlines={8}]{cpp}
 // bind the sockets over the tasks
 Enc[sck::encode      ::u ].bind(Src[sck::generate   ::u]);
@@ -277,7 +280,7 @@ Dec[sck::decode      ::l ].bind(Mdm[sck::demodulate ::l]);
 Mnt[sck::check_errors::u2].bind(Dec[sck::decode     ::u]);
 Mnt[sck::check_errors::u1].bind(Src[sck::generate   ::u]);
   \end{minted}
-  \onslide<14>
+  \onslide<15>
   \begin{minted}[linenos]{cpp}
 // build a sequence of tasks (= a chain) from the previous binding
 aff3ct::tools::Sequence comm_chain(Src[tsk::generate    ], // first task

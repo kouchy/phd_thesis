@@ -11,8 +11,8 @@
   \vspace{0.1cm}
   \begin{enumerate}
     \item Efficient software implementations of digital communication algorithms
-    \item Portable description : Adapt to various ISA
-    \item Flexible source code : Manage multiple data types
+    \item Portable description: adapt to various ISAs
+    \item Flexible source code: manage multiple data types
   \end{enumerate}
   \vspace{0.3cm}
   \pause
@@ -269,7 +269,7 @@ void addVector(const std::vector<T> &A,
     \item Same code can \textbf{work on various data types} and \textbf{instruction sets}
     \pause
     	\\\vspace*{.5em}
-      {\color{bleuUni}\Large\MVRightarrow} Good for \textbf{readability}, \textbf{flexibility} and \textbf{portability}!
+      {\color{bleuUni}\Large\MVRightarrow} Good for \textbf{flexibility} and \textbf{portability}!
   \end{itemize}
 \end{frame}
 
@@ -329,6 +329,7 @@ void addVector(const std::vector<T> &A,
     % \caption{Specifications of the target processors}
     \label{tab:targets}
     % {\small\resizebox{\linewidth}{!}{
+    {\small
     \begin{tabular}{c|c c c}
     \textbf{Instr. set}             & \textbf{\texttt{NEON}} & \textbf{\texttt{SSE / AVX}} & \textbf{\texttt{AVX-512}} \\ \hline
     \textbf{Name}                   & \textbf{Exynos5422}    & \textbf{Core i5-5300U}      & \textbf{Xeon Phi 7230}    \\ %\hline
@@ -340,6 +341,7 @@ void addVector(const std::vector<T> &A,
     \textbf{LLC}                    & 2 MB L2                & 3 MB L3                     & 32 MB L2                  \\ %\hline
     \textbf{TDP}                    & $\sim$4 W              & 15 W                        & 215 W                     \\
     \end{tabular}
+    }
     % }}
   \end{table}
   \vfill
@@ -400,34 +402,34 @@ void addVector(const std::vector<T> &A,
         \label{plot1}
 
         % SSE
-        \only<3->{
+        % \only<3->{
         \addplot[black!25!Paired-3,fill=Paired-3!40,draw=Paired-3,
                   postaction={pattern color = black!50!Paired-3!70,
                               pattern=horizontal lines}
                  ]
                  coordinates {(intr,3.74) (mippm,3.70) (vcl,3.67) (simdpp,3.28) (tsimd,3.39) (vc,1.17) (xsimd,3.40) (boost,1.03)};
         \label{plot2}
-        }
+        % }
 
         % AVX
-        \only<4->{
+        % \only<4->{
         \addplot[black!25!Paired-7,fill=Paired-7!40,draw=Paired-7,
                  postaction={pattern color = black!50!Paired-7!70,
                              pattern=grid}
                 ]
                 coordinates {(intr,6.98) (mippm,6.76) (vcl,6.98) (simdpp,5.92) (tsimd,5.48) (vc,6.81) (xsimd,6.99) (boost,0.83)};
         \label{plot4}
-        }
+        % }
 
         % AVX-512
-        \only<5->{
+        % \only<5->{
         \addplot[black!25!Paired-1,fill=Paired-1!40,draw=Paired-1,
                  postaction={pattern color = black!50!Paired-1!70,
                              pattern=flexible hatch north west}
                 ]
                 coordinates {(intr,14.30) (mippm,14.30) (vcl,14.30) (simdpp,7.84) (tsimd,5.49) (vc,5.16) (boost,0.84)};
         \label{plot5}
-        }
+        % }
 
         \legend{\texttt{NEON},
                 \texttt{SSE},

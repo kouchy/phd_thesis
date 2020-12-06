@@ -9,7 +9,9 @@
 \begin{frame}{Motivations}
   % \vfill
   \begin{itemize}
-    \item Existing solutions:
+    \item Need for environment adapted to SDR systems description
+    \vspace{0.1cm}
+    \item<2-> Existing solutions:
     \begin{itemize}
       \item Dedicated languages~\cite{Amarasinghe2005,DeOliveiraCastro2017} based on the \textbf{dataflow model}
       \item GNU Radio~\cite{GNURadio}
@@ -24,19 +26,21 @@
     % \end{itemize}
     % \vspace{0.3cm}
     % \pause
-    \item<2-> Proposed solution:
+    \item<3-> Proposed solution:
     \begin{itemize}
       \item \Cxx embedded Domain Specific Language (eDSL)
       \item \textbf{Interpreted language}, meta-programming technique is avoided
       \item Close to the cyclo-static dataflow model but \textbf{not stateless}
     \end{itemize}
   \end{itemize}
-  \vfill
+  \vspace{0.5cm}
+  \only<2->{
   \enumcite{Amarasinghe2005}
 
   \enumcite{DeOliveiraCastro2017}
 
   \enumcite{GNURadio}
+  }
 \end{frame}
 
 \begin{frame}{Tasks and Sequence}
@@ -160,7 +164,7 @@
   \vfill
   \pause
   \begin{itemize}
-    \item<2-> A sequence is build from an initial and a final list of tasks
+    \item<2-> A sequence is built from an initial and a final list of tasks
     \item<3-> \textbf{Oriented graphs} have to be supported \textbf{to map real SDR systems}
     \item<4-> Tasks scheduling is resolved at the construction of the sequence
     % \begin{itemize}

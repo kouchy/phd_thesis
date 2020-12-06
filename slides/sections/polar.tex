@@ -49,11 +49,13 @@
     % \item<3-> First code proven to achieve the channel capacity (asymptotically)
   \end{itemize}
   \only<2->{
+  \vspace{0.2cm}
   \enumcite{Arikan2009}
   }
 \end{frame}
 
 \begin{frame}{Coding Scheme}
+  \vspace{-0.2cm}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -341,7 +343,8 @@
   \end{figure}
 
   \begin{itemize}
-    \item<1-> $\bm{u}$ is the initial message of $K$ bits and $\bm{c}$ is the codeword of $N$ bits ($K < N$)
+    \item<1-> $\bm{u}$: initial message ($K$ bits)
+    \item<1-> $\bm{c}$: codeword ($N$ bits, $K < N$)
     % \item<2-> Generator matrix $\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes m}; \bm{\mathcal{K}} =
     %   \begin{bmatrix}
     %   1 & 0 \\
@@ -1042,28 +1045,22 @@
   \end{figure}
   \end{column}
   \begin{column}{.50\textwidth}
-  \vspace{0.5cm}
+  \vspace{1.cm}
   \begin{itemize}
-    \item SC intrinsic parallelism decreases with the tree depth
-    \begin{itemize}
-      \item Intra-frame parallelism
-    \end{itemize}
+    \item Parallelism decreases with tree depth (intra-frame parallelism)
     \vspace{0.3cm}
     \item<5-> Regular memory access pattern
-      \begin{itemize}
-        \item Good for the SIMD paradigm
-      \end{itemize}
     \vspace{0.3cm}
-    \item<6-> \textbf{Problem:} limited SIMD efficiency near the leaves
+    \item<6-> \textbf{Problem:} limited SIMD efficiency near leaves
     \vspace{0.3cm}
-    \item<7-> \textbf{Solution 1:} reduce the number of nodes that have a limited amount of parallelism
+    \item<7-> \textbf{Solution 1:} reduce number of nodes that have a limited amount of parallelism
   \end{itemize}
   \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{Simplified Successive Cancellation (SSC) Algorithm}
-  \vspace{-0.2cm}
+  % \vspace{-0.2cm}
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
@@ -1206,14 +1203,14 @@
   \end{figure}
 
   \begin{itemize}
-    \item SC simplifications have been proposed in the literature~\cite{Alamdar-Yazdi2011,Sarkis2014a}
+    \item SC simplifications proposed in literature~\cite{Alamdar-Yazdi2011,Sarkis2014a}
     \begin{itemize}
-      \item Introducing new type of nodes => tree pruning
+      \item Introducing new type of nodes {\color{bleuUni}\Large\MVRightarrow} \textbf{Tree pruning}
       % \item<8-> Drastically reduce the number of nodes with a low level of parallelism
-      \item<8-> Drastically reduce the number of nodes: \textbf{from 2047 nodes to 291 nodes} ($N = 1024$ and $R = 1/2$)
+      \item<8-> \textbf{2047 nodes pruned to 291 nodes} ($N = 1024$, $R = 1/2$)
     \end{itemize}
   \end{itemize}
-  \vfill
+  \vspace{0.5cm}
   \enumcite{Alamdar-Yazdi2011}
 \end{frame}
 
@@ -2017,7 +2014,7 @@
   \end{figure}
   \vfill
   \begin{itemize}
-    \item \textbf{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
+    \item \textbf{Problem:} Codewords$~> N = 2^8$ exceed CPU instruction cache
     \vspace{0.2cm}
     \item<2-> \textbf{Solution 1:} Do not store intermediate memory address offsets
     \vspace{0.2cm}
@@ -2070,21 +2067,17 @@
 % \subsection[Evaluations and Comparisons]{Evaluations and Comparisons}
 
 \begin{frame}[fragile]{Experimentation Protocol}
-
+  \vfill
   \begin{itemize}
-    \item Compiler
-    \begin{itemize}
-      \item GCC version 4.8
-      \item Optimization flags: \verb|-O3 -funroll-loops|
-    \end{itemize}
-    \vspace{0.2cm}
-    \item Focus on the \textbf{SC generated decoders}
+    \item Focus on \textbf{SC generated decoders}
     \begin{itemize}
       \item Intra-frame SIMD: 32-bit floating-point representation + \verb|AVX| instructions
       \item Inter-frame SIMD: 8-bit fixed-point representation + \verb|SSE4.2| instructions
     \end{itemize}
-    \vspace{0.2cm}
+    \vspace{0.1cm}
     \item \textbf{Single core performance}
+    \vspace{0.1cm}
+    \item GCC compiler version 4.8 (\verb|-O3 -funroll-loops|)
   \end{itemize}
   \vfill
   \begin{table}[htp]
@@ -2098,7 +2091,7 @@
     \multirow{1}{*}{\textbf{LLC}} & L3 6 MB                 \\
     \end{tabular}
   \end{table}
-
+  \vfill
 \end{frame}
 
 \begin{frame}{Impact of the Tree Pruning on the Decoding Speed}
@@ -2321,14 +2314,16 @@
   \end{column}
   \end{columns}
   \vfill
+  SIMD strategy:
+
   \begin{itemize}
-    \item Intra-frame SIMD strategy: \textbf{Lowest latencies}
-    \item Inter-frame SIMD strategy: \textbf{Highest throughputs}
+    \item Intra-frame: \textbf{lowest latencies}
+    \item Inter-frame: \textbf{highest throughputs}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Comparisons with State-of-the-Art Implementations}
-  \vspace{-0.5cm}
+  % \vspace{-0.5cm}
   \begin{columns}
   \begin{column}[T]{6cm}
   \begin{figure}[!h]
@@ -2411,7 +2406,7 @@
   \end{figure}
   \end{column}
   \end{columns}
-  \vfill
+  % \vspace{0.5cm}
   \enumcite{Sarkis2014}
 
   \enumcite{LeGal2015a}
