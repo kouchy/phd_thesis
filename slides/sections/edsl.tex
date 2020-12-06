@@ -51,16 +51,32 @@
           \draw[->,>=latex,dotted,white] (-1.25,0) -- (-0.5,0.0) node [midway, above] {};
           \draw[->,>=latex,dotted,white] (6.5,0) -- (6+1.25,0) node [midway, above] {};
 
-          \node[tsk ] (t1) at (0.0, 0.00) {$t_1$};
-          \node[sout] (t1_so) at (0.0+0.5, 0) {};
-          \node[tsk ] (t2) at (2.0, 0.00) {$t_2$};
-          \node[sin ] (t2_si) at (2.0-0.5, 0) {};
-          \node[sout] (t2_so) at (2.0+0.5, 0) {};
-          \node[tsk ] (t3) at (4.0, 0.00) {$t_3$};
-          \node[sin ] (t3_si) at (4.0-0.5, 0) {};
-          \node[sout] (t3_so) at (4.0+0.5, 0) {};
-          \node[tsk ] (t4) at (6.0, 0.00) {$t_4$};
-          \node[sin ] (t4_si) at (6.0-0.5, 0) {};
+          \only<1>{
+          \node[tsk       ] (t1) at (0.0, 0.00) {$t_1$};
+          }
+          \only<2>{
+          \node[tsk, thick] (t1) at (0.0, 0.00) {$t_1$};
+          }
+          \only<3->{
+          \node[tsk       ] (t1) at (0.0, 0.00) {$t_1$};
+          }
+          \node[sout      ] (t1_so) at (0.0+0.5, 0) {};
+          \node[tsk       ] (t2) at (2.0, 0.00) {$t_2$};
+          \node[sin       ] (t2_si) at (2.0-0.5, 0) {};
+          \node[sout      ] (t2_so) at (2.0+0.5, 0) {};
+          \node[tsk       ] (t3) at (4.0, 0.00) {$t_3$};
+          \node[sin       ] (t3_si) at (4.0-0.5, 0) {};
+          \node[sout      ] (t3_so) at (4.0+0.5, 0) {};
+          \only<1>{
+          \node[tsk       ] (t4) at (6.0, 0.00) {$t_4$};
+          }
+          \only<2>{
+          \node[tsk, thick] (t4) at (6.0, 0.00) {$t_4$};
+          }
+          \only<3->{
+          \node[tsk       ] (t4) at (6.0, 0.00) {$t_4$};
+          }
+          \node[sin       ] (t4_si) at (6.0-0.5, 0) {};
 
           \draw[->,>=latex] (t1_so) -- (t2_si) node [midway, above] {};
           \draw[->,>=latex] (t2_so) -- (t3_si) node [midway, above] {};
@@ -86,6 +102,8 @@
         \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt, minimum height=1.5cm} }
         \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
         \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+
+        \path[use as bounding box] (-1.25, -2.1) rectangle (7.25, 1.65);
 
         \node[tsk ] (t1)    at (0.0    , +1.00) {$t_1$};
         \node[sin ] (t1_si) at (0.0-0.5, +1.00) {};
@@ -125,16 +143,21 @@
         \draw[->,>=latex,dotted] (t6_so) -- (6+1.25,-1) node [midway, above] {};
 
         \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1_si) (t1) (t2) (t3) (t5_so)] {};
+
+        \only<1-2>{
+          \draw[white, fill=white] (-1.25, -2.1) rectangle (7.25, 1.65);
+        }
       \end{tikzpicture}
       }
     \end{figure}
     \end{column}
   \end{columns}
   \vfill
+  \pause
   \begin{itemize}
-    \item A sequence is build from an initial and a final list of tasks
-    \item \textbf{Oriented graphs} have to be supported \textbf{to map real SDR systems}
-    \item Tasks scheduling is resolved at the construction of the sequence
+    \item<2-> A sequence is build from an initial and a final list of tasks
+    \item<3-> \textbf{Oriented graphs} have to be supported \textbf{to map real SDR systems}
+    \item<4-> Tasks scheduling is resolved at the construction of the sequence
     % \begin{itemize}
     %   \item Could be resolved at compilation time
     %   \item But small overhead at runtime
@@ -225,15 +248,15 @@
       \newcommand\tttthr{-4.5}
 
       \thread{(-1,-5.0)}{1}{tht};
-      \node[tsk ] (tttt1)    at (0.0    , \tttthr) {$t_1^t$};
+      \node[tsk ] (tttt1)    at (0.0    , \tttthr) {$t_1^n$};
       \node[sout] (tttt1_so) at (0.0+0.5, \tttthr) {};
-      \node[tsk ] (tttt2)    at (2.0    , \tttthr) {$t_2^t$};
+      \node[tsk ] (tttt2)    at (2.0    , \tttthr) {$t_2^n$};
       \node[sin ] (tttt2_si) at (2.0-0.5, \tttthr) {};
       \node[sout] (tttt2_so) at (2.0+0.5, \tttthr) {};
-      \node[tsk ] (tttt3)    at (4.0    , \tttthr) {$t_3^t$};
+      \node[tsk ] (tttt3)    at (4.0    , \tttthr) {$t_3^n$};
       \node[sin ] (tttt3_si) at (4.0-0.5, \tttthr) {};
       \node[sout] (tttt3_so) at (4.0+0.5, \tttthr) {};
-      \node[tsk ] (tttt4)    at (6.0    , \tttthr) {$t_4^t$};
+      \node[tsk ] (tttt4)    at (6.0    , \tttthr) {$t_4^n$};
       \node[sin ] (tttt4_si) at (6.0-0.5, \tttthr) {};
 
       \draw[->,>=latex] (tttt1_so) -- (tttt2_si) node [midway, above] {};
@@ -249,7 +272,7 @@
 
       \node[sseq, label={[Paired-9]below:Sub-sequence 1}, fit=(t1) (t4)] {};
       \node[sseq, label={[Paired-9]below:Sub-sequence 2}, fit=(tt1) (tt4)] {};
-      \node[sseq, label={[Paired-9]below:Sub-sequence $t$}, fit=(tttt1) (tttt4)] {};
+      \node[sseq, label={[Paired-9]below:Sub-sequence $n$}, fit=(tttt1) (tttt4)] {};
 
     \end{tikzpicture}
     }
@@ -282,6 +305,7 @@
 
       \newcommand\thr{0}
 
+      \only<2->{
       \newcommand\shfx{0.1}
       \newcommand\shfy{0.1}
 
@@ -323,6 +347,7 @@
 
       \draw[->,>=latex, draw=black!40] (pt2_so) -- (pt3_si) node [midway, above] {};
       \draw[->,>=latex, draw=black!40] (pt3_so) -- (pt4_si) node [midway, above] {};
+      }
 
       \node[stsk] (t1)    at ( 0.0    , \thr) {$t_1$};
       \node[sout] (t1_so) at ( 0.0+0.5, \thr) {};
@@ -348,26 +373,37 @@
       \draw[->,>=latex] (t5_so) -- (t6_si) node [midway, above] {};
 
       \Thread{0.00}{0.7}{th1}
+      \only<1>{
+      \Thread{4.00}{0.7}{th2}
+      }
+      \only<2->{
       \Thread{3.25}{1.0}{th2}
       \Thread{3.75}{1.0}{th3}
       \Thread{4.25}{1.0}{th4}
       \Thread{4.75}{1.0}{th5}
+      }
       \Thread{9.00}{0.7}{th6}
 
-      \node[seq, label={[Paired-11]below:Sequence 1}, fit=(t1) (t1_so)                        ] (seq1) {};
-      \node[seq, label={[Paired-11]below:Sequence 2}, fit=(t2_si) (t2) (t3) (pppt4) (pppt4_so)] (seq2) {};
-      \node[seq, label={[Paired-11]below:Sequence 3}, fit=(t5_si) (t5) (t6)                   ] (seq3) {};
+      \node[seq, label={[Paired-11,align=center]below:Sequence 1\\= Stage 1}, fit=(t1)    (t1_so)                     ] (seq1) {};
+      \only<1>{
+      \node[seq, label={[Paired-11,align=center]below:Sequence 2\\= Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
+      }
+      \only<2->{
+      \node[seq, draw=white, label={[Paired-11,align=center]below:Sequence 2\\= Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t4_so)] (seq2) {};
+      \node[seq, fit=(t2_si) (t2) (t3) (pppt4) (pppt4_so)] (pseq2) {};
+      }
+      \node[seq, label={[Paired-11,align=center]below:Sequence 3\\= Stage 3}, fit=(t5_si) (t5) (t6)                   ] (seq3) {};
 
-      \node[pip, minimum height=3.0cm, minimum width=12.0cm, label={[Dark2-8]below:Pipeline}, fit=(seq1) (seq2) (seq3)] {};
+      \node[pip, minimum height=3.75cm, minimum width=12.0cm, label={[Dark2-8]below:Pipeline}, fit=(seq1) (seq2) (seq3)] {};
     \end{tikzpicture}
     }
   \end{figure}
   \vfill
   \begin{itemize}
     \item Sequential tasks cannot be duplicated {\color{bleuUni}\Large\MVRightarrow} \textbf{Pipeline strategy}
-    \item A sequence = a pipeline stage
-    \item A pipeline is built from a list of sequences
-    \item The sequence duplication technique is still possible in parallel stages
+    % \item A sequence = a pipeline stage
+    \item A pipeline is composed of a sequence list
+    \item<2-> The \textbf{sequence duplication} technique is still possible in \textbf{parallel stages}
   \end{itemize}
   \vfill
 \end{frame}
@@ -428,7 +464,7 @@
     \item<2-> 2x Universal Software Radio Peripherals (\textcolor{Paired-7}{USRPs}) N320 for the RF
     \item<3-> 1x Middle class computer for the digital transmitter (\textcolor{Paired-1}{Tx})
     \item<3-> 1x Server class computer for the digital receiver (\textcolor{Paired-3}{Rx})
-    \item<5-> \textbf{Industrial constraint}: 30 $\sim$ 100 Mb/s
+    \item<5-> \textbf{Industrial constraint}: 30 $\sim$ 50 Mb/s
   \end{itemize}
   \vspace{-0.1cm}
   % \vfill
@@ -647,7 +683,7 @@
       \node[seq, minimum height=3.5cm, minimum width=17.0cm,  label={[Paired-11]below:Stage 7}, fit=(t14_si) (t18_so), line width=1.0mm                                               ] (seq7) {};
       }
       \only<3->{
-      \node[seq, minimum height=3.5cm, minimum width=17.0cm,  label={[Paired-11]below:Stage 7 (parallelized with the sequence duplication technique)}, fit=(t14_si) (t18_so)                                                      ] (seq7) {};
+      \node[seq, minimum height=3.5cm, minimum width=17.0cm,  label={[Paired-11]below:Stage 7 (\textbf{parallelized on 28 cores} with the sequence duplication technique)}, fit=(t14_si) (t18_so)                                                      ] (seq7) {};
       }
       \node[seq, minimum height=3.5cm, minimum width=3.2cm,   label={[Paired-11]below:Stage 8}, fit=(t19_si) (t19)                                                         ] (seq8) {};
 
@@ -694,13 +730,13 @@
                       grid=both, grid style={gray!30},
                       %tick align=outside, tickpos=left,
                       legend pos=north east]
-      \addplot[mark=square,    Paired-1,    semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:llline1}
-      \addplot[mark=o,         Paired-1!60, semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:llline3}
-      \addplot[mark=square,    Paired-3,    semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:llline4}
-      \addplot[mark=o,         Paired-3!60, semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:llline6}
-      \addplot[mark=square,    Paired-5,    semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:llline7}
-      \addplot[mark=o,         Paired-5!60, semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:llline9}
-      \coordinate (legend) at (axis description cs:0.85,1.05);
+      \addplot[mark=square,    Paired-1!60, semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:llline1}
+      \addplot[mark=o,         Paired-1,    semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:llline3}
+      \addplot[mark=square,    Paired-3!60, semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:llline4}
+      \addplot[mark=o,         Paired-3,    semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:llline6}
+      \addplot[mark=square,    Paired-5!60, semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:llline7}
+      \addplot[mark=o,         Paired-5,    semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:llline9}
+      \coordinate (legend) at (axis description cs:0.875,1.05);
     \end{axis}
 
     \matrix [
