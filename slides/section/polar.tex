@@ -9,14 +9,13 @@
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
     % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
-    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
 
     \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
     \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-    \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
-    \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
+    \tikzset{ rftx/.style    ={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
+    \tikzset{ rfrx/.style    ={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
 
     \node[style=txtplain, thick   ] (enc)  at ( 4,   4) {Polar\\Encoder};
     \node[style=txt               ] (mod)  at ( 8,   4) {BPSK\\Modulator};
@@ -46,7 +45,6 @@
   \begin{itemize}
     \item<2-> \textbf{Polar codes} have been discovered by \Arikan in 2009~\cite{Arikan2009}
     \item<3-> \textbf{Adopted in the 5G standard} for control channels
-    % \item<3-> First code proven to achieve the channel capacity (asymptotically)
   \end{itemize}
   \only<2->{
   \vspace{0.2cm}
@@ -77,84 +75,7 @@
     \draw[zoom,                 ] (-5.5,2.5) rectangle (5.5,-2.5);
     }
 
-    % \only<2>{
-    % \node (g) at (0,0)
-    % {$
-    % \begin{bmatrix}
-    % \\
-    % \\
-    % \\
-    % u_0\\
-    % \\
-    % u_1\\
-    % u_2\\
-    % u_3\\
-    % \end{bmatrix}^{T}
-    % \times
-    % \begin{bmatrix}
-    % 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
-    % 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
-    % 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
-    % 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
-    % 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-    % \end{bmatrix}
-    % =
-    % \begin{bmatrix}
-    % c_0\\
-    % c_1\\
-    % c_2\\
-    % c_3\\
-    % c_4\\
-    % c_5\\
-    % c_6\\
-    % c_7\\
-    % \end{bmatrix}^{T}
-    % $};
-    % }
-
-    % \only<3>{
-    % \node (g) at (0,0)
-    % {$
-    % \begin{bmatrix}
-    % \textcolor{Paired-1}{0}\\
-    % \textcolor{Paired-1}{0}\\
-    % \textcolor{Paired-1}{0}\\
-    % u_0\\
-    % \textcolor{Paired-1}{0}\\
-    % u_1\\
-    % u_2\\
-    % u_3\\
-    % \end{bmatrix}^{T}
-    % \times
-    % \begin{bmatrix}
-    % 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-    % 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\
-    % 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
-    % 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
-    % 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
-    % 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
-    % \end{bmatrix}
-    % =
-    % \begin{bmatrix}
-    % c_0\\
-    % c_1\\
-    % c_2\\
-    % c_3\\
-    % c_4\\
-    % c_5\\
-    % c_6\\
-    % c_7\\
-    % \end{bmatrix}^{T}
-    % $};
-    % }
-
     \only<2->{
-
     \tikzset{XOR/.style={draw,circle, minimum height=0.35cm,append after command={
             [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
             (\tikzlastnode.north) edge (\tikzlastnode.south)
@@ -221,9 +142,9 @@
     \draw[-,>=latex] (\startx-\sed, \startyg+1.75) node[left] {$\textcolor{Paired-1}{0} = v_0$} -- (g3_x0);
     \draw[-,>=latex] (\startx-\sed, \startyg+1.25) node[left] {$\textcolor{Paired-1}{0} = v_1$} -- (g3_e0);
     }
-    \draw[-,>=latex] (g3_x0)                       -- (g3_e0);
-    \draw[-,>=latex] (g3_x0)                       -- (g3_x2);
-    \draw[-,>=latex] (g3_e0)                       -- (g3_x3);
+    \draw[-,>=latex] (g3_x0) -- (g3_e0);
+    \draw[-,>=latex] (g3_x0) -- (g3_x2);
+    \draw[-,>=latex] (g3_e0) -- (g3_x3);
 
     \only<1-2>{
     \draw[-,>=latex] (\startx-\sed, \startyg+0.75) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_2$} -- (g3_x1);
@@ -232,15 +153,15 @@
     \draw[-,>=latex] (\startx-\sed, \startyg+0.75) node[left] {$\textcolor{Paired-1}{0} = v_2$} -- (g3_x1);
     }
     \draw[-,>=latex] (\startx-\sed, \startyg+0.25) node[left] {$u_0 = v_3$} -- (g3_e1);
-    \draw[-,>=latex] (g3_x1)                       -- (g3_e1);
-    \draw[-,>=latex] (g3_x1)                       -- (g3_e2);
-    \draw[-,>=latex] (g3_e1)                       -- (g3_e3);
-    \draw[-,>=latex] (g3_e2)                       -- (g3_x2);
-    \draw[-,>=latex] (g3_e3)                       -- (g3_x3);
-    \draw[-,>=latex] (g3_x2)                       -- (g3_x8);
-    \draw[-,>=latex] (g3_x3)                       -- (g3_x9);
-    \draw[-,>=latex] (g3_e2)                       -- (g3_x10);
-    \draw[-,>=latex] (g3_e3)                       -- (g3_x11);
+    \draw[-,>=latex] (g3_x1) -- (g3_e1);
+    \draw[-,>=latex] (g3_x1) -- (g3_e2);
+    \draw[-,>=latex] (g3_e1) -- (g3_e3);
+    \draw[-,>=latex] (g3_e2) -- (g3_x2);
+    \draw[-,>=latex] (g3_e3) -- (g3_x3);
+    \draw[-,>=latex] (g3_x2) -- (g3_x8);
+    \draw[-,>=latex] (g3_x3) -- (g3_x9);
+    \draw[-,>=latex] (g3_e2) -- (g3_x10);
+    \draw[-,>=latex] (g3_e3) -- (g3_x11);
 
     \only<1-2>{
     \draw[-,>=latex] (\startx-\sed, \startyg-0.25) node[left] {$\textcolor{white}{0} \textcolor{white}{=} v_4$} -- (g3_x4);
@@ -249,26 +170,25 @@
     \draw[-,>=latex] (\startx-\sed, \startyg-0.25) node[left] {$\textcolor{Paired-1}{0} = v_4$} -- (g3_x4);
     }
     \draw[-,>=latex] (\startx-\sed, \startyg-0.75) node[left] {$u_1 = v_5$} -- (g3_e4);
-    \draw[-,>=latex] (g3_x4)                       -- (g3_e4);
-    \draw[-,>=latex] (g3_x4)                       -- (g3_x6);
-    \draw[-,>=latex] (g3_e4)                       -- (g3_x7);
+    \draw[-,>=latex] (g3_x4) -- (g3_e4);
+    \draw[-,>=latex] (g3_x4) -- (g3_x6);
+    \draw[-,>=latex] (g3_e4) -- (g3_x7);
 
     \draw[-,>=latex] (\startx-\sed, \startyg-1.25) node[left] {$u_2 = v_6$} -- (g3_x5);
     \draw[-,>=latex] (\startx-\sed, \startyg-1.75) node[left] {$u_3 = v_7$} -- (g3_e5);
-    \draw[-,>=latex] (g3_x5)                       -- (g3_e5);
-    \draw[-,>=latex] (g3_x5)                       -- (g3_e6);
-    \draw[-,>=latex] (g3_e5)                       -- (g3_e7);
-    \draw[-,>=latex] (g3_e6)                       -- (g3_x6);
-    \draw[-,>=latex] (g3_e7)                       -- (g3_x7);
-    \draw[-,>=latex] (g3_x6)                       -- (g3_e8);
-    \draw[-,>=latex] (g3_x7)                       -- (g3_e9);
-    \draw[-,>=latex] (g3_e6)                       -- (g3_e10);
-    \draw[-,>=latex] (g3_e7)                       -- (g3_e11);
-
-    \draw [-,>=latex] (g3_e8)                      -- (g3_x8);
-    \draw [-,>=latex] (g3_e9)                      -- (g3_x9);
-    \draw [-,>=latex] (g3_e10)                     -- (g3_x10);
-    \draw [-,>=latex] (g3_e11)                     -- (g3_x11);
+    \draw[-,>=latex] (g3_x5)  -- (g3_e5);
+    \draw[-,>=latex] (g3_x5)  -- (g3_e6);
+    \draw[-,>=latex] (g3_e5)  -- (g3_e7);
+    \draw[-,>=latex] (g3_e6)  -- (g3_x6);
+    \draw[-,>=latex] (g3_e7)  -- (g3_x7);
+    \draw[-,>=latex] (g3_x6)  -- (g3_e8);
+    \draw[-,>=latex] (g3_x7)  -- (g3_e9);
+    \draw[-,>=latex] (g3_e6)  -- (g3_e10);
+    \draw[-,>=latex] (g3_e7)  -- (g3_e11);
+    \draw[-,>=latex] (g3_e8)  -- (g3_x8);
+    \draw[-,>=latex] (g3_e9)  -- (g3_x9);
+    \draw[-,>=latex] (g3_e10) -- (g3_x10);
+    \draw[-,>=latex] (g3_e11) -- (g3_x11);
     }
 
     \only<2-3>{
@@ -345,58 +265,10 @@
   \begin{itemize}
     \item<1-> $\bm{u}$: initial message ($K$ bits)
     \item<1-> $\bm{c}$: codeword ($N$ bits, $K < N$)
-    % \item<2-> Generator matrix $\bm{\mathcal{G}} = \bm{\mathcal{K}}^{\otimes m}; \bm{\mathcal{K}} =
-    %   \begin{bmatrix}
-    %   1 & 0 \\
-    %   1 & 1
-    %   \end{bmatrix}; N = 2^{m}$
     \item<3-> \textcolor{Paired-1}{Frozen bits} $= N - K$ bits set to \textcolor{Paired-1}{zero}
     \item<4-> Binary tree structure
   \end{itemize}
 \end{frame}
-
-% \begin{frame}{Decoders}
-%   \begin{figure}[!h]
-%   \centering
-%   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-%     % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
-%     % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
-
-%     \tikzset{ txt/.style     ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center} }
-%     \tikzset{ rxt/.style     ={draw=Paired-3, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-3, align=center} }
-%     \tikzset{ txtplain/.style={draw=Paired-1, fill=Paired-1!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-%     \tikzset{ rxtplain/.style={draw=Paired-3, fill=Paired-3!50, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
-
-%     \node[style=txtplain,         ] (enc) at ( 4,   4) {Polar\\Encoder};
-%     \node[style=txt               ] (mod) at ( 8,   4) {BPSK\\Modulator};
-%     \Cloud{(11,2)}{}{0.65};
-%     \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
-%     \node[style=rxt               ] (dem) at ( 8,   0) {BPSK\\Demodulator};
-%     \node[style=rxtplain, thick   ] (dec) at ( 4,   0) {Polar\\Decoder};
-
-%     \node[draw=Paired-1, rounded corners=2pt, label={[Paired-1]below:Transmitter}, minimum height=1.5cm, dashed, fit=(enc) (mod)] (tx) {};
-%     \node[draw=Paired-3, rounded corners=2pt, label={[Paired-3]above:Receiver   }, minimum height=1.5cm, dashed, fit=(dem) (dec)] (rx) {};
-
-%     \draw[<-,>=latex] (enc.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{u}$};
-%     \draw[->,>=latex] (enc)      --   (mod)    node [midway,  above           ] {$\bm{c}$};
-%     \draw[->,>=latex] (tx.east)  --   (10,  4) node [midway,  above           ] {$\bm{x}$};
-%     \draw[-         ] ( 9.9,4)   --   (10.5,4) node [antenna, above, scale=0.5] {};
-%     \draw[-         ] (10  ,0)   --   (10.5,0) node [antenna, above, scale=0.5] {};
-%     \draw[<-,>=latex] (rx.east)  --   (10,  0) node [midway,  above           ] {$\bm{y}$};
-%     \draw[->,>=latex] (dem)      --   (dec)    node [midway,  above           ] {$\bm{l}$};
-%     \draw[->,>=latex] (dec.west) --++ (-1.0,0) node [midway,  above           ] {$\bm{\hat{u}}$};
-%     \draw[- ,>=latex] (mod.east) --   (10.5,4);
-%     \draw[- ,>=latex] (dem.east) --   ( 9.6,0);
-%   \end{tikzpicture}
-%   \end{figure}
-
-%   \begin{itemize}
-%     \item<1-> Compute intensive processing
-%     \item<2-> $\bm{l}$ is an input vector $N$ Log Likelihood Ratios (LLRs)
-%     \item<2-> $\bm{\hat{u}}$ is an output vector of $K$ bits
-%     \item<3-> Many algorithms with various complexities and decoding performances
-%   \end{itemize}
-% \end{frame}
 
 \subsection[Successive Cancellation Algorithm]{Successive Cancellation Algorithm}
 
@@ -935,7 +807,7 @@
     \draw[zoom,-,>=latex] (dec.south west) --++ (-3.55, -1.0);
     \draw[zoom,-,>=latex] (dec.south east) --++ (+3.55, -1.0);
 
-    \draw[zoom                  ] (-2.2,7.4) rectangle (7.4,-1.0);
+    \draw[zoom] (-2.2,7.4) rectangle (7.4,-1.0);
 
     \draw[fill=Gray!20, draw=none] ( 1.015, 6.96) rectangle (4.215,  5.945);
 
@@ -1206,7 +1078,6 @@
     \item SC simplifications proposed in literature~\cite{Alamdar-Yazdi2011,Sarkis2014a}
     \begin{itemize}
       \item Introducing new type of nodes {\color{bleuUni}\Large\MVRightarrow} \textbf{Tree pruning}
-      % \item<8-> Drastically reduce the number of nodes with a low level of parallelism
       \item<8-> \textbf{2047 nodes pruned to 291 nodes} ($N = 1024$, $R = 1/2$)
     \end{itemize}
   \end{itemize}
@@ -1223,10 +1094,10 @@
       \centering
       \scalebox{.65}{
       \begin{tikzpicture}
-        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20         } }
-        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20         } }
-        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20         } }
-        \tikzset{ lh/.style ={draw=white, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white               } }
+        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20} }
+        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20} }
+        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20} }
+        \tikzset{ lh/.style ={draw=white, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white      } }
 
         \tikzstyle{instr}=[->,>=stealth,rounded corners=3pt, fill=white, draw=Paired-5, text=Paired-5]
         \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
@@ -1267,21 +1138,21 @@
       \centering
       \scalebox{.65}{
       \begin{tikzpicture}
-        \tikzset{ e/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40             } }
-        \tikzset{ en/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40         } }
-        \tikzset{ ens/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40         } }
-        \tikzset{ enn/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40!Paired-5!40 } }
-        \tikzset{ ep/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!40         } }
-        \tikzset{ eps/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-8!40         } }
+        \tikzset{ e/.style  ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40            } }
+        \tikzset{ en/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!40        } }
+        \tikzset{ ens/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-6!40        } }
+        \tikzset{ enn/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=gray!40!Paired-5!40} }
+        \tikzset{ ep/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!40        } }
+        \tikzset{ eps/.style={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-8!40        } }
         \tikzset{ ept/.style={            minimum width=0.7cm, minimum height=0.7cm] } }
 
-        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20         } }
-        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20         } }
-        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20         } }
+        \tikzset{ la/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-7!20} }
+        \tikzset{ lb/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-9!20} }
+        \tikzset{ lc/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=Paired-5!20} }
 
-        \tikzset{ lah/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
-        \tikzset{ lbh/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
-        \tikzset{ lch/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white         } }
+        \tikzset{ lah/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white} }
+        \tikzset{ lbh/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white} }
+        \tikzset{ lch/.style ={draw=black, minimum width=0.7cm, minimum height=0.7cm, text=black, fill=white} }
 
         \tikzstyle{lnk}=[->,>=stealth,rounded corners=3pt]
         \tikzstyle{shf}=[black!20]
@@ -1381,51 +1252,6 @@
   \end{columns}
   \vfill
 \end{frame}
-
-% \begin{frame}[containsverbatim,fragile]{Polar Application Programming Interface (Polar API)}
-%   \vfill
-%   \begin{itemize}
-%     \item Polar functions ($f$, $g$ and $h$) implemented with \textbf{a portable SIMD library}
-%     \vspace{0.2cm}
-%     \item Portability
-%     \begin{itemize}
-%       \item Same description for NEON, SSE, AVX and AVX-512
-%       \item Independant from the vectorization strategy (intra-/inter-frame)
-%     \end{itemize}
-%     \vspace{0.2cm}
-%     \pause
-%     \item Flexibility
-%     \begin{itemize}
-%       \item Same description for real floating-point and fixed-point representation
-%       \item Compatible with: \verb|double|, \verb|float|, \verb|int8_t| and \verb|int16_t| types
-%     \end{itemize}
-%     \vspace{0.2cm}
-%     \pause
-%     \item Efficiency
-%     \begin{itemize}
-%       \item High througput (intra-/inter-frame)
-%       \item Low latency (intra-frame)
-%     \end{itemize}
-%   \end{itemize}
-%   \vfill
-% %   \begin{minted}[linenos]{cpp}
-% % template <typename R>
-% % mipp::<R> f(const mipp::<R> la, const mipp::<R> lb) {
-% %   return mipp::copysign(mipp::min(mipp::abs(la), mipp::abs(lb)),
-% %                         mipp::sign(la, lb));
-% % } // f(la, lb) = sign(la.lb).min(|la|, |lb|)
-
-% % template <typename B, typename R>
-% % mipp::<R> g(const mipp::<R> la, const mipp::<R> lb, const mipp::<B> s) {
-% %   return mipp::copysign(la, s) + lb;
-% % } // g(la, lb, sa) = (1-2s)la + lb
-
-% % template <typename B>
-% % mipp::<B> h(const mipp::<B> sa, const mipp::<B> sb) {
-% %   return sa ^ sb;
-% % } // h(sa, sb) = sa XOR sb
-% %   \end{minted}
-% \end{frame}
 
 \begin{frame}{SC Dynamic Versus Generated Implementation}
   \vspace{-0.4cm}
@@ -1589,10 +1415,6 @@
     \begin{column}[T]{6.0cm}
       \begin{itemize}
         \item $+$ High flexibility
-        % \begin{itemize}
-        %   \item Adapt to many code rate $R = K/N$
-        %   \item Adapt to many frozen bits configurations
-        % \end{itemize}
         \item $-$ Recursive calls and \textit{if} overhead
       \end{itemize}
     \end{column}
@@ -1600,10 +1422,6 @@
       \only<4->{
       \begin{itemize}
         \item $-$ Reduced flexibility
-        % \begin{itemize}
-        %   \item Fixed code rate $R = K/N$
-        %   \item Fixed frozen bits positions
-        % \end{itemize}
         \item $+$ Improved throughput and latency
       \end{itemize}
       }
@@ -1619,8 +1437,8 @@
   \begin{figure}[!h]
     \centering
     \scalebox{.5}{
-    \begin{tikzpicture}%[scale=0.50, every node/.style={transform shape}]
-    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+    \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ },
                  width=1.0\linewidth, height=0.7\linewidth,
                  ymode = log,
                  log basis y={2},
@@ -1628,17 +1446,12 @@
                  xlabel=Codeword size ($N$), ylabel=Decoder binary size (KB), grid=both, grid style={gray!30},
                  xmin=6, xmax=16,
                  xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
-                 % yticklabels={2,4,8,16,32,64,128,256,512,1024,2048,4096},
                  yticklabels={2,8,32,128,512,2048},
                  grid style={dashed, gray!30},
-                 %ymin=-5, ymax=102,
-                 % tick align=outside, tickpos=left,
-                 %label style={font=\large},
-                 % tick label style={font=\large},
                  legend pos=south east, legend columns=1]
-        \addplot[mark=o,        Paired-5, semithick    ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:lllline1}
-        \addplot[mark=square,   Paired-1, semithick    ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:lllline2}
-        \addplot[mark=none,     Paired-7, dashed, thick] coordinates {(6,32) (16,32)}; \label{plot:lllline3}
+        \addplot[mark=o,      Paired-5, semithick    ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:lllline1}
+        \addplot[mark=square, Paired-1, semithick    ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:lllline2}
+        \addplot[mark=none,   Paired-7, dashed, thick] coordinates {(6,32) (16,32)}; \label{plot:lllline3}
     \end{axis}
 
     \matrix [draw,
@@ -1659,12 +1472,6 @@
   \end{figure}
   \begin{itemize}
     \item \textbf{Problem:} Codewords$~> N = 2^8$ exceeds the CPU instruction cache size
-  %   \pause
-  %   \vspace{0.2cm}
-  %   \item \textbf{Solution 1:} Do not store the memory addresses offsets in the generated code
-  %   \pause
-  %   \vspace{0.2cm}
-  %   \item \textbf{Solution 2:} Implement a sub-tree folding algorithm to reduce the binary size
   \end{itemize}
   \vfill
 \end{frame}
@@ -1910,7 +1717,6 @@
       \draw[->,>=latex, dashed] (l4_n0) -- (l5_n1);
       \draw[->,>=latex        ] (l4_n3) -- (l5_n2);
       \draw[->,>=latex, dashed] (l4_n3) -- (l5_n3);
-      % \draw[->,>=latex        ] (l4_n6) -- (l5_n1);
       \draw[->,>=latex        ] (l4_n6) to[out=230,in=0] (l5_n1);
       \draw[->,>=latex, dashed] (l4_n6) -- (l5_n4);
 
@@ -1936,12 +1742,11 @@
 \end{frame}
 
 \begin{frame}{Impact of the Compression Techniques on the Decoder Binary Size}
-  % \vspace{-0.5cm}
   \begin{figure}[!h]
     \centering
     \scalebox{.5}{
-    \begin{tikzpicture}%[scale=0.50, every node/.style={transform shape}]
-    \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+    \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={ },
                  width=1.0\linewidth, height=0.7\linewidth,
                  ymode = log,
                  log basis y={2},
@@ -1950,13 +1755,8 @@
                  xmin=6, xmax=16,
                  ymin=0, ymax=4096,
                  xticklabels={$2^5$, $2^6$, $2^7$, $2^8$, $2^9$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$, $2^{14}$, $2^{15}$, $2^{16}$},
-                 % yticklabels={2,4,8,16,32,64,128,256,512,1024,2048,4096},
                  yticklabels={0,2,8,32,128,512,2048},
                  grid style={dashed, gray!30},
-                 %ymin=-5, ymax=102,
-                 % tick align=outside, tickpos=left,
-                 %label style={font=\large},
-                 % tick label style={font=\large},
                  legend pos=south east, legend columns=1]
         \addplot[mark=o,      Paired-5,  semithick                              ] table [x index=0, y index=1] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:llllline1}
         \addplot[mark=square, Paired-1,  semithick                              ] table [x index=0, y index=3] {../main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat}; \label{plot:llllline2}
@@ -2044,27 +1844,13 @@
   \pause
 
   \vspace*{.5em}
-  ~~~~~{\color{bleuUni}\Large\MVRightarrow} Support intra-/inter-frame SIMDization %thanks to the Polar API
+  ~~~~~{\color{bleuUni}\Large\MVRightarrow} Support intra-/inter-frame SIMDization
 
   \vspace*{.5em}
   ~~~~~{\color{bleuUni}\Large\MVRightarrow} Compatible with tree pruning techniques
 
   \vfill
 \end{frame}
-
-% \begin{frame}{Polar Decoder: Successive Cancellation List Algorithm}
-%   \begin{itemize}
-%     \item Based on the Successive Cancellation decoder
-%     \item Maintains a finite list of $L$ possible decoding trees
-%     \item Chooses the most likely tree according to a metric
-%     \item Decoding performance are better for short to medium size codewords
-%     \item Can be combined with a CRC code to discriminate the metric
-%       \\\vspace*{.5em}
-%       {\color{bleuUni}\Large\MVRightarrow} Decoding performance is, again, improved
-%   \end{itemize}
-% \end{frame}
-
-% \subsection[Evaluations and Comparisons]{Evaluations and Comparisons}
 
 \begin{frame}[fragile]{Experimentation Protocol}
   \vfill
@@ -2101,10 +1887,9 @@
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}[every axis/.style={
-                        /pgfplots/table/ignore chars={|}, %footnotesize,
+                        /pgfplots/table/ignore chars={|},
                         width=2.0\linewidth, height=1.40\linewidth,
                         xticklabel style={black!70}, yticklabel style={black!70},
-                        % tick align=outside, tickpos=left,
                         ybar stacked, bar width=14pt,
                         legend style={at={(0.39,0.95)}, anchor=north}, legend columns=-1,
                         ylabel={Coded throughput (Mb/s)}, xlabel={Code rate ($R = K / N$)},
@@ -2168,10 +1953,9 @@
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}[every axis/.style={
-                        /pgfplots/table/ignore chars={|}, %footnotesize,
+                        /pgfplots/table/ignore chars={|},
                         width=2.0\linewidth, height=1.40\linewidth,
                         xticklabel style={black!70}, yticklabel style={black!70},
-                        % tick align=outside, tickpos=left,
                         ybar stacked, bar width=14pt,
                         legend style={at={(0.39,0.95)}, anchor=north}, legend columns=-1,
                         ylabel={Coded throughput (Mb/s)}, xlabel={Code rate ($R = K / N$)},
@@ -2236,18 +2020,13 @@
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}
-      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+      \begin{axis}[/pgfplots/table/ignore chars={ },
                    width=2.0\linewidth, height=1.4\linewidth,
                    xticklabel style={black!70}, yticklabel style={black!70},
-                   xmode = log,
-                   ymode = log,
+                   xmode = log, ymode = log,
                    log basis x={2},
                    xlabel=Codeword size ($N$), ylabel=Latency ($\mu$s), grid=both, grid style={gray!30},
-                   xmin=4, xmax=65536,
-                   % tick align=outside, tickpos=left,
-                   %label style={font=\large},
-                   % tick label style={font=\large},
-                   grid style={dashed, gray!30},
+                   xmin=4, xmax=65536, grid style={dashed, gray!30},
                    legend pos=south east, legend columns=1]
           \addplot[mark=o,      Paired-1,    semithick                              ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:intra_line1}
           \addplot[mark=o,      Paired-1!70, semithick, dashed, mark options={solid}] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:intra_line2}
@@ -2277,16 +2056,13 @@
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}
-      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+      \begin{axis}[/pgfplots/table/ignore chars={ },
                    width=2.0\linewidth, height=1.4\linewidth,
                    xticklabel style={black!70}, yticklabel style={black!70},
                    xmode = log,
                    log basis x={2},
                    xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
                    xmin=4, xmax=65536,
-                   % tick align=outside, tickpos=left,
-                   %label style={font=\large},
-                   % tick label style={font=\large},
                    grid style={dashed, gray!30},
                    legend pos=south east, legend columns=1]
           \addplot[mark=o,      Paired-1,    semithick                              ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:intra_line1}
@@ -2295,18 +2071,6 @@
           \addplot[mark=square, Paired-5!70, semithick, dashed, mark options={solid}] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r1_2.dat}; \label{plot:inter_line2}
 
       \end{axis}
-      % \matrix [draw,
-      %          matrix of nodes,
-      %          anchor=north,
-      %          inner sep=2.3pt,
-      %          fill=white,
-      %          column 1/.style={anchor=base east},
-      %          ampersand replacement=\&] at (4.5,4.0)
-      % {
-      %                 \& $R = 5/6$              \& $R = 1/2$              \\
-      %     intra-frame \& \ref{plot:intra_line1} \& \ref{plot:intra_line2} \\
-      %     inter-frame \& \ref{plot:inter_line1} \& \ref{plot:inter_line2} \\
-      % };
     \end{tikzpicture}
     }
     \caption*{\footnotesize{~~Throughput performance (higher is better)}}
@@ -2323,23 +2087,18 @@
 \end{frame}
 
 \begin{frame}{Comparisons with State-of-the-Art Implementations}
-  % \vspace{-0.5cm}
   \begin{columns}
   \begin{column}[T]{6cm}
   \begin{figure}[!h]
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}
-      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+      \begin{axis}[/pgfplots/table/ignore chars={ },
                    width=2.0\linewidth, height=1.4\linewidth,
                    xticklabel style={black!70}, yticklabel style={black!70},
-                   xmode = log,
-                   log basis x={2},
+                   xmode = log, log basis x={2},
                    xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
                    xmin=4, xmax=65536,
-                   % tick align=outside, tickpos=left,
-                   %label style={font=\large},
-                   % tick label style={font=\large},
                    grid style={dashed, gray!30},
                    legend pos=south east, legend columns=1]
           \addplot[mark=o,    Paired-1,    semithick                                   ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:iintra_line1}
@@ -2370,17 +2129,13 @@
     \centering
     \scalebox{.5}{
     \begin{tikzpicture}
-      \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+      \begin{axis}[/pgfplots/table/ignore chars={ },
                    width=2.0\linewidth, height=1.4\linewidth,
                    xticklabel style={black!70}, yticklabel style={black!70},
                    xmode = log,
                    log basis x={2},
                    xlabel=Codeword size ($N$), ylabel=Coded throughput (Mb/s), grid=both, grid style={gray!30},
-                   xmin=4, xmax=65536,
-                   % tick align=outside, tickpos=left,
-                   %label style={font=\large},
-                   % tick label style={font=\large},
-                   grid style={dashed, gray!30},
+                   xmin=4, xmax=65536, grid style={dashed, gray!30},
                    legend pos=south east, legend columns=1]
           \addplot[mark=square,   Paired-5,    semithick                              ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r5_6.dat}; \label{plot:iinter_line1}
           \addplot[mark=triangle, Paired-3,    semithick                              ] table [x index=0, y index=13] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r5_6.dat }; \label{plot:iinter_line2}
@@ -2406,100 +2161,7 @@
   \end{figure}
   \end{column}
   \end{columns}
-  % \vspace{0.5cm}
   \enumcite{Sarkis2014}
 
   \enumcite{LeGal2015a}
 \end{frame}
-
-% \begin{frame}{Latency Performance Comparisons, Lower is Better}
-%   \vspace{-0.5cm}
-%   \begin{columns}
-%   \begin{column}[T]{6cm}
-%   \begin{figure}[!h]
-%     \centering
-%     \scalebox{.5}{
-%     \begin{tikzpicture}
-%       \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
-%                    width=2.0\linewidth, height=1.4\linewidth,
-%                    xticklabel style={black!70}, yticklabel style={black!70},
-%                    xmode = log,
-%                    ymode = log,
-%                    log basis x={2},
-%                    xlabel=Codeword size ($N$), ylabel=Latency ($\mu$s), grid=both, grid style={gray!30},
-%                    xmin=256, xmax=32768, ymin=0.4, ymax=800,
-%                    % tick align=outside, tickpos=left,
-%                    %label style={font=\large},
-%                    % tick label style={font=\large},
-%                    grid style={dashed, gray!30},
-%                    legend pos=south east, legend columns=1]
-%           \addplot[mark=square, Paired-1,    semithick                                   ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:intra_line1}
-%           \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}     ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:intra_line3}
-%           \addplot[mark=x,      Paired-3,    semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r5_6.dat}; \label{plot:intra_line2}
-%           \addplot[mark=star,   Paired-3!70, semithick, thick,  only marks, mark size=4.0] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_intra/dat/E31225_samples_intra_32b_sarkis_r1_2.dat}; \label{plot:intra_line4}
-%       \end{axis}
-
-%       \matrix [draw,
-%                matrix of nodes,
-%                anchor=north,
-%                inner sep=2.3pt,
-%                fill=white,
-%                column 1/.style={anchor=base east},
-%                ampersand replacement=\&] at (7.85,2.0)
-%       {
-%                             \& $R = 5/6$              \& $R = 1/2$              \\
-%           this work         \& \ref{plot:intra_line1} \& \ref{plot:intra_line3} \\
-%           \cite{Sarkis2014} \& \ref{plot:intra_line2} \& \ref{plot:intra_line4} \\
-%       };
-%     \end{tikzpicture}
-%     }
-%   \caption*{Intra-frame SIMD}
-%   \end{figure}
-%   \end{column}
-%   \begin{column}[T]{6cm}
-%   \begin{figure}[!h]
-%     \centering
-%     \scalebox{.5}{
-%     \begin{tikzpicture}
-%       \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
-%                    width=2.0\linewidth, height=1.4\linewidth,
-%                    xticklabel style={black!70}, yticklabel style={black!70},
-%                    xmode = log,
-%                    ymode = log,
-%                    log basis x={2},
-%                    xlabel=Codeword size ($N$), ylabel=Latency ($\mu$s), grid=both, grid style={gray!30},
-%                    xmin=256, xmax=32768, ymin=0.4, ymax=800,
-%                    % tick align=outside, tickpos=left,
-%                    %label style={font=\large},
-%                    % tick label style={font=\large},
-%                    grid style={dashed, gray!30},
-%                    legend pos=south east, legend columns=1]
-%           \addplot[mark=square, Paired-5,    semithick                              ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r5_6.dat}; \label{plot:inter_line1}
-%           \addplot[mark=o,      Paired-3,    semithick                              ] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r5_6.dat }; \label{plot:inter_line2}
-%           \addplot[mark=square, Paired-5!70, semithick, dashed, mark options={solid}] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_aff3ct_r1_2.dat}; \label{plot:inter_line3}
-%           \addplot[mark=o,      Paired-3!70, semithick, dashed, mark options={solid}] table [x index=0, y index=15] {../main/chapter4/fig/polar/sc_gen_thr_inter/dat/E31225_samples_inter_8b_handw_r1_2.dat }; \label{plot:inter_line4}
-%       \end{axis}
-
-%       \matrix [draw,
-%                matrix of nodes,
-%                anchor=north,
-%                inner sep=2.3pt,
-%                fill=white,
-%                column 1/.style={anchor=base east},
-%                ampersand replacement=\&] at (7.85,2.0)
-%       {
-%                             \& $R = 5/6$              \& $R = 1/2$              \\
-%           this work         \& \ref{plot:inter_line1} \& \ref{plot:inter_line3} \\
-%           \cite{LeGal2015a} \& \ref{plot:inter_line2} \& \ref{plot:inter_line4} \\
-%       };
-%     \end{tikzpicture}
-%     }
-%   \caption*{Inter-frame SIMD}
-%   \end{figure}
-%   \end{column}
-%   \end{columns}
-%   \vfill
-%   \enumcite{Sarkis2014}
-
-%   \enumcite{LeGal2015a}
-% \end{frame}

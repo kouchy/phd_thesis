@@ -7,7 +7,6 @@
 \subsection[Proposed eDSL]{Description of the Proposed Embedded Domain Specific Language}
 
 \begin{frame}{Motivations}
-  % \vfill
   \begin{itemize}
     \item Need for environment adapted to SDR systems description
     \vspace{0.1cm}
@@ -17,15 +16,6 @@
       \item GNU Radio~\cite{GNURadio}
     \end{itemize}
     \vspace{0.1cm}
-    % \pause
-    % \item Objectives:
-    % \begin{itemize}
-    %   \item High performance eDSL
-    %   \item Integrate the eDSL with \AFFECT and its fast implementations
-    %   \item Easy to understand, to use and to modify for new users
-    % \end{itemize}
-    % \vspace{0.3cm}
-    % \pause
     \item<3-> Proposed solution:
     \begin{itemize}
       \item \Cxx embedded Domain Specific Language (eDSL)
@@ -51,7 +41,7 @@
     \begin{figure}[!h]
       \centering
       \scalebox{.65}{
-      \begin{tikzpicture}%[scale=\tikzscale]
+      \begin{tikzpicture}
           \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
           \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
           \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt} }
@@ -95,7 +85,6 @@
           \node[seq, label={[Paired-11]below:Sequence},  dashed, fit=(t1) (t4)] {};
 
           \node[draw=Paired-1, rounded corners=0pt,         minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-1]right:Task}         ] (l1) at (+0.0, 1.9) {};
-      %   \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.7cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (+0.0, 1.9) {};
           \node[sout,                                                                                                 label={[Paired-5]right:Output socket}] (l3) at (+4.0, 1.3) {};
           \node[sin,                                                                                                  label={[Paired-7]right:Input socket} ] (l4) at (+4.0, 1.9) {};
       \end{tikzpicture}
@@ -106,7 +95,7 @@
     \begin{figure}[!h]
       \centering
       \scalebox{.65}{
-      \begin{tikzpicture}%[scale=\tikzscale]
+      \begin{tikzpicture}
         \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
         \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
         \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt, minimum height=1.5cm} }
@@ -168,16 +157,6 @@
     \item<2-> A sequence is built from an initial and a final list of tasks
     \item<3-> \textbf{Oriented graphs} have to be supported \textbf{to map real SDR systems}
     \item<4-> Tasks scheduling is resolved at the construction of the sequence
-    % \begin{itemize}
-    %   \item Could be resolved at compilation time
-    %   \item But small overhead at runtime
-    % \end{itemize}
-    % \item Binding rules
-    % \begin{itemize}
-    %   \item All the input sockets of a task have to be bound to execute a task
-    %   \item An input socket has to be bound to a single output socket
-    %   \item An output socket can be bound to many input sockets
-    % \end{itemize}
   \end{itemize}
   \vfill
 \end{frame}
@@ -188,7 +167,7 @@
   \begin{figure}[!h]
     \centering
     \scalebox{.65}{
-    \begin{tikzpicture}%[scale=\tikzscale]
+    \begin{tikzpicture}
       \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
       \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
       \tikzset{ seq/.style ={draw=Paired-11, rounded corners=2pt} }
@@ -285,11 +264,9 @@
       \node[sseq, label={[Paired-9]below:Sub-sequence 1}, fit=(t1) (t4)] {};
       \node[sseq, label={[Paired-9]below:Sub-sequence 2}, fit=(tt1) (tt4)] {};
       \node[sseq, label={[Paired-9]below:Sub-sequence $n$}, fit=(tttt1) (tttt4)] {};
-
     \end{tikzpicture}
     }
   \end{figure}
-  % \vspace{0.3cm}
   \begin{itemize}
     \item Put each duplicated \textbf{sub-sequence on a thread}
     \item Preserve the \textbf{cache data locality}
@@ -301,15 +278,14 @@
   \begin{figure}[!h]
     \centering
     \scalebox{.65}{
-    \begin{tikzpicture}%[scale=\tikzscale]
-      \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=white} }
-      \tikzset{ stsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
-      \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
-      \tikzset{ seq/.style ={draw=Paired-11,  dashed, rounded corners=2pt} }
-      % \tikzset{ pip/.style ={draw=Dark2-1,  dashed, rounded corners=2pt} }
-      \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
-      \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
-      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+    \begin{tikzpicture}
+      \tikzset{ tsk/.style  = {draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=white} }
+      \tikzset{ stsk/.style = {draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
+      \tikzset{ ss/.style   = {draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
+      \tikzset{ seq/.style  = {draw=Paired-11,  dashed, rounded corners=2pt} }
+      \tikzset{ pip/.style  = {draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
+      \tikzset{ sin/.style  = {draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
+      \tikzset{ sout/.style = {draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
 
       \tikzset{ htsk/.style ={draw=Paired-1!40, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=white} }
       \tikzset{ hsin/.style ={draw=Paired-7!40, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7!40} }
@@ -413,7 +389,6 @@
   \vfill
   \begin{itemize}
     \item Sequential tasks cannot be duplicated {\color{bleuUni}\Large\MVRightarrow} \textbf{Pipeline strategy}
-    % \item A sequence = a pipeline stage
     \item A pipeline is composed of a sequence list
     \item<2-> The \textbf{sequence duplication} technique is still possible in \textbf{parallel stages}
   \end{itemize}
@@ -428,10 +403,8 @@
   \begin{figure}[!h]
   \centering
   \scalebox{.50}{
-  \begin{tikzpicture}%[scale=0.65, every node/.style={transform shape}]
-    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
+  \begin{tikzpicture}
     \path[use as bounding box] (-2.2, 0.1) rectangle (11.85, 5.2);
-    % \draw (-2.2, 0.1) rectangle (11.85, 5.2);
 
     \tikzset{ txt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
     \tikzset{ rxt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
@@ -466,20 +439,14 @@
   \end{tikzpicture}
   }
   \end{figure}
-  % \begin{figure}[htp]
-  %   \centering
-  %   \includegraphics[scale=0.25]{pics/demo_dvbs2}
-  % \end{figure}
   \vspace{+0.1cm}
   \begin{itemize}
-    % \item Implement a full DVB-S2 transceiver (streaming video)
     \item<2-> 2x Universal Software Radio Peripherals (\textcolor{Paired-7}{USRPs}) N320 for the RF
     \item<3-> 1x Middle class computer for the digital transmitter (\textcolor{Paired-1}{Tx})
     \item<3-> 1x Server class computer for the digital receiver (\textcolor{Paired-3}{Rx})
     \item<5-> \textbf{Industrial constraint}: 30 $\sim$ 50 Mb/s
   \end{itemize}
   \vspace{-0.1cm}
-  % \vfill
   \pause
   \pause
   \pause
@@ -496,92 +463,14 @@
     }
     \caption*{Selected DVB-S2 configurations (MODCOD).}
   \end{table}
-  % \vfill
-
 \end{frame}
-
-% \begin{frame}{Transmitter}
-%   \vfill
-%   \begin{figure}[!h]
-%     \centering
-%     \scalebox{.50}{
-%     \begin{tikzpicture}%[scale=\tikzscale]
-%       \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
-%       \tikzset{ stsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
-%       \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
-%       \tikzset{ seq/.style ={draw=Paired-11, dashed, rounded corners=2pt} }
-%       \tikzset{ mdl/.style ={draw=Paired-3,  dashed, rounded corners=2pt} }
-%       \tikzset{ pip/.style ={draw=Dark2-8,  dotted, thick, rounded corners=2pt} }
-%       \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
-%       \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
-
-%       \node[stsk                    , align=center] (t1) at (0.0, 2.0) {~generate~~\\($t^{\text{Tx}}_1$)};
-%       \node[tsk , right=2.00cm of t1, align=center] (t2)               {~scramble~~\\($t^{\text{Tx}}_2$)};
-%       \node[tsk , right=1.25cm of t2, align=center] (t3)               {~encode~~\\($t^{\text{Tx}}_3$)};
-%       \node[tsk , right=1.25cm of t3, align=center] (t4)               {~encode~~\\($t^{\text{Tx}}_4$)};
-%       \node[tsk , right=1.25cm of t4, align=center] (t5)               {~interleave~~\\($t^{\text{Tx}}_5$)};
-%       \node[tsk,  below=1.00cm of t2, align=center] (t6)               {~modulate~~\\($t^{\text{Tx}}_6$)};
-%       \node[tsk , right=1.25cm of t6, align=center] (t7)               {~insert~~\\($t^{\text{Tx}}_7$)};
-%       \node[tsk , right=1.25cm of t7, align=center] (t8)               {~scramble~~\\($t^{\text{Tx}}_8$)};
-%       \node[stsk, right=4.60cm of t8, align=center] (t9)               {~filter~~\\($t^{\text{Tx}}_9$)};
-%       \node[stsk, right=1.00cm of t9, align=center] (t10)              {~send~~\\($t^{\text{Tx}}_{10}$)};
-
-%       \node[sout, at=(t1.east) ] (t1_so)  {};
-%       \node[sin,  at=(t2.west) ] (t2_si)  {};
-%       \node[sout, at=(t2.east) ] (t2_so)  {};
-%       \node[sin,  at=(t3.west) ] (t3_si)  {};
-%       \node[sout, at=(t3.east) ] (t3_so)  {};
-%       \node[sin,  at=(t4.west) ] (t4_si)  {};
-%       \node[sout, at=(t4.east) ] (t4_so)  {};
-%       \node[sin,  at=(t5.west) ] (t5_si)  {};
-%       \node[sout, at=(t5.east) ] (t5_so)  {};
-%       \node[sin,  at=(t6.west) ] (t6_si)  {};
-%       \node[sout, at=(t6.east) ] (t6_so)  {};
-%       \node[sin,  at=(t7.west) ] (t7_si)  {};
-%       \node[sout, at=(t7.east) ] (t7_so)  {};
-%       \node[sin,  at=(t8.west) ] (t8_si)  {};
-%       \node[sout, at=(t8.east) ] (t8_so)  {};
-%       \node[sin,  at=(t9.west) ] (t9_si)  {};
-%       \node[sout, at=(t9.east) ] (t9_so)  {};
-%       \node[sin,  at=(t10.west)] (t10_si) {};
-
-%       \node[mdl, label={[Paired-3]above:Source Binary File},  fit=(t1)           (t1_so)] (m1) {};
-%       \node[mdl, label={[Paired-3]above:Scrambler Binary},    fit=(t2)  (t2_si)  (t2_so)] (m2) {};
-%       \node[mdl, label={[Paired-3]above:Encoder BCH},         fit=(t3)  (t3_si)  (t3_so)] (m3) {};
-%       \node[mdl, label={[Paired-3]above:Encoder LDPC},        fit=(t4)  (t4_si)  (t4_so)] (m4) {};
-%       \node[mdl, label={[Paired-3]above:Interleaver},         fit=(t5)  (t5_si)  (t5_so)] (m5) {};
-%       \node[mdl, label={[Paired-3]above:Modem PSK},           fit=(t6)  (t6_si)  (t6_so)] (m6) {};
-%       \node[mdl, label={[Paired-3]above:Framer PLH},          fit=(t7)  (t7_si)  (t7_so)] (m7) {};
-%       \node[mdl, label={[Paired-3]above:Scrambler Symbol},    fit=(t8)  (t8_si)  (t8_so)] (m8) {};
-%       \node[mdl, label={[Paired-3]above:Filter Shaping},      fit=(t9)  (t9_si)  (t9_so)] (m9) {};
-%       \node[mdl, label={[Paired-3]above:Radio},               fit=(t10) (t10_si)        ] (m9) {};
-
-%       \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t2_so) -- (t3_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t3_so) -- (t4_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t5_so) -- (13.9,2.0) -- (13.9,1.15) -- (2.25,1.15) -- (2.25,0) -- (t6_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t6_so) -- (t7_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t7_so) -- (t8_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t8_so) -- (t9_si)  node [midway, above] {};
-%       \draw[->,>=latex] (t9_so) -- (t10_si) node [midway, above] {};
-%       \draw[black, -] (t10.east)--++(0:1.0cm) node[antenna, label={[above,yshift=+2.15cm]USRP}] {};
-
-%       \node[seq, minimum height=2.5cm, minimum width=3.5cm,  label={[Paired-11]below:Stage 1}, fit=(t1) (t1_so)                                      ] (seq1) {};
-%       \node[seq, minimum height=4.5cm, minimum width=12.0cm, label={[Paired-11]below:Stage 2}, fit=(t2_si) (t2) (t3) (t4) (t5) (t6) (t7) (t8) (t8_so)] (seq2) {};
-%       \node[seq, minimum height=2.5cm, minimum width=4.5cm,  label={[Paired-11]below:Stage 3}, fit=(t9_si) (t10)                                     ] (seq3) {};
-%     \end{tikzpicture}
-%     }
-%   \end{figure}
-%   \vfill
-% \end{frame}
 
 \begin{frame}{Receiver (Rx)}
   \vspace{-0.3cm}
   \begin{figure}[!h]
     \centering
     \scalebox{.40}{
-    \begin{tikzpicture}%[scale=\tikzscale]
+    \begin{tikzpicture}
       \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm} }
       \tikzset{ stsk/.style={draw=Paired-1, rounded corners=0pt, text=Paired-1, minimum height=1.0cm, minimum width=1cm, fill=Paired-1!7} }
       \tikzset{ ss/.style  ={draw=Paired-9, rounded corners=2pt, minimum height=1.5cm} }
@@ -652,23 +541,19 @@
       \node[sin,  at=(t19.west)               ] (t19_si) {};
 
       \draw[black, -] (t1.west)--++(0:-1.0cm) node[antenna, label={[above,yshift=+2.15cm,Paired-7]USRP}] {};
-      \draw[->,>=latex] (t1_so) -- (t2_si)  node [midway, above] {};
-      \draw[->,>=latex] (t2_so) -- (t3_si)  node [midway, above] {};
-      \draw[->,>=latex] (t3_so) -- (t4_si)  node [midway, above] {};
-      % \draw[->,>=latex] (t4_so) -- (t5_si)  node [midway, above] {};
-      \draw[->,>=latex] (t4_so) -| (11.0,-0.5) -- (1.5,-0.5) |- (t5_si)  node [midway, above] {};
-      \draw[->,>=latex] (t5_so1) -- (t6_si1)  node [midway, above] {};
-      \draw[->,>=latex] (t5_so2) -- (t6_si2)  node [midway, above] {};
-      % \draw[->,>=latex] (t5_so) -- (13.9,2.0) -- (13.9,1.15) -- (2.25,1.15) -- (2.25,0) -- (t6_si)  node [midway, above] {};
-      \draw[->,>=latex] (t6_so) -- (t7_si)  node [midway, above] {};
-      \draw[->,>=latex] (t7_so) -- (t8_si)  node [midway, above] {};
-      % \draw[->,>=latex] (t8_so) -- (t9_si)  node [midway, above] {};
+      \draw[->,>=latex] (t1_so)  -- (t2_si)  node [midway, above] {};
+      \draw[->,>=latex] (t2_so)  -- (t3_si)  node [midway, above] {};
+      \draw[->,>=latex] (t3_so)  -- (t4_si)  node [midway, above] {};
+      \draw[->,>=latex] (t4_so)  -| (11.0,-0.5) -- (1.5,-0.5) |- (t5_si)  node [midway, above] {};
+      \draw[->,>=latex] (t5_so1) -- (t6_si1) node [midway, above] {};
+      \draw[->,>=latex] (t5_so2) -- (t6_si2) node [midway, above] {};
+      \draw[->,>=latex] (t6_so)  -- (t7_si)  node [midway, above] {};
+      \draw[->,>=latex] (t7_so)  -- (t8_si)  node [midway, above] {};
       \draw[->,>=latex] (t8_so1) -| (15.5,-5.0) -- (1.5,-5.0) |- (t9_si)  node [midway, above] {};
-      \draw[->,>=latex] (t9_so) -- (t10_si) node [midway, above] {};
+      \draw[->,>=latex] (t9_so)  -- (t10_si) node [midway, above] {};
       \draw[->,>=latex] (t10_so) -- (t11_si) node [midway, above] {};
       \draw[->,>=latex] (t11_so) -- (t12_si) node [midway, above] {};
       \draw[->,>=latex] (t12_so) -- (t13_si) node [midway, above] {};
-      % \draw[->,>=latex] (t13_so) -- (t14_si) node [midway, above] {};
       \draw[->,>=latex] (t13_so) -| (19.5,-9.5) -- (1.5,-9.5) |- (t14_si)  node [midway, above] {};
 
       \draw[->,>=latex] (t14_so) -- (t15_si) node [midway, above] {};
@@ -729,18 +614,14 @@
   \begin{figure}[!h]
     \centering
     \scalebox{.50}{
-    \begin{tikzpicture}%[scale=\tikzscale]
-    \begin{axis}[/pgfplots/table/ignore chars={|}, %footnotesize,
+    \begin{tikzpicture}
+    \begin{axis}[/pgfplots/table/ignore chars={|},
                       height=1.54\textwidth, width=2.0\textwidth,
                       xticklabel style={black!70}, yticklabel style={black!70},
                       ymode = log,
                       ylabel=Frame Error Rate,
-                      % ymin=0.000000001, ymax=0.05,
-                      % xmin=0, xmax=2,
-                      % xtick={0,0.5,...,4.5},
                       xlabel=$E_b/N_0~\text{(dB)}$,
                       grid=both, grid style={gray!30},
-                      %tick align=outside, tickpos=left,
                       legend pos=north east]
       \addplot[mark=square,    Paired-1!60, semithick, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:llline1}
       \addplot[mark=o,         Paired-1,    semithick, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {../main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:llline3}
@@ -758,10 +639,9 @@
         fill=white,
         ampersand replacement=\&
     ] at (legend) {
-                 \& \textcolor{Paired-1}{MODCOD 1} \& \textcolor{Paired-3}{MODCOD 2} \& \textcolor{Paired-5}{MODCOD 3} \\
-        AWGN     \& \ref{plot:llline1} \& \ref{plot:llline4} \& \ref{plot:llline7} \\
-        % AWGN$^+$ \& \ref{plot:llline2} \& \ref{plot:llline5} \& \ref{plot:llline8} \\
-        Real     \& \ref{plot:llline3} \& \ref{plot:llline6} \& \ref{plot:llline9} \\
+             \& \textcolor{Paired-1}{MODCOD 1} \& \textcolor{Paired-3}{MODCOD 2} \& \textcolor{Paired-5}{MODCOD 3} \\
+        AWGN \& \ref{plot:llline1} \& \ref{plot:llline4} \& \ref{plot:llline7} \\
+        Real \& \ref{plot:llline3} \& \ref{plot:llline6} \& \ref{plot:llline9} \\
     };
     \end{tikzpicture}
     }
@@ -771,10 +651,6 @@
     \vspace{1.7cm}
     \begin{table}[htp]
     \centering
-    % \caption
-    %   [Throughput performance depending of the selected DVB-S2 configuration.]
-    %   {Throughput performance depending of the selected DVB-S2 configuration.}
-    % \label{tab:sdr_dvbs2_thr_modcod}
     {\small\resizebox{1.0\linewidth}{!}{
     \begin{tabular}{c | c | c }
       \multirow{2}{*}{\textbf{Config.}} & \multicolumn{2}{c }{\textbf{Throughput} $\bm{\mathcal{T}_i}$ (Mb/s)} \\

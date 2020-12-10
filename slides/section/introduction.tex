@@ -1,33 +1,15 @@
 %!TEX root = ../slides.tex
 
-% \section[Introduction]{Introduction \& Context}
-
-% \subsection[Introduction]{Introduction}
-
 \begin{frame}{Context}
   \vfill
   \begin{figure}[htp]
   \centering
-  \includegraphics[scale=0.40]{pics/5G_modif}
+  \includegraphics[scale=0.40]{pic/com_num}
   \end{figure}
   \vfill
-  % \begin{itemize}
-  %   \item Nowadays digital communication systems are everywhere
-  %   \item Real-time systems are traditionally implemented in hardware
-  %   \item Needs validation of more robust and more complex systems
-  %   \item Needs to flexibility to adapt to many parameters
-  %   \item New challenge: implement digital communication systems in software
-  %     \\\vspace*{.5em}
-  %     {\color{bleuUni}\Large\MVRightarrow} \textbf{Require high performance implementations}
-  % \end{itemize}
 \end{frame}
 
-% \subsection[Applicative Contexts]{Applicative Contexts}
-
 \begin{frame}{Software-defined Radio}
-  % A Software-Defined Radio (SDR) is a radio communication system where
-  % components traditionally implemented in hardware are instead implemented by
-  % means of software.
   \vspace{0.3cm}
   \textbf{Software-Defined Radio (SDR)} = radio communication system all in software
 
@@ -169,10 +151,7 @@
   \end{columns}
   \vfill
   \begin{itemize}
-    % \item<2-> Base station = Radio Frequency (RF) + Base Band (BB) processing
-    % \item<4-> Virtualization of the BB processing = Cloud Radio Access Network (C-RAN)
     \item<4-> BB virtualization = Cloud Radio Access Network (C-RAN)
-    % \item<4-> SDR is considered in the Fifth Generation of Mobile Phone Networks (5G)
     \item<4-> SDR considered for 5G
   \end{itemize}
 \end{frame}
@@ -181,9 +160,7 @@
   \begin{figure}[!h]
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
-    % \path[use as bounding box] (-2.2, -1.2) rectangle (11.8, 5.2);
     \path[use as bounding box] (-2.7, -1.7) rectangle (12.0, 5.3);
-    % \draw (-2.2, -1.2) rectangle (11.8, 5.2);
 
     \only<1>{
     \tikzset{ txt/.style={draw=white, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=white, align=center} }
@@ -252,7 +229,6 @@
   \centering
   \begin{tikzpicture}[scale=0.65, every node/.style={transform shape}]
     \path[use as bounding box] (-2.7, -1.7) rectangle (12.0, 5.3);
-    % \draw (-2.7, -1.7) rectangle (12.0, 5.3);
 
     \tikzset{ rftx/.style={draw=Paired-1, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-1!20} }
     \tikzset{ rfrx/.style={draw=Paired-3, rounded corners=0pt, minimum height=0.7cm, minimum width=1.0cm, text=black, align=center, rounded corners=2pt, dashed, fill=Paired-3!20} }
@@ -307,7 +283,7 @@
     \node[text=black, align=center] (chn) at (10.7, 2) {AWGN\\Channel};
     }
     \only<3->{
-    \node[style={chn}   ] (chn) at (10.7, 2) {AWGN\\Channel};
+    \node[style={chn}] (chn) at (10.7, 2) {AWGN\\Channel};
     }
     \only<1-2>{
     \node[style=rfrx] (rfrx) at (10.5,0) {\textbf{RF}};
@@ -343,7 +319,7 @@
     }
 
     \only<1>{
-    \draw[<-,>=latex, style=hid2] (tx.west)  -- (-2,  4) node [left,    above           ] {$\bm{m}$};
+    \draw[<-,>=latex, style=hid2] (tx.west) -- (-2,  4) node [left, above] {$\bm{m}$};
     }
     \only<1-2>{
     \draw[->,>=latex] (tx.east)  -- (rftx)   node [midway,  above           ] {$\bm{x}$};
@@ -368,37 +344,37 @@
     }
 
     \only<1>{
-    \draw[->,>=latex, style=hid2] (rx.west)  -- (-2,  0) node [left,    below           ] {$\bm{\hat{m}}$};
+    \draw[->,>=latex, style=hid2] (rx.west)  -- (-2,  0) node [left, below] {$\bm{\hat{m}}$};
     }
     \only<1-2>{
-    \draw[->,>=latex            ] (sen)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex] (sen) -- (enc) node [midway, above] {$\bm{u}$};
     }
     \only<3>{
-    \draw[->,>=latex            ] (src)      -- (enc)    node [midway,  above           ] {$\bm{u}$};
+    \draw[->,>=latex] (src) -- (enc) node [midway, above] {$\bm{u}$};
     }
     \only<4>{
-    \draw[->,>=latex            ] (src)      -- (enc)    node [midway,  above           ] {};
+    \draw[->,>=latex] (src) -- (enc) node [midway, above] {};
     }
     \only<1-3>{
-    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {$\bm{c}$};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above] {$\bm{c}$};
     }
     \only<4>{
-    \draw[->,>=latex            ] (enc)      -- (mod)    node [midway,  above           ] {};
+    \draw[->,>=latex] (enc) -- (mod) node [midway, above] {};
     }
     \only<1-3>{
-    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  below           ] {$\bm{l}$};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below] {$\bm{l}$};
     }
     \only<4>{
-    \draw[->,>=latex            ] (dem)      -- (dec)    node [midway,  below           ] {};
+    \draw[->,>=latex] (dem) -- (dec) node [midway, below] {};
     }
     \only<1-2>{
-    \draw[->,>=latex            ] (dec)      -- (sde)    node [midway,  below           ] {$\bm{\hat{u}}$};
+    \draw[->,>=latex] (dec) -- (sde) node [midway, below] {$\bm{\hat{u}}$};
     }
     \only<3>{
-    \draw[->,>=latex            ] (dec)      -- (mnt)    node [midway,  below           ] {$\bm{\hat{u}}$};
+    \draw[->,>=latex] (dec) -- (mnt) node [midway, below] {$\bm{\hat{u}}$};
     }
     \only<4>{
-    \draw[->,>=latex            ] (dec)      -- (mnt)    node [midway,  below           ] {};
+    \draw[->,>=latex] (dec) -- (mnt) node [midway, below] {};
     }
 
     \only<5->{
@@ -467,45 +443,17 @@
   }
 \end{frame}
 
-% \subsection[Problematics]{Problematics and Contributions}
-
 \begin{frame}{Challenges}
   \vfill
-
   \begin{enumerate}
     \item Propose \textbf{fast software implementations} of digital processing algorithms
-    % \begin{item}
-    %   \item
-    % \end{item}
     \vspace{0.3cm}
     \item Preserve \textbf{flexibility and portability}
     \vspace{0.3cm}
-    % \item Manage \textbf{algorithmic heterogeneity} and \textbf{reproduce state-of-the-art} results
     \item Manage \textbf{algorithmic heterogeneity} and enable \textbf{low error rate simulations}
     \vspace{0.3cm}
     \item Enable efficient execution of full \textbf{SDR chains on parallel architectures}
   \end{enumerate}
-
-  % \textbf{Software-defined Radio:}
-  % \vspace*{.5em}
-  % \begin{itemize}
-  %   \item<1-> \textbf{High throughput}: required for high resolution video streaming
-  %   \item<2-> \textbf{Low latency}: required for remote medical operations
-  %   \item<3-> \textbf{Flexibility}: the ability to adapt to many configurations
-  %   \item<4-> \textbf{Portability}: take advantage of the large variety of General Purpose Processors (GPPs) and operating systems
-  % \end{itemize}
-  % \vfill
-  % \pause
-  % \pause
-  % \pause
-  % \pause
-  % \textbf{Functional Simulation:}
-  % \vspace*{.5em}
-  % \begin{itemize}
-  %   \item<5-> \textbf{Simulation time}: expensive Monte Carlo simulation of the whole chain
-  %   \item<6-> \textbf{Algorithmic heterogeneity}: many algorithms with various characteristics
-  %   \item<7-> \textbf{Reproducibility}: ease the reproduction of the state-of-the-art results
-  % \end{itemize}
   \vfill
 \end{frame}
 

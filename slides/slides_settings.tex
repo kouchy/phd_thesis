@@ -1,10 +1,12 @@
 %!TEX root = ./slides.tex
 
+% -----------------------------------------------------------------------------
 % Packages --------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-% \usepackage[frenchb]{babel}
-\usepackage[english]{babel}
+\usepackage[english]{babel} % \usepackage[frenchb]{babel}
 \usepackage{eulervm}
 \usepackage{etoolbox,refcount}
 \usepackage[normalem]{ulem} % strikeout with \sout{}
@@ -46,16 +48,29 @@
   backref      = true]{biblatex}
 \addbibresource{../tail/bibliography.bib}
 
-% Parameters ------------------------------------------------------------------
-% \renewcommand{\scriptsize}{\fontsize{5}{6}}
+% -----------------------------------------------------------------------------
+% Configuration of the packages -----------------------------------------------
+% -----------------------------------------------------------------------------
+
+% load the colors definition from an external file
+\input{../settings/colors}
+
+% smaller footnotesize
 \renewcommand{\footnotesize}{\fontsize{7}{8.4}}
-% % \renewcommand{\footnotesize}{\scriptsize}
 
-\pgfplotsset{compat=newest}
-\usepgfplotslibrary{colorbrewer}
-\usepgfplotslibrary{groupplots}
+% reset the footnote counter to 0 for each slide
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+
+% package 'minted'
+% following lines are for a beautiful source code with 'minted'
+\setminted{bgcolor=marronUni,fontsize=\fontsize{8}{9.2},tabsize=4,numbers=left,framesep=0pt,numbersep=2pt,xleftmargin=3.5mm,xrightmargin=3.5mm,highlightcolor=marronUni!90} % package 'minted'
+\usemintedstyle{monokai}
+\BeforeBeginEnvironment{minted}{\begin{tcolorbox}[colback=marronUni, colframe=black, arc=0.5mm, boxsep=0mm, boxrule=0.0mm, left=0mm, right=0mm, top=0mm, bottom=0mm]}
+\AfterEndEnvironment{minted}{\end{tcolorbox}}
+\renewcommand{\theFancyVerbLine}{\textcolor[rgb]{1,1,1}{\tiny{\arabic{FancyVerbLine}}}}
+
+% package 'tikz'
 \usetikzlibrary{matrix, positioning, fit, patterns, shapes, arrows, shapes.multipart, decorations.pathmorphing, calc, spy}
-
 \tikzset{
     invisible/.style={opacity=0},
     visible on/.style={alt={#1{}{invisible}}},
@@ -67,24 +82,11 @@
     hatch thickness/.store in=\hatchthickness,
     hatch thickness=0.5pt,
 }
-% \SetAlFnt{\footnotesize}
-\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
 
-% package 'minted'
-\setminted{bgcolor=marronUni,fontsize=\fontsize{8}{9.2},tabsize=4,numbers=left,framesep=0pt,numbersep=2pt,xleftmargin=3.5mm,xrightmargin=3.5mm,highlightcolor=marronUni!90} % package 'minted'
-\usemintedstyle{monokai} % friendly fruity
-% https://tex.stackexchange.com/questions/252263/alignment-of-minted-line-numbers
-% \newlength{\mintednumbersep}
-% \AtBeginDocument{%
-%   \sbox0{\tiny00}%
-%   \setlength\mintednumbersep{\parindent}%
-%   \addtolength\mintednumbersep{-\wd0}%
-% }
-\BeforeBeginEnvironment{minted}{\begin{tcolorbox}[colback=marronUni, colframe=black, arc=0.5mm, boxsep=0mm, boxrule=0.0mm, left=0mm, right=0mm, top=0mm, bottom=0mm]}
-\AfterEndEnvironment{minted}{\end{tcolorbox}}
-\renewcommand{\theFancyVerbLine}{\textcolor[rgb]{1,1,1}{\tiny{\arabic{FancyVerbLine}}}}
-% \renewcommand{\theFancyVerbLine}{\sffamily\textcolor[rgb]{1,1,1}{\footnotesize\oldstylenums{\arabic{FancyVerbLine}}}}
-
+% package 'pgfplots'
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{groupplots}
 % new shapes for pgfplot
 \makeatletter
 \pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north east}
@@ -111,15 +113,13 @@
     \pgfusepath{stroke}
 }
 
+% configure figure captions
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
 
-% biblatex
+% package 'biblatex'
 % separate multi-citations by a comma instead of a semicolon in 'biblatex'
 \renewcommand*{\multicitedelim}{\addcomma\addspace}
-% \renewcommand\mkbibacro[1]{{\footnotesize\MakeUppercase{#1}}}
-\definecolor{bluecite}{HTML}{009DE0}
 \setbeamertemplate{bibliography item}{\textcolor{black}{\insertbiblabel}}
-\newcommand{\enumcite}[1]{{{\fontsize{6}{7.2}\selectfont \cite{#1}\quad \fullcite{#1}}}}
 
 % package 'hyperref'
 \hypersetup{
@@ -128,17 +128,19 @@
   citecolor= bluecite,
   urlcolor=bluecite,
 }
+
 % package 'url'
 \urlstyle{tt}
 
+% package 'algorithm2e'
+\SetKwComment{Comment}{$\triangleright$\ }{}
+\newcommand\mycommfont[1]{\small\ttfamily\textcolor{Comment}{#1}}
+\SetCommentSty{mycommfont}
 
-\SetKwComment{Comment}{$\triangleright$\ }{} % package 'algorithm2e'
-\newcommand\mycommfont[1]{\small\ttfamily\textcolor{Comment}{#1}} % package 'algorithm2e'
-\SetCommentSty{mycommfont} % package 'algorithm2e'
+% -----------------------------------------------------------------------------
+% Beamer template configuration -----------------------------------------------
+% -----------------------------------------------------------------------------
 
-
-% Beamer template -------------------------------------------------------------
-\input{../settings/colors}
 \usecolortheme[named=bleuUni]{structure}
 
 % Special commands : ddfrac and actionenv and compresslist
@@ -182,17 +184,11 @@
                        \hspace*{2ex}\strut\bfseries\color{bleuUni!15!white}\insertframetitle\strut\par %
 \end{beamercolorbox}}
 
-%\setbeamerfont{headline}{size=\footnotesize}
-
-% \usepackage{animate}
-% \usepackage{multimedia}
 \usetheme{Ilmenau} % Beamer theme v 3.0
 \setbeamercolor{section in head/foot}{bg=marronUni}
 \useinnertheme{circles} %rectangle bullet points instead of circle ones
 \usepackage{beamerthemebars}
 \beamertemplatenavigationsymbolsempty
-%\setbeamercolor{navigation symbols dimmed}{fg=red!80!black}
-%\setbeamercolor{navigation symbols}{fg=red!80!black}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 \setbeamertemplate{headline}{%
@@ -220,7 +216,9 @@
 \end{frame}
 }
 
-% MIPP ------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+% New commands declaration ----------------------------------------------------
+% -----------------------------------------------------------------------------
 
 \newcommand{\MIPP}{MIPP\xspace}
 \newcommand{\longMIPP}{MyIntrinsics++\xspace}
@@ -232,32 +230,34 @@
 \newcommand{\BoostSIMD}{Boost.SIMD\xspace}
 \newcommand{\bSIMD}{bSIMD\xspace}
 \newcommand{\AFFECT}{AFF3CT\xspace}
-
 \newcommand{\C}{\texttt{C}\xspace}
 \newcommand{\Cxx}{\texttt{C++}\xspace}
 \newcommand{\Cxy}[1]{\texttt{C++{#1}}\xspace}
 \newcommand{\CppUnit}{\texttt{CppUnit}\xspace}
-
 \newcommand{\cmark}{\textcolor{btfGreen}{\ding{51}}}
 \newcommand{\xmark}{\textcolor{btfRed}{\ding{55}}}
 \newcommand{\Arikan}{Ar{\i}kan\xspace}
-
-\DeclareMathOperator*{\sign}{sign}
-\DeclareMathOperator*{\DecoderSC}{DecoderSC}
-\DeclareMathOperator*{\hardDecide}{h_d}
-
-% \newcommand{\highlight}[2]{\colorbox{#1}{\ensuremath{#2}}}
-
 \newcommand{\highlight}[2][yellow]{\mathchoice%
   {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\displaystyle#2$}}}%
   {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\textstyle#2$}}}%
   {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\scriptstyle#2$}}}%
   {{\setlength{\fboxsep}{0pt}\colorbox{#1}{$\scriptscriptstyle#2$}}}}%
-
 \newcommand{\R}{\textsuperscript{\textregistered}\xspace}
 \newcommand{\TM}{\textsuperscript{\texttrademark}\xspace}
+\newcommand{\enumcite}[1]{{{\fontsize{6}{7.2}\selectfont \cite{#1}\quad \fullcite{#1}}}}
 
-% add column types for big table
+% -----------------------------------------------------------------------------
+% New math operators declaration ----------------------------------------------
+% -----------------------------------------------------------------------------
+
+\DeclareMathOperator*{\sign}{sign}
+\DeclareMathOperator*{\DecoderSC}{DecoderSC}
+\DeclareMathOperator*{\hardDecide}{h_d}
+
+% -----------------------------------------------------------------------------
+% Add column types for big table ----------------------------------------------
+% -----------------------------------------------------------------------------
+
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}

@@ -4,29 +4,6 @@
 
 \subsection[Motivations]{Motivations}
 
-% \begin{frame}{Observations}
-%   \vfill
-%   \begin{enumerate}
-%     \item Signal processing community not used to share source codes
-%     \begin{itemize}
-%       \item A non-negligible part of the researchers time is spent in reproducing State-of-the-Art results
-%     \end{itemize}
-%     \vspace{0.3cm}
-%     \pause
-%     \item Existing open-source codes are often written with high-level language (MATLAB/Python)
-%     \begin{itemize}
-%       \item Speed limitations for low error rate simulations and real-time applications
-%     \end{itemize}
-%     \vspace{0.3cm}
-%     \pause
-%     \item Some high performance open-source codes are available
-%     \begin{itemize}
-%       \item Targets a reduce set of signal processing algorithms, hard to use in other contexts
-%     \end{itemize}
-%   \end{enumerate}
-%   \vfill
-% \end{frame}
-
 \begin{frame}{A Fast Forward Error Correction Toolbox}
   \vfill
   \textbf{Observations:}
@@ -48,10 +25,8 @@
   \vspace{0.1cm}
   \begin{enumerate}
     \item \Cxx \textbf{open-source toolbox}: ease the \textbf{reproduction of scientific results}
-    % \vspace{0.3cm}
     \pause
     \item Focus on high performance implementations: \textbf{high speed simulations}
-    % \vspace{0.3cm}
     \pause
     \item Manage the \textbf{algorithmic heterogeneity} to propose a \textbf{unified library}
   \end{enumerate}
@@ -84,14 +59,13 @@
   \begin{figure}[!h]
     \centering
     \scalebox{.60}{
-    \begin{tikzpicture}%[scale=\tikzscale]
+    \begin{tikzpicture}
       \path[use as bounding box] (-1.4, 4.65) rectangle (12.65, -0.65);
-      % \draw (-1.4, 4.65) rectangle (12.65, -0.65);
 
       \tikzset{ tsk/.style ={draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1} }
-      \tikzset{ mdl/.style ={draw=Paired-3, rounded corners=2pt,} }
+      \tikzset{ mdl/.style ={draw=Paired-3, rounded corners=2pt} }
       \tikzset{ sin/.style ={draw=Paired-7, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=north east lines, pattern color=Paired-7} }
-      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots, pattern color=Paired-5} }
+      \tikzset{ sout/.style={draw=Paired-5, circle, minimum width=0.3cm, text=black, preaction={fill=white}, pattern=crosshatch dots,  pattern color=Paired-5} }
 
       \draw (-4.4, 4.65) rectangle (-1.6, 2.4);
       \node[draw=Paired-3, rounded corners=2pt, dashed, minimum height=0.3cm, minimum width=0.3cm, text=Paired-1, label={[Paired-3]right:Module}       ] (l2) at (-4.1, 4.3) {};
@@ -296,29 +270,12 @@ comm_chain.exec([&Mnt]() {
 
 \subsection[Functionnal Simulator]{Simulation of Digital Communication Algorithms}
 
-% \begin{frame}{Features}
-%   \vfill
-%   \begin{itemize}
-%     \item Estimation of the BER/FER via Monte Carlo simulations
-%     \begin{itemize}
-%       \item Can require very long simulation time (hours to months)
-%     \end{itemize}
-%     \vspace{0.5cm}
-%     \item Take advantage of parallel architectures
-%     \begin{itemize}
-%       \item Multi-threaded execution (\Cxy{11} threads)
-%       \item Multi-node execution (Message Passing Interface, MPI)
-%     \end{itemize}
-%   \end{itemize}
-%   \vfill
-% \end{frame}
-
 \begin{frame}{Simulation of a 5G Receiver}
   \vspace{-0.3cm}
   \begin{figure}[!h]
     \centering
     \scalebox{.50}{
-    \begin{tikzpicture}%[scale=\tikzscale]
+    \begin{tikzpicture}
       \node[draw=Paired-5, dashed, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-5, align=center] (azcw) at ( 0, 0) {All-zero\\Codeword};
 
       \node[draw=Paired-1, rounded corners=0pt, minimum height=1cm, minimum width=2.5cm, text=Paired-1, align=center] (chn) at ( 3.5, 0) {AWGN\\Channel};
@@ -347,50 +304,27 @@ comm_chain.exec([&Mnt]() {
     \centering
     \scalebox{.65}{
     \begin{tikzpicture}
-      \begin{groupplot}[/pgfplots/table/ignore chars={|}, %footnotesize,
+      \begin{groupplot}[/pgfplots/table/ignore chars={|},
                         height=1.125\textwidth,  width=0.75\textwidth,
                         xticklabel style={black!70}, yticklabel style={black!70},
-                        % group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
                         group style={group name=ccsds, group size= 2 by 1, horizontal sep=2cm, vertical sep=2.2cm},
                         ymode = log, xmin=2.5, xmax=4.5, xtick={0,0.5,...,4.5},
                         xlabel=$E_b/N_0 \text{(dB)}$, grid=both, grid style={gray!30},
-                        %tick align=outside, tickpos=left,
                         legend pos=south west]
         \nextgroupplot[ylabel=Frame Error Rate]
-        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
-        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
-        % \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line3}
-        % \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line4}
-        % \legend{\texttt{FA-SCL} $L=\textrm{ }8$,
-        %         \texttt{FA-SCL} $L=32$,
-        %         \texttt{PA-SCL} $L=\textrm{ }8$,
-        %         \texttt{PA-SCL} $L=32$}
+        \addplot[mark=o,      Paired-5, semithick] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};  \label{plot:line1}
+        \addplot[mark=square, Paired-1, semithick] table [x=Eb/N0, y=FER] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt}; \label{plot:line2}
 
-        % create a (dummy) coordinate where we want to place the legend
-        %
-        % (The matrix cannot be placed inside the `axis' environment
-        %  directly, because then a catcode error is raised.
-        %  I guess that this is caused by the `matrix of nodes' feature)
-        % \coordinate (legend) at (axis description cs:0.97,0.03);
         \coordinate (legend) at (axis description cs:0.61,0.03);
 
         \nextgroupplot[ylabel=Information throughput (Mb/s), log basis y={2}, log ticks with fixed point, grid style={dashed, gray!30}]
-        \addplot[mark=o,      Paired-5,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
-        \addplot[mark=square, Paired-1,    semithick]                               table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
-        % \addplot[mark=o,      Paired-5!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt};
-        % \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL32_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=o,      Paired-5, semithick] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt};
+        \addplot[mark=square, Paired-1, semithick] table [x=Eb/N0, y=ITHR] {../main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt};
       \end{groupplot}
       \only<1-2>{
       \draw[white, fill=white] (5, -0.95) rectangle (11.05, 7.45);
       }
-      \only<3->{
-      }
-      % create the legend matrix which is placed at the created (dummy) coordinate
-      % and recall the plot specification using the `\ref' command
-      %
-      % adapt the style of that node to your needs
-      % (e.g. if you like different spacings between the rows or columns
-      %  or a fill color)
+
       \matrix [
           draw,
           matrix of nodes,
@@ -423,30 +357,25 @@ comm_chain.exec([&Mnt]() {
 \end{frame}
 
 \begin{frame}{Evaluation on Various Multi-core Architectures}
-
-\begin{table}[htp]
-  \vspace{-0.7cm}
-  \centering
-  % \caption
-  %   [Specifications of the target processors for the \AFFECT simulator
-  %    experiments.]
-  %   {Specifications of the target processors.}
-  % \label{tab:eval_simu_cpus_specs}
-  {\resizebox{\linewidth}{!}{
-  \begin{tabular}{l  l | l | l | c | c | c | c | c}
-  \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
-          &                                           & \textbf{Name}      & \textbf{Size}         &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
-  \hline
-  ARM\R   & \textcolor{Paired-5}{ThunderX2\R CN9975}  & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
-  Intel\R & \textcolor{Paired-3}{Xeon Phi\TM 7230}    & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
-  Intel\R & \textcolor{Paired-7}{Xeon\TM E5-2680 v3}  & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
-  Intel\R & \textcolor{Paired-1}{Xeon\TM Gold 6140}   & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
-% Intel\R & Xeon\TM Gold 6142                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
-  Intel\R & \textcolor{Paired-1!60}{Xeon\TM Gold 6240}& \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
-% AMD\R   & EPYC\TM 7452                              & \texttt{AVX2}      & 256-bit               & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
-  AMD\R   & \textcolor{Paired-9}{EPYC\TM 7702}        & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
-  \end{tabular}
-  }}
+  \begin{table}[htp]
+    \vspace{-0.7cm}
+    \centering
+    {\resizebox{\linewidth}{!}{
+    \begin{tabular}{l  l | l | l | c | c | c | c | c}
+    \multicolumn{2}{c |}{\multirow{2}{*}{\textbf{CPU}}} & \multicolumn{2}{c |}{\textbf{SIMD instr.}} & \multirow{2}{*}{\textbf{\# Proc.}} & \textbf{\# Cores}  & \textbf{Freq.} & \multirow{2}{*}{\textbf{SMT}} & \textbf{Turbo} \\ \cline{3-4}
+            &                                           & \textbf{Name}      & \textbf{Size}         &                                    & \textbf{per Proc.} & (GHz)          &                               & \textbf{Boost} \\
+    \hline
+    ARM\R   & \textcolor{Paired-5}{ThunderX2\R CN9975}  & \texttt{NEON}      & 128-bit               & 2                                  &  28                & 2.00           & 4                             & \xmark         \\
+    Intel\R & \textcolor{Paired-3}{Xeon Phi\TM 7230}    & \texttt{AVX-512F}  & 512-bit               & 1                                  &  64                & 1.30           & 4                             & \cmark         \\
+    Intel\R & \textcolor{Paired-7}{Xeon\TM E5-2680 v3}  & \texttt{AVX2}      & 256-bit               & 2                                  &  12                & 2.50           & 1                             & \xmark         \\
+    Intel\R & \textcolor{Paired-1}{Xeon\TM Gold 6140}   & \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.30           & 2                             & \cmark         \\
+  % Intel\R & Xeon\TM Gold 6142                         & \texttt{AVX-512BW} & 512-bit               & 2                                  &  16                & 2.60           & 1                             & \xmark         \\
+    Intel\R & \textcolor{Paired-1!60}{Xeon\TM Gold 6240}& \texttt{AVX-512BW} & 512-bit               & 2                                  &  18                & 2.60           & 1                             & \xmark         \\
+  % AMD\R   & EPYC\TM 7452                              & \texttt{AVX2}      & 256-bit               & 2                                  &  32                & 2.35           & 1                             & \xmark         \\
+    AMD\R   & \textcolor{Paired-9}{EPYC\TM 7702}        & \texttt{AVX2}      & 256-bit               & 2                                  &  64                & 2.00           & 1                             & \xmark         \\
+    \end{tabular}
+    }}
+  \end{table}
 
   \begin{columns}
     \begin{column}[T]{6cm}
@@ -456,16 +385,13 @@ comm_chain.exec([&Mnt]() {
       \scalebox{.50}{
       \begin{tikzpicture}
 
-        \begin{axis}[/pgfplots/table/ignore chars={ }, %footnotesize,
+        \begin{axis}[/pgfplots/table/ignore chars={ },
                      width=2.0\linewidth, height=1.4\linewidth,
                      xticklabel style={black!70}, yticklabel style={black!70},
                      xlabel=Number of threads, ylabel=Speedup, grid=both, grid style={gray!30},
                      xmin=1, xmax=256, xtick={1,32,64,...,256}, ytick={1,16,32,...,96},
                      ymin=-5, ymax=102,
                      grid style={dashed, gray!30},
-                     % tick align=outside, tickpos=left,
-                     %label style={font=\large},
-                     %tick label style={font=\large},
                      legend pos=south east, legend columns=1]
             \addplot[mark=pentagon, Paired-5,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 28.219] {../main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt}; \label{plot:lline1}
             \addplot[mark=triangle, Paired-3,    semithick] table [x=t, y expr=\thisrow{Mbps}/ 26.892] {../main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt    }; \label{plot:lline2}
@@ -486,7 +412,6 @@ comm_chain.exec([&Mnt]() {
                 fill=white,
                 ampersand replacement=\&]
                 at (5.60,0.18)
-                % at (10.80,4.0955)
         {
             \ref{plot:lline1} \& $2 \times$ThunderX2 CN9975 \\
             \ref{plot:lline2} \& $1 \times$Xeon Phi 7230    \\
@@ -495,22 +420,6 @@ comm_chain.exec([&Mnt]() {
             \ref{plot:lline4} \& $2 \times$Xeon Gold 6240   \\
             \ref{plot:lline6} \& $2 \times$EPYC 7702        \\
         };
-
-        % \matrix [draw,
-        %          matrix of nodes,
-        %          anchor=south west,
-        %          fill=white] at (3.10,0.15)
-        % {
-        %                      & \bf{\small{CPU Name}}    & \bf{\small{Cores}} & \bf{\small{SMT}} & \bf{\small{Soc.}} \\
-        %     \ref{plot:line1} & \small{ThunderX2 CN9975} & \small{56}         & \small{4}        & \small{2}         \\
-        %     \ref{plot:line2} & \small{Xeon Phi 7230}    & \small{64}         & \small{4}        & \small{1}         \\
-        %     \ref{plot:line6} & \small{Ryzen 7 2700X}    & \small{8}          & \small{2}        & \small{1}         \\
-        %     \ref{plot:line5} & \small{Xeon E5-2680 v3}  & \small{24}         & \small{1}        & \small{2}         \\
-        %     \ref{plot:line3} & \small{Xeon Gold 6140}   & \small{36}         & \small{2}        & \small{2}         \\
-        %     \ref{plot:line4} & \small{Xeon Gold 6142}   & \small{32}         & \small{1}        & \small{2}         \\
-        % };
-
-        % \end{scope}
       \end{tikzpicture}
       }
       \end{figure}
@@ -521,7 +430,6 @@ comm_chain.exec([&Mnt]() {
       \scalebox{.50}{
       \begin{tikzpicture}
       \path[use as bounding box] (-1.55, -1.05) rectangle (10.45, 8.4);
-      % \draw (-1.55, -1.05) rectangle (10.45, 8.4);
       \begin{axis}[ybar,
                    width=2.0\linewidth, height=1.4\linewidth,
                    xticklabel style={black!70}, yticklabel style={black!70},
@@ -543,11 +451,7 @@ comm_chain.exec([&Mnt]() {
                    ymax=5900,
                    nodes near coords,
                    nodes near coords align={vertical},
-                   % every node near coord/.style={font=\small},
                    every node near coord/.append style={rotate=90, anchor=west, font=\footnotesize},
-                   % tick align=outside, tickpos=left,
-                   %label style={font=\large},
-                   %tick label style={font=\large},
                    restrict y to domain*=0:6500, % Cut values off at 14
                    visualization depends on=rawy\as\rawy, % Save the unclipped values
                    after end axis/.code={ % Draw line indicating break
@@ -620,7 +524,5 @@ comm_chain.exec([&Mnt]() {
       \end{figure}
     \end{column}
   \end{columns}
-
-\end{table}
 
 \end{frame}
