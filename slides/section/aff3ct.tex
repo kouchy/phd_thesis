@@ -257,8 +257,8 @@ Mnt[sck::check_errors::u1].bind(Src[sck::generate   ::u]);
   \onslide<15>
   \begin{minted}[linenos]{cpp}
 // build a sequence of tasks (= a chain) from the previous binding
-aff3ct::tools::Sequence comm_chain(Src[tsk::generate    ], // first task
-                                   Mnt[tsk::check_errors]; // last task
+aff3ct::tools::Sequence comm_chain(Src[tsk::generate    ],  // first task
+                                   Mnt[tsk::check_errors]); // last task
 
 // execute the communication chain
 comm_chain.exec([&Mnt]() {
