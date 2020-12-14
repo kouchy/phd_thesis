@@ -1,0 +1,99 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,french]{babel}
+\usepackage[top=1.5cm,bottom=2.5cm,right=1.5cm,left=1.5cm]{geometry}
+\usepackage{eulervm}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{color}
+\definecolor{bleuUni}{RGB}{0, 157, 224}
+\begin{document}
+
+\thispagestyle{empty}
+\selectlanguage{french}
+
+\paragraph{Résumé}
+
+Cette thèse propose d'étudier les algorithmes les plus coûteux en temps de
+calcul dans les chaînes de communication numériques actuelles. Ces algorithmes
+sont le plus souvent présents dans des décodeurs de codes correcteurs d'erreurs
+au niveau récepteur. Le rôle du codage canal est d’accroître la robustesse vis à
+vis des erreurs qui peuvent apparaître lorsque l'information transite au travers
+d'un canal de transmission. Trois grandes familles de codes correcteurs
+d'erreurs sont étudiées dans nos travaux, à savoir les codes LDPC, les codes
+polaires et les turbo codes. Ces trois familles de codes sont présentes dans la
+plupart des standards de communication actuels comme le Wi-Fi, l’Ethernet, les
+réseaux mobiles 3G, 4G et 5G, la télévision numérique, etc. Les décodeurs qui en
+découlent proposent le meilleur compromis entre la résistance aux erreurs et la
+vitesse de décodage. Chacune de ces familles repose sur des algorithmes de
+décodage spécifiques. Un des enjeux principal de cette thèse est de proposer des
+implémentations logicielles optimisées pour chacune des trois familles. Des
+réponses sont apportées de façon spécifique puis des stratégies d'optimisation
+plus générales sont discutées (vectorisation et parallélisation). L'idée est
+d'abstraire des stratégies d'optimisation possibles en étudiant un sous-ensemble
+représentatif de décodeurs.
+
+Enfin, la dernière partie de cette thèse propose la mise en œuvre d'un système
+de communications numériques complet à l'aide de la radio logicielle. En
+s’appuyant sur les implémentations rapides de décodeurs proposées, un émetteur
+et un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce
+standard est typiquement utilisé pour la diffusion de contenu multimédia par
+satellite. À cette occasion, un langage dédié à la radio logicielle est
+développé pour tirer parti de l'architecture parallèle des processeurs
+généralistes actuels. Le système atteint des débits suffisants pour être déployé
+en condition opérationnelle.
+
+\vskip0.5cm
+\emph{Mots clefs :} Radio logicielle, Simulation fonctionnelle, Codes
+                    correcteurs d'erreurs, Implémentation logicielle,
+                    Optimisation, Parallélisation, Code source ouvert
+
+\vskip1.0cm
+{\color{bleuUni}\hrule}
+\vskip0.5cm
+
+\selectlanguage{english}
+\paragraph{Abstract}
+
+This thesis proposes to study the most time consuming algorithms in today's
+digital communication chains. These algorithms often are the channel decoders
+located on the receivers. The role of the channel coding is to improve the error
+resilience of the system. Indeed, errors can occur at the channel level during
+the transmission between the transmitter and the receiver. Three main channel
+coding families are then presented: the LDPC codes, the polar codes and the
+turbo codes. These three code families are used in most of the current digital
+communication standards like the Wi-Fi, the Ethernet, the 3G, 4G and 5G mobile
+networks, the digital television, etc. The resulting decoders offer the best
+compromise between error resistance and decoding speed known to date. Each of
+these families comes with specific decoding algorithms. One of the main
+challenge of this thesis is to propose optimized software implementations for
+each of them. Specific efficient implementations are proposed as well as more
+general optimization strategies (vectorization and parallelization). The idea is
+to extract the generic strategies from a representative subset of decoders.
+
+The last part of the thesis focuses on the implementation of a complete digital
+communication system in software. Thanks to the efficient decoding
+implementations proposed before, a full transceiver, compatible with the DVB-S2
+standard, is implemented. This standard is typically used for broadcasting
+multimedia contents via satellite. To this purpose, an embedded domain specific
+language targeting the software-defined radio is introduced. The main objective
+of this language is to take advantage of the parallel architecture of the
+current general purpose processors. The results show that the system achieves
+sufficient throughputs to be deployed in real-world conditions.
+
+\vskip0.5cm
+\emph{Keywords:} Software-Defined Radio, Functional Simulation, Error
+                 Correcting Codes, Software Implementation, Optimization,
+                 Parallelization, Open Source Code
+
+
+\begin{tikzpicture}[overlay,remember picture]
+  \node[opacity=1.0] at (0.9,-2.5) {\includegraphics[height=3.5cm]{fig/qr_code.pdf}};
+
+  \node[                     ] (ims) at (15.8,-3.0) {\includegraphics[height=1.2cm]{../head/pic/ims}};
+  \node[left = 0.1cm of ims  ] (inria)              {\includegraphics[height=1.5cm]{../head/pic/inr_logo_rouge}};
+  \node[left = 0.1cm of inria] (ub)                 {\includegraphics[height=1.5cm]{../head/pic/ub}};
+\end{tikzpicture}
+
+\end{document}

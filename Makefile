@@ -44,6 +44,7 @@ fast: settings/colors.tex \
 	rubber --unsafe -d my_thesis.tex
 
 figs: titlepage \
+      abstract \
       chapter1_fig \
       chapter2_fig \
       chapter3_fig \
@@ -52,6 +53,9 @@ figs: titlepage \
 
 titlepage: head/titlepage.tex
 	cd head                                                && rubber -d titlepage.tex
+
+abstract: head/abstract.tex
+	cd tail                                                && rubber -d abstract.tex
 
 chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
               main/chapter1/fig/intro/com_chain/colors \
@@ -478,6 +482,7 @@ clean4all:
 clean: clean4all
 	cd ./                                                  && rubber --clean my_thesis
 	cd head                                                && rubber --clean titlepage
+	cd taim                                                && rubber --clean abstract
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean com_chain
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean com_chain
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean in_out
@@ -572,6 +577,7 @@ clean: clean4all
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
 	cd head                                                && rubber --clean -d titlepage.tex
+	cd tail                                                && rubber --clean -d abstract.tex
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean -d com_chain.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean -d com_chain.tex
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean -d in_out.tex

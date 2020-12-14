@@ -63,5 +63,14 @@
 \backmatter
 \include{tail/bibliography}
 \include{tail/publications}
+\let\clearpage\relax
+
+\ifthenelse{\boolean{twosidedoc}}
+{
+\thispagestyle{empty}
+\clearpage\null\newpage
+\includepdf[pages={1}]{tail/abstract}
+}
+{}
 
 \end{document}
