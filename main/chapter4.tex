@@ -360,8 +360,9 @@ This can be explained by architectural improvements brought by the more recent
 ARM64 platform. Despite the fact that the ARM64 is a development board, the
 ARM64 outperforms the ARM32 architecture. Finally we observe that the power
 consumption is higher for the inter-frame version than for the intra-frame one
-because it fills the SIMD units more intensively. Moreover the SIMD units
-consume more than the scalar pipeline.
+because it fills the SIMD units more intensively. One can note that the SIMD
+units consume more than the scalar pipeline. However, this is largely
+compensated by a much higher efficiency.
 
 For comparison, the results for the Intel\R Core\TM i7-4850HQ, using SSE4.1
 instructions (same vector length as ARM\R NEON vectors) are also included. Even
@@ -428,8 +429,8 @@ to the low throughput causes a high dynamic RAM refreshing bill. Therefore it is
 more interesting to use frequencies higher than 250 MHz. For this problem size
 and configuration, and from an energy-only point of view, the best choice is to
 run the decoder at 350 MHz. On the A15-O \bigARM cluster, the energy cost is
-mainly driven by the CPU frequency, while the RAM energy bill is limited
-compared to the CPU.
+driven by the CPU frequency, while the RAM energy bill is limited compared to
+the CPU.
 
 Thus, the bottom line about energy versus frequency relationship is: On the \little
 cluster it is more interesting to clock the CPU at high frequency (higher

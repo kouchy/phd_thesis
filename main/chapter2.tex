@@ -406,9 +406,10 @@ considered the ``\emph{golden}'' model.
 \textbf{\BoostSIMD} only supports the SSE instruction set, even when the code is
 compiled with one of the AVX or AVX-512 flags. It is insufficient for our
 channel coding processing purpose. The \BoostSIMD wrapper performance results
-are disappointing. The sequential Mandelbrot kernel does an early exit in the
-innermost loop, as soon as the divergence of the sequence is detected for the
-input coordinates. We were unable to SIMDize this early termination with
+are disappointing because its contents has been migrated into the new
+proprietary \bSIMD wrapper. The sequential Mandelbrot kernel does an early exit
+in the innermost loop, as soon as the divergence of the sequence is detected for
+the input coordinates. We were unable to SIMDize this early termination with
 \BoostSIMD, because the \verb|boost::simd::any| function was not available in
 the GitHub repository at the time of writing.
 
@@ -646,10 +647,12 @@ proposed implementation is based on the intra-frame SIMD strategy.
 Table~\ref{lst:opt_simu_awgn_speedup} presents the measured speedups with the
 same \MIPP code compiled for NEON, SSE, AVX and AVX-512, compared to the
 sequential code (can be auto-vectorized). It also gives the actual throughput
-for each instruction set. The conversion of floating-point format from single
-precision to double precision only requires to replace the \verb|float| keyword
-by \verb|double|. The ability to switch seamlessly from one data type to another
-is clearly a strength of the \MIPP library.
+for each instruction set. The proposed kernel is compute intensive and the
+speedups are mainly driven by the \MIPP implementations of the
+\verb|mipp::sincos| trigonometric function. The conversion of floating-point
+format from single precision to double precision only requires to replace the
+\verb|float| keyword by \verb|double|. The ability to switch seamlessly from one
+data type to another is clearly a strength of the \MIPP library.
 
 \subsection{Quantizer}
 \label{sec:opt_simu_quantizer}
@@ -950,12 +953,11 @@ benefit from fine tuning.
 
 Figure~\ref{plot:opt_polar_scl_tree_cut} shows the impact of the different tree
 pruning optimizations on the SSCL decoder throughput according to the code
-rate (intra-frame vectorization only). The performance improvements are
-cumulative. Coded throughput, in which the redundant bits are taken into
-account, is shown instead of information throughput, for which only information
-bits are considered, in order to illustrate the computational effort without the
-influence of the fact that higher rate codes involve higher information
-throughputs.
+rate. The performance improvements are cumulative. Coded throughput, in which
+the redundant bits are taken into account, is shown instead of information
+throughput, for which only information bits are considered. It illustrates the
+computational effort without the influence of the fact that higher rate codes
+involve higher information throughputs.
 
 The coded throughput of the original unpruned algorithm (\verb|ref|) decreases
 as the code rate increases. Indeed, frozen bit leaf nodes are faster to process
