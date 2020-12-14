@@ -1,4 +1,7 @@
 build
+pv
+*synctex*
+*.vrb
 _minted*
 stamp
 .DS_Store

@@ -6,7 +6,6 @@ all: figs \
      settings/settings_custom.tex \
      head/resume.tex \
      head/abstract.tex \
-     head/dedication.tex \
      head/labo.tex \
      head/symbols.tex \
      head/thanks.tex \
@@ -28,7 +27,6 @@ fast: settings/colors.tex \
       settings/settings_custom.tex \
       head/resume.tex \
       head/abstract.tex \
-      head/dedication.tex \
       head/labo.tex \
       head/symbols.tex \
       head/thanks.tex \
