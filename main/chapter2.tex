@@ -469,7 +469,7 @@ compared to the expected latency of these algorithms. Moreover, generally the
 signal processing algorithms are implemented on hardware targets (ASIC or FPGA).
 Consequently, these algorithms have been refined to take advantage of the
 fixed-point arithmetic. It enables software implementations working on 16-bit
-and 8-bit integers. Combining the vectorization and the fixed-point arithmetic
+and 8-bit integers. Combining the SIMDization and the fixed-point arithmetic
 leads to a high level of SIMD parallelism. For instance, if we consider the
 AVX-512 ISA, there are 512 bits in the registers. If computations are made on
 8-bit integers, the available parallelism is $p^\text{8-bit}_\text{SIMD} = 512 /
@@ -1036,7 +1036,7 @@ several elements at a time. For instance, line 17, the addition between all the
 elements of the \verb|neg_la| and \verb|lb| registers is executed in a single
 CPU cycle. We also tried an auto-vectorized approach but even if all the
 routines were well vectorized (from the GCC 5.4 compiler report), the
-performance was, at least, 3 times slower than the MIPP handwritten versions.
+performance was, at least, 3 times slower than the \MIPP handwritten versions.
 The template \verb|N_ELMTS| parameter is not used in the proposed
 \verb|API_polar_SIMD| implementation. The interest of this parameter will be
 explained in the next section.
