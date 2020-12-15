@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english,french]{babel}
-\usepackage[top=1.5cm,bottom=2.5cm,right=1.5cm,left=1.5cm]{geometry}
+\usepackage[top=1.25cm,bottom=1.25cm,right=1.5cm,left=1.5cm]{geometry}
 \usepackage{eulervm}
 \usepackage{tikz}
 \usetikzlibrary{calc,positioning}
@@ -12,6 +12,10 @@
 
 \thispagestyle{empty}
 \selectlanguage{french}
+
+\noindent
+{\large \textbf{``Méthodes d'optimisation et de parallélisation pour la radio
+                logicielle''}}
 
 \paragraph{Résumé}
 
@@ -34,8 +38,8 @@ plus générales sont discutées (vectorisation et parallélisation). L'idée es
 d'abstraire des stratégies d'optimisation possibles en étudiant un sous-ensemble
 représentatif de décodeurs.
 
-Enfin, la dernière partie de cette thèse propose la mise en œuvre d'un système
-de communications numériques complet à l'aide de la radio logicielle. En
+Une autre contribution importante de cette thèse est la mise en œuvre d'un
+système de communications numériques complet à l'aide de la radio logicielle. En
 s’appuyant sur les implémentations rapides de décodeurs proposées, un émetteur
 et un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce
 standard est typiquement utilisé pour la diffusion de contenu multimédia par
@@ -49,11 +53,16 @@ en condition opérationnelle.
                     correcteurs d'erreurs, Implémentation logicielle,
                     Optimisation, Parallélisation, Code source ouvert
 
-\vskip1.0cm
+\vskip0.5cm
 {\color{bleuUni}\hrule}
 \vskip0.5cm
 
 \selectlanguage{english}
+
+\noindent
+{\large \textbf{``Optimization and Parallelization Methods for the Software-Defined
+                Radio''}}
+
 \paragraph{Abstract}
 
 This thesis proposes to study the most time consuming algorithms in today's
@@ -72,15 +81,16 @@ each of them. Specific efficient implementations are proposed as well as more
 general optimization strategies (vectorization and parallelization). The idea is
 to extract the generic strategies from a representative subset of decoders.
 
-The last part of the thesis focuses on the implementation of a complete digital
-communication system in software. Thanks to the efficient decoding
-implementations proposed before, a full transceiver, compatible with the DVB-S2
-standard, is implemented. This standard is typically used for broadcasting
-multimedia contents via satellite. To this purpose, an embedded domain specific
-language targeting the software-defined radio is introduced. The main objective
-of this language is to take advantage of the parallel architecture of the
-current general purpose processors. The results show that the system achieves
-sufficient throughputs to be deployed in real-world conditions.
+Another important contribution of this thesis is the implementation of a
+complete digital communication system in software. Thanks to the efficient
+decoding implementations proposed before, a full transceiver, compatible with
+the DVB-S2 standard, is implemented. This standard is typically used for
+broadcasting multimedia contents via satellite. To this purpose, an embedded
+domain specific language targeting the software-defined radio is introduced. The
+main objective of this language is to take advantage of the parallel
+architecture of the current general purpose processors. The results show that
+the system achieves sufficient throughputs to be deployed in real-world
+conditions.
 
 \vskip0.5cm
 \emph{Keywords:} Software-Defined Radio, Functional Simulation, Error
@@ -89,11 +99,11 @@ sufficient throughputs to be deployed in real-world conditions.
 
 
 \begin{tikzpicture}[overlay,remember picture]
-  \node[opacity=1.0] at (0.9,-2.5) {\includegraphics[height=3.5cm]{fig/qr_code.pdf}};
+  \node[opacity=1.0] at (0.9,-1.75) {\includegraphics[height=3.5cm]{fig/qr_code}};
 
-  \node[                     ] (ims) at (15.8,-3.0) {\includegraphics[height=1.2cm]{../head/pic/ims}};
-  \node[left = 0.1cm of ims  ] (inria)              {\includegraphics[height=1.5cm]{../head/pic/inr_logo_rouge}};
-  \node[left = 0.1cm of inria] (ub)                 {\includegraphics[height=1.5cm]{../head/pic/ub}};
+  \node[                     ] (ims) at (15.8,-2.50) {\includegraphics[height=1.2cm]{../head/pic/ims}};
+  \node[left = 0.1cm of ims  ] (inria)               {\includegraphics[height=1.5cm]{../head/pic/inr_logo_rouge}};
+  \node[left = 0.1cm of inria] (ub)                  {\includegraphics[height=1.5cm]{../head/pic/ub}};
 \end{tikzpicture}
 
 \end{document}
