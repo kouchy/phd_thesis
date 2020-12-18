@@ -956,19 +956,19 @@ In future works, it could be interesting to combine the parallel features of the
 \AFFECT eDSL with high level languages like Python or MATLAB\R. The signal
 processing community is often not familiar with the \Cxx language. They could
 use the existing high-speed \Cxx tasks and develop their own in the high level
-language. Linking with the \AFFECT library, it would be convenient if the tasks written
-in the high level language could be inserted in the \AFFECT sequences. This way
-the whole system would automatically be parallelized. This is technically
-possible in our model. As the static scheduling is evaluated at the runtime, it
-is possible to encapsulate a function from a high level language in \AFFECT task
-(with a callback) and to start the sequence analysis (= perform the static
-scheduling resolution) after that. In comparison, it would be more complicated
-to make the languages interfacing with GNU Radio as the static scheduling is
-resolved at the compilation time and flatten in the Python language. When the
-generated Python code is executed, it performs calls to the tasks written and
-compiled in a \Cxx library. Moreover, it could be very useful to propose a
-graphical user interface like \emph{GNU Radio Companion} to facilitate the tasks
-creation and binding as well as the parallelism definition (sequence
-duplication, pipeline stages). The graphical user interface would then generate
-a ready to compile \Cxx code similar to the one presented in
+language. Linking with the \AFFECT library, it would be convenient if the tasks
+written in the high level language could be inserted in the \AFFECT sequences.
+This way the whole system would automatically be parallelized. This is
+technically possible in our model. As the static scheduling is evaluated at the
+runtime, it is possible to encapsulate a function from a high level language in
+\AFFECT task (with a callback) and to start the sequence analysis (= perform the
+static scheduling resolution) after that. In comparison, it would be more
+complicated to make the languages interfacing with GNU Radio as the static
+scheduling is resolved at the compilation time and flatten in the Python
+language. When the generated Python code is executed, it performs calls to the
+tasks written and compiled in a \Cxx library. Moreover, it could be very useful
+to propose a graphical user interface like \emph{GNU Radio Companion} to
+facilitate the tasks creation and binding as well as the parallelism definition
+(sequence duplication, pipeline stages). The graphical user interface would then
+generate a ready to compile \Cxx code similar to the one presented in
 Listing~\ref{lst:sdr_dsl_pipeline}.

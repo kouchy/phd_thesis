@@ -44,15 +44,15 @@ state-of-the-art LDPC decoders.
     [Specifications of the target processors for the LPDC decoder experiments.]
     {Specifications of the target processors.}
   \begin{tabular}{c | c  c  c}
-                         & \textbf{Platinum 8168}        & \textbf{EPYC 7452}       \\
+                         & \textbf{Platinum 8168}        & \textbf{EPYC 7452}   \\
     \hline
     \hline
-    \textbf{CPU}         & Intel\R Xeon\TM Platinum 8168 & AMD\R EPYC 7452          \\
-    \textbf{Arch.}       & \textit{Skylake} Q3'17        & \textit{Zen 2} Q3'19     \\
-    \textbf{Process}     & 14 nm                         & 7 nm                     \\
-    \textbf{Cores/Freq.} & 24 cores, 2.7 GHz             & 32 cores, 2.35 GHz       \\
-    \textbf{LLC}         & 33 MB L3                      & 128 MB L3                \\
-    \textbf{TDP}         & 205 W                         & 155 W                    \\
+    \textbf{CPU}         & Intel\R Xeon\TM Platinum 8168 & AMD\R EPYC 7452      \\
+    \textbf{Arch.}       & \textit{Skylake} Q3'17        & \textit{Zen 2} Q3'19 \\
+    \textbf{Process}     & 14 nm                         & 7 nm                 \\
+    \textbf{Cores/Freq.} & 24 cores, 2.7 GHz             & 32 cores, 2.35 GHz   \\
+    \textbf{LLC}         & 33 MB L3                      & 128 MB L3            \\
+    \textbf{TDP}         & 205 W                         & 155 W                \\
   \end{tabular}
   \label{tab:eval_ldpc_specs}
 \end{table}
@@ -535,8 +535,7 @@ algorithm in the generator.
   \quad
   \subfloat[][With compression]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
   \caption
-    {Generated SC decoder binary sizes depending on the frame size
-     ($R=1/2$).}
+    {Generated SC decoder binary sizes depending on the frame size ($R=1/2$).}
   \label{plot:eval_polar_sc_gen_l1i_size}
 \end{figure}
 
@@ -993,7 +992,6 @@ implementation is able to reach the reference decoding performance in 16-bit.
 In 8-bit, there is contained decoding performance degradations compared to the
 other works in the literature.
 
-% \newpage
 \section{FEC Software Decoders Hall of Fame}
 \label{sec:eval_hof}
 
