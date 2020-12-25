@@ -1,4 +1,5 @@
-\documentclass{standalone}
+\providecommand{\datapath}{.}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -11,7 +12,7 @@
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}
@@ -29,33 +30,33 @@
                       legend pos=north east]
       \nextgroupplot[ylabel=BER]
 
-      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_3_5_BB.txt};  \label{plot:line1}
-      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_3_5_sim.txt}; \label{plot:line2}
-      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_3_5_rad.txt}; \label{plot:line3}
+      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:line1}
+      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_3_5_sim.txt}; \label{plot:line2}
+      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:line3}
 
-      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_8_9_BB.txt};  \label{plot:line4}
-      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_8_9_sim.txt}; \label{plot:line5}
-      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {dat/data_QPSK_R_8_9_rad.txt}; \label{plot:line6}
+      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:line4}
+      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_8_9_sim.txt}; \label{plot:line5}
+      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:line6}
 
-      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_8PSK_R_8_9_BB.txt};  \label{plot:line7}
-      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {dat/data_8PSK_R_8_9_sim.txt}; \label{plot:line8}
-      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {dat/data_8PSK_R_8_9_rad.txt}; \label{plot:line9}
+      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:line7}
+      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_8PSK_R_8_9_sim.txt}; \label{plot:line8}
+      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=BER] {\datapath/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:line9}
 
       \coordinate (legend) at (axis description cs:1.375,1.05);
 
       \nextgroupplot[ylabel=FER]
 
-      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_3_5_BB.txt};  \label{plot:line1}
-      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_3_5_sim.txt}; \label{plot:line2}
-      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_3_5_rad.txt}; \label{plot:line3}
+      \addplot[mark=square,    Paired-1,    semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_3_5_BB.txt};  \label{plot:line1}
+      \addplot[mark=triangle,  Paired-1!80, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_3_5_sim.txt}; \label{plot:line2}
+      \addplot[mark=o,         Paired-1!60, semithick, dashed, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_3_5_rad.txt}; \label{plot:line3}
 
-      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_8_9_BB.txt};  \label{plot:line4}
-      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_8_9_sim.txt}; \label{plot:line5}
-      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {dat/data_QPSK_R_8_9_rad.txt}; \label{plot:line6}
+      \addplot[mark=square,    Paired-3,    semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_8_9_BB.txt};  \label{plot:line4}
+      \addplot[mark=triangle,  Paired-3!80, semithick, dotted, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_8_9_sim.txt}; \label{plot:line5}
+      \addplot[mark=o,         Paired-3!60, semithick, dotted, mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_QPSK_R_8_9_rad.txt}; \label{plot:line6}
 
-      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_8PSK_R_8_9_BB.txt};  \label{plot:line7}
-      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {dat/data_8PSK_R_8_9_sim.txt}; \label{plot:line8}
-      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {dat/data_8PSK_R_8_9_rad.txt}; \label{plot:line9}
+      \addplot[mark=square,    Paired-5,    semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_8PSK_R_8_9_BB.txt};  \label{plot:line7}
+      \addplot[mark=triangle,  Paired-5!80, semithick,         mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_8PSK_R_8_9_sim.txt}; \label{plot:line8}
+      \addplot[mark=o,         Paired-5!60, semithick,         mark options={solid}, domain=0:0.2, error bars/.cd, x dir=both,x fixed=0.2, y dir=both,y explicit, error bar style={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/data_8PSK_R_8_9_rad.txt}; \label{plot:line9}
     \end{groupplot}
 
     \matrix [

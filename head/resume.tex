@@ -27,24 +27,24 @@ Dans ce contexte, cette thèse propose d'étudier les algorithmes les plus
 coûteux en temps de calcul dans les chaînes de communication numériques
 actuelles. Ces algorithmes sont le plus souvent présents dans des décodeurs de
 codes correcteurs d'erreurs au niveau récepteur. Le rôle du codage canal est
-d’accroître la robustesse vis à vis des erreurs qui peuvent apparaître lorsque
+d'accroître la robustesse vis à vis des erreurs qui peuvent apparaître lorsque
 l'information transite au travers d'un canal de transmission. Trois grandes
 familles de codes correcteurs d'erreurs sont étudiées dans nos travaux, à savoir
 les codes LDPC, les codes polaires et les turbo codes. Ces trois familles de
-codes sont présentes dans la plupart des standards de communication actuels comme
-le Wi-Fi, l’Ethernet, les réseaux mobiles 3G, 4G et 5G, la télévision numérique,
-etc. Les décodeurs qui en découlent proposent le meilleur compromis entre la
-résistance aux erreurs et la vitesse de décodage. Chacune de ces familles repose
-sur des algorithmes de décodage spécifiques. Un des enjeux principal de cette
-thèse est de proposer des implémentations logicielles optimisées pour chacune
-des trois familles. Des réponses sont apportées de façon spécifique puis des
-stratégies d'optimisation plus générales sont discutées. L'idée est d'abstraire
-des stratégies d'optimisation possibles en étudiant un sous-ensemble
-représentatif de décodeurs.
+codes sont présentes dans la plupart des standards de communication actuels
+comme le Wi-Fi, l'Ethernet, les réseaux mobiles 3G, 4G et 5G, la télévision
+numérique, etc. Les décodeurs qui en découlent proposent le meilleur compromis
+entre la résistance aux erreurs et la vitesse de décodage. Chacune de ces
+familles repose sur des algorithmes de décodage spécifiques. Un des enjeux
+principal de cette thèse est de proposer des implémentations logicielles
+optimisées pour chacune des trois familles. Des réponses sont apportées de façon
+spécifique puis des stratégies d'optimisation plus générales sont discutées.
+L'idée est d'abstraire des stratégies d'optimisation possibles en étudiant un
+sous-ensemble représentatif de décodeurs.
 
 Enfin, la dernière partie de cette thèse propose la mise en œuvre d'un système
 de communications numériques complet à l'aide de la radio logicielle. En
-s’appuyant sur les implémentations rapides de décodeurs proposées, un émetteur
+s'appuyant sur les implémentations rapides de décodeurs proposées, un émetteur
 et un récepteur compatibles avec le standard DVB-S2 sont implémentés. Ce
 standard est typiquement utilisé pour la diffusion de contenu multimédia par
 satellite. À cette occasion, un langage dédié à la radio logicielle est

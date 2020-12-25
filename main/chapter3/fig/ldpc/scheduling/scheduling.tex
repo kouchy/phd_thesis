@@ -1,4 +1,5 @@
-\documentclass{standalone}
+\providecommand{\datapath}{.}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -11,7 +12,7 @@
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}
@@ -26,20 +27,20 @@
                  ymode = log,
                  %tick align=outside, tickpos=left,
                  legend pos=south west, legend columns=1]
-        % \addplot[mark=pentagon*, Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt}; \label{plot:line1}
-        \addplot[mark=*,         Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt}; \label{plot:line2}
-        \addplot[mark=triangle*, Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_20_ite.txt}; \label{plot:line3}
-        \addplot[mark=square*,   Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_flooding_SPA_40_ite.txt}; \label{plot:line4}
+        % \addplot[mark=pentagon*, Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt}; \label{plot:line1}
+        \addplot[mark=*,         Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt}; \label{plot:line2}
+        \addplot[mark=triangle*, Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_flooding_SPA_20_ite.txt}; \label{plot:line3}
+        \addplot[mark=square*,   Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_flooding_SPA_40_ite.txt}; \label{plot:line4}
 
-        % \addplot[mark=pentagon,  Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_SPA_05_ite.txt}; \label{plot:line5}
-        \addplot[mark=o,         Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_SPA_10_ite.txt}; \label{plot:line6}
-        \addplot[mark=triangle,  Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_SPA_20_ite.txt}; \label{plot:line7}
-        \addplot[mark=square,    Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_hlayered_SPA_40_ite.txt}; \label{plot:line8}
+        % \addplot[mark=pentagon,  Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_hlayered_SPA_05_ite.txt}; \label{plot:line5}
+        \addplot[mark=o,         Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_hlayered_SPA_10_ite.txt}; \label{plot:line6}
+        \addplot[mark=triangle,  Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_hlayered_SPA_20_ite.txt}; \label{plot:line7}
+        \addplot[mark=square,    Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_hlayered_SPA_40_ite.txt}; \label{plot:line8}
 
-        % \addplot[mark=+,         Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_05_ite.txt}; \label{plot:line9}
-        \addplot[mark=star,      Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_10_ite.txt}; \label{plot:line10}
-        \addplot[mark=x,         Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_20_ite.txt}; \label{plot:line11}
-        \addplot[mark=+,         Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/WiMAX_2304_1152_vlayered_SPA_40_ite.txt}; \label{plot:line12}
+        % \addplot[mark=+,         Paired-3!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_vlayered_SPA_05_ite.txt}; \label{plot:line9}
+        \addplot[mark=star,      Paired-5!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_vlayered_SPA_10_ite.txt}; \label{plot:line10}
+        \addplot[mark=x,         Paired-1!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_vlayered_SPA_20_ite.txt}; \label{plot:line11}
+        \addplot[mark=+,         Paired-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/WiMAX_2304_1152_vlayered_SPA_40_ite.txt}; \label{plot:line12}
 
         \coordinate (legend) at (axis description cs:0.465,0.015);
     \end{axis}

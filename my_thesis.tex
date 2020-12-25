@@ -1,7 +1,8 @@
 % !TEX options=--shell-escape
 
-\input{settings/settings_template.tex}
-\input{settings/settings_custom.tex}  % place your custom packages, etc... in this file!
+\input{settings/settings_template}
+\input{settings/settings_tikz}
+\input{settings/settings_custom}  % place your custom packages, etc... in this file!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% HEAD: Book-Begin
@@ -10,6 +11,7 @@
 \frontmatter
 \begin{titlepage}
 \includepdf[pages={1}]{head/titlepage}
+% \import{head/}{titlepage}
 \end{titlepage}
 \selectlanguage{french}
 \include{head/labo}
@@ -48,7 +50,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
 \setcounter{mtc}{8} % for '\minitoc' command
-% \adjustmtc
 \include{main/introduction}
 \include{main/chapter1}
 \include{main/chapter2}
@@ -67,8 +68,7 @@
 
 \ifthenelse{\boolean{twosidedoc}}
 {
-\thispagestyle{empty}
-\clearpage\null\newpage
+\cleartoleftpage
 \includepdf[pages={1}]{tail/backcover}
 }
 {}

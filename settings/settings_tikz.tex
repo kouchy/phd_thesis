@@ -1,0 +1,82 @@
+%!TEX root = ../my_thesis.tex
+
+\usepackage[subpreambles=false]{standalone}
+\usepackage{import}
+\usepackage{tikz}
+\usepackage{currfile}
+\usepackage{etoolbox}
+\usepackage{xstring}
+\usepackage{circuitikz}
+\usepackage{tkz-kiviat}
+\usepackage{pgfplots}
+
+\input{main/chapter2/fig/polar/sc_gen_compression/settings/styles}
+\input{settings/colors} % file containing all the colors definitions
+
+\usetikzlibrary{external}
+\usetikzlibrary{fit, patterns, arrows, automata, matrix, positioning, calc, shapes.geometric, spy}
+\tikzexternalize[prefix=tikz_cache/, optimize command away=\includepdf]
+
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer, groupplots}
+\tikzset{
+    hatch distance/.store in=\hatchdistance,
+    hatch distance=7pt,
+    hatch thickness/.store in=\hatchthickness,
+    hatch thickness=0.5pt
+}
+
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north east}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatletter
+\pgfdeclarepatternformonly[\hatchdistance,\hatchthickness]{flexible hatch north west}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfqpoint{\hatchdistance}{\hatchdistance}}
+{\pgfpoint{\hatchdistance-1pt}{\hatchdistance-1pt}}%
+{
+    \pgfsetcolor{\tikz@pattern@color}
+    \pgfsetlinewidth{\hatchthickness}
+    \pgfpathmoveto{\pgfqpoint{\hatchdistance}{0pt}}
+    \pgfpathlineto{\pgfqpoint{0pt}{\hatchdistance}}
+    \pgfusepath{stroke}
+}
+\makeatother
+
+\tikzsetfigurename{figure-}
+\newcommand*\setmyname{%
+  \expandafter\tikzsetfigurename\expandafter{\currfilebase-}%
+}
+\makeatletter
+\apptocmd{\sa@document}{\setmyname}{\typeout{Append to document: OK!}}{\typeout{Append to document: Oh, no!}}
+\makeatother
+
+\makeatletter
+  \def\relativepath{\import@path}
+\makeatother
+
+\newcommand{\inputtikz}[1]{%
+\begingroup%
+\IfSubStr{#1}{.pdf}{%
+\includegraphics{#1}%
+}{%
+\IfFileExists{#1.pdf}{%
+\includegraphics{#1}%
+}{%
+\newcommand{\datapath}{\relativepath}%
+\StrCount{#1}{/}[\matches]%
+\StrBehind[\matches]{#1}{/}[\filepath]%
+\StrBefore[\matches]{#1}{/}[\rootpath]%
+\subimport{\rootpath/}{\filepath}%
+}}%
+\endgroup%
+}

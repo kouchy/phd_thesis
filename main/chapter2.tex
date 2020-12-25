@@ -379,9 +379,9 @@ version is compiled for each SIMD ISA.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Float 32-bit]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit}\label{plot:opt_mipp_mandelbrot_32}}
+  \subfloat[][Float 32-bit]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit}}\label{plot:opt_mipp_mandelbrot_32}}
   \quad
-  \subfloat[][Float 64-bit]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit}\label{plot:opt_mipp_mandelbrot_64}}
+  \subfloat[][Float 64-bit]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit}}\label{plot:opt_mipp_mandelbrot_64}}
   \caption{Speedups over the Mandelbrot naive auto-vectorized implementation.}
   \label{plot:opt_mipp_mandelbrot}
 \end{figure}
@@ -517,7 +517,7 @@ a factor $p_\text{SIMD}$ but the latency of a single frame is mainly unchanged.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/vectorization/inter_frame/inter_frame}
+  \inputtikz{\curChapter/fig/vectorization/inter_frame/inter_frame}
   \caption
     [Frame reordering operation before and after an inter-frame SIMD process.]
     {Frame reordering operation before and after an inter-frame SIMD process.}
@@ -543,7 +543,7 @@ after the SIMD computations.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\textwidth]{\curChapter/fig/vectorization/reordering/reordering}
+  \resizebox{1.0\textwidth}{!}{\inputtikz{\curChapter/fig/vectorization/reordering/reordering}}
   \caption
     [MIPP implementation of the SIMD frame reordering process for
      $p_\text{SIMD} = 4$.]
@@ -866,7 +866,7 @@ set to \emph{any}.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/polar/patterns/patterns}
+  \inputtikz{\curChapter/fig/polar/patterns/patterns}
   \caption{Polar sub-tree rewriting rules for processing specialization.}
   \label{fig:opt_polar_patterns}
 \end{figure}
@@ -912,9 +912,9 @@ most once on a given node.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][32-bit intra-frame SIMD (AVX)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_tree_cut/sc_tree_cut_intra}\label{plot:opt_polar_sc_tree_cut_intra}}
+  \subfloat[][32-bit intra-frame SIMD (AVX)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_tree_cut/sc_tree_cut_intra}}\label{plot:opt_polar_sc_tree_cut_intra}}
   \quad
-  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_tree_cut/sc_tree_cut_inter}\label{plot:opt_polar_sc_tree_cut_inter}}
+  \subfloat[][8-bit inter-frame SIMD (SSE4.1)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_tree_cut/sc_tree_cut_inter}}\label{plot:opt_polar_sc_tree_cut_inter}}
   \caption
     [Throughput of the SSC decoder depending on the different optimizations.]
     {Throughput of the SSC decoder depending on the different optimizations for
@@ -941,7 +941,7 @@ benefit from fine tuning.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/scl_tree_cut/scl_tree_cut}
+  \resizebox{0.70\textwidth}{!}{\inputtikz{\curChapter/fig/polar/scl_tree_cut/scl_tree_cut}}
   \caption
     [Impact of the specialized nodes on the SSCL coded throughput.]
     {Impact of the specialized nodes on the SSCL coded throughput.
@@ -977,7 +977,7 @@ order to offer a tradeoff between throughput and decoding performance.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/scl_spc/scl_spc_diff}
+  \resizebox{0.70\textwidth}{!}{\inputtikz{\curChapter/fig/polar/scl_spc/scl_spc_diff}}
   \caption
     [Effects of the $\texttt{SPC}_\texttt{4+}$ nodes on the CA-SSCL decoder @
      $10^{-5}$ FER]
@@ -1174,17 +1174,17 @@ loops at compile time.
 \begin{figure}[htp]
   \centering
   \subfloat[][Legend.]{
-    \includegraphics{\curChapter/fig/polar/sc_gen_compression/sc_gen_compression_legend}
+    \inputtikz{\curChapter/fig/polar/sc_gen_compression/sc_gen_compression_legend}
   }
   \\
   \subfloat[][Without compression.]{
     \label{fig:opt_polar_sc_gen_compression_wo}
-    \includegraphics{\curChapter/fig/polar/sc_gen_compression/sc_gen_no_compression}
+    \inputtikz{\curChapter/fig/polar/sc_gen_compression/sc_gen_no_compression}
   }
   \\
   \subfloat[][With compression.]{
     \label{fig:opt_polar_sc_gen_compression_w}
-    \includegraphics{\curChapter/fig/polar/sc_gen_compression/sc_gen_compression}
+    \inputtikz{\curChapter/fig/polar/sc_gen_compression/sc_gen_compression}
   }
   \caption
     [Pruned polar decoding tree representation without and with compression.]
@@ -1359,7 +1359,7 @@ SSCL$_{\texttt{ptr}}$.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}
+  \resizebox{0.70\textwidth}{!}{\inputtikz{\curChapter/fig/polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr}}
   \caption
     [Throughput of the SSCL decoder depending on the partial sums management.]
     {Information throughput of the SSCL decoder depending on the codeword
@@ -1703,13 +1703,13 @@ and final beliefs at each user in \eqref{eq:ctx_scma_10}.
   \centering
   \subfloat[][Array of Structures (AoS)]
   {
-    \includegraphics[scale=1.0]{\curChapter/fig/scma/simd_norm/simd_norm_aos_mipp}
+    \inputtikz{\curChapter/fig/scma/simd_norm/simd_norm_aos_mipp}
     \label{fig:opt_scma_simd_norm_aos}
   }
   \\
   \subfloat[][Structure of Arrays (SoA)]
   {
-    \includegraphics[scale=1.0]{\curChapter/fig/scma/simd_norm/simd_norm_soa_mipp}
+    \inputtikz{\curChapter/fig/scma/simd_norm/simd_norm_soa_mipp}
     \label{fig:opt_scma_simd_norm_soa}
   }
   \caption
@@ -1744,7 +1744,7 @@ evaluations.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/scma/simd_exp/simd_exp_mipp}
+  \inputtikz{\curChapter/fig/scma/simd_exp/simd_exp_mipp}
   \caption
     [MPA vectorized exponentials.]
     {MPA vectorized exponentials ($N_0 = 2\sigma^2$, $p_\text{SIMD} = 8$).}
@@ -1773,7 +1773,7 @@ computation effort.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/scma/simd_final_beliefs/simd_final_beliefs_mipp}
+  \inputtikz{\curChapter/fig/scma/simd_final_beliefs/simd_final_beliefs_mipp}
   \caption
     [MPA vectorized computations of final beliefs.]
     {MPA vectorized computations of final beliefs ($p_\text{SIMD} = 8$).}

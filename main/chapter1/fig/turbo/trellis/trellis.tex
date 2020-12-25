@@ -1,4 +1,4 @@
-\documentclass{standalone}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -13,7 +13,7 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{automata}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}%[scale=\tikzscale]
@@ -33,7 +33,6 @@
   % \draw[b1] (s2) to[bend right=30]                (s0) node [midway, above, xshift=+1.5cm, yshift=-0.40cm] {1/11};
   % \draw[b1] (s3) to[out=-120,in= -60,looseness=6] (s3) node [midway, above, xshift=+0.0cm, yshift=-4.60cm] {1/10};
   % \draw[b0] (s0) to[out= +60,in=+120,looseness=6] (s0) node [midway, above, xshift=+0.0cm, yshift=+1.00cm] {0/00};
-
 
   \newcommand\vsep{2.5}
   \newcommand\hsep{1.25}

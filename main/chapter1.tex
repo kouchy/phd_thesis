@@ -34,7 +34,7 @@ thesis.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/intro/com_chain/com_chain}
+  \inputtikz{\curChapter/fig/intro/com_chain/com_chain}
   \caption{Digital communication chain.}
   \label{fig:ctx_com_chain}
 \end{figure}
@@ -290,7 +290,7 @@ In this case, the encoding process is \emph{systematic}.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/ldpc/parity_check/parity_check}
+  \inputtikz{\curChapter/fig/ldpc/parity_check/parity_check}
   \caption{Representation of the $\mathcal{C}_0$ parity-check constraint on a
     Tanner graph.}
   \label{fig:ctx_ldpc_parity_check}
@@ -313,7 +313,7 @@ $\bm{\mathcal{G}} \times \bm{\mathcal{H}}^T = \bm{0}.$
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/ldpc/parity_checks/parity_checks}
+  \inputtikz{\curChapter/fig/ldpc/parity_checks/parity_checks}
   \caption{Parity-check constraints of an LDPC code on a Tanner graph.}
   \label{fig:ctx_ldpc_parity_checks}
 \end{figure}
@@ -376,13 +376,13 @@ message.
   \centering
   \subfloat[][Check nodes update.]
   {
-    \includegraphics[scale=0.9]{\curChapter/fig/ldpc/bp_cn_update/bp_cn_update}
+    \scalebox{0.9}{\inputtikz{\curChapter/fig/ldpc/bp_cn_update/bp_cn_update}}
     \label{fig:ctx_ldpc_bp_cn_update}
   }
   \quad
   \subfloat[][Variable nodes update.]
   {
-    \includegraphics[scale=0.9]{\curChapter/fig/ldpc/bp_vn_update/bp_vn_update}
+    \scalebox{0.9}{\inputtikz{\curChapter/fig/ldpc/bp_vn_update/bp_vn_update}}
     \label{fig:ctx_ldpc_bp_vn_update}
   }
   \caption{Illustration of the belief propagation algorithm on a Tanner graph.}
@@ -479,7 +479,7 @@ To summarize, the polar encoding process can be defined as follow: $\bm{c} =
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\linewidth]{\curChapter/fig/polar/encoder/encoder}
+  \resizebox{1.0\linewidth}{!}{\inputtikz{\curChapter/fig/polar/encoder/encoder}}
   \caption{Polar encoding process for $N \in \{2, 4, 8\}$ and $R = 1/2$.}
   \label{fig:ctx_polar_encoder}
 \end{figure}
@@ -495,7 +495,7 @@ systematic.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/polar/encoder_sys/encoder_sys}
+  \inputtikz{\curChapter/fig/polar/encoder_sys/encoder_sys}
   \caption{Systematic polar encoder for $N = 8$ and $R = 1/2$.}
   \label{fig:ctx_polar_encoder_sys}
 \end{figure}
@@ -518,7 +518,7 @@ are not directed.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/polar/tree/tree}
+  \inputtikz{\curChapter/fig/polar/tree/tree}
   \caption{Tree representation of a polar encoder for $N = 8$ and $R = 1/2$.}
   \label{fig:ctx_polar_tree}
 \end{figure}
@@ -541,7 +541,7 @@ rectangle (four XORs per node).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/polar/sc_decoder/sc_decoder}
+  \inputtikz{\curChapter/fig/polar/sc_decoder/sc_decoder}
   \caption{Full SC decoding tree ($N = 16$).}
   \label{fig:ctx_polar_sc_decoder}
 \end{figure}
@@ -688,7 +688,7 @@ at the end of each decoding.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/polar/tree_pruning_example/tree_pruning_example}
+  \inputtikz{\curChapter/fig/polar/tree_pruning_example/tree_pruning_example}
   \caption
     [Example of polar tree pruning on a small binary tree ($N = 8$).]
     {Example of tree pruning on a small binary tree ($N = 8$). The tree is cut
@@ -757,19 +757,19 @@ output depends on the current input and on the few previous inputs.
   \centering
   \subfloat[][Encoder scheme.]
   {
-    \includegraphics[scale=1.0]{\curChapter/fig/turbo/sub_encoder/sub_encoder}
+    \inputtikz{\curChapter/fig/turbo/sub_encoder/sub_encoder}
     \label{fig:ctx_turbo_sub_encoder_graph}
   }
   \quad
   \subfloat[][Finite state machine.]
   {
-    \includegraphics[scale=0.75]{\curChapter/fig/turbo/mealy/mealy}
+    \scalebox{0.75}{\inputtikz{\curChapter/fig/turbo/mealy/mealy}}
     \label{fig:ctx_turbo_sub_encoder_mealy}
   }
   \\
   \subfloat[][Trellis representation.]
   {
-    \includegraphics[scale=0.9]{\curChapter/fig/turbo/trellis/trellis}
+    \scalebox{0.9}{\inputtikz{\curChapter/fig/turbo/trellis/trellis}}
     \label{fig:ctx_turbo_sub_encoder_trellis}
   }
   \caption{Different representations of a recursive and systematic convolutional
@@ -817,7 +817,7 @@ starting from $\nu +1$ time units, the trellis pattern is repeated.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/turbo/encoder/encoder}
+  \inputtikz{\curChapter/fig/turbo/encoder/encoder}
   \caption{Turbo code ($R = 1/3$) with two convolutional sub-encoders and a
     $\Pi$ interleaver.}
   \label{fig:ctx_turbo_encoder}
@@ -845,7 +845,7 @@ order are given to the sub-encoder 2.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.0]{\curChapter/fig/turbo/decoder/decoder}
+  \inputtikz{\curChapter/fig/turbo/decoder/decoder}
   \caption{Information exchanges in turbo decoding process.}
   \label{fig:ctx_turbo_decoder}
 \end{figure}
@@ -916,7 +916,7 @@ of the trellis.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\textwidth]{\curChapter/fig/turbo/encoder_lte/encoder_lte}
+  \resizebox{1.0\textwidth}{!}{\inputtikz{\curChapter/fig/turbo/encoder_lte/encoder_lte}}
   \caption
     [Turbo LTE encoder and its associated 8-state trellis.]
     {Turbo LTE encoder and its associated 8-state trellis.
@@ -1051,13 +1051,13 @@ BER/FER value until they reach a stable value.
   \centering
   \subfloat[][Specification of the simulation chain.]
   {
-    \includegraphics[scale=1]{\curChapter/fig/simu/com_chain/com_chain}
+    \inputtikz{\curChapter/fig/simu/com_chain/com_chain}
     \label{fig:ctx_simu_com_chain_specs}
   }
   \\
   \subfloat[][Input simulation parameters and output BER results.]
   {
-    \includegraphics[scale=1]{\curChapter/fig/simu/in_out/in_out}
+    \inputtikz{\curChapter/fig/simu/in_out/in_out}
     \label{fig:ctx_simu_com_chain_in_out}
   }
   \caption{Description of a digital communication system simulation.}
@@ -1080,12 +1080,12 @@ maximum SNR value. $s$ is the SNR step between two SNR values.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][LDPC code ($R = 5/6$).                ]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_ldpc}  \label{fig:ctx_bfer_ldpc}}   \quad{}
-  \subfloat[][Turbo code ($R \approx 1/3$).         ]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_turbo} \label{fig:ctx_bfer_turbo}}  \\
-  \subfloat[][Polar code ($R \approx 0.84$).        ]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_polar} \label{fig:ctx_bfer_polar}}  \quad{}
-  \subfloat[][Turbo product code ($R \approx 0.78$).]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_tpc}   \label{fig:ctx_bfer_tpc}}    \\
-  \subfloat[][Algebraic codes ($R \approx 0.93$).   ]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_bch_rs}\label{fig:ctx_bfer_bch_rs}} \quad{}
-  \subfloat[][Convolutional codes ($R \approx 1/2)$.]{\includegraphics[width=0.475\textwidth]{\curChapter/fig/simu/bfer/bfer_rsc}   \label{fig:ctx_bfer_rsc}}
+  \subfloat[][LDPC code ($R = 5/6$).                ]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_ldpc}  \label{fig:ctx_bfer_ldpc}}}   \quad{}
+  \subfloat[][Turbo code ($R \approx 1/3$).         ]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_turbo} \label{fig:ctx_bfer_turbo}}}  \\
+  \subfloat[][Polar code ($R \approx 0.84$).        ]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_polar} \label{fig:ctx_bfer_polar}}}  \quad{}
+  \subfloat[][Turbo product code ($R \approx 0.78$).]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_tpc}   \label{fig:ctx_bfer_tpc}}}    \\
+  \subfloat[][Algebraic codes ($R \approx 0.93$).   ]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_bch_rs}\label{fig:ctx_bfer_bch_rs}}} \quad{}
+  \subfloat[][Convolutional codes ($R \approx 1/2)$.]{\resizebox{0.475\textwidth}{!}{\inputtikz{\curChapter/fig/simu/bfer/bfer_rsc}   \label{fig:ctx_bfer_rsc}}}
   \caption
     [BER and FER simulation results on various code families.]
     {BER and FER simulation results on various code families and decoder
@@ -1135,11 +1135,11 @@ terminals.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Early base station.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_1G_2G} \label{fig:ctx_sdr_base_station_1G_2G}}
+  \subfloat[][Early base station.]{\scalebox{0.715}{\inputtikz{\curChapter/fig/sdr/base_station/base_station_1G_2G}} \label{fig:ctx_sdr_base_station_1G_2G}}
   \quad{}
-  \subfloat[][BB and RF processing separation.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_3G_4G} \label{fig:ctx_sdr_base_station_3G_4G}}
+  \subfloat[][BB and RF processing separation.]{\scalebox{0.715}{\inputtikz{\curChapter/fig/sdr/base_station/base_station_3G_4G}} \label{fig:ctx_sdr_base_station_3G_4G}}
   \quad{}
-  \subfloat[][C-RAN.]{\includegraphics[scale=0.715]{\curChapter/fig/sdr/base_station/base_station_5G_future} \label{fig:ctx_sdr_base_station_5G_future}}
+  \subfloat[][C-RAN.]{\scalebox{0.715}{\inputtikz{\curChapter/fig/sdr/base_station/base_station_5G_future}} \label{fig:ctx_sdr_base_station_5G_future}}
   \caption
     [Base stations evolution in mobile networks.]
     {Base stations evolution in mobile networks.}
@@ -1245,27 +1245,31 @@ modulator and the SCMA decoder can be seen as a digital demodulator.
 
 \begin{figure}%[htp]
   \centering
-  \subfloat[][SCMA encoder with 6 users (layers) and 4 physical resources.]{
+  \subfloat[][SCMA encoder with 6 users (layers) and 4 physical resources.]
+  {
     \label{fig:ctx_scma_enc}
-    \includegraphics{\curChapter/fig/scma/codec/codec_enc}
+    \inputtikz{\curChapter/fig/scma/codec/codec_enc}
   }
   \\
-  \subfloat[][SCMA uplink chain with channel coding.]{
+  \subfloat[][SCMA uplink chain with channel coding.]
+  {
     \label{fig:ctx_scma_codec}
-    \includegraphics{\curChapter/fig/scma/codec/codec_chain}
+    \inputtikz{\curChapter/fig/scma/codec/codec_chain}
   }
   \\
-  \subfloat[][Factor graph representation of a decoder.]{
+  \subfloat[][Factor graph representation of a decoder.]
+  {
     \label{fig:ctx_scma_dec_graph}
-    \includegraphics{\curChapter/fig/scma/codec/codec_graph}
+    \inputtikz{\curChapter/fig/scma/codec/codec_graph}
   }
   \quad
   \subfloat[][Message Passing Algorithm based on Bayesian factor graph:\linebreak
               (I)   Resource to user message,
               (II)  Guess swap at each user and user to resource message,
-              (III) Final guess at each user.]{
+              (III) Final guess at each user.]
+  {
     \label{fig:ctx_scma_dec_alg}
-    \includegraphics{\curChapter/fig/scma/codec/codec_dec}
+    \inputtikz{\curChapter/fig/scma/codec/codec_dec}
   }
   \caption
     [SCMA system model, encoding and decoding schemes.]

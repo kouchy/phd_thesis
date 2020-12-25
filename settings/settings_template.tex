@@ -1,6 +1,6 @@
 %!TEX root = ../my_thesis.tex
 
-\documentclass[a4paper,11pt,fleqn,oneside]{book} % 'twoside' document for print, 'oneside' document for digital version
+\documentclass[a4paper,11pt,fleqn,twoside]{book} % 'twoside' document for print, 'oneside' document for digital version
 
 % boolean 'twosidedoc' contain true if the document is two-sided, false else
 \usepackage{ifthen}
@@ -84,6 +84,11 @@
   \if@twocolumn\hbox{}\newpage\fi\fi\fi}
 \makeatother \clearpage{\pagestyle{plain}\cleardoublepage}
 
+\newcommand*\cleartoleftpage{%
+   \clearpage
+   \ifodd\value{page}\hbox{}\vspace*{\fill}\thispagestyle{empty}\newpage\fi
+}
+
 %%%%% CHAPTER HEADER %%%%
 
 \newcommand*\chapterlabel{}
@@ -92,7 +97,9 @@
   {\normalfont\bfseries\Huge} % format of the chapter
   {\gdef\chapterlabel{\thechapter\ }}     % the label
   {0pt} % separation between label and chapter-title
-    {\begin{tikzpicture}[remember picture,overlay]
+    {
+    \tikzset{external/export=false}
+    \begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-6cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
         \ifthenelse{\boolean{twosidedoc}}

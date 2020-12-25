@@ -58,18 +58,18 @@ backcover: tail/backcover.tex
 	cd tail                                                && rubber -d backcover.tex
 
 chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
-              main/chapter1/fig/intro/com_chain/colors \
+              main/chapter1/fig/intro/com_chain/settings/colors.tex \
               main/chapter1/fig/simu/com_chain/com_chain.tex \
-              main/chapter1/fig/simu/com_chain/colors \
+              main/chapter1/fig/simu/com_chain/settings/colors.tex \
               main/chapter1/fig/simu/in_out/in_out.tex \
-              main/chapter1/fig/simu/in_out/colors \
+              main/chapter1/fig/simu/in_out/settings/colors.tex \
               main/chapter1/fig/simu/bfer/bfer_bch_rs.tex \
               main/chapter1/fig/simu/bfer/bfer_ldpc.tex \
               main/chapter1/fig/simu/bfer/bfer_polar.tex \
               main/chapter1/fig/simu/bfer/bfer_rsc.tex \
               main/chapter1/fig/simu/bfer/bfer_tpc.tex \
               main/chapter1/fig/simu/bfer/bfer_turbo.tex \
-              main/chapter1/fig/simu/bfer/colors \
+              main/chapter1/fig/simu/bfer/settings/colors.tex \
               main/chapter1/fig/simu/bfer/dat/BCH_N255_K231_algebraic_T3.txt \
               main/chapter1/fig/simu/bfer/dat/LDPC_N648_K540_hlayered_SPA_i05_Wi-Fi.txt \
               main/chapter1/fig/simu/bfer/dat/LDPC_N648_K540_hlayered_SPA_i40_Wi-Fi.txt \
@@ -87,40 +87,40 @@ chapter1_fig: main/chapter1/fig/intro/com_chain/com_chain.tex \
               main/chapter1/fig/sdr/base_station/base_station_3G_4G.tex \
               main/chapter1/fig/sdr/base_station/base_station_5G_future.tex \
               main/chapter1/fig/ldpc/bp_cn_update/bp_cn_update.tex \
-              main/chapter1/fig/ldpc/bp_cn_update/colors \
+              main/chapter1/fig/ldpc/bp_cn_update/settings/colors.tex \
               main/chapter1/fig/ldpc/bp_vn_update/bp_vn_update.tex \
-              main/chapter1/fig/ldpc/bp_vn_update/colors \
+              main/chapter1/fig/ldpc/bp_vn_update/settings/colors.tex \
               main/chapter1/fig/polar/sc_decoder/sc_decoder.tex \
-              main/chapter1/fig/polar/sc_decoder/colors \
+              main/chapter1/fig/polar/sc_decoder/settings/colors.tex \
               main/chapter1/fig/polar/tree_pruning_example/tree_pruning_example.tex \
-              main/chapter1/fig/polar/tree_pruning_example/colors \
+              main/chapter1/fig/polar/tree_pruning_example/settings/colors.tex \
               main/chapter1/fig/scma/codec/codec_chain.tex \
               main/chapter1/fig/scma/codec/codec_dec.tex \
               main/chapter1/fig/scma/codec/codec_enc.tex \
               main/chapter1/fig/scma/codec/codec_graph.tex \
-              main/chapter1/fig/scma/codec/colors \
+              main/chapter1/fig/scma/codec/settings/colors.tex \
               main/chapter1/fig/ldpc/parity_checks/parity_checks.tex \
-              main/chapter1/fig/ldpc/parity_checks/colors \
+              main/chapter1/fig/ldpc/parity_checks/settings/colors.tex \
               main/chapter1/fig/ldpc/parity_check/parity_check.tex \
-              main/chapter1/fig/ldpc/parity_check/colors \
+              main/chapter1/fig/ldpc/parity_check/settings/colors.tex \
               main/chapter1/fig/polar/encoder/encoder.tex \
-              main/chapter1/fig/polar/encoder/colors \
+              main/chapter1/fig/polar/encoder/settings/colors.tex \
               main/chapter1/fig/polar/encoder_sys/encoder_sys.tex \
-              main/chapter1/fig/polar/encoder_sys/colors \
+              main/chapter1/fig/polar/encoder_sys/settings/colors.tex \
               main/chapter1/fig/polar/tree/tree.tex \
-              main/chapter1/fig/polar/tree/colors \
+              main/chapter1/fig/polar/tree/settings/colors.tex \
               main/chapter1/fig/turbo/sub_encoder/sub_encoder.tex \
-              main/chapter1/fig/turbo/sub_encoder/colors \
+              main/chapter1/fig/turbo/sub_encoder/settings/colors.tex \
               main/chapter1/fig/turbo/mealy/mealy.tex \
-              main/chapter1/fig/turbo/mealy/colors \
+              main/chapter1/fig/turbo/mealy/settings/colors.tex \
               main/chapter1/fig/turbo/trellis/trellis.tex \
-              main/chapter1/fig/turbo/trellis/colors \
+              main/chapter1/fig/turbo/trellis/settings/colors.tex \
               main/chapter1/fig/turbo/encoder/encoder.tex \
-              main/chapter1/fig/turbo/encoder/colors \
+              main/chapter1/fig/turbo/encoder/settings/colors.tex \
               main/chapter1/fig/turbo/decoder/decoder.tex \
-              main/chapter1/fig/turbo/decoder/colors \
+              main/chapter1/fig/turbo/decoder/settings/colors.tex \
               main/chapter1/fig/turbo/encoder_lte/encoder_lte.tex \
-              main/chapter1/fig/turbo/encoder_lte/colors
+              main/chapter1/fig/turbo/encoder_lte/settings/colors.tex
 	cd main/chapter1/fig/intro/com_chain                   && rubber -d com_chain.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber -d com_chain.tex
 	cd main/chapter1/fig/simu/in_out                       && rubber -d in_out.tex
@@ -168,9 +168,9 @@ chapter2_fig: main/chapter2/src/ldpc/bp_scheduling_hl.cpp \
               main/chapter2/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_32bit.tex \
               main/chapter2/fig/vectorization/mandelbrot_speedup/mandelbrot_speedup_64bit.tex \
               main/chapter2/fig/vectorization/inter_frame/inter_frame.tex \
-              main/chapter2/fig/vectorization/inter_frame/colors \
+              main/chapter2/fig/vectorization/inter_frame/settings/colors.tex \
               main/chapter2/fig/vectorization/reordering/reordering.tex \
-              main/chapter2/fig/vectorization/reordering/colors \
+              main/chapter2/fig/vectorization/reordering/settings/colors.tex \
               main/chapter2/fig/polar/sc_tree_cut/sc_tree_cut_inter.tex \
               main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4.dat \
               main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_inter_8b_opti_spc4+.dat \
@@ -180,19 +180,19 @@ chapter2_fig: main/chapter2/src/ldpc/bp_scheduling_hl.cpp \
               main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc4+.dat \
               main/chapter2/fig/polar/sc_tree_cut/dat/E31225_samples_intra_32b_opti_spc16-.dat \
               main/chapter2/fig/polar/scl_tree_cut/scl_tree_cut.tex \
-              main/chapter2/fig/polar/scl_tree_cut/colors \
+              main/chapter2/fig/polar/scl_tree_cut/settings/colors.tex \
               main/chapter2/fig/polar/scl_tree_cut/dat/data_L32_i5-6600K.txt \
               main/chapter2/fig/polar/scl_spc/scl_spc_diff.tex \
-              main/chapter2/fig/polar/scl_spc/colors \
+              main/chapter2/fig/polar/scl_spc/settings/colors.tex \
               main/chapter2/fig/polar/patterns/patterns.tex \
-              main/chapter2/fig/polar/patterns/colors \
+              main/chapter2/fig/polar/patterns/settings/colors.tex \
               main/chapter2/fig/polar/sc_gen_compression/sc_gen_compression.tex \
               main/chapter2/fig/polar/sc_gen_compression/sc_gen_no_compression.tex \
               main/chapter2/fig/polar/sc_gen_compression/sc_gen_compression_legend.tex \
-              main/chapter2/fig/polar/sc_gen_compression/colors \
-              main/chapter2/fig/polar/sc_gen_compression/styles.tex \
+              main/chapter2/fig/polar/sc_gen_compression/settings/colors.tex \
+              main/chapter2/fig/polar/sc_gen_compression/settings/styles.tex \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/scl_cpy_vs_ptr.tex \
-              main/chapter2/fig/polar/scl_cpy_vs_ptr/colors \
+              main/chapter2/fig/polar/scl_cpy_vs_ptr/settings/colors.tex \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_8.txt \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_16.txt \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_cpy_32.txt \
@@ -201,11 +201,11 @@ chapter2_fig: main/chapter2/src/ldpc/bp_scheduling_hl.cpp \
               main/chapter2/fig/polar/scl_cpy_vs_ptr/dat/data_i5-6600K_scl_ptr_32.txt \
               main/chapter2/fig/scma/simd_norm/simd_norm_aos_mipp.tex \
               main/chapter2/fig/scma/simd_norm/simd_norm_soa_mipp.tex \
-              main/chapter2/fig/scma/simd_norm/colors \
+              main/chapter2/fig/scma/simd_norm/settings/colors.tex \
               main/chapter2/fig/scma/simd_exp/simd_exp_mipp.tex \
-              main/chapter2/fig/scma/simd_exp/colors \
+              main/chapter2/fig/scma/simd_exp/settings/colors.tex \
               main/chapter2/fig/scma/simd_final_beliefs/simd_final_beliefs_mipp.tex \
-              main/chapter2/fig/scma/simd_final_beliefs/colors
+              main/chapter2/fig/scma/simd_final_beliefs/settings/colors.tex
 	cd main/chapter2/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_32bit.tex
 	cd main/chapter2/fig/vectorization/mandelbrot_speedup/ && rubber -d mandelbrot_speedup_64bit.tex
 	cd main/chapter2/fig/vectorization/inter_frame/        && rubber -d inter_frame.tex
@@ -231,9 +231,9 @@ chapter3_fig: main/chapter3/src/use_cases/library/modules_allocation.cpp \
               main/chapter3/src/use_cases/simulator/input.txt \
               main/chapter3/src/use_cases/simulator/output.txt \
               main/chapter3/fig/use_cases/library_task_module/library_task_module.tex \
-              main/chapter3/fig/use_cases/library_task_module/colors \
+              main/chapter3/fig/use_cases/library_task_module/settings/colors.tex \
               main/chapter3/fig/ldpc/scheduling/scheduling.tex \
-              main/chapter3/fig/ldpc/scheduling/colors \
+              main/chapter3/fig/ldpc/scheduling/settings/colors.tex \
               main/chapter3/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_01_ite.txt \
               main/chapter3/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_05_ite.txt \
               main/chapter3/fig/ldpc/scheduling/dat/WiMAX_2304_1152_flooding_SPA_10_ite.txt \
@@ -250,13 +250,13 @@ chapter3_fig: main/chapter3/src/use_cases/library/modules_allocation.cpp \
               main/chapter3/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_20_ite.txt \
               main/chapter3/fig/ldpc/scheduling/dat/WiMAX_2304_1152_vlayered_SPA_40_ite.txt \
               main/chapter3/fig/ldpc/update_rules/update_rules.tex \
-              main/chapter3/fig/ldpc/update_rules/colors \
+              main/chapter3/fig/ldpc/update_rules/settings/colors.tex \
               main/chapter3/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_MS_40_ite.txt \
               main/chapter3/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_NMS_40_ite.txt \
               main/chapter3/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_OMS_40_ite.txt \
               main/chapter3/fig/ldpc/update_rules/dat/WiMAX_2304_1152_hlayered_SPA_40_ite.txt \
               main/chapter3/fig/polar/scl_adaptive/scl_adaptive.tex \
-              main/chapter3/fig/polar/scl_adaptive/colors \
+              main/chapter3/fig/polar/scl_adaptive/settings/colors.tex \
               main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL8_CRC32_SPC4_i5-6600K.txt \
               main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_FASCL32_CRC32_SPC4_i5-6600K.txt \
               main/chapter3/fig/polar/scl_adaptive/dat/polar_2048_1723_1.0_4.5_PASCL8_CRC32_SPC4_i5-6600K.txt \
@@ -267,7 +267,7 @@ chapter3_fig: main/chapter3/src/use_cases/library/modules_allocation.cpp \
               main/chapter3/fig/turbo/quantization/dat/data_6144_16b_fixed_Q6_3.txt \
               main/chapter3/fig/turbo/quantization/dat/data_6144_8b_fixed_Q6_2.txt \
               main/chapter3/fig/scma/fec/fec_1_2.tex \
-              main/chapter3/fig/scma/fec/colors \
+              main/chapter3/fig/scma/fec/settings/colors.tex \
               main/chapter3/fig/scma/fec/dat/1_2/ldpc_empa.txt \
               main/chapter3/fig/scma/fec/dat/1_2/ldpc_mpa.txt \
               main/chapter3/fig/scma/fec/dat/1_2/polar_empa.txt \
@@ -275,7 +275,7 @@ chapter3_fig: main/chapter3/src/use_cases/library/modules_allocation.cpp \
               main/chapter3/fig/scma/fec/dat/1_2/turbo_empa.txt \
               main/chapter3/fig/scma/fec/dat/1_2/turbo_mpa.txt \
               main/chapter3/fig/ci_cd/pipeline/pipeline.tex \
-              main/chapter3/fig/ci_cd/pipeline/colors
+              main/chapter3/fig/ci_cd/pipeline/settings/colors.tex
 	cd main/chapter3/fig/use_cases/library_task_module/    && rubber -d library_task_module.tex
 	cd main/chapter3/fig/ldpc/scheduling/                  && rubber -d scheduling.tex
 	cd main/chapter3/fig/ldpc/update_rules/                && rubber -d update_rules.tex
@@ -335,7 +335,7 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes.dat \
               main/chapter4/fig/polar/sc_gen_l1i_size/dat/samples_generated_decoders_sizes_after_compression.dat \
               main/chapter4/fig/polar/sc_colgate/sc_colgate.tex \
-              main/chapter4/fig/polar/sc_colgate/colors \
+              main/chapter4/fig/polar/sc_colgate/settings/colors.tex \
               main/chapter4/fig/turbo/thr/thr.tex \
               main/chapter4/fig/turbo/thr/dat/data_E5_01c_AVX.txt \
               main/chapter4/fig/turbo/thr/dat/data_E5_01c_SSE.txt \
@@ -356,7 +356,7 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter4/fig/turbo/energy/dat/data_K6144_SSE.txt \
               main/chapter4/fig/ldpc/WiMAX_thr_lat/WiMAX_thr.tex \
               main/chapter4/fig/ldpc/WiMAX_thr_lat/WiMAX_lat.tex \
-              main/chapter4/fig/ldpc/WiMAX_thr_lat/colors \
+              main/chapter4/fig/ldpc/WiMAX_thr_lat/settings/colors.tex \
               main/chapter4/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_epyc_7452_AVX.txt \
               main/chapter4/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_epyc_7452_SSE.txt \
               main/chapter4/fig/ldpc/WiMAX_thr_lat/dat/LEGACY_N2304_K1152_xeon_platinum_8168_AVX-512.txt \
@@ -369,7 +369,7 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter4/fig/ldpc/WiMAX_thr_lat/dat/N2304_K1152_xeon_platinum_8168_SSE.txt \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/DVB-S2_thr.tex \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/DVB-S2_lat.tex \
-              main/chapter4/fig/ldpc/DVB-S2_thr_lat/colors \
+              main/chapter4/fig/ldpc/DVB-S2_thr_lat/settings/colors.tex \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_epyc_7452_AVX.txt \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_epyc_7452_SSE.txt \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX-512.txt \
@@ -391,7 +391,7 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_xeon_platinum_8168_AVX.txt \
               main/chapter4/fig/ldpc/DVB-S2_thr_lat/dat/N64800_K32400_xeon_platinum_8168_SSE.txt \
               main/chapter4/fig/simu/speedup/speedup.tex \
-              main/chapter4/fig/simu/speedup/colors \
+              main/chapter4/fig/simu/speedup/settings/colors.tex \
               main/chapter4/fig/simu/speedup/dat/AMD_Ryzen_7_2700X.txt \
               main/chapter4/fig/simu/speedup/dat/Cavium_ThunderX2_CN9975.txt \
               main/chapter4/fig/simu/speedup/dat/Intel_Xeon_E5-2680v3.txt \
@@ -399,9 +399,9 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
               main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Gold_6142.txt \
               main/chapter4/fig/simu/speedup/dat/Intel_Xeon_Phi_7230.txt \
               main/chapter4/fig/simu/throughput/throughput.tex \
-              main/chapter4/fig/simu/throughput/colors \
+              main/chapter4/fig/simu/throughput/settings/colors.tex \
               main/chapter4/fig/simu/chain/chain.tex \
-              main/chapter4/fig/simu/chain/colors
+              main/chapter4/fig/simu/chain/settings/colors.tex
 	cd main/chapter4/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_total.tex
 	cd main/chapter4/fig/polar/sc_energy_implems_vs/       && rubber -d sc_energy_implems_vs_mem.tex
 	cd main/chapter4/fig/polar/sc_energy_freq/             && rubber -d sc_energy_freq_a7.tex
@@ -427,25 +427,25 @@ chapter4_fig: main/chapter4/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_
 
 chapter5_fig: main/chapter5/src/pipeline/pipeline.cpp \
               main/chapter5/fig/dsl/loop/loop.tex \
-              main/chapter5/fig/dsl/loop/colors \
+              main/chapter5/fig/dsl/loop/settings/colors.tex \
               main/chapter5/fig/dsl/nested_loops/nested_loops.tex \
-              main/chapter5/fig/dsl/nested_loops/colors \
+              main/chapter5/fig/dsl/nested_loops/settings/colors.tex \
               main/chapter5/fig/dsl/sequence/sequence_chain.tex \
               main/chapter5/fig/dsl/sequence/sequence_generic.tex \
-              main/chapter5/fig/dsl/sequence/colors \
+              main/chapter5/fig/dsl/sequence/settings/colors.tex \
               main/chapter5/fig/dsl/sequence_dup/sequence_dup.tex \
-              main/chapter5/fig/dsl/sequence_dup/colors \
+              main/chapter5/fig/dsl/sequence_dup/settings/colors.tex \
               main/chapter5/fig/dsl/pipeline/pipeline_usr.tex \
               main/chapter5/fig/dsl/pipeline/pipeline_adp.tex \
-              main/chapter5/fig/dsl/pipeline/colors \
+              main/chapter5/fig/dsl/pipeline/settings/colors.tex \
               main/chapter5/fig/dvbs2/transmitter/transmitter.tex \
-              main/chapter5/fig/dvbs2/transmitter/colors \
+              main/chapter5/fig/dvbs2/transmitter/settings/colors.tex \
               main/chapter5/fig/dvbs2/receiver/receiver_transmission.tex \
               main/chapter5/fig/dvbs2/receiver/receiver_learning.tex \
-              main/chapter5/fig/dvbs2/receiver/colors \
+              main/chapter5/fig/dvbs2/receiver/settings/colors.tex \
               main/chapter5/fig/dvbs2/pipeline_copy/pipeline_copy_dat.tex \
               main/chapter5/fig/dvbs2/pipeline_copy/pipeline_copy_ptr.tex \
-              main/chapter5/fig/dvbs2/pipeline_copy/colors \
+              main/chapter5/fig/dvbs2/pipeline_copy/settings/colors.tex \
               main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_BB.txt \
               main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_sim.txt \
               main/chapter5/fig/dvbs2/bfer/dat/data_8PSK_R_8_9_rad.txt \
@@ -456,7 +456,7 @@ chapter5_fig: main/chapter5/src/pipeline/pipeline.cpp \
               main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_sim.txt \
               main/chapter5/fig/dvbs2/bfer/dat/data_QPSK_R_3_5_rad.txt \
               main/chapter5/fig/dvbs2/bfer/bfer.tex \
-              main/chapter5/fig/dvbs2/bfer/colors
+              main/chapter5/fig/dvbs2/bfer/settings/colors.tex
 	cd main/chapter5/fig/dsl/loop/                         && rubber -d loop.tex
 	cd main/chapter5/fig/dsl/nested_loops/                 && rubber -d nested_loops.tex
 	cd main/chapter5/fig/dsl/sequence/                     && rubber -d sequence_chain.tex
@@ -474,7 +474,10 @@ chapter5_fig: main/chapter5/src/pipeline/pipeline.cpp \
 clean4all:
 	rm -f *.mtc*
 	rm -f *.bcf
+	rm -f *.sta
+	rm -f *.auxlock
 	rm -f *.lol
+	rm -f *.pyg
 	rm -f *.run.xml
 	rm -rf _minted*
 	rm -rf build
@@ -482,7 +485,7 @@ clean4all:
 clean: clean4all
 	cd ./                                                  && rubber --clean my_thesis
 	cd head                                                && rubber --clean titlepage
-	cd taim                                                && rubber --clean backcover
+	cd tail                                                && rubber --clean backcover
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean com_chain
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean com_chain
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean in_out
@@ -668,6 +671,7 @@ mrproper: clean4all
 	cd main/chapter5/fig/dvbs2/pipeline_copy/              && rubber --clean -d pipeline_copy_dat.tex
 	cd main/chapter5/fig/dvbs2/pipeline_copy/              && rubber --clean -d pipeline_copy_ptr.tex
 	cd main/chapter5/fig/dvbs2/bfer/                       && rubber --clean -d bfer.tex
+	rm tikz_cache/* -rf
 
 open:
 	xdg-open my_thesis.pdf &

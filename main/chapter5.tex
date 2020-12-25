@@ -178,9 +178,9 @@ the sequence is repeated, the sequence is stopped otherwise.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Simple chain sequence.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_chain}\label{fig:sdr_dsl_sequence_chain}}
+  \subfloat[][Simple chain sequence.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/dsl/sequence/sequence_chain}}\label{fig:sdr_dsl_sequence_chain}}
   \quad
-  \subfloat[][Sequence with multiple first and last tasks.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/dsl/sequence/sequence_generic}\label{fig:sdr_dsl_sequence_generic}}
+  \subfloat[][Sequence with multiple first and last tasks.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/dsl/sequence/sequence_generic}}\label{fig:sdr_dsl_sequence_generic}}
   \caption{Example of sequences.}
   \label{fig:sdr_dsl_sequence}
 \end{figure}
@@ -218,7 +218,7 @@ condition is \emph{false} and the second one is taken when the condition is
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.90\textwidth]{\curChapter/fig/dsl/loop/loop}
+  \resizebox{0.90\textwidth}{!}{\inputtikz{\curChapter/fig/dsl/loop/loop}}
   \caption
     [Example of a sequence of tasks with a loop.]
     {Example of a sequence of tasks with a loop.}
@@ -250,7 +250,7 @@ evaluation returns \emph{true} (\emph{for-loop} behavior).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1.00]{\curChapter/fig/dsl/nested_loops/nested_loops}
+  \inputtikz{\curChapter/fig/dsl/nested_loops/nested_loops}
   \caption
     [Nested loops.]
     {Nested loops.}
@@ -270,7 +270,7 @@ within the body of an outer one ($L_1$).
 
 \begin{figure}[htp]
   \centering
-  \includegraphics{\curChapter/fig/dsl/sequence_dup/sequence_dup}
+  \inputtikz{\curChapter/fig/dsl/sequence_dup/sequence_dup}
   \caption
     [Sequence duplication for multi-threaded execution.]
     {Sequence duplication for multi-threaded execution.}
@@ -369,13 +369,13 @@ efficiency of the pipeline.
   \subfloat[][Description of a pipeline: tasks creation, tasks binding and
               sequences/stages definition (with the corresponding number of
               threads).]{
-    \includegraphics[scale=1]{\curChapter/fig/dsl/pipeline/pipeline_usr}
+    \inputtikz{\curChapter/fig/dsl/pipeline/pipeline_usr}
     \label{fig:sdr_dsl_pipeline_usr}}
   \\
   \subfloat[][Automatic parallelization of a pipeline description: sequence
               duplications, $1$ to $n$ and $n$ to $1$ adaptors creation and
               binding.]{
-    \includegraphics[width=0.985\linewidth]{\curChapter/fig/dsl/pipeline/pipeline_adp}
+    \resizebox{0.985\linewidth}{!}{\inputtikz{\curChapter/fig/dsl/pipeline/pipeline_adp}}
     \label{fig:sdr_dsl_pipeline_adp}}
   \caption{Example of a pipeline description and the associate transformation
     with adaptors.}
@@ -489,7 +489,7 @@ the main encountered problems and the adopted solutions.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/transmitter/transmitter}
+  \resizebox{1.0\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/transmitter/transmitter}}
   \caption
     [DVB-S2 transmitter software implementation.]
     {DVB-S2 transmitter software implementation.}
@@ -550,11 +550,11 @@ and the five remaining hardware threads have been dedicated to the stage 2.
 \begin{figure}[htp]
   \centering
   \subfloat[][Waiting phase and learning phase 1 \& 2.]{
-    \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_learning}
+    \resizebox{1.0\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/receiver/receiver_learning}}
     \label{fig:sdr_dvbs2_receiver_learning}}
   \\
   \subfloat[][Learning phase 3 \& transmission phase.]{
-    \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/receiver/receiver_transmission}
+    \resizebox{1.0\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/receiver/receiver_transmission}}
     \label{fig:sdr_dvbs2_receiver_transmission}}
   \caption
     [DVB-S2 receiver software implementation.]
@@ -623,7 +623,7 @@ $t^\text{Rx}_8$ second output socket is left unbound.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\linewidth]{\curChapter/fig/dvbs2/bfer/bfer}
+  \resizebox{1.0\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/bfer/bfer}}
   \caption
     [DVB-S2 BER and FER decoding performance.]
     {DVB-S2 BER/FER decoding performance (LDPC BP h-layered, min-sum, 10 ite.).}
@@ -817,9 +817,9 @@ did not try to reduce its overall occupancy.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_dat}\label{plot:sdr_dvbs2_pipeline_copy_dat}}
+  \subfloat[][Data copy (stage throughput is 40 Mb/s).]{\resizebox{0.485\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_dat}}\label{plot:sdr_dvbs2_pipeline_copy_dat}}
   \quad
-  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\includegraphics[width=0.485\linewidth]{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_ptr}\label{plot:sdr_dvbs2_pipeline_copy_ptr}}
+  \subfloat[][Pointer copy (stage throughput is 55 Mb/s).]{\resizebox{0.485\linewidth}{!}{\inputtikz{\curChapter/fig/dvbs2/pipeline_copy/pipeline_copy_ptr}}\label{plot:sdr_dvbs2_pipeline_copy_ptr}}
   \caption
     [Comparison of the two pipeline implementations in the receiver.]
     {Comparison of the two pipeline implementations in the receiver (MODCOD 2).}

@@ -83,9 +83,9 @@ fixed-point representation.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Throughput.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_thr}\label{plot:eval_ldpc_WiMAX_thr}}
+  \subfloat[][Throughput.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_thr}}\label{plot:eval_ldpc_WiMAX_thr}}
   \quad
-  \subfloat[][Latency.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_lat}\label{plot:eval_ldpc_WiMAX_lat}}
+  \subfloat[][Latency.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/ldpc/WiMAX_thr_lat/WiMAX_lat}}\label{plot:eval_ldpc_WiMAX_lat}}
   \caption
     [LDPC decoder throughput and latency depending on the number of cores (WiMAX).]
     {LDPC decoder throughput and latency depending on the number of cores.
@@ -114,9 +114,9 @@ preferable to use the wider possible SIMD instructions on the EPYC 7452 CPU.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Throughput.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_thr}\label{plot:eval_ldpc_DVB-S2_thr}}
+  \subfloat[][Throughput.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_thr}}\label{plot:eval_ldpc_DVB-S2_thr}}
   \quad
-  \subfloat[][Latency.]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_lat}\label{plot:eval_ldpc_DVB-S2_lat}}
+  \subfloat[][Latency.]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/ldpc/DVB-S2_thr_lat/DVB-S2_lat}}\label{plot:eval_ldpc_DVB-S2_lat}}
   \caption
     [LDPC decoder throughput and latency depending on the number of cores (DVB-S2).]
     {LDPC decoder throughput and latency depending on the number of cores.
@@ -372,9 +372,9 @@ the low power SDR systems because of its high power requirements.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Total (cluster + memory).]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total}\label{plot:eval_polar_sc_energy_implems_vs_total}}
+  \subfloat[][Total (cluster + memory).]{\resizebox{!}{7cm}{\inputtikz{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_total}}\label{plot:eval_polar_sc_energy_implems_vs_total}}
   \quad
-  \subfloat[][Memory only.]{\includegraphics[height=7cm]{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
+  \subfloat[][Memory only.]{\resizebox{!}{7cm}{\inputtikz{\curChapter/fig/polar/sc_energy_implems_vs/sc_energy_implems_vs_mem}}\label{plot:eval_polar_sc_energy_implems_vs_mem}}
   \caption
     [SC variation of the \emph{energy-per-bit} for different frame sizes and
     implementations.]
@@ -406,9 +406,9 @@ larger frame sizes.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][ARM\R Cortex-A7 (ODROID-XU+E)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a7}\label{plot:eval_polar_sc_energy_freq_a7}}
+  \subfloat[][ARM\R Cortex-A7 (ODROID-XU+E)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a7}}\label{plot:eval_polar_sc_energy_freq_a7}}
   \quad
-  \subfloat[][ARM\R Cortex-A15 (ODROID-XU+E)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a15}\label{plot:eval_polar_sc_energy_freq_a15}}
+  \subfloat[][ARM\R Cortex-A15 (ODROID-XU+E)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_energy_freq/sc_energy_freq_a15}}\label{plot:eval_polar_sc_energy_freq_a15}}
   \caption
     [SC variation of the \emph{energy-per-bit} depending on the cluster
     frequency.]
@@ -440,7 +440,7 @@ clock the CPU at a low frequency.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.70\textwidth]{\curChapter/fig/polar/sc_energy_rate/sc_energy_rate_N32768}
+  \resizebox{0.70\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_energy_rate/sc_energy_rate_N32768}}
   \caption
     [SC evolution of the \emph{energy-per-bit} depending on the code rate.]
     {Evolution of the \emph{energy-per-bit} ($E_b$) for $N = 32768$ depending on
@@ -462,7 +462,7 @@ available on the A15-O). The \little A7-O is more energy efficient than the
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[scale=1]{\curChapter/fig/polar/sc_colgate/sc_colgate}
+  \inputtikz{\curChapter/fig/polar/sc_colgate/sc_colgate}
   \caption
     [SC ranking of intra-/inter-frame SIMD approaches along 5 metrics.]
     {Ranking of the different approaches along
@@ -531,9 +531,9 @@ algorithm in the generator.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Without compression]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
+  \subfloat[][Without compression]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_wo_comp}}\label{plot:eval_polar_sc_gen_l1i_size_wo_comp}}
   \quad
-  \subfloat[][With compression]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
+  \subfloat[][With compression]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_l1i_size/sc_gen_l1i_size_w_comp}}\label{plot:eval_polar_sc_gen_l1i_size_w_comp}}
   \caption
     {Generated SC decoder binary sizes depending on the frame size ($R=1/2$).}
   \label{plot:eval_polar_sc_gen_l1i_size}
@@ -587,9 +587,9 @@ decoder. Even if we used a more recent CPU, the same set of instructions
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Intel\R Xeon\TM E3-1225 (AVX SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_x86}\label{plot:eval_polar_sc_gen_thr_intra_x86}}
+  \subfloat[][Intel\R Xeon\TM E3-1225 (AVX SIMD)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_x86}}\label{plot:eval_polar_sc_gen_thr_intra_x86}}
   \quad
-  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
+  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_thr_intra/sc_gen_thr_intra_arm}}\label{plot:eval_polar_sc_gen_thr_intra_arm}}
   \caption
     [SC performance comparison between two code rates (intra-frame
      vectorization).]
@@ -634,9 +634,9 @@ decoder. Even if we used a more recent CPU, the same set of instructions
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Intel\R Xeon\TM E3-1225 (SSE4.1 SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_x86}\label{plot:eval_polar_sc_gen_thr_inter_x86}}
+  \subfloat[][Intel\R Xeon\TM E3-1225 (SSE4.1 SIMD)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_x86}}\label{plot:eval_polar_sc_gen_thr_inter_x86}}
   \quad
-  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\includegraphics[width=0.485\textwidth]{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
+  \subfloat[][Nvidia\R Jetson TK1 A15 (NEON SIMD)]{\resizebox{0.485\textwidth}{!}{\inputtikz{\curChapter/fig/polar/sc_gen_thr_inter/sc_gen_thr_inter_arm}}\label{plot:eval_polar_sc_gen_thr_inter_arm}}
   \caption
     [SC performance comparison between several code rates (inter-frame
      vectorization).]
@@ -868,7 +868,7 @@ with the \verb|-Ofast -funroll-loops -msse4.1/-mavx2| options.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.90\textwidth]{\curChapter/fig/turbo/thr/thr}
+  \resizebox{0.90\textwidth}{!}{\inputtikz{\curChapter/fig/turbo/thr/thr}}
   \caption
     [Information throughput of the turbo decoder depending on $K$.]
     {Information throughput depending on $K$ for various number of cores and
@@ -894,7 +894,7 @@ target, the throughput exceeds 1 Gbps for all codes with $K<4096$.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=0.7\textwidth]{\curChapter/fig/turbo/energy/energy}
+  \resizebox{0.7\textwidth}{!}{\inputtikz{\curChapter/fig/turbo/energy/energy}}
   \caption
     [Turbo decoder \emph{energy-per-bit} depending on the number of cores.]
     {\emph{Energy-per-bit} ($E_d$) depending on the number of cores and the
@@ -1411,7 +1411,7 @@ results are scalable up to the number of processing units dedicated to them.
 
 \begin{figure}[htp]
   \centering
-  \includegraphics[width=1.0\textwidth]{\curChapter/fig/simu/chain/chain}
+  \resizebox{1.0\textwidth}{!}{\inputtikz{\curChapter/fig/simu/chain/chain}}
   \caption
     [\AFFECT simulator chain.]
     {\AFFECT simulator chain.}
@@ -1566,9 +1566,9 @@ multi-core performance.
 
 \begin{figure}[htp]
   \centering
-  \subfloat[][Simulator speedups.]{\includegraphics[width=1.00\textwidth]{\curChapter/fig/simu/speedup/speedup}\label{plot:eval_simu_speedup}}
+  \subfloat[][Simulator speedups.]{\resizebox{1.0\textwidth}{!}{\inputtikz{\curChapter/fig/simu/speedup/speedup}}\label{plot:eval_simu_speedup}}
   \\
-  \subfloat[][Simulator throughputs.]{\includegraphics[width=0.70\textwidth]{\curChapter/fig/simu/throughput/throughput}\label{plot:eval_simu_throughput}}
+  \subfloat[][Simulator throughputs.]{\resizebox{0.7\textwidth}{!}{\inputtikz{\curChapter/fig/simu/throughput/throughput}}\label{plot:eval_simu_throughput}}
   \caption
     [\AFFECT simulation results of a (2048,1723) Polar code, FA-SSCL decoder
      $L=32$.]

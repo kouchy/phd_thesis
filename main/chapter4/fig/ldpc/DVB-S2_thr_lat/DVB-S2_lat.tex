@@ -1,4 +1,5 @@
-\documentclass{standalone}
+\providecommand{\datapath}{.}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -11,7 +12,7 @@
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}
@@ -29,11 +30,11 @@
                  % tick label style={font=\large},
                  grid style={dashed, gray!30},
                  legend pos=south east, legend columns=1]
-        \addplot[mark=square*,   Paired-1,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {./dat/LEGACY_N16200_K14400_xeon_platinum_8168_SSE.txt};     \label{plot:line1}
-        \addplot[mark=*,         Paired-3,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {./dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX.txt};     \label{plot:line2}
-        \addplot[mark=pentagon*, Paired-5,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {./dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX-512.txt}; \label{plot:line3}
-        \addplot[mark=square,    Paired-1,  semithick, dashed, mark options={solid}] table [x index=0, y index=2] {./dat/LEGACY_N16200_K14400_epyc_7452_SSE.txt};              \label{plot:line4}
-        \addplot[mark=o,         Paired-3,  semithick, dashed, mark options={solid}] table [x index=0, y index=2] {./dat/LEGACY_N16200_K14400_epyc_7452_AVX.txt};              \label{plot:line5}
+        \addplot[mark=square*,   Paired-1,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {\datapath/dat/LEGACY_N16200_K14400_xeon_platinum_8168_SSE.txt};     \label{plot:line1}
+        \addplot[mark=*,         Paired-3,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {\datapath/dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX.txt};     \label{plot:line2}
+        \addplot[mark=pentagon*, Paired-5,  semithick, solid,  mark options={solid}] table [x index=0, y index=2] {\datapath/dat/LEGACY_N16200_K14400_xeon_platinum_8168_AVX-512.txt}; \label{plot:line3}
+        \addplot[mark=square,    Paired-1,  semithick, dashed, mark options={solid}] table [x index=0, y index=2] {\datapath/dat/LEGACY_N16200_K14400_epyc_7452_SSE.txt};              \label{plot:line4}
+        \addplot[mark=o,         Paired-3,  semithick, dashed, mark options={solid}] table [x index=0, y index=2] {\datapath/dat/LEGACY_N16200_K14400_epyc_7452_AVX.txt};              \label{plot:line5}
     \end{axis}
   \end{tikzpicture}
 \end{document}

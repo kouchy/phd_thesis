@@ -1,4 +1,5 @@
-\documentclass{standalone}
+\providecommand{\datapath}{.}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -11,7 +12,7 @@
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}
@@ -28,10 +29,10 @@
                  ytick={1,0.1,0.01,0.001,0.0001,0.00001,0.000001, 0.0000001, 0.00000001, 0.000000001},
                  %tick align=outside, tickpos=left,
                  legend pos=south west, legend columns=1]
-        \addplot[mark=o,      Dark2-7,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line1}
-        \addplot[mark=o,      Dark2-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line2}
-        \addplot[mark=square, Dark2-8,    semithick                              ] table [x=Eb/N0, y=BER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line3}
-        \addplot[mark=square, Dark2-8!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {./dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line4}
+        \addplot[mark=o,      Dark2-7,    semithick                              ] table [x=Eb/N0, y=BER] {\datapath/dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line1}
+        \addplot[mark=o,      Dark2-7!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/RSC_N262_K128_BCJR_p32.txt};   \label{plot:line2}
+        \addplot[mark=square, Dark2-8,    semithick                              ] table [x=Eb/N0, y=BER] {\datapath/dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line3}
+        \addplot[mark=square, Dark2-8!90, semithick, dashed, mark options={solid}] table [x=Eb/N0, y=FER] {\datapath/dat/RSC_N2054_K1024_BCJR_p32.txt}; \label{plot:line4}
         % \coordinate (legend) at (axis description cs:0.655,0.03);
         \coordinate (legend) at (axis description cs:0.47,0.03);
     \end{axis}

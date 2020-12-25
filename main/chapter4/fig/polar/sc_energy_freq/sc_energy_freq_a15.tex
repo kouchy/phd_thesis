@@ -1,4 +1,5 @@
-\documentclass{standalone}
+\providecommand{\datapath}{.}
+\documentclass[tikz]{standalone}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -11,7 +12,7 @@
 \usepgfplotslibrary{groupplots}
 \usetikzlibrary{matrix, positioning, patterns}
 
-\input{colors}
+\input{./settings/colors}
 
 \begin{document}
   \begin{tikzpicture}[every axis/.style={
@@ -25,13 +26,13 @@
                       x tick label style={rotate=-0}, xticklabels={800, 900, 1000, 1100}}]
 
     \begin{axis}[bar shift=-10pt, legend style={at={(0.39,0.95)}, anchor=north}]
-      \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west lines}] table [x index=0, y expr=\thisrowno{1}              ] {dat/A15_800MHz_1400MHz_R05_N4096_intra_bis.dat}; \label{plot:line1}
-      \addplot+[draw=Paired-1, fill=Paired-1!20, postaction={pattern color = black!80!Paired-1!70, pattern=crosshatch dots} ] table [x index=0, y expr=\thisrowno{2}-\thisrowno{1}] {dat/A15_800MHz_1400MHz_R05_N4096_intra_bis.dat}; \label{plot:line2}
+      \addplot+[draw=Paired-1, fill=Paired-1!40, postaction={pattern color = black!80!Paired-1!70, pattern=north west lines}] table [x index=0, y expr=\thisrowno{1}              ] {\datapath/dat/A15_800MHz_1400MHz_R05_N4096_intra_bis.dat}; \label{plot:line1}
+      \addplot+[draw=Paired-1, fill=Paired-1!20, postaction={pattern color = black!80!Paired-1!70, pattern=crosshatch dots} ] table [x index=0, y expr=\thisrowno{2}-\thisrowno{1}] {\datapath/dat/A15_800MHz_1400MHz_R05_N4096_intra_bis.dat}; \label{plot:line2}
     \end{axis}
 
     \begin{axis}[bar shift=+10pt, hide axis]
-      \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=north east lines}] table [x index=0, y expr=\thisrowno{1}              ] {dat/A15_800MHz_1400MHz_R05_N4096_inter_bis.dat}; \label{plot:line3}
-      \addplot+[draw=Paired-5, fill=Paired-5!20                                                                             ] table [x index=0, y expr=\thisrowno{2}-\thisrowno{1}] {dat/A15_800MHz_1400MHz_R05_N4096_inter_bis.dat}; \label{plot:line4}
+      \addplot+[draw=Paired-5, fill=Paired-5!40, postaction={pattern color = black!80!Paired-5!70, pattern=north east lines}] table [x index=0, y expr=\thisrowno{1}              ] {\datapath/dat/A15_800MHz_1400MHz_R05_N4096_inter_bis.dat}; \label{plot:line3}
+      \addplot+[draw=Paired-5, fill=Paired-5!20                                                                             ] table [x index=0, y expr=\thisrowno{2}-\thisrowno{1}] {\datapath/dat/A15_800MHz_1400MHz_R05_N4096_inter_bis.dat}; \label{plot:line4}
     \end{axis}
 
     % \matrix [draw,
