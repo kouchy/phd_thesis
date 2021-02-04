@@ -27,10 +27,10 @@
                  % tick label style={font=\large},
                  grid style={dashed, gray!30},
                  legend pos=south east, legend columns=1]
-        \addplot[mark=square, Paired-1,    semithick                              ] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:line1}
+        \addplot[mark=square, Paired-1,    semithick                                   ] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_aff3ct_r5_6.dat}; \label{plot:line1}
         \addplot[mark=square, Paired-1!70, semithick, dashed, mark options={solid}     ] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_aff3ct_r1_2.dat}; \label{plot:line3}
-        \addplot[mark=x,      Paired-3,    semithick,         only marks, mark size=4.0] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_sarkis_r5_6.dat}; \label{plot:line2}
-        \addplot[mark=star,   Paired-3!70, semithick,         only marks, mark size=4.0] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_sarkis_r1_2.dat}; \label{plot:line4}
+        \addplot[mark=x,      Paired-3,    semithick,         only marks, mark size=6.0] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_sarkis_r5_6.dat}; \label{plot:line2}
+        \addplot[mark=star,   Paired-3!70, semithick,         only marks, mark size=6.0] table [x index=0, y index=13] {./dat/E31225_samples_intra_32b_sarkis_r1_2.dat}; \label{plot:line4}
     \end{axis}
 
     \matrix [draw,

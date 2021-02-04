@@ -43,7 +43,8 @@ fast: settings/colors.tex \
       my_thesis.tex
 	rubber --unsafe -d my_thesis.tex
 
-figs: titlepage \
+figs: coverpage \
+      slice \
       backcover \
       chapter1_fig \
       chapter2_fig \
@@ -51,8 +52,11 @@ figs: titlepage \
       chapter4_fig \
       chapter5_fig
 
-titlepage: head/titlepage.tex
-	cd head                                                && rubber -d titlepage.tex
+coverpage: head/coverpage.tex
+	cd head                                                && rubber -d coverpage.tex
+
+slice: head/slice.tex
+	cd head                                                && rubber -d slice.tex
 
 backcover: tail/backcover.tex
 	cd tail                                                && rubber -d backcover.tex
@@ -481,8 +485,9 @@ clean4all:
 
 clean: clean4all
 	cd ./                                                  && rubber --clean my_thesis
-	cd head                                                && rubber --clean titlepage
-	cd taim                                                && rubber --clean backcover
+	cd head                                                && rubber --clean coverpage
+	cd head                                                && rubber --clean slice
+	cd tail                                                && rubber --clean backcover
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean com_chain
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean com_chain
 	cd main/chapter1/fig/simu/in_out                       && rubber --clean in_out
@@ -576,7 +581,8 @@ clean: clean4all
 
 mrproper: clean4all
 	cd ./                                                  && rubber --clean -d my_thesis.tex
-	cd head                                                && rubber --clean -d titlepage.tex
+	cd head                                                && rubber --clean -d coverpage.tex
+	cd head                                                && rubber --clean -d slice.tex
 	cd tail                                                && rubber --clean -d backcover.tex
 	cd main/chapter1/fig/intro/com_chain                   && rubber --clean -d com_chain.tex
 	cd main/chapter1/fig/simu/com_chain                    && rubber --clean -d com_chain.tex
