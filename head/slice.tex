@@ -1,0 +1,20 @@
+\documentclass[landscape,a4paper]{article}
+\usepackage[top=0cm, bottom=0cm, left=0.0cm, right=0.0cm]{geometry}
+\usepackage{tikz}
+\usepackage{eulervm}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usetikzlibrary{positioning}
+\usepackage{color}
+\definecolor{bleuUni}{RGB}{0, 157, 224}
+\begin{document}
+  \noindent
+  \begin{tikzpicture}[overlay,remember picture]
+    \node[opacity=1, xshift=-1.7cm] (title) at (current page.center) {{\large \textbf{Méthodes d'optimisation et de parallélisation pour la radio logicielle}}};
+    \node[left = 1.0cm of title, yshift=0.03cm] (name) {{\large \textbf{Adrien} \textsc{\textbf{Cassagne}}}};
+    \node[right = 1.0cm of title, yshift=0.03cm, fill=bleuUni, minimum height=3.0cm, align=center] (ub) {{\large \textcolor{white}{\textbf{Université de Bordeaux}}}};
+    % \node[right = 1.0cm of title, yshift=0.03cm, minimum height=3.0cm, align=center] (ub) {{\large \textbf{Université de Bordeaux}}};
+    \node[right = 1.0cm of ub, yshift=-0.0cm] (year) {{\large \textbf{2020}}};
+  \end{tikzpicture}
+\end{document}
