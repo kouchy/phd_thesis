@@ -50,9 +50,18 @@
   \renewcommand{\headrulewidth}{0.4pt}
 %  \renewcommand{\headrule}{\hbox to\headwidth{%
 %    \color{bleuUni}\leaders\hrule height \headrulewidth\hfill}}
+
+\ifthenelse{\boolean{twosidedoc}}
+{
+\renewcommand{\headrule}{{\color{grayBleuUni}%
+\hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
+}
+{
 \renewcommand{\headrule}{{\color{bleuUni}%
 \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
-  \renewcommand{\footrulewidth}{0.0pt}
+}
+
+\renewcommand{\footrulewidth}{0.0pt}
   \fancyhead[OR]{\bfseries \nouppercase{\rightmark}}
   \fancyhead[EL]{\bfseries \nouppercase{\leftmark}}
   \ifthenelse{\boolean{twosidedoc}}
