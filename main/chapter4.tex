@@ -897,13 +897,13 @@ target, the throughput exceeds 1 Gbps for all codes with $K<4096$.
   \resizebox{0.7\textwidth}{!}{\inputtikz{\curChapter/fig/turbo/energy/energy}}
   \caption
     [Turbo decoder \emph{energy-per-bit} depending on the number of cores.]
-    {\emph{Energy-per-bit} ($E_d$) depending on the number of cores and the
+    {\emph{Energy-per-bit} ($E_b$) depending on the number of cores and the
     instruction types. 6 iterations, 8-bit fixed-point.}
   \label{plot:eval_turbo_energy}
 \end{figure}
 
 Figure~\ref{plot:eval_turbo_energy} shows the energy consumed by the processor
-to decode one information bit ($E_d$) of the codes using SSE and AVX
+to decode one information bit ($E_b$) of the codes using SSE and AVX
 instructions on the i7-4960HQ CPU target. The throughput and power measurements
 were conducted on i7-4960HQ with the \emph{Intel\R Power Gadget} tool. For small
 codewords ($K=1024$) it is more energy efficient to resort to AVX. But this is

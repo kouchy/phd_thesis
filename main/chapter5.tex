@@ -254,13 +254,13 @@ evaluation returns \emph{true} (\emph{for-loop} behavior).
   \caption
     [Nested loops.]
     {Nested loops.}
-  \label{fig:sdr_dsl_sequence}
+  \label{fig:sdr_dsl_nested_loop}
 \end{figure}
 
 The overall system also supports nested loops. The idea is to regroup the tasks
 in sub-sequences: one before the loop and two after the loop. This is
 implemented as a binary tree. Each time a loop is encountered, two new paths are
-created. Figure~\ref{fig:sdr_dsl_sequence} shows an example with two loops
+created. Figure~\ref{fig:sdr_dsl_nested_loop} shows an example with two loops
 ($L_1$ and $L_2$). Five sub-sequences of tasks are created ($SS_x$): one before
 $L_1$ ($SS_1$), two after $L_1$ ($SS_2$ and $SS_5$) and two after $L_2$ ($SS_3$
 and $SS_4$). In this example $L_2$ is a nested loop. Indeed, it is an inner loop
