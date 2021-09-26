@@ -49,3 +49,4 @@ sample-*.pdf
 *.lol
 *.bcf
 doc
+tikz_cache

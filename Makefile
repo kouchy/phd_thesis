@@ -46,6 +46,7 @@ backcover_vclear: tail/backcover.vclear
 # to remove
 DIRS_BUILD=$(shell find ./ -type d -name 'build')
 DIRS_MINTED=$(shell find ./ -type d -name '_minted*')
+DIRS_TIKZC=$(shell find ./ -type d -name 'tikz_cache')
 FILES_MTC=$(shell find ./ -type f -name '*.mtc*')
 FILES_BCF=$(shell find ./ -type f -name '*.bcf')
 FILES_LOL=$(shell find ./ -type f -name '*.lol')
@@ -53,7 +54,8 @@ FILES_XML=$(shell find ./ -type f -name '*.run.xml')
 FILES_FLS=$(shell find ./ -type f -name '*.fls')
 FILES_FDB=$(shell find ./ -type f -name '*.fdb_latexmk')
 FILES_AUX=$(shell find ./ -type f -name '*.aux')
+FILES_LOCK=$(shell find ./ -type f -name '*.auxlock')
 
 clean4all:
-	rm -rf $(DIRS_BUILD) $(DIRS_MINTED)
-	rm -f $(FILES_MTC) $(FILES_BCF) $(FILES_LOL) $(FILES_XML) $(FILES_FLS) $(FILES_FDB) $(FILES_AUX)
+	rm -rf $(DIRS_BUILD) $(DIRS_MINTED) $(DIRS_TIKZC)
+	rm -f $(FILES_MTC) $(FILES_BCF) $(FILES_LOL) $(FILES_XML) $(FILES_FLS) $(FILES_FDB) $(FILES_AUX) $(FILES_LOCK)
