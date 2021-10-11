@@ -12,10 +12,11 @@ FIGS_PDF=$(patsubst %.tex, %.pdf, $(FIGS_TEX))
 FIGS_CLR=$(patsubst %.pdf, %.clear, $(FIGS_PDF))
 FIGS_VCLR=$(patsubst %.pdf, %.vclear, $(FIGS_PDF))
 
-all: coverpage backcover figs
+all: coverpage slice backcover figs
 	rubber --unsafe -d $(DOC_NAME).tex
 
 coverpage: head/coverpage.pdf
+slice: head/slice.pdf
 backcover: tail/backcover.pdf
 figs: $(FIGS_PDF)
 
@@ -25,16 +26,18 @@ open:
 %.pdf: %.tex
 	cd $(<D) && rubber --unsafe -d $(<F)
 
-clean: $(FIGS_CLR) coverpage_clear backcover_clear document_clear clean4all
+clean: $(FIGS_CLR) coverpage_clear slice_clear backcover_clear document_clear clean4all
 
 document_clear: $(DOC_NAME).clear
 coverpage_clear: head/coverpage.clear
+slice_clear: head/slice.clear
 backcover_clear: tail/backcover.clear
 
-mrproper: $(FIGS_VCLR) coverpage_vclear backcover_vclear document_vclear clean4all
+mrproper: $(FIGS_VCLR) coverpage_vclear slice_vclear backcover_vclear document_vclear clean4all
 
 document_vclear: $(DOC_NAME).vclear
 coverpage_vclear: head/coverpage.vclear
+slice_vclear: head/slice.vclear
 backcover_vclear: tail/backcover.vclear
 
 %.clear: %.tex
