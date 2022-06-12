@@ -257,19 +257,22 @@ research context.
   \centering
   \caption{Comparison of various SIMD wrappers: General Information and Features.}
   \label{tab:opt_mipp_comparison_general}
-  \begin{tabular}{r r r r | c c c}
-  \multicolumn{4}{c|}{\multirow{2}{*}{\textbf{General Information}}}      & \multicolumn{3}{c}{\multirow{2}{*}{\textbf{Features}}}\\
-                &                     &                &                  &                &                    &                 \\ \hline
-  \textbf{Name} & \textbf{Ref.}       & \textbf{Start} & \textbf{License} & \textbf{Math}  & \textbf{\Cxx}      & \textbf{Test}   \\
-                &                     & \textbf{Year}  &                  & \textbf{Func.} & \textbf{Technique} & \textbf{Suite}  \\ \hline \hline
-  \MIPP         & \cite{Cassagne2018} & 2013           & MIT              & \cmark         & Op. overload.      & \cmark          \\
-  \VCL          & \cite{Fog}          & 2012           & GNU GPL          & \cmark         & Op. overload.      & \textbf{N/A}    \\
-  \simdpp       & \cite{Kanapickas}   & 2013           & Boost Software   & \xmark         & Expr. templ.       & \cmark          \\
-  \TSIMD        & \cite{Moller2016}   & 2016           & Open-source      & \xmark         & Op. overload.      & \textbf{N/A}    \\
-  \Vc           & \cite{Kretz2012}    & 2012           & BSD-3-Clause     & \cmark         & Op. overload.      & \cmark          \\
-  \xsimd        & \cite{Mabille}      & 2014           & BSD-3-Clause     & \cmark         & Op. overload.      & \textbf{N/A}    \\
-  \BoostSIMD    & \cite{Esterie2012}  & 2012           & Boost Software   & \cmark         & Expr. templ.       & \cmark          \\
-  \bSIMD        & \cite{Esterie2012a} & 2017           & Non-free         & \cmark         & Expr. templ.       & \cmark          \\
+  \begin{tabular}{r r r r c c c}
+  \toprule
+  \multicolumn{4}{c}{\multirow{1}{*}{General Information}} & \multicolumn{3}{c}{\multirow{1}{*}{Features}} \\
+  \cmidrule(lr){1-4} \cmidrule(lr){5-7}
+  & & \multirowcell{2}{Start\\Year} & & \multirowcell{2}{Math\\Func.} & \multirowcell{2}{\Cxx\\Technique} & \multirowcell{2}{Test\\Suite} \\
+  Name & Ref. & & License & & & \\
+  \midrule   % Ref.                  Year   License          Math     C++ techn.      Test
+  \MIPP      & \cite{Cassagne2018} & 2013 & MIT            & \cmark & Op. overload. & \cmark       \\
+  \VCL       & \cite{Fog}          & 2012 & GNU GPL        & \cmark & Op. overload. & \textbf{N/A} \\
+  \simdpp    & \cite{Kanapickas}   & 2013 & Boost Software & \xmark & Expr. templ.  & \cmark       \\
+  \TSIMD     & \cite{Moller2016}   & 2016 & Open-source    & \xmark & Op. overload. & \textbf{N/A} \\
+  \Vc        & \cite{Kretz2012}    & 2012 & BSD-3-Clause   & \cmark & Op. overload. & \cmark       \\
+  \xsimd     & \cite{Mabille}      & 2014 & BSD-3-Clause   & \cmark & Op. overload. & \textbf{N/A} \\
+  \BoostSIMD & \cite{Esterie2012}  & 2012 & Boost Software & \cmark & Expr. templ.  & \cmark       \\
+  \bSIMD     & \cite{Esterie2012a} & 2017 & Non-free       & \cmark & Expr. templ.  & \cmark       \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -277,19 +280,23 @@ research context.
   \centering
   \caption{Comparison of various SIMD wrappers: Supported ISA and Data Type.}
   \label{tab:opt_mipp_comparison_isa_data}
-  \begin{tabular}{r || c c c c c || c c | c c c c}
-  {\multirow{4}{*}{\textbf{Name}}} & \multicolumn{5}{c||}{\multirow{2}{*}{\textbf{Instruction Set}}}                 & \multicolumn{6}{c}{\multirow{2}{*}{\textbf{Data Type}}}                    \\
-                                   & \multicolumn{5}{c||}{}                                                          & \multicolumn{6}{c}{}                                                       \\ \cline{2-12}
-                                   & \textbf{SSE} & \textbf{AVX} & \textbf{AVX512} & \textbf{NEON} & \textbf{AltiV.} & \multicolumn{2}{c|}{\textbf{Float}} & \multicolumn{4}{c}{\textbf{Integer}} \\
-                                   & 128-bit      & 256-bit      & 512-bit         & 128-bit       & 128-bit         & 64      & 32                        & 64     & 32     & 16     & 8         \\ \hline \hline
-  \MIPP                            & \cmark       & \cmark       & \cmark          & \cmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
-  \VCL                             & \cmark       & \cmark       & \cmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
-  \simdpp                          & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
-  \TSIMD                           & \cmark       & \cmark       & \xmark          & \cmark        & \xmark          & \xmark  & \cmark                    & \xmark & \cmark & \cmark & \cmark    \\
-  \Vc                              & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \xmark    \\
-  \xsimd                           & \cmark       & \cmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \xmark & \xmark    \\
-  \BoostSIMD                       & \cmark       & \xmark       & \xmark          & \xmark        & \xmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
-  \bSIMD                           & \cmark       & \cmark       & \cmark          & \cmark        & \cmark          & \cmark  & \cmark                    & \cmark & \cmark & \cmark & \cmark    \\
+  \begin{tabular}{r c c c c c c c c c c c}
+  \toprule
+  & \multicolumn{5}{c}{\multirow{1}{*}{Instruction Set}} & \multicolumn{6}{c}{\multirow{1}{*}{Data Type}} \\
+  \cmidrule(lr){2-6} \cmidrule(lr){7-12}
+  & \multirowcell{2}{SSE\\128-bit} & \multirowcell{2}{AVX\\256-bit} & \multirowcell{2}{AVX512\\512-bit} & \multirowcell{2}{NEON\\128-bit} & \multirowcell{2}{AltiV.\\128-bit} & \multicolumn{2}{c}{Float} & \multicolumn{4}{c}{Integer} \\
+  \cmidrule(lr){7-8} \cmidrule(lr){9-12}
+  Name & & & & & & 64 & 32 & 64 & 32 & 16 & 8 \\
+  \midrule   %    SSE      AVX   AVX512     NEON   AltiV.      f64      f32      s64      s32      s16       s8
+  \MIPP      & \cmark & \cmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+  \VCL       & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+  \simdpp    & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+  \TSIMD     & \cmark & \cmark & \xmark & \cmark & \xmark & \xmark & \cmark & \xmark & \cmark & \cmark & \cmark \\
+  \Vc        & \cmark & \cmark & \xmark & \xmark & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark \\
+  \xsimd     & \cmark & \cmark & \xmark & \xmark & \xmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark \\
+  \BoostSIMD & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+  \bSIMD     & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -346,14 +353,16 @@ teams of these wrappers.
     {Specifications of the target processors.}
   \label{tab:opt_mipp_specs}
   \begin{tabular}{c | c c c c}
-  \textbf{Name}                   & \textbf{Exynos5422} & \textbf{RK3399} & \textbf{Core\TM i5-5300U}  & \textbf{Xeon Phi\TM 7230} \\ \hline \hline
-  \textbf{Year}                   & 2014                & 2016            & 2015                       & 2016                      \\
-  \textbf{Vendor}                 & Samsung\R           & Rockchip\R      & Intel\R                    & Intel\R                   \\
-  \multirow{2}{*}{\textbf{Arch.}} & ARMv7               & ARMv8           & \multirow{2}{*}{Broadwell} & Knights                   \\
-                                  & Cortex-A15          & Cortex-A72      &                            & Landing                   \\
-  \textbf{Cores/Freq.}            & 4/2.0 GHz           & 2/1.6 GHz       & 2/2.3 GHz                  & 64/1.3 GHz                \\
-  \textbf{LLC}                    & 2 MB L2             & 1 MB L2         & 3 MB L3                    & 32MB L2                   \\
-  \textbf{TDP}                    & $\sim$4 W           & $\sim$2 W       & 15 W                       & 215 W                     \\
+  \toprule
+  Name        & Exynos5422     & RK3399         & Core\TM i5-5300U & Xeon Phi\TM 7230 \\
+  \midrule
+  Year        & 2014           & 2016           & 2015             & 2016             \\
+  Vendor      & Samsung\R      & Rockchip\R     & Intel\R          & Intel\R          \\
+  Arch.       & ARM Cortex-A15 & ARM Cortex-A72 & Broadwell        & Knights Landing  \\
+  Cores/Freq. & 4/2.0 GHz      & 2/1.6 GHz      & 2/2.3 GHz        & 64/1.3 GHz       \\
+  LLC         & 2 MB L2        & 1 MB L2        & 3 MB L3          & 32MB L2          \\
+  TDP         & $\sim$4 W      & $\sim$2 W      & 15 W             & 215 W            \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -635,10 +644,13 @@ proposed implementation is based on the intra-frame SIMD strategy.
   \caption{AWGN channel throughputs and speedups of the \MIPP implementation.}
   \label{lst:opt_simu_awgn_speedup}
   \begin{tabular}{r | r  r r r}
-                             & \textbf{NEON} & \textbf{SSE} & \textbf{AVX} & \textbf{AVX-512} \\ \hline \hline
-  \textbf{SIMD size}         & 4             & 4            & 8            & 16               \\ %\hline
-  \textbf{Throughput} (Mb/s) & 40.9          & 107.4        & 178.3        & 95.1             \\ %\hline
-  \textbf{Speedup}           & $\times 3.1$  & $\times 2.3$ & $\times 4.2$ & $\times 14.4$    \\
+  \toprule
+                    & NEON         & SSE          & AVX          & AVX-512       \\
+  \midrule
+  SIMD size         & 4            & 4            & 8            & 16            \\
+  Throughput (Mb/s) & 40.9         & 107.4        & 178.3        & 95.1          \\
+  Speedup           & $\times 3.1$ & $\times 2.3$ & $\times 4.2$ & $\times 14.4$ \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -687,10 +699,13 @@ quantized number, including $v$ bits for the fractional part.
   \caption{Quantizer throughputs and speedups of the \MIPP implementation.}
   \label{tab:opt_simu_quantizer_speedup}
   \begin{tabular}{r | r  r r}
-                             & \textbf{NEON} & \textbf{SSE}  & \textbf{AVX}  \\ \hline \hline
-  \textbf{SIMD size}         & 4-16          & 4-16          & 8-32          \\
-  \textbf{Throughput} (Mb/s) & 300.6         & 3541.4        & 5628.3        \\
-  \textbf{Speedup}           & $\times 4.6$  & $\times 15.6$ & $\times 25.8$ \\
+  \toprule
+                    & NEON         & SSE           & AVX           \\
+  \midrule
+  SIMD size         & 4-16         & 4-16          & 8-32          \\
+  Throughput (Mb/s) & 300.6        & 3541.4        & 5628.3        \\
+  Speedup           & $\times 4.6$ & $\times 15.6$ & $\times 25.8$ \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -1396,14 +1411,15 @@ this was not beneficial in any use case.
   \caption{Polar decoders memory complexity.}
   \label{tab:opt_polar_scl_memory_footprint}
   \begin{tabular}{r r}
-    \textbf{Algorithms}        & \textbf{Memory Footprint} \\
-    \hline
-    \hline
-    (CA-)SSCL$_{\texttt{cpy}}$ & $\mathcal{O}((2L + 1)NQ)$ \\
-    (CA-)SSCL$_{\texttt{ptr}}$ & $\mathcal{O}((3L + 1)NQ)$ \\
-    A-SSCL$_{\texttt{cpy}}$    & $\mathcal{O}((2L + 3)NQ)$ \\
-    A-SSCL$_{\texttt{ptr}}$    & $\mathcal{O}((3L + 3)NQ)$ \\
- \end{tabular}
+  \toprule
+  Algorithms                 & Memory Footprint          \\
+  \midrule
+  (CA-)SSCL$_{\texttt{cpy}}$ & $\mathcal{O}((2L + 1)NQ)$ \\
+  (CA-)SSCL$_{\texttt{ptr}}$ & $\mathcal{O}((3L + 1)NQ)$ \\
+  A-SSCL$_{\texttt{cpy}}$    & $\mathcal{O}((2L + 3)NQ)$ \\
+  A-SSCL$_{\texttt{ptr}}$    & $\mathcal{O}((3L + 3)NQ)$ \\
+  \bottomrule
+  \end{tabular}
 \end{table}
 
 The exact memory footprint of the SSCL decoders is hard to estimate as there are
@@ -1425,7 +1441,7 @@ In this section we proposed flexible software implementations of the SC and the
 SCL decoding algorithms. The pruned versions of these decoders (SSC and SSCL)
 are the key of efficiency. The generated (or unrolled) strategy has also been
 experimented and improved for the SSC decoders. These specialized decoders trade
-a part of the flexibility for higher throughput and lower latency performance.
+a part of the flexibility for higher throughput and lower latency.
 
 \section{Turbo Decoders}
 

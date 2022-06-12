@@ -147,33 +147,35 @@ the same. In other terms, the \AFFECT simulator is deterministic.
   \label{tab:aff3ct_fec_libraries_comparison}
   {\resizebox{\linewidth}{!}{
   \begin{tabular}{r   r  r  r  r  r | C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth}  C{\simcolwidth} }
-  \multirow{4}{*}{\textbf{Name}} & \multirow{4}{*}{\textbf{Ref.}} &                  &                &                & \multirow{4}{*}{\textbf{License}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
-                                 &                                & \textbf{Contri-} & \textbf{Code}  & \textbf{Start} &                                   &        &        &        &        &        &        &        &        &        &         \\
-                                 &                                & \textbf{butors}  & \textbf{Lines} & \textbf{Year}  &                                   &        &        &        &        &        &        &        &        &        &         \\
-                                 &                                &                  &                &                &                                   &        &        &        &        &        &        &        &        &        &         \\ \hline\hline
-                                                                                                                                                           % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
-  {\AFFECT}                      & \cite{Cassagne2019a}           &               11 &            76k & 2016           & MIT                               & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
-  {aicodix GmbH}                 & \cite{Aicodix}                 &                1 &             7k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {eccpage}                      & \cite{ECCpage}                 &               20 &              - & 1989           & -                                 & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark  \\
-  {EZPWD}                        & \cite{EZPWDRS}                 &                2 &             6k & 2014           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {FastECC}                      & \cite{FastECC}                 &                2 &             1k & 2015           & Apache 2.0                        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {FEC-AL}                       & \cite{FEC-AL}                  &                1 &             3k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
-  {FECpp}                        & \cite{FECpp}                   &                1 &             2k & 2009           & -                                 & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark  \\
-  {GNURadio}                     & \cite{GNURadio}                &              192 &           270k & 2006           & GPLv3                             & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \cmark & \xmark  \\
-  {Inan}                         & \cite{Inan-LDPC}               &                2 &            13k & 2018           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {IT++}                         & \cite{ITpp}                    &               20 &           109k & 2005           & GPLv3                             & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {Le Gal}                       & \cite{LeGal-LDPC}              &                1 &            83k & 2015           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Leopard}                      & \cite{Leopard}                 &                4 &             5k & 2017           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {libcorrect}                   & \cite{Libcorrect}              &                6 &             5k & 2016           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {Neal}                         & \cite{Neal-LDPC}               &                1 &             5k & 2006           & Copyright                         & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {OpenAir}                      & \cite{OpenAir}                 &              148 &           740k & 2013           & OAI Public                        & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {OpenFEC}                      & \cite{OpenFEC}                 &                8 &            55k & 2009           & CeCCIL-C                          & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Schifra}                      & \cite{Schifra}                 &                1 &             7k & 2010           & GPLv3                             & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Siamese}                      & \cite{Siamese}                 &                1 &            11k & 2018           & BSD                               & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
-  {Tavildar (Polar)}             & \cite{Tavildar-Polar}          &                1 &             2k & 2016           & -                                 & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {Tavildar (LDPC)}              & \cite{Tavildar-LDPC}           &                1 &             1k & 2016           & -                                 & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
-  {the-art-of-ecc}               & \cite{The-art-of-ecc}          &                1 &              - & 2006           & Copyright                         & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
-  {TurboFEC}                     & \cite{TurboFEC}                &                2 &             4k & 2015           & GPLv3                             & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  \toprule
+       &      &         &       &       &         & \multirow{4}{*}{\rotatebox[origin=c]{90}{Polar}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{LDPC}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Turbo P.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{BCH}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RS}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Conv.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{RA}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Rep.}} & \multirow{4}{*}{\rotatebox[origin=c]{90}{Erasure}} \\
+       &      &         &       &       &         & & & & & & & & & & \\
+       &      & Contri- & Code  & Start &         & & & & & & & & & & \\
+  Name & Ref. & butors  & Lines & Year  & License & & & & & & & & & & \\
+  \midrule                                                                    % Polar    LDPC     Turbo    TPC      BCH      RS       Conv.    RA       Rep.     Erasure
+  {\AFFECT}          & \cite{Cassagne2019a}  &  11 &  76k & 2016 & MIT        & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark  \\
+  {aicodix GmbH}     & \cite{Aicodix}        &   1 &   7k & 2018 & Copyright  & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {eccpage}          & \cite{ECCpage}        &  20 &    - & 1989 & -          & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark  \\
+  {EZPWD}            & \cite{EZPWDRS}        &   2 &   6k & 2014 & GPLv3      & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {FastECC}          & \cite{FastECC}        &   2 &   1k & 2015 & Apache 2.0 & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {FEC-AL}           & \cite{FEC-AL}         &   1 &   3k & 2018 & BSD        & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+  {FECpp}            & \cite{FECpp}          &   1 &   2k & 2009 & -          & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark  \\
+  {GNURadio}         & \cite{GNURadio}       & 192 & 270k & 2006 & GPLv3      & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \cmark & \xmark  \\
+  {Inan}             & \cite{Inan-LDPC}      &   2 &  13k & 2018 & Copyright  & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {IT++}             & \cite{ITpp}           &  20 & 109k & 2005 & GPLv3      & \xmark & \cmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {Le Gal}           & \cite{LeGal-LDPC}     &   1 &  83k & 2015 & -          & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Leopard}          & \cite{Leopard}        &   4 &   5k & 2017 & BSD        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {libcorrect}       & \cite{Libcorrect}     &   6 &   5k & 2016 & BSD        & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {Neal}             & \cite{Neal-LDPC}      &   1 &   5k & 2006 & Copyright  & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {OpenAir}          & \cite{OpenAir}        & 148 & 740k & 2013 & OAI Public & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {OpenFEC}          & \cite{OpenFEC}        &   8 &  55k & 2009 & CeCCIL-C   & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Schifra}          & \cite{Schifra}        &   1 &   7k & 2010 & GPLv3      & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Siamese}          & \cite{Siamese}        &   1 &  11k & 2018 & BSD        & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \cmark  \\
+  {Tavildar (Polar)} & \cite{Tavildar-Polar} &   1 &   2k & 2016 & -          & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {Tavildar (LDPC)}  & \cite{Tavildar-LDPC}  &   1 &   1k & 2016 & -          & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  {the-art-of-ecc}   & \cite{The-art-of-ecc} &   1 &    - & 2006 & Copyright  & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark  \\
+  {TurboFEC}         & \cite{TurboFEC}       &   2 &   4k & 2015 & GPLv3      & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark  \\
+  \bottomrule
   \end{tabular}
   }}
 \end{table}
@@ -410,45 +412,44 @@ The \AFFECT software functionalities are decomposed in three main parts: the
   \centering
   \caption{List of the channel codes (codecs) supported in \AFFECT.}
   \label{tab:aff3ct_features_codecs}
-  \begin{tabular}{ c | c | c }
-  \multirow{2}{*}{\textbf{Channel Code}}  & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Decoders}}        \\
-                                          &                                    &                                           \\
-  \hline
-  \hline
-  \multirow{5}{*}{{LDPC}}                 & 5G (data), Wi-Fi,                  & Scheduling: Flooding and H./V. Layered    \\
-                                          & WiMAX, WRAN,                       & Sum-Product Algorithm (SPA, log-SPA)      \\
-                                          & 10 Gigabit Eth.,                   & Min-Sum its derivatives (MS, NMS and OMS) \\
-                                          & DVB-S2, CCSDS                      & Approximate Min-Star (AMS)                \\
-                                          & etc.                               & Bit Flipping: GallagerA/B/E, PPBF, WBF    \\
-  \hline
-                                          &                                    & Successive Cancellation (SC)              \\
-  Polar                                   & 5G                                 & Successive Cancellation List (SCL)        \\
-  (\Arikan mono-kernel)                   & (control channel)                  & CRC-Aided SCL (CA-SCL, FA-SCL, PA-SCL)    \\
-                                          &                                    & Soft Cancellation (SCAN)                  \\
-  \hline
-  Polar                                   &                                    & Successive Cancellation (SC)              \\
-  (mono/multi-kernel                      & --                                 & Successive Cancellation List (SCL)        \\
-  generic)                                &                                    & CRC-Aided SCL (CA-SCL, PA-SCL)            \\
+  \begin{tabular}{ l  l  l }
+  \toprule
+  Channel Code                     & Standard          & Decoders                                  \\
+  \midrule
+  \multirow{5}{*}{{LDPC}}          & 5G (data), Wi-Fi, & Scheduling: Flooding and H./V. Layered    \\
+                                   & WiMAX, WRAN,      & Sum-Product Algorithm (SPA, log-SPA)      \\
+                                   & 10 Gigabit Eth.,  & Min-Sum its derivatives (MS, NMS and OMS) \\
+                                   & DVB-S2, CCSDS,    & Approximate Min-Star (AMS)                \\
+                                   & etc.              & Bit Flipping: GallagerA/B/E, PPBF, WBF    \\
+  \midrule
+                                   &                   & Successive Cancellation (SC)              \\
+  Polar                            & 5G                & Successive Cancellation List (SCL)        \\
+  (\Arikan mono-kernel)            & (control channel) & CRC-Aided SCL (CA-SCL, FA-SCL, PA-SCL)    \\
+                                   &                   & Soft Cancellation (SCAN)                  \\
+  \midrule
+  Polar                            &                   & Successive Cancellation (SC)              \\
+  (mono/multi-kernel               & --                & Successive Cancellation List (SCL)        \\
+  generic)                         &                   & CRC-Aided SCL (CA-SCL, PA-SCL)            \\
 
-  \hline
-  \multirow{1}{*}{{Turbo}}                & LTE (3G, 4G),                      & Turbo BCJR                                \\
-  (single and double                      & DVB-RCS,                           & Turbo BCJR + Early Termination (CRC)      \\
-  binary)                                 & CCSDS, etc.                        & Post proc.: Flip aNd Check (FNC)          \\
-  \hline
-  \multirow{2}{*}{{Product}}              & \multirow{2}{*}{WiMAX (opt.)}      & \multirow{2}{*}{Turbo Chase-Pyndiah}      \\
-                                          &                                    &                                           \\
-  \hline
-  \multirow{3}{*}{{BCH}}                  & CD, DVD,                           &                                           \\
-                                          & SSD, DVB-S2,                       & Berlekamp-Massey + Chien search           \\
-                                          & Bitcoin, etc.                      &                                           \\
-  \hline
-  \multirow{3}{*}{{Reed-Solomon}}         & CD, DVD,                           &                                           \\
-                                          & SSD, DVB-T,                        & Berlekamp-Massey + Chien search           \\
-                                          & ADSL, etc.                         &                                           \\
-  \hline
-  \multirow{1}{*}{{Convolutional}}        &                                    & BCJR - Maximum A Posteriori (MAP)         \\
-  (single and double                      & NASA                               & BCJR - Linear Approximation (L-MAP)       \\
-  binary)                                 &                                    & BCJR - Max-log Approximation (ML-MAP)     \\
+  \midrule
+  Turbo                            & LTE (3G, 4G),     & Turbo BCJR                                \\
+  (single and double               & DVB-RCS,          & Turbo BCJR + Early Termination (CRC)      \\
+  binary)                          & CCSDS, etc.       & Post proc.: Flip aNd Check (FNC)          \\
+  \midrule
+  Product                          & WiMAX (opt.)      & Turbo Chase-Pyndiah                       \\
+  \midrule
+  \multirow{3}{*}{{BCH}}           & CD, DVD,          &                                           \\
+                                   & SSD, DVB-S2,      & Berlekamp-Massey + Chien search           \\
+                                   & Bitcoin, etc.     &                                           \\
+  \midrule
+  \multirow{3}{*}{{Reed-Solomon}}  & CD, DVD,          &                                           \\
+                                   & SSD, DVB-T,       & Berlekamp-Massey + Chien search           \\
+                                   & ADSL, etc.        &                                           \\
+  \midrule
+  Convolutional                    &                   & BCJR - Maximum A Posteriori (MAP)         \\
+  (single and double               & NASA              & BCJR - Linear Approximation (L-MAP)       \\
+  binary)                          &                   & BCJR - Max-log Approximation (ML-MAP)     \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -471,34 +472,34 @@ arithmetic.
   \centering
   \caption{List of the modulations/demodulations (modems) supported in \AFFECT.}
   \label{tab:aff3ct_features_modems}
-  \begin{tabular}{ c | c | c }
-  \multirow{2}{*}{\textbf{Modem}} & \multirow{2}{*}{\textbf{Standard}} & \multirow{2}{*}{\textbf{Information}}  \\
-                                  &                                    &                                        \\
-  \hline
-  \hline
+  \begin{tabular}{ l  l  l }
+  \toprule
+  Modem                           & Standard                           & Information                            \\
+  \midrule
   \multirow{3}{*}{{N-PSK}}        & IEEE 802.16 (WiMAX)                &                                        \\
                                   & UMTS (2G, 2G+)                     & Phase-Shift Keying                     \\
                                   & EDGE (8-PSK), ...                  &                                        \\
-  \hline
+  \midrule
   \multirow{3}{*}{{N-QAM}}        & IEEE 802.16 (WiMAX)                &                                        \\
                                   & UMTS (2G, 2G+)                     & Quadrature Amplitude Modulation        \\
                                   & 3G, 4G, 5G, ...                    &                                        \\
-  \hline
+  \midrule
   \multirow{3}{*}{{N-PAM}}        & IEEE 802.16 (WiMAX)                &                                        \\
                                   & UMTS (2G, 2G+)                     & Pulse Amplitude Modulation             \\
                                   & 3G, 4G, 5G, ...                    &                                        \\
-  \hline
+  \midrule
   \multirow{2}{*}{{CPM}}          & GMSK, Bluetooth                    & Continuous Phase Modulation            \\
                                   & IEEE 802.11 FHSS                   & Coded (convolutional-based) modulation \\
-  \hline
+  \midrule
   \multirow{2}{*}{{OOK}}          & IrDA (Infrared)                    & On-Off Keying                          \\
                                   & ISM bands                          & Used in optical communication systems  \\
-  \hline
+  \midrule
   \multirow{2}{*}{{SCMA}}         & \multirow{2}{*}{Considered for 5G} & Sparse Code Multiple Access            \\
                                   &                                    & Multi-user modulation                  \\
-  \hline
+  \midrule
   \multirow{2}{*}{{User defined}} & \multirow{2}{*}{-}                 & Constellation and order can be         \\
                                   &                                    & defined from an external file          \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -519,25 +520,16 @@ at the digital level.
   \centering
   \caption{List of the channel models supported in \AFFECT.}
   \label{tab:aff3ct_features_channels}
-  \begin{tabular}{ c | c | c }
-  \multirow{2}{*}{\textbf{Channel}}      & \multirow{2}{*}{\textbf{Multi-user}} & \multirow{2}{*}{\textbf{Information}}          \\
-                                         &                                      &                                                \\
-  \hline
-  \hline
-  \multirow{2}{*}{{AWGN}}                & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Additive White Gaussian Noise} \\
-                                         &                                      &                                                \\
-  \hline
-  \multirow{2}{*}{{BEC}}                 & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Erasure Channel}        \\
-                                         &                                      &                                                \\
-  \hline
-  \multirow{2}{*}{{BSC}}                 & \multirow{2}{*}{No}                  & \multirow{2}{*}{Binary Symmetric Channel}      \\
-                                         &                                      &                                                \\
-  \hline
-  \multirow{2}{*}{{Rayleigh}}            & \multirow{2}{*}{Yes}                 & \multirow{2}{*}{Flat Rayleigh fading channel}  \\
-                                         &                                      &                                                \\
-  \hline
-  \multirow{2}{*}{{User defined}}        & \multirow{2}{*}{No}                  & User can import noise samples                  \\
-                                         &                                      & from an external file                          \\
+  \begin{tabular}{ l l l }
+  \toprule
+  Channel      & Multi-user & Information                                         \\
+  \midrule
+  AWGN         & Yes        & Additive White Gaussian Noise                       \\
+  BEC          & No         & Binary Erasure Channel                              \\
+  BSC          & No         & Binary Symmetric Channel                            \\
+  Rayleigh     & Yes        & Flat Rayleigh fading channel                        \\
+  User defined & No         & User can import noise samples from an external file \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -643,6 +635,8 @@ observed. As explained in Section~\ref{sec:ctx_ldpc}, the Min-Sum (MS) is an
 approximation of the Sum-Product Algorithm (SPA) and leads to a performance
 loss. The Offset Min-Sum (OMS) and the Normalized Min-Sum (NMS) are improvements
 of the MS. They enable to recover a part of the SPA decoding performance.
+
+\newpage
 
 \begin{figure}[htp]
   \centering
