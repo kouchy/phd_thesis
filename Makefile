@@ -58,7 +58,8 @@ FILES_FLS=$(shell find ./ -type f -name '*.fls')
 FILES_FDB=$(shell find ./ -type f -name '*.fdb_latexmk')
 FILES_AUX=$(shell find ./ -type f -name '*.aux')
 FILES_LOCK=$(shell find ./ -type f -name '*.auxlock')
+FILES_PYG=$(shell find ./ -type f -name '*.pyg')
 
 clean4all:
 	rm -rf $(DIRS_BUILD) $(DIRS_MINTED) $(DIRS_TIKZC)
-	rm -f $(FILES_MTC) $(FILES_BCF) $(FILES_LOL) $(FILES_XML) $(FILES_FLS) $(FILES_FDB) $(FILES_AUX) $(FILES_LOCK)
+	rm -f $(FILES_MTC) $(FILES_BCF) $(FILES_LOL) $(FILES_XML) $(FILES_FLS) $(FILES_FDB) $(FILES_AUX) $(FILES_LOCK) $(FILES_PYG)
