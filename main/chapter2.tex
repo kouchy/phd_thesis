@@ -566,7 +566,7 @@ operations. To this purpose we developed a SIMD reordering function that
 extensively uses the \verb|mipp::interleave| function to reorder the elements.
 This function is completely vectorized and generic on the data types and the
 frame sizes. The \verb|mipp::interleave| function takes two registers $\bm{r^a}
-= [r^a_0, r^a_1, ..., r^a_{p_\text{SIMD}}]$ and $\bm{r^b} = [r^b_0, r^b_1,
+= [r^a_0, r^a_1, ..., r^a_{p_\text{SIMD}-1}]$ and $\bm{r^b} = [r^b_0, r^b_1,
 ..., r^b_{p_\text{SIMD}-1}]$ as input parameters and returns two output
 registers $\bm{r^c} = [r^a_0, r^b_0, ..., r^a_{p_\text{SIMD}/2-1},
 r^b_{p_\text{SIMD}/2-1}]$ and $\bm{r^d} = [r^a_{p_\text{SIMD}/2},
